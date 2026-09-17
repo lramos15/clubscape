@@ -1,0 +1,119 @@
+{
+  "all_legal_styles_bound": true,
+  "avatar_or_source_assets_modified": false,
+  "channel_ticks_unchanged": 24,
+  "home_teleport_phases": [
+    {
+      "at_tick": 0,
+      "sequence": 4847
+    },
+    {
+      "at_tick": 6,
+      "sequence": 4850
+    },
+    {
+      "at_tick": 12,
+      "sequence": 4853
+    },
+    {
+      "at_tick": 16,
+      "sequence": 4855
+    },
+    {
+      "at_tick": 21,
+      "sequence": 4857
+    }
+  ],
+  "input_sha256": "43fafa676d29a22f4d7b57bd545860993350b5c627494e20ee52db98496ca4b0",
+  "milestone_accepted": false,
+  "required_sequences": [
+    386,
+    390,
+    395,
+    400,
+    401,
+    422,
+    423,
+    426,
+    428,
+    429,
+    440,
+    621,
+    625,
+    711,
+    733,
+    827,
+    829,
+    836,
+    879,
+    896,
+    897,
+    898,
+    899,
+    2305,
+    4847,
+    4850,
+    4853,
+    4855,
+    4857,
+    12526
+  ],
+  "schema_version": 1,
+  "source_binding_sha256": "27a42ea306aa02b7fcfcb3b5c970a908bda21d0b21dbc2c609b419becae104d3",
+  "unknowns": {
+    "empty_container": "No numeric actor sequence or deliberate silence has been verified; keep the actual item action identity.",
+    "recipe.cooking.dough": "No numeric actor sequence or deliberate silence has been verified; original potter-wheel883 is not a dough substitute."
+  },
+  "water_extension": {
+    "rule": {
+      "kind": "unverified",
+      "reason": "Scenery animationID=-1 is not actor dispatch evidence. No filling sequence or deliberate absence was verified; do not use a similarly named vial, fountain or construction sequence."
+    },
+    "source": [
+      {
+        "notes": "Water-specific source motion is explicitly unverified, not silence or a similarly named sequence.",
+        "reference": "research/water-fill/facts.json",
+        "revision": "9dc44a36c88538605e9d66a408966ff623a392d2e9927fda9dc28d949e14d47d",
+        "status": "inference"
+      }
+    ]
+  },
+  "weapon_styles": {
+    "item.axe.bronze": {
+      "style.axe.bronze.crush.aggressive": 401,
+      "style.axe.bronze.slash.accurate": 395,
+      "style.axe.bronze.slash.aggressive": 395,
+      "style.axe.bronze.slash.defensive": 395
+    },
+    "item.dagger.bronze": {
+      "style.dagger.bronze.slash.aggressive": 390,
+      "style.dagger.bronze.stab.accurate": 386,
+      "style.dagger.bronze.stab.aggressive": 386,
+      "style.dagger.bronze.stab.defensive": 386
+    },
+    "item.pickaxe.bronze": {
+      "style.pickaxe.bronze.crush.aggressive": 401,
+      "style.pickaxe.bronze.stab.accurate": 400,
+      "style.pickaxe.bronze.stab.aggressive": 400,
+      "style.pickaxe.bronze.stab.defensive": 400
+    },
+    "item.shortbow": {
+      "style.shortbow.accurate": 426,
+      "style.shortbow.longrange": 426,
+      "style.shortbow.rapid": 426
+    },
+    "item.spear.bronze": {
+      "style.spear.bronze.crush.controlled": 429,
+      "style.spear.bronze.slash.controlled": 440,
+      "style.spear.bronze.stab.controlled": 428,
+      "style.spear.bronze.stab.defensive": 428
+    },
+    "item.sword.bronze": {
+      "style.sword.bronze.slash.aggressive": 390,
+      "style.sword.bronze.stab.accurate": 386,
+      "style.sword.bronze.stab.aggressive": 386,
+      "style.sword.bronze.stab.defensive": 386
+    }
+  },
+  "worlds_repin_attempted": false
+}

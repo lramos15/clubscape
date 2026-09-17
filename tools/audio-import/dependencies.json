@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "python": "CPython 3.12 standard library",
+  "java_release": 17,
+  "runtime_selection": {
+    "path": "research/current-source/selection.json",
+    "sha256": "b1a8d65cec6143946dba7172bc29142c8aa47cc4383abaffefef5b2ea3b2b028",
+    "selection_id": "osrs-live-240-cache2695-injected1.12.38-20260913"
+  },
+  "extraction_inventory": {
+    "path": "assets/manifests/osrs/cache2695-full-bundle.json.gz",
+    "sha256": "5d55cdeef8d4e1af1a1215c19d606a3aace0c10c47fc280559aaf8cfb13dbd70"
+  },
+  "supplementary_decoder_lock": {
+    "path": "tools/cache-import/dependencies.json",
+    "sha256": "cd3d731fc45b12d7515d7ded9df6b5c53d70e27a33011a78d254c3421be0d8e4",
+    "role": "Only bounded source sequence, clientscripts and additional audio extraction; synthesis remains the original current runtime."
+  },
+  "lossless_encoder": {
+    "binding": "Python standard-library ctypes; existing shared libraries, no executable installation",
+    "platform": "linux-aarch64",
+    "version": "libsndfile-1.2.2",
+    "compression_level": 0.8,
+    "libraries": [
+      {
+        "soname": "libsndfile.so.1",
+        "filename": "libsndfile.so.1.0.37",
+        "size_bytes": 594792,
+        "sha256": "2a44435dc9a00828d0e734eba66ed2a25b960b4946d957a5817750e8f246d652",
+        "package": "libsndfile1 1.2.2-1ubuntu5.24.04.1",
+        "upstream": "https://github.com/libsndfile/libsndfile/tree/1.2.2"
+      },
+      {
+        "soname": "libFLAC.so.12",
+        "filename": "libFLAC.so.12.1.0",
+        "size_bytes": 329600,
+        "sha256": "a547ee7c9ac918e0432950790bf8beab0f86c6c143a3d6a8e9e5fc35553f6d56",
+        "upstream": "https://github.com/xiph/flac/tree/1.4.3"
+      }
+    ],
+    "portability": "The original Java PCM synthesis is portable; this byte-identical FLAC encoding lock describes the verified ARM64 host. Other encoder builds must not silently replace these hashes or claim byte-identical output."
+  },
+  "artifacts": [
+    {
+      "name": "injected-client-1.12.38.jar",
+      "url": "https://repo.runelite.net/net/runelite/injected-client/1.12.38/injected-client-1.12.38.jar",
+      "size_bytes": 4235748,
+      "sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947",
+      "role": "Unmodified original Jagex audio decoder, instruments, MIDI sequencer, mixer and PCM device conversion."
+    },
+    {
+      "name": "runelite-api-1.12.38-runtime.jar",
+      "url": "https://repo.runelite.net/net/runelite/runelite-api/1.12.38/runelite-api-1.12.38-runtime.jar",
+      "size_bytes": 272846,
+      "sha256": "6d50aa843c070120a5093c5ead29d72e92742074346241e0359a133dad008852"
+    },
+    {
+      "name": "client-1.12.38.jar",
+      "url": "https://repo.runelite.net/net/runelite/client/1.12.38/client-1.12.38.jar",
+      "size_bytes": 5261401,
+      "sha256": "6dcd0da2fdbf48d35c3d8f666d801d05afa964030c553e806eb173dba97323d5",
+      "role": "Exact /runelite/index overlay inventory resource required by the injected archive accessor. No client application is launched."
+    },
+    {
+      "name": "gson-2.8.5.jar",
+      "url": "https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.5/gson-2.8.5.jar",
+      "size_bytes": 241622,
+      "sha256": "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81",
+      "role": "Structured conversion evidence only; no audio implementation."
+    },
+    {
+      "name": "slf4j-api-1.7.25.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar",
+      "size_bytes": 41203,
+      "sha256": "18c4a0095d5c1da6b817592e767bb23d29dd2f560ad74df75ff3961dbde25b79"
+    },
+    {
+      "name": "slf4j-simple-1.7.25.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-simple/1.7.25/slf4j-simple-1.7.25.jar",
+      "size_bytes": 15257,
+      "sha256": "0966e86fffa5be52d3d9e7b89dd674d98a03eed0a454fbaf7c1bd9493bd9d874"
+    },
+    {
+      "name": "json-20090211.jar",
+      "url": "https://repo.runelite.net/org/json/json/20090211/json-20090211.jar",
+      "size_bytes": 45944,
+      "sha256": "055be110a570f9cda3eba8d70a006ff46c77a048bc67868524879211c48b330a"
+    }
+  ]
+}

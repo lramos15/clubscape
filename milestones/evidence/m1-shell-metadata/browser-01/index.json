@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "actual-source-title.png",
+      "source": ".worktrees/m1-shell-metadata/.local/metadata-source-browser-01/actual-source-title.png",
+      "bytes": 577461,
+      "sha256": "7f4608f8d34707da12459f53a7d949f8d969c8bfc3daca96c102cab555c58923"
+    },
+    {
+      "path": "actual-streamed-source-world.png",
+      "source": ".worktrees/m1-shell-metadata/.local/metadata-source-browser-01/actual-streamed-source-world.png",
+      "bytes": 895966,
+      "sha256": "3ba8357f3b125fdcee5134d9e47d8088e09a83f7586c210ebe45395dfee9eb00"
+    },
+    {
+      "path": "game-root-startup.json",
+      "source": ".worktrees/m1-shell-metadata/.local/metadata-source-browser-01/game-root-startup.json",
+      "bytes": 897,
+      "sha256": "327556514b06c1973441f759fb588eae4b92b0b3205ebf974f6becd31767d50f"
+    },
+    {
+      "path": "native-audio-diagnostics.json",
+      "source": ".worktrees/m1-shell-metadata/.local/metadata-source-browser-01/native-audio-diagnostics.json",
+      "bytes": 98471,
+      "sha256": "c0b85785ac625341bf3b41ea6165356509125d3707889aa0a27145aa20bf8930"
+    },
+    {
+      "path": "result.json",
+      "source": ".worktrees/m1-shell-metadata/.local/metadata-source-browser-01/result.json",
+      "bytes": 156658,
+      "sha256": "c444d34a576c6c2457022166047145e00ef37122617dd1a1efa1ea656a9e28d5"
+    },
+    {
+      "path": "source-character-preview-contract-gap.png",
+      "source": ".worktrees/m1-shell-metadata/.local/metadata-source-browser-01/source-character-preview-contract-gap.png",
+      "bytes": 122438,
+      "sha256": "bb22c295bd87f9c2f027e0a269fe2e0390d886811a4bc995696d691a5ef40f6e"
+    },
+    {
+      "path": "source-run-pin.json",
+      "source": ".worktrees/m1-shell-metadata/.local/metadata-source-browser-01/source-run-pin.json",
+      "bytes": 807,
+      "sha256": "9c7701d3784e17982c0af965d1e954402483cbee066a55ee2cf93e47a6ce6657"
+    },
+    {
+      "path": "browser-authority-v1.json",
+      "source": ".worktrees/m1-shell-metadata/.local/metadata-integration/browser-authority-v1.json",
+      "bytes": 2385,
+      "sha256": "10292c4de45ecc4040d2d179107a3351fce0706b49bf3942c9758d8231efddbb"
+    },
+    {
+      "path": "browser-execution-01.log",
+      "source": ".worktrees/m1-shell-metadata/.local/metadata-integration/browser-execution-01.log",
+      "bytes": 394,
+      "sha256": "1265415112a6d31e1b4605e24cf1f24f64c84a298d724a3e7dcde8bef6265467"
+    }
+  ],
+  "raw_evidence_preserved": true,
+  "milestone_accepted": false
+}

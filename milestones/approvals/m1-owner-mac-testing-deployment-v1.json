@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "kind": "owner_conditional_m1_testing_deployment",
+  "status": "approved_after_playable_candidate_readiness",
+  "authority": "owner",
+  "recorded_at": "2026-09-17T13:48:20.991156+00:00",
+  "timestamp_basis": "Recording time after the structured response, not a separately captured click timestamp.",
+  "owner_instruction": "After you feel confident in everything that is done, please deploy it via ~/docker-lander's docker compose stack for testing by me the owner on my Mac.",
+  "owner_choices": {
+    "deployment_stage": "playable_candidate",
+    "deployment_stage_label": "After the M1 browser candidate is playable, before my acceptance testing (recommended)",
+    "mac_access": "ssh_localhost",
+    "mac_access_label": "Localhost through an SSH tunnel (secure-context support, no public exposure)",
+    "https_origin_response": "No need, just localhost for now"
+  },
+  "approved_scope": "Deploy the playable M1 owner-testing candidate into the existing home-services Compose stack, using localhost-only access forwarded to the owner's Mac through SSH. Do not deploy the currently fenced engineering preview.",
+  "stack": {
+    "dashboard_directory": "/home/lramos15/docker-lander",
+    "compose_file": "/home/lramos15/compose.yaml",
+    "project": "home-services",
+    "docker_context": "default",
+    "docker_endpoint": "unix:///var/run/docker.sock"
+  },
+  "conditions": [
+    "First establish and record that the exact candidate supports normal playable browser entry and the required M1 interactions without diagnostic-camera or fixture fallbacks.",
+    "Do not require prior owner Mac acceptance or final Mac performance evidence to deploy for those very checks; deployment readiness and milestone acceptance are separate gates.",
+    "Add or update only ClubScape-owned services and resources. Preserve unrelated stack configuration, containers and persistent data; never restart or tear down the whole stack for this task.",
+    "Publish the application only on host loopback and provide the matching Mac SSH-forward command and localhost URL when deployed. No public hostname, TLS setup or browser security bypass is requested.",
+    "Use isolated owner-testing persistence and supported normal account creation. Never copy private saved checkpoints, credentials, session archives or development control directories into the deployment or image.",
+    "Record the deployed revision/image identities, actual service readiness and browser handoff without claiming M1 acceptance or a release."
+  ],
+  "original_or_successor_saved_authority_renewed": false,
+  "private_checkpoint_restore_or_migration_authorized": false,
+  "other_exhausted_source_browser_gpu_operator_or_runelite_allowances_renewed": false,
+  "public_or_production_release_authorized": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false,
+  "deployment_performed_by_this_record": false
+}

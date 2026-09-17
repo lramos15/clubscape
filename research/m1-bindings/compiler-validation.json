@@ -1,0 +1,186 @@
+{
+  "artifact": {
+    "artifact_version": 4,
+    "bytes": 528842,
+    "path": "content/m1/game-content.csc.gz",
+    "schema_version": 4,
+    "sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+    "uncompressed_bytes": 13222639,
+    "uncompressed_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc"
+  },
+  "artifact_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+  "command": [
+    "cargo",
+    "run",
+    "--quiet",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/crates/content/Cargo.toml",
+    "-p",
+    "clubscape-content",
+    "--",
+    "--input",
+    "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/tools/m1-content/.local/compiler/game-content.json",
+    "--output",
+    "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/tools/m1-content/.local/compiler/m1.csc"
+  ],
+  "compiler_manifest": "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/crates/content/Cargo.toml",
+  "compiler_manifest_sha256": "980057ed62a451bbf7eae3782ef442ce89fb54915d5f64c429802833086bdfd5",
+  "compiler_sources": [
+    {
+      "path": "src/artifact.rs",
+      "sha256": "366afbc14607f8b9fb8eb0d54aae4406390c824ed5e14ceaa670c4a5d1012813"
+    },
+    {
+      "path": "src/decode.rs",
+      "sha256": "a1e60f6543cdd56eff717939b5725d8acc4c904d664d7e916f8189644d68217e"
+    },
+    {
+      "path": "src/lib.rs",
+      "sha256": "7d74789e4e7fbe7d2af9177df1b351af4e9bf9bd604434b77394d6ce9021f901"
+    },
+    {
+      "path": "src/main.rs",
+      "sha256": "f256d690e78a5c0938e9dc6940fea51143b3c8b098f66b9f68b924f2f606221e"
+    },
+    {
+      "path": "src/validation/actor_animations.rs",
+      "sha256": "4853cd91b519cc8c2496307bbbcaa7008f479ad61cff6cdd15832bca8bbfddfc"
+    },
+    {
+      "path": "src/validation/audio.rs",
+      "sha256": "827070061d5be1206ad88926f7e15e0f1817684171e33a17f8afc9075be54272"
+    },
+    {
+      "path": "src/validation/definitions.rs",
+      "sha256": "643ea771e0fef7f0eda2697f92a119139e1e34ce5adc410f18f72e8cb5b1048d"
+    },
+    {
+      "path": "src/validation/execution.rs",
+      "sha256": "64966d3fad10ed5e2b3ae86d5bf6e75bbfdb32af1388d0dae86cfe935e3e8f35"
+    },
+    {
+      "path": "src/validation/graphs/reachability.rs",
+      "sha256": "f06b2ade452a62545ba15dcefdbbf72e0f7d75e7ab38a5764b3b80251eb4d32a"
+    },
+    {
+      "path": "src/validation/graphs.rs",
+      "sha256": "8da90f598badec93e583dad58ed7d42b00ee7c0f9302ba25b7ef94d219b2429a"
+    },
+    {
+      "path": "src/validation/mechanics.rs",
+      "sha256": "35aa8ee7c299e082f85c970ad5e9be49f2c2cc28cd5484167ec4d351c34fb449"
+    },
+    {
+      "path": "src/validation/mod.rs",
+      "sha256": "40a81355dfd53938c7c0a67d92f34f7c90a71bba01de7384986a61bbc7f2f716"
+    },
+    {
+      "path": "src/validation/rules.rs",
+      "sha256": "d40f6c3bac0b009109b569af31218dd96f243cd86dcb5e57641bc0f41a630bbd"
+    },
+    {
+      "path": "src/validation/ui.rs",
+      "sha256": "939b9a62f6611e0f9aba0a95bb6db7c6c876da62df095c3d1e69a9db5096dcef"
+    },
+    {
+      "path": "src/validation/world.rs",
+      "sha256": "cdd2863ebba4f1398cd59f0e4f2e65e49a5b83fef64a32b372747d74d55c6df2"
+    }
+  ],
+  "compiler_sources_aggregate_sha256": "95edf724258356d8cf29ca0655c422ff77e37c07e571177270db576c8231669e",
+  "exit_code": 0,
+  "gameplay_executed": false,
+  "input_compressed_sha256": "ce3b2448455595b0e0f65ab67c9670ff08ff7f89d02b965f083f8e24cac91255",
+  "input_sha256": "842ca4d1f44d035a4f2ece936c78182e0f75bfe1438c1c7777fd726feaf1e115",
+  "note": "Actual clubscape-content Runtime CLI, no --test-fixture, permissive mode, field-stripping, synthetic content or substitute validator.",
+  "presentation_approved": false,
+  "runtime_compile_passed": true,
+  "schema_version": 1,
+  "shared_game_types_content_sha256": "fb336de624c862544287b36dc7888dd5b70a3ed0c0d4db770c3376bf4aa9802f",
+  "source_branch_residuals": {
+    "active_or_conditionally_active": [],
+    "active_or_conditionally_active_count": 0,
+    "inactive_full_target": [
+      {
+        "path": "items.item.ensouled_goblin_head.stackable.rule",
+        "proof": {
+          "ordinary_acquisition_absent": true,
+          "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+          "rare_items": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ]
+        },
+        "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+        "rule_group": "conditional_stack_alternatives"
+      },
+      {
+        "path": "items.item.milk.bottomless_bucket.stackable.rule",
+        "proof": {
+          "ordinary_acquisition_absent": true,
+          "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+          "rare_items": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ]
+        },
+        "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+        "rule_group": "conditional_stack_alternatives"
+      },
+      {
+        "path": "mechanics.death.office_overflow",
+        "proof": {
+          "excluded_unacquired_conditional_keys": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ],
+          "office_capacity": 120,
+          "ordinary_acquired_instance_items": 0,
+          "ordinary_item_key_upper_bound": 120,
+          "precondition": "Office must merge ordinary non-instanced item keys. Recheck on universe, acquisition or instance/merge-rule changes; never unconditionally discard overflow.",
+          "represented_item_keys": 122
+        },
+        "reason": "Deletion order above120 Office entries is not source-bound.",
+        "rule_group": "office_capacity_unreachable"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      }
+    ],
+    "inactive_full_target_count": 6,
+    "policy": "A source binding is required only when its proved branch is reachable. Inactive definitions remain in the full target; no unresolved value is replaced by a success-shaped default.",
+    "unresolved_total": 6
+  },
+  "stderr": "",
+  "stdout": "{\"artifact_version\":4,\"baseline\":\"OSRS live build 240 / cache 2695; post-July-2026 normal F2P behavior contracts\",\"codec\":\"messagepack_named\",\"counts\":{\"collision_cells\":46358,\"dialogue_nodes\":48,\"dialogues\":21,\"equipment_slots\":11,\"interfaces\":31,\"items\":122,\"npcs\":26,\"objects\":4837,\"quests\":2,\"recipes\":14,\"regions\":29,\"shops\":1,\"skills\":24,\"spawns\":536,\"tutorial_stages\":71},\"file_bytes\":13222639,\"ok\":true,\"output\":\"/home/lramos15/clubscape/.worktrees/m1-water-dispatch/tools/m1-content/.local/compiler/m1.csc\",\"revision\":\"m1.source-backed.v4.71c86749d02088ee\",\"schema_version\":4,\"sha256\":\"adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc\",\"validation\":{\"approval_verification_performed\":false,\"asset_manifest\":null,\"checks\":[\"schema_and_identity\",\"map_keys_and_source_ids\",\"source_record_structure_and_mode\",\"numeric_and_reference_contracts\",\"explicit_collision_ownership\",\"initial_state_and_containers\",\"bounded_guard_and_effect_trees\",\"dialogue_and_progression_graphs\",\"rooted_progression_event_flag_and_unlock_dependencies\",\"one_time_quest_rewards\",\"asset_id_structure\",\"interface_registry_references\",\"recipe_tool_references_and_nonconsumption\",\"recipe_tool_holding_capacity\",\"initial_run_energy_units_and_bounds\",\"typed_mechanic_bindings_and_source_domains\",\"counter_entitlement_instance_and_recovery_contracts\",\"stationary_anchor_and_mobile_footprint_policy\",\"authoritative_ui_sources_context_rewards_and_controls\"],\"evidence\":{\"approved_adaptation\":4,\"inference\":3357,\"test_fixture\":0,\"verified_reference\":16035},\"interface_definition_validation_performed\":true,\"limitations\":[\"Interface registry validation establishes logical identity and source mappings, not rendered controls or interface behavior.\",\"Source URLs, observations, baseline completeness, and owner approvals are not authenticated by compilation.\",\"Graph checks are conservative structural/constant-condition checks, not a gameplay planner or milestone acceptance.\",\"Typed formula/timing bindings are validated, not executed or source-certified; unresolved bindings remain unavailable at execution.\",\"Animation actor filters are checked as ActorId syntax; dynamic actor existence belongs to world-state validation.\",\"Optional presentation assets, asset files, geometry, audio, and visual fidelity require separate acceptance checks.\"],\"mode\":\"runtime\",\"presentation_verification_performed\":false,\"recipe_tool_reference_validation_performed\":true,\"referenced_assets\":5015,\"source_verification_performed\":false,\"unassigned_asset_sites\":872,\"unresolved_bindings\":[\"items.item.ensouled_goblin_head.stackable.rule\",\"items.item.milk.bottomless_bucket.stackable.rule\",\"mechanics.death.office_overflow\",\"spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn\",\"spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn\",\"spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn\"]}}\n",
+  "unresolved_binding_count": 6
+}

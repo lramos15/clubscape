@@ -1,0 +1,106 @@
+Original OSRS runtime and audio inputs
+-------------------------------------
+Copyright © 1999 - 2026 Jagex Ltd. All rights reserved.
+See assets/source/osrs/audio-runtime/NOTICE.txt and assets/source/osrs/NOTICE.txt.
+The original runtime and large source/cache inputs remain checksum-verified,
+ignored dependencies; no gamepack binary is redistributed by this tool.
+
+RuneLite
+--------
+https://github.com/runelite/runelite
+ID/decoder source revision: ac79ed8bd8926bec7bf172aa291574b4d944b0e7
+Official runtime/resource artifacts: version1.12.38, locked in dependencies.json.
+Dependency JARs and their embedded notices are retained unchanged.
+
+BSD 2-Clause License
+
+Copyright (c) 2016-2017, Adam <Adam@sigterm.info>
+Copyright (c) 2018, SomeoneWithAnInternetConnection (SoundEffectID.java)
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Independent ID research: RS Mod
+------------------------------
+https://github.com/rsmod/rsmod
+Pinned revision: fa13b3f67172ef36e15d6b1514358aee61411796
+Only documented symbol facts/relationships are retained. This is not Jagex
+server code and is never treated as source-session timing proof.
+
+Copyright (c) 2025 RS Mod
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+Other sources and dependencies
+------------------------------
+Exact wiki revision URLs/hashes and contributor/copyright links are retained
+in research/audio-source/references.json. Wiki prose and independent server
+source snapshots are not published as game dialogue/code by this tool.
+The isolated smelting reference is only a labeled candidate; no code is copied.
+
+Gson, SLF4J, org.json, Guava, commons-compress and JNA remain original pinned
+JARs with embedded upstream notices, under ignored .local/audio-import/tooling.
+Additional artifact versions/licenses are retained via the checksum-locked
+tools/cache-import/dependencies.json and THIRD_PARTY_NOTICES.txt.
+
+The existing libsndfile1.2.2 and FLAC1.4.3 system libraries are used read-only,
+not copied into this repository. Installed package notices remain unchanged.
+Upstream licenses:
+https://github.com/libsndfile/libsndfile/blob/1.2.2/COPYING
+https://github.com/xiph/flac/blob/1.4.3/COPYING.Xiph
+Neither codec's code license applies to the Jagex audio it packages.
+
+Binding follow-up sources and optional analysis tools
+---------------------------------------------------
+The independent sound-name dictionary is from AlterRSPS/Alter revision
+9ddbbbe3bdf47d79ff919a12d01ce1a7e6be6169,
+game-api/src/main/kotlin/org/alter/api/cfg/Sound.kt.
+Copyright (c) 2023, Alter. BSD 2-Clause License, with the same redistribution
+conditions and warranty/liability disclaimer reproduced above. Only selected
+numeric identity facts are retained; independent server code is not treated as
+Jagex's current event selector.
+
+Optional yt-dlp2026.8.19, yt-dlp-ejs0.8.0, PyAV18.1.0 and NumPy2.5.3 are
+checksum-pinned in binding-media-requirements.txt and
+binding-analysis-requirements.txt. Their unmodified wheels/installed packages
+and embedded license files remain in ignored project-local storage. No tool
+binary or complete third-party recording is redistributed by this repository.
+Upstream license/source locations:
+https://github.com/yt-dlp/yt-dlp
+https://github.com/yt-dlp/ejs
+https://github.com/PyAV-Org/PyAV
+https://github.com/numpy/numpy
+
+Public video titles, creators, original URLs, dates, downloaded byte hashes,
+comparison bounds and source-version limitations are preserved in
+research/audio-source/binding-public-evidence.json.gz. These are bounded
+source-reference observations, not an open-source grant for the recordings or
+game audio, and not an assertion of current per-quest server behavior.

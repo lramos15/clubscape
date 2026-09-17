@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "selection_id": "osrs-live-240-cache2695-injected1.12.38-20260913",
+  "selected_at": "2026-09-13T23:56:13.646340+00:00",
+  "decision": "The newest complete live English OSRS cache in the retrieved current public metadata is still 2695. It is selected for freshness and working decoding, not as a mandatory historical pin. Use the current original injected runtime, not the official farewell stub or a legacy build-235 downgrade.",
+  "owner_authorized_change": "Complete M1, use the latest gamepacks you can find it does not need to be exactly 2695.",
+  "discovery": {
+    "metadata_url": "https://archive.openrs2.org/caches.json",
+    "observed_at": "2026-09-13T23:36:58Z",
+    "snapshot": {
+      "path": ".local/current-source/caches.json",
+      "size_bytes": 1343953,
+      "sha256": "27758761499f8db7f8a6b2f6474e39938ea4374a184b325a993435f525bc68c7"
+    },
+    "selection_rule": "game=oldschool, environment=live, language=en; sort by timestamp then id descending; require complete indexes/groups and disk_store_valid; selected cache supplied directly by Jagex",
+    "metadata_record": {
+      "id": 2695,
+      "scope": "runescape",
+      "game": "oldschool",
+      "environment": "live",
+      "language": "en",
+      "builds": [
+        {
+          "major": 240,
+          "minor": null
+        }
+      ],
+      "timestamp": "2026-09-08T10:30:08.897945Z",
+      "sources": [
+        "Jagex"
+      ],
+      "valid_indexes": 25,
+      "indexes": 25,
+      "valid_groups": 117441,
+      "groups": 117441,
+      "valid_keys": 0,
+      "keys": 0,
+      "size": 191236221,
+      "blocks": 438706,
+      "disk_store_valid": true,
+      "hidden": false
+    },
+    "bootstrap_url": "https://static.runelite.net/bootstrap.json",
+    "bootstrap_observed_at": "2026-09-13T23:36:59Z",
+    "bootstrap_last_modified": "2026-09-08T20:21:15Z",
+    "bootstrap_snapshot": {
+      "path": ".local/current-source/bootstrap.json",
+      "size_bytes": 18988,
+      "sha256": "6f8f3f03e48ad4db730ae0d59f5916b4a99789e6b2bc4464eaea116a9e8d00a3"
+    }
+  },
+  "cache": {
+    "id": 2695,
+    "scope": "runescape",
+    "build": 240,
+    "timestamp": "2026-09-08T10:30:08.897945Z",
+    "source": "Jagex via OpenRS2",
+    "url": "https://archive.openrs2.org/caches/runescape/2695",
+    "advertised_group_size_bytes": 191236221,
+    "download": {
+      "url": "https://archive.openrs2.org/caches/runescape/2695/disk.zip",
+      "path": ".local/current-source/cache-2695-disk.zip",
+      "size_bytes": 190266299,
+      "sha256": "8f6bd170d2f97e310aaa7700626f7140647a97ce926195ef7625d738f4aa4157",
+      "download_bound_bytes": 237220374
+    },
+    "disk_files_manifest": {
+      "path": "research/current-source/cache-files.json",
+      "size_bytes": 3773,
+      "sha256": "8f473271eb810624731eef42d42c125fbf33d9e851911967034b5f93cc6e8747"
+    },
+    "encrypted_groups": 0,
+    "zero_group_indexes": [16, 23],
+    "disk_store_note": "The original ZIP contains 25 files. RuneLite DiskStorage additionally creates empty .idx16 and .idx23 for zero-group indexes; only these exact empty extras are allowed. All original file hashes are verified before and after integrity tests.",
+    "index_format": {
+      "protocol": 7,
+      "map_index_flags": 4,
+      "map_index_named": false,
+      "map_group": "group ID = (regionX << 8) | regionY, file 0 terrain, file 1 locations",
+      "disk_version_trailer": "low 16 bits of full 32-bit index archive revision; validate then strip before RuneLite decoding"
+    }
+  },
+  "runtime": {
+    "provider": "Current official RuneLite bootstrap, original injected Jagex runtime",
+    "version": "1.12.38",
+    "artifacts": [
+      {
+        "name": "injected-client-1.12.38.jar",
+        "url": "https://repo.runelite.net/net/runelite/injected-client/1.12.38/injected-client-1.12.38.jar",
+        "size_bytes": 4235748,
+        "sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947"
+      },
+      {
+        "name": "runelite-api-1.12.38-runtime.jar",
+        "url": "https://repo.runelite.net/net/runelite/runelite-api/1.12.38/runelite-api-1.12.38-runtime.jar",
+        "size_bytes": 272846,
+        "sha256": "6d50aa843c070120a5093c5ead29d72e92742074346241e0359a133dad008852"
+      }
+    ],
+    "configuration": {
+      "url": "https://oldschool.runescape.com/jav_config.ws",
+      "observed_final_host": "oldschool196.runescape.com",
+      "observed_at": "2026-09-13T23:37:00Z",
+      "encoding": "windows-1252",
+      "path": "research/current-source/runtime-config.ws",
+      "size_bytes": 2766,
+      "sha256": "1737421a678fbc97e1e2f94932ac07d15c4cba1008646dca66f3d9e146956743"
+    },
+    "opaque_build_id": "33653951311.245",
+    "numeric_revision_observation": {
+      "method": "Instantiate the actual injected client in an isolated headless JVM; set ClientConfiguration from the retrieved official configuration; call original init(); read getRevision()",
+      "before_init": 0,
+      "after_init": 240,
+      "official_parameter_25": "240",
+      "init_exception": null,
+      "exit_code": 0,
+      "probe_source": "tools/cache-import/RuntimeProbe.java",
+      "scope": "Configuration initialization only. No gameworld login, terms acceptance, personal RuneLite configuration, or source scene capture."
+    }
+  },
+  "tooling": {
+    "lock": "tools/cache-import/dependencies.json",
+    "repository": "https://github.com/runelite/runelite",
+    "revision": "ac79ed8bd8926bec7bf172aa291574b4d944b0e7",
+    "version": "1.12.39-SNAPSHOT cache module",
+    "configured_decoder_versions": "Object/NPC/sequence loaders consume their config archive revisions, not numeric game revision; interface loader consumes full index-3 revision."
+  },
+  "compatibility_observations": [
+    {
+      "status": "verified",
+      "observation": "Current official configuration declares revision240 and the original current injected runtime returns240 after its actual initialization."
+    },
+    {
+      "status": "verified",
+      "observation": "Latest cache metadata declares240; original bytes for full regions, object/NPC definitions, models, interfaces, fonts, textures, legacy frames/skeletons, music and sounds decode successfully with full selected group CRC/version checks."
+    },
+    {
+      "status": "not_verified",
+      "observation": "Full original renderer cache loading, calibrated world/UI/audio capture and authorized in-world journey have not been observed by this task. Initialization and source-data decoding are not these acceptance gates."
+    }
+  ],
+  "alternatives": [
+    {
+      "url": "https://oldschool196.runescape.com/gamepack_5587366.jar",
+      "size_bytes": 16649,
+      "sha256": "1f30d37d5bbae75c4cc289f36c6276ab768cc343568f8abb296389d6784e8ba6",
+      "outcome": "HTTP200 HTML page titled Old School RuneScape Game, not a JAR."
+    },
+    {
+      "url": "http://oldschool196.runescape.com/gamepack_5587366.jar",
+      "size_bytes": 320687,
+      "sha256": "741518d1fd13ce1887ef41d03f509dec70c3624420ddd64115c28bc75b16da61",
+      "declared_download_size_in_config": 331463,
+      "class_count": 5,
+      "outcome": "Small Applet stub with Base64ImageStore/Base64Toolkit and paint/update methods, not the full current game renderer. Not selected."
+    },
+    {
+      "repository": "https://github.com/runetech/osrs-gamepacks",
+      "revision": "2e92962075cfbc0df227cc783c37633d5e92f297",
+      "last_real_legacy_build": 235,
+      "outcome": "Reuse previous verified evidence; no mandatory downgrade and no repeat acquisition of farewell osrs--1.jar."
+    }
+  ],
+  "input_corrections": [
+    {
+      "kind": "music",
+      "name": "Scape Main",
+      "selected_index6_group": 0,
+      "earlier_wiki_seed_group": 16,
+      "evidence": "Current index6 archive-name hash resolves scape main to0; other required named tracks resolve62,144,76,2. Exact source name/hash assertion is in the extractor."
+    }
+  ],
+  "remaining_gates": [
+    "Authorized source-client account/terms handoff for full Tutorial Island and Lumbridge reference captures. No acceptance or login has been performed.",
+    "Calibration of source camera/draw-distance/Resizable-Classic settings and audio timing; source NPC spawn identities and server-side behavior are not encoded as cache placements.",
+    "Dynamic widget/client-script dependency and item-icon generation contracts; cached animation curve playback and original music synthesis verification. Original source payloads are retained; no substitutes were generated.",
+    "Owner reference-pack approval before ClubScape presentation implementation, and separate final presentation/gameplay/compatibility acceptance."
+  ],
+  "reference_pack_approved": false,
+  "gameplay_verified": false,
+  "clubscape_runelite_compatibility_verified": false,
+  "notices": "assets/source/osrs/NOTICE.txt and tools/cache-import/THIRD_PARTY_NOTICES.txt"
+}

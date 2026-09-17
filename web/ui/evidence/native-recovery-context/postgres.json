@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "scope": "Guarded real PostgreSQL recovery component fixture; not a player journey",
+  "recorded_at": "2026-09-16T19:04:19.166600+00:00",
+  "base_commit": "7f30a0aa5a1dabd89e890f16781f70f0b3d51045",
+  "executable": "target/debug/deps/game_storage-34c5e8afcd171cc3",
+  "executable_sha256": "182a0687515a42cd7b26a081102af8ad321c3f8b19e19e49d013043adecb14e7",
+  "encoder_sha256": "19392cecccd90f4c0aef152b85129f95048548c58b053323f67cf648832a3328",
+  "test_sha256": "e97a70a95e11bdeeb1e4287e603574334ac91d2c1c5c3597f18cd5692c13948f",
+  "database_image": "postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685",
+  "result": "passed",
+  "passed_tests": 1,
+  "milestone_accepted": false,
+  "private_journey_accessed": false,
+  "ready_on_owned_loopback": true,
+  "command": [
+    "target/debug/deps/game_storage-34c5e8afcd171cc3",
+    "recovery_context::whole_context_recovery_is_one_durable_operation_across_records_restart_and_auth_renewal",
+    "--exact",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "owned_database_removed": true,
+  "temporary_credentials_removed": true
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "scope": "Actual exclusive Survival Expert tools lesson and source grants/next-stage proof",
+  "tutorial_dialogue_entry_blocker_verified_fixed": true,
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_claims": false,
+  "authorized_parent_commits": [
+    "2f775f7971a78ad990e7ed80f2cf04c3e89e4c89",
+    "435e27c567c59a80613ada6fa437852d9e0b6a2b"
+  ],
+  "local_integrations": ["4677324", "f2b1870e02c07ebbb9dbb166e946e20cae4b6df8"],
+  "new_source_candidate": {
+    "revision": "m1.source-backed.v3.41555bd46c074d62",
+    "raw_artifact_sha256": "bb99ad96add9669fd49c4162832fbd8e9cb151997a4e4c4682b33b1f1882e2e1",
+    "existing_df3_world_repinned": false,
+    "fresh_normal_public_account_and_character_creation": true,
+    "artifact_preserved_through_onboarding_restart": true
+  },
+  "real_run": {
+    "run_id": "a7af9401bc974a32",
+    "command": "python3 tools/journey-tests/run.py --report .local/evidence/m1-exclusive-dialogue-journey.json",
+    "world_id": "114fd213-345e-4335-aef6-904d1edc4302",
+    "account_id": "e3df9e2a-6143-4e47-90a6-63969effa2bd",
+    "actor_id": "actor.7d70f047d75a456fb036df1f3f342847",
+    "prior_legitimate_state": "Actual net grant, stochastic raw-shrimp catch/Fishing XP and passed onboarding reconnect/logout/login/owned-server-restart/replay checks",
+    "source_choice": {
+      "speaker": "spawn.survival_expert",
+      "choice": "woodcutting_firemaking_intro",
+      "sequence": 35,
+      "operation_id": "d932e8ff-294c-4e69-ab51-10aeefba13b3"
+    },
+    "acknowledged_result": {
+      "observed_tick": 162,
+      "next_sequence": 36,
+      "from_stage": "stage.tutorial.survival_tools",
+      "to_stage": "stage.tutorial.cut_logs",
+      "inventory": [
+        {"slot": 0, "item": "item.fishing_net.small", "quantity": 1},
+        {"slot": 1, "item": "item.shrimps.raw", "quantity": 1},
+        {"slot": 2, "item": "item.axe.bronze", "quantity": 1},
+        {"slot": 3, "item": "item.tinderbox", "quantity": 1}
+      ],
+      "exact_primary_grant_and_net_retention_assertions": "passed",
+      "game_source_view_500_at_tools_lesson": false
+    },
+    "further_source_progress": {
+      "successful_edges_before_later_stop": 24,
+      "actual_cut_logs": true,
+      "actual_fire_lit": true,
+      "actual_shrimp_cooking_resolved": true,
+      "actual_chef_ingredients_dough_and_range_bread": true,
+      "actual_run_setting": true,
+      "actual_quest_guide_and_quest_journal": true
+    },
+    "later_runner_evidence_stop": {
+      "stage": "stage.tutorial.quest_explanation",
+      "last_continuous_revision": 433,
+      "last_continuous_tick": 356,
+      "next_input_sequence": 72,
+      "operation_id": "547d1f97-9171-4d6c-a31d-e86b03a0d10a",
+      "choice": "quest_journal_explanation",
+      "reason": "Successful input snapshot reported an event_history_gap using its old join floor. The old runner conservatively stopped rather than treating that envelope as continuous event evidence.",
+      "follow_up": "Read-only PollWorld from the last actually observed revision, with required no-gap, floor/revision/tick/sequence consistency. The acknowledged input is never replayed and a genuine cursor gap still fails."
+    },
+    "source_service_exit_clean": true,
+    "owned_resources_cleaned": true
+  },
+  "exact_build_identity": {
+    "server_revision_label": "f2b1870e02c07ebbb9dbb166e946e20cae4b6df8",
+    "server_sha256": "00f0d35fced68e524e3cfa68290c9cdb79d50ce90ce05b0da5bfaf980be51250",
+    "simulator_sha256": "f5a9932f6bf39a1e802eafae86f55aba84bb308618ab40aa59aadd7fd311aa54",
+    "descriptor_sha256": "49a4b8a2ce540a8eb5bbc210ff261cdbd3fec5415b719a842252e36094ae6c15",
+    "assets_manifest_sha256": "caeb977c6e583520bd91b0dfd1c41c0f58cfeec2be4fd9514014a5b7386bc057"
+  },
+  "source_outcome_setters_or_gameplay_sql_used": false,
+  "source_geometry_grant_amounts_rng_or_cadence_overridden": false,
+  "sql_entry_task": "m1-tutorial-dialogue-entries closed only after the actual primary lesson/grant/stage evidence",
+  "full_journey": "Separate and unpassed; old 10-edge/df3/recovery evidence remains historical, not combined into a full pass."
+}

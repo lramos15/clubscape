@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "kind": "director_camera_height_presence_code_repair",
+  "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION",
+  "status": "candidate_qualified_independent_review_pending",
+  "candidate": "milestones/evidence/m1-camera-height-presence-repair-candidate.json",
+  "executor": "director",
+  "failure": "milestones/evidence/m1-camera-consumers-director-cpu-result.json",
+  "base_revision": "93979df1319ad6ab503b0292d553f8deb766ec63",
+  "worktree": ".worktrees/m1-camera-consumers-review",
+  "branch": "fix/m1-camera-height-presence",
+  "goal": "Repair only the newly demonstrated loss of camera height availability through the existing terrain rebuild. Preserve source rendering arithmetic and every original failed assertion.",
+  "allowed_paths": [
+    "crates/renderer/src/scene/mod.rs",
+    "crates/renderer/src/scene/terrain.rs",
+    "crates/renderer/tests/camera_source.rs",
+    "crates/renderer/README.md"
+  ],
+  "requirements": [
+    "Record genuine corner writes independently of their numeric value; loaded zero is available, an unobserved zero is not.",
+    "Transfer presence with the current terrain rebuild without changing rendered heights, lighting, geometry, topology, placement, source data or thresholds.",
+    "Exercise actual terrain apply, including invalidation of previously present stale heights and unloaded/far-edge corners; keep source surface and settings checks.",
+    "Retain939 source identity, its failed test executable and all raw failure evidence. New repair commands use a different owned target/output directory.",
+    "Do not change the parked camera worker, root source, Cargo.lock, dependency manifests or any peer worktree.",
+    "Commit and independently review the repair before any main integration. Full live focus/footprint/effect producers and all normal-entry/browser/M1 gates remain separate."
+  ],
+  "code_qualification": {
+    "scope": "New repaired source only, not a retry of unchanged939 or a refund of its consumed one-case admission.",
+    "native_targets": ["camera_source with its original ignored streamed case explicitly included", "existing directly related CPU terrain regression selectors", "strict Clippy for the changed library and camera_source target"],
+    "maximum_seconds_per_command": 600,
+    "cargo_build_jobs": 4,
+    "target": ".local/director-height-repair-target",
+    "output": ".local/director-height-repair-qualification",
+    "source_input_policy": "Reuse only the two already materialized exact public gzip twins and tracked candidate inputs; no further source materialization/export/download.",
+    "tests_must_record_actual_exit_duration_and_retained_failure": true
+  },
+  "forbidden": [
+    "Original failed-qualification target or logs overwritten",
+    "Any gear-pose recomputation, GPU/browser/native-wgpu or RuneLite invocation",
+    "Services/databases/accounts/gameplay/operators or protected checkpoint stat/read/hash",
+    "Source generation, dependency changes/installation, frozen input/threshold edits",
+    "Native focus/effect guesses, source-missing fallbacks or weakened ignored-case assertions",
+    "Peers, nested agents or factories"
+  ],
+  "original_strict_cpu_attempt_consumed": 1,
+  "original_strict_cpu_attempt_remaining": 0,
+  "saved_execution_attempts_remaining": 0,
+  "renderer_full_pose_recomputations_remaining": 0,
+  "main_integration_admitted": false,
+  "milestone_accepted": false
+}

@@ -1,0 +1,12 @@
+[package]
+name = "clubscape-simulation"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+clubscape-game-types.workspace = true
+
+[lints]
+workspace = true

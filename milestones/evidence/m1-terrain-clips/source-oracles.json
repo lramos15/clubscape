@@ -1,0 +1,56 @@
+{
+  "origin": "Original native per-base exports retained by the renderer worker; copied byte-for-byte, not generated from the candidate renderer",
+  "exporter_commit": "aa2cb1974551f2c2ea7a88cb4c2a4aa896d79a90",
+  "files": [
+    {
+      "file": "scenes/tutorial-starting-house.pinned.bin",
+      "bytes": 5381676,
+      "sha256": "9f818846c00a7fe9d00d1e90caa5ec6725bf3f10e8e81c7569efc7906071fd5e"
+    },
+    {
+      "file": "scenes/tutorial-starting-house.pinned.models.bin",
+      "bytes": 7492051,
+      "sha256": "ed59465a450c07e0a9ceee0cdf034d91d884df6e7dfac2996eb308d3e4e4cada"
+    },
+    {
+      "file": "scenes/tutorial-survival-coast.pinned.bin",
+      "bytes": 5378735,
+      "sha256": "24919cdc00086f744af20bbe68d0e2d5ec58a1fda69345ec151d39b40be05c5e"
+    },
+    {
+      "file": "scenes/tutorial-survival-coast.pinned.models.bin",
+      "bytes": 6606130,
+      "sha256": "2e09cecd26d8161200b6b22928341b6734732af485c42c24c40ace6874da3c55"
+    },
+    {
+      "file": "scenes/lumbridge-castle-plaza.pinned.bin",
+      "bytes": 5383648,
+      "sha256": "ac2becdb7b8e311f81c175cad8597ace78ad4857399f08b3729c65edc49c2935"
+    },
+    {
+      "file": "scenes/lumbridge-castle-plaza.pinned.models.bin",
+      "bytes": 9195411,
+      "sha256": "9f31b22060e3cecf710f5c379dd4c574d44463ac68b989a53b43e089a61bfc25"
+    },
+    {
+      "file": "scenes/lumbridge-river-bridge.pinned.bin",
+      "bytes": 5383648,
+      "sha256": "caeef72bcaabe01fcb138a8d1c084161da6beb23194d0bb3a76b41218847cd4f"
+    },
+    {
+      "file": "scenes/lumbridge-river-bridge.pinned.models.bin",
+      "bytes": 9195411,
+      "sha256": "9f31b22060e3cecf710f5c379dd4c574d44463ac68b989a53b43e089a61bfc25"
+    },
+    {
+      "file": "scenes/lumbridge-windmill-route.pinned.bin",
+      "bytes": 5255367,
+      "sha256": "8f5c1e9cd3cff6b689e97df7d231bcad395672521d1d927a3787f2ec8031bc59"
+    },
+    {
+      "file": "scenes/lumbridge-windmill-route.pinned.models.bin",
+      "bytes": 8379035,
+      "sha256": "239568474d6edcd87ee8e38c5e48c110b33163d3386d0d5dbe171d0baff77fde"
+    }
+  ]
+}

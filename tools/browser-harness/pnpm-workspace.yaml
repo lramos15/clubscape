@@ -1,0 +1,4 @@
+storeDir: .runtime/pnpm-store
+
+minimumReleaseAgeExclude:
+  - zod@4.6.5

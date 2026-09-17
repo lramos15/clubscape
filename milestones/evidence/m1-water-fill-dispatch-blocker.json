@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "source_candidates_published_native_dispatch_still_blocked",
+  "worker": "fdda1fb0-1135-4cf8-8cff-3db550e48f54",
+  "worker_read_through_turn": 5,
+  "worktree": ".worktrees/m1-water-fill",
+  "owned_revision": "eaa527a8f3d9d408d6bf1a4b8fdc47269abe0137",
+  "handoff": ".worktrees/m1-water-fill/research/water-fill/handoff.json",
+  "worker_reported_candidates": {
+    "current_original_raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "current_candidate_raw_sha256": "08b3787487a734af8e201e00ca290566aa510c1611346b2b68e505274cff6f67",
+    "legacy_original_raw_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "legacy_candidate_raw_sha256": "2b13ad7accbcde88a04baf71d5eb8ec75d421968726c657cad596c00affd4b3d",
+    "canonical_delta": ["/revision", "/recipes/recipe.water.bucket", "explicit unverified water-motion entry"],
+    "legacy_delta": ["/revision", "/recipes/recipe.water.bucket"],
+    "migration_ready": false,
+    "parent_adopted": false
+  },
+  "worker_reported_evidence": {
+    "content_tests": 104,
+    "driver_tests": 2,
+    "repeatable_output_hashes": 105,
+    "positive_native_water_cases": "0/4 in each profile",
+    "negative_guards": "Five proved; all six negative requests refuse atomically, but the earlier dispatch failure masks the plane guard.",
+    "qualification": "Worker reports only, not fresh parent execution. No conversion, cadence or duplicate-outcome execution is claimed."
+  },
+  "remaining_seam": "UseItem finds the recipe, but check_recipe_target requires a menu-visible Production interaction. Source sink14868 has no operations; item-on-only authorization/reach must be implemented explicitly without adding a fake Fill/Use menu operation or weakening geometry.",
+  "remaining_source_qualification": "One-tick conversion is documented; first/repeat use it as labeled interpretations. Water motion remains unverified, not a proved absent animation.",
+  "reported_source_contact_candidates": [[3205, 3214, 0], [3205, 3217, 0], [3206, 3216, 0]],
+  "next_admission": "Review the exact source evidence and existing recipe-target contract, then bound the necessary shared item-on-only repair. Admit no migration or saved-world continuation until both positive runtime and explicit fenced compatibility gates pass.",
+  "protected_checkpoint": "52f32d29b5dc4f1a",
+  "private_state_access_or_migration": false,
+  "consumed_journey_allowances_reused": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

@@ -1,0 +1,676 @@
+//! Original scene structures (`ez`) as exported by `tools/render-assets` and the exact port of
+//! the original scene traversal that turns them into the ordered triangle stream.
+
+pub mod block;
+pub mod draw;
+pub mod minimap;
+pub mod terrain;
+pub mod tile;
+pub mod visibility;
+
+use std::collections::HashMap;
+
+use crate::chunk::Chunks;
+use crate::error::RenderError;
+
+/// Tile flag bits (`xj`).
+pub mod flag {
+    pub const EXISTS: i32 = 1;
+    pub const DRAW_PRIMARY: i32 = 2;
+    pub const VISIBLE: i32 = 4;
+    pub const DRAW_OBJECTS: i32 = 8;
+    pub const WALL_DEFERRED: i32 = 16;
+    pub const BRIDGE_BELOW: i32 = 32;
+    pub const FORCE_PLANE_0: i32 = 64;
+    pub const ZONE_DYNAMIC: i32 = 128;
+    pub const PAINT: i32 = 256;
+    pub const PAINT_VISIBLE: i32 = 512;
+    pub const TILE_MODEL: i32 = 1024;
+    pub const FLOOR_DECOR: i32 = 2048;
+    pub const ITEM_LAYER: i32 = 4096;
+    pub const ITEM_LAYER_DEFERRED: i32 = 8192;
+    pub const WALL: i32 = 16384;
+    pub const WALL_DECOR: i32 = 32768;
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TilePaint {
+    pub sw: i32,
+    pub se: i32,
+    pub ne: i32,
+    pub nw: i32,
+    pub texture: i32,
+    pub flat: bool,
+    pub rgb: i32,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TileModel {
+    pub shape: i32,
+    pub rotation: i32,
+    pub flat: bool,
+    pub underlay_rgb: i32,
+    pub overlay_rgb: i32,
+    pub xs: Vec<i32>,
+    pub ys: Vec<i32>,
+    pub zs: Vec<i32>,
+    pub face_a: Vec<i32>,
+    pub face_b: Vec<i32>,
+    pub face_c: Vec<i32>,
+    pub color_a: Vec<i32>,
+    pub color_b: Vec<i32>,
+    pub color_c: Vec<i32>,
+    pub textures: Option<Vec<i32>>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Wall {
+    pub model_a: i32,
+    pub model_b: i32,
+    pub orientation_a: i32,
+    pub orientation_b: i32,
+    pub x: i32,
+    pub height: i32,
+    pub z: i32,
+    pub hash: i64,
+    /// `fe.getConfig()`: placement type (`& 31`) and rotation (`>> 6 & 3`); -1 when the export
+    /// did not carry it (fixture scenes without a minimap sidecar).
+    pub config: i32,
+}
+
+/// Object-definition fields the original minimap reads (`om.getMapSceneId/zf/ib/getMapIconId`).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct MapObjectDef {
+    pub map_scene: i32,
+    pub size_x: i32,
+    pub size_y: i32,
+    pub map_icon: i32,
+}
+
+/// Object id carried in an original object tag (bits 20..51).
+#[inline]
+pub fn tag_object_id(hash: i64) -> i32 {
+    ((hash >> 20) & 0xFFFF_FFFF) as i32
+}
+
+/// Whether an original object tag marks the object as non-interactive (bit 19).
+#[inline]
+pub fn tag_non_interactive(hash: i64) -> bool {
+    hash & (1 << 19) != 0
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct WallDecoration {
+    pub model_a: i32,
+    pub model_b: i32,
+    pub orientation: i32,
+    pub orientation2: i32,
+    pub x: i32,
+    pub height: i32,
+    pub z: i32,
+    pub offset_x: i32,
+    pub offset_z: i32,
+    pub offset_x2: i32,
+    pub offset_z2: i32,
+    pub hash: i64,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct FloorDecoration {
+    pub model: i32,
+    pub x: i32,
+    pub height: i32,
+    pub z: i32,
+    pub hash: i64,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct GameObject {
+    pub model: i32,
+    pub orientation: i32,
+    pub x: i32,
+    pub height: i32,
+    pub z: i32,
+    /// Tile span in main-area coordinates (without the extension offset).
+    pub min_x: i32,
+    pub max_x: i32,
+    pub min_y: i32,
+    pub max_y: i32,
+    pub config: i32,
+    /// `fm`: span mask of this tile relative to the object.
+    pub slot_flag: i32,
+    pub dynamic: bool,
+    pub hash: i64,
+}
+
+/// Static scene data straight from the exported original structures.
+#[derive(Clone, Debug)]
+pub struct SceneData {
+    pub name: String,
+    pub base_x: i32,
+    pub base_y: i32,
+    pub width: i32,
+    pub height: i32,
+    pub planes: i32,
+    pub draw_distance: i32,
+    /// `oy`: extension offset of the main 104x104 area inside the extended grid.
+    pub offset: i32,
+    pub min_x: i32,
+    pub max_x: i32,
+    pub min_y: i32,
+    pub max_y: i32,
+    pub main_scene: bool,
+    pub roof_mode: i32,
+    /// `fb`: bits for y in the tile index; `xu`: bits for x+y (plane shift).
+    pub y_bits: i32,
+    pub plane_shift: i32,
+    pub plane_stride: i32,
+    pub x_stride: i32,
+    pub tile_count: usize,
+    pub min_level: i32,
+    pub flags: Vec<i32>,
+    pub link: Vec<i8>,
+    pub object_count: Vec<i8>,
+    pub object_flags: Vec<i8>,
+    heights: Vec<i32>,
+    roofs: Vec<i32>,
+    /// Original tile settings (`vs`): bit 1 blocked, bit 2 bridge, bit 4 roof, bit 8 lowest.
+    settings: Vec<i8>,
+    camera_height_present: Vec<bool>,
+    camera_setting_present: Vec<bool>,
+    pub paints: HashMap<usize, TilePaint>,
+    pub tile_models: HashMap<usize, TileModel>,
+    pub walls: HashMap<usize, Wall>,
+    pub wall_decorations: HashMap<usize, WallDecoration>,
+    pub floor_decorations: HashMap<usize, FloorDecoration>,
+    /// Distinct game objects (a multi-tile object appears once here).
+    pub game_objects: Vec<GameObject>,
+    /// Game object slot (`tile_index * 5 + slot`) to object id.
+    pub slots: HashMap<usize, usize>,
+    /// Dynamic zone object ids keyed by zone (x >> 3, y >> 3) in extended coordinates.
+    pub zone_dynamic: HashMap<(i32, i32), Vec<usize>>,
+    /// Model content hashes referenced by index from the records above.
+    pub model_keys: Vec<String>,
+    /// Baked animated scenery sets (block scenes only; fixture scenes are static exports).
+    pub animated: Vec<block::AnimatedSet>,
+    /// Per-placement animation instances referenced as `-(index) - 2` model references.
+    pub animated_instances: Vec<block::AnimatedInstance>,
+    /// Minimap fields of the object definitions referenced by this scene's placements (block
+    /// scenes with a minimap sidecar; empty otherwise).
+    pub object_defs: HashMap<i32, MapObjectDef>,
+    /// The original minimap icon pass recorded per block sidecar, mapped into this scene:
+    /// `(plane, world x, world y, map element)`; the renderer's own icon list is checked
+    /// against it (`MinimapSurface::icon_check`).
+    pub source_icons: Vec<(i32, i32, i32, i32)>,
+    /// Statistics of the assembly-time terrain pass (`scene::terrain::apply`) when the scene's
+    /// tiles were rebuilt from raw block terrain; `None` when the exported lit tiles are in use.
+    pub terrain_rebuilt: Option<terrain::TerrainStats>,
+}
+
+impl SceneData {
+    /// An empty extended grid (all tiles absent) for block assembly.
+    #[allow(clippy::too_many_arguments)]
+    pub fn empty_grid(
+        name: String,
+        base_x: i32,
+        base_y: i32,
+        grid: i32,
+        planes: i32,
+        offset: i32,
+        main: i32,
+        tile_count: usize,
+    ) -> Self {
+        SceneData {
+            name,
+            base_x,
+            base_y,
+            width: grid,
+            height: grid,
+            planes,
+            draw_distance: 25,
+            offset,
+            min_x: 0,
+            max_x: main,
+            min_y: 0,
+            max_y: main,
+            main_scene: true,
+            roof_mode: 0,
+            y_bits: 8,
+            plane_shift: 16,
+            plane_stride: 65536,
+            x_stride: 256,
+            tile_count,
+            min_level: 0,
+            flags: vec![0; tile_count],
+            link: vec![0; tile_count],
+            object_count: vec![0; tile_count],
+            object_flags: vec![0; tile_count * 5],
+            heights: vec![0; (planes * (grid + 1) * (grid + 1)) as usize],
+            roofs: vec![0; (planes * grid * grid) as usize],
+            settings: vec![0; (planes * grid * grid) as usize],
+            camera_height_present: vec![false; (planes * (grid + 1) * (grid + 1)) as usize],
+            camera_setting_present: vec![false; (planes * grid * grid) as usize],
+            paints: HashMap::new(),
+            tile_models: HashMap::new(),
+            walls: HashMap::new(),
+            wall_decorations: HashMap::new(),
+            floor_decorations: HashMap::new(),
+            game_objects: Vec::new(),
+            slots: HashMap::new(),
+            zone_dynamic: HashMap::new(),
+            model_keys: Vec::new(),
+            animated: Vec::new(),
+            animated_instances: Vec::new(),
+            object_defs: HashMap::new(),
+            source_icons: Vec::new(),
+            terrain_rebuilt: None,
+        }
+    }
+
+    #[inline]
+    pub fn set_height(&mut self, plane: i32, x: i32, y: i32, value: i32) {
+        self.set_height_with_presence(plane, x, y, value, true);
+    }
+
+    #[inline]
+    fn set_height_with_presence(&mut self, plane: i32, x: i32, y: i32, value: i32, present: bool) {
+        let w = (self.width + 1) as usize;
+        let h = (self.height + 1) as usize;
+        let index = plane as usize * w * h + x as usize * h + y as usize;
+        self.heights[index] = value;
+        self.camera_height_present[index] = present;
+    }
+
+    #[inline]
+    pub fn set_roof(&mut self, plane: i32, x: i32, y: i32, value: i32) {
+        let w = self.width as usize;
+        let h = self.height as usize;
+        self.roofs[plane as usize * w * h + x as usize * h + y as usize] = value;
+    }
+
+    /// `ez.vs[plane][x][y]` tile settings in extended coordinates (0 when not exported).
+    #[inline]
+    pub fn setting(&self, plane: i32, x: i32, y: i32) -> i32 {
+        let w = self.width as usize;
+        let h = self.height as usize;
+        self.settings
+            .get(plane as usize * w * h + x as usize * h + y as usize)
+            .copied()
+            .unwrap_or(0) as i32
+    }
+
+    #[inline]
+    pub fn set_setting(&mut self, plane: i32, x: i32, y: i32, value: i8) {
+        let w = self.width as usize;
+        let h = self.height as usize;
+        let index = plane as usize * w * h + x as usize * h + y as usize;
+        self.settings[index] = value;
+        self.camera_setting_present[index] = true;
+    }
+
+    /// Checked original inputs: an empty assembly slot is not an observed zero.
+    pub fn camera_height(&self, plane: i32, x: i32, y: i32) -> Option<i32> {
+        if !(0..self.planes).contains(&plane)
+            || !(0..=self.width).contains(&x)
+            || !(0..=self.height).contains(&y)
+        {
+            return None;
+        }
+        let index = ((plane * (self.width + 1) + x) * (self.height + 1) + y) as usize;
+        self.camera_height_present
+            .get(index)
+            .copied()
+            .filter(|v| *v)
+            .and_then(|_| self.heights.get(index).copied())
+    }
+
+    pub fn camera_setting(&self, plane: i32, x: i32, y: i32) -> Option<u8> {
+        if !(0..self.planes).contains(&plane)
+            || !(0..self.width).contains(&x)
+            || !(0..self.height).contains(&y)
+        {
+            return None;
+        }
+        let index = ((plane * self.width + x) * self.height + y) as usize;
+        self.camera_setting_present
+            .get(index)
+            .copied()
+            .filter(|v| *v)
+            .and_then(|_| self.settings.get(index).map(|v| *v as u8))
+    }
+
+    /// `ez.ff`: whether the tile carries the roof setting bit.
+    #[inline]
+    pub fn is_roof_tile(&self, plane: i32, x: i32, y: i32) -> bool {
+        self.setting(plane, x, y) & 4 != 0
+    }
+
+    /// Resolves a model reference for the current animation clock: static indices pass
+    /// through; animated instances select the source frame (or the plain model once a one-shot
+    /// sequence finished).
+    #[inline]
+    pub fn resolve_model(&self, reference: i32, cycles: i64) -> i32 {
+        if reference > -2 {
+            return reference;
+        }
+        let Some(instance) = self.animated_instances.get((-(reference) - 2) as usize) else {
+            return -1;
+        };
+        let set = &self.animated[instance.set];
+        match set.frame_at(instance.start_frame, instance.start_cycle, cycles) {
+            Some(frame) => set.models.get(frame).copied().unwrap_or(-1),
+            None => instance.plain,
+        }
+    }
+
+    pub fn from_chunks(data: &[u8]) -> Result<Self, RenderError> {
+        let chunks = Chunks::parse(data)?;
+        let h = chunks.ints("SCHD")?;
+        if h.len() < 19 {
+            return Err(RenderError::Format("scene header".into()));
+        }
+        let width = h[2];
+        let height = h[3];
+        let planes = h[4];
+        let tile_count = h[17] as usize;
+        let flags = chunks.ints("FLAG")?;
+        if flags.len() != tile_count {
+            return Err(RenderError::InvalidAsset("scene flag array size".into()));
+        }
+        let heights = chunks.ints("HGHT")?;
+        if heights.len() != (planes * (width + 1) * (height + 1)) as usize {
+            return Err(RenderError::InvalidAsset("scene heights size".into()));
+        }
+        let roofs = chunks.ints("ROOF")?;
+        // `ez.vs` drives roof removal and the stock top-plane rule; a scene without it would
+        // silently draw every roof, so an export predating TSET is rejected, not defaulted.
+        let settings = chunks.bytes_opt("TSET")?.ok_or_else(|| {
+            RenderError::InvalidAsset(
+                "scene export lacks TSET tile settings (re-export with the current scenes profile)"
+                    .into(),
+            )
+        })?;
+        if settings.len() != roofs.len() {
+            return Err(RenderError::InvalidAsset("scene tile settings size".into()));
+        }
+        let mut scene = SceneData {
+            name: chunks.text("NAME")?,
+            base_x: h[0],
+            base_y: h[1],
+            width,
+            height,
+            planes,
+            draw_distance: h[5],
+            offset: h[6],
+            min_x: h[7],
+            max_x: h[8],
+            min_y: h[9],
+            max_y: h[10],
+            main_scene: h[11] != 0,
+            roof_mode: h[12],
+            y_bits: h[13],
+            plane_shift: h[14],
+            plane_stride: h[15],
+            x_stride: h[16],
+            tile_count,
+            min_level: h[18],
+            flags,
+            link: chunks.bytes("LINK")?,
+            object_count: chunks.bytes("OBJC")?,
+            object_flags: chunks.bytes("OBJF")?,
+            camera_height_present: vec![true; heights.len()],
+            camera_setting_present: vec![true; settings.len()],
+            heights,
+            roofs,
+            settings,
+            paints: HashMap::new(),
+            tile_models: HashMap::new(),
+            walls: HashMap::new(),
+            wall_decorations: HashMap::new(),
+            floor_decorations: HashMap::new(),
+            game_objects: Vec::new(),
+            slots: HashMap::new(),
+            zone_dynamic: HashMap::new(),
+            model_keys: chunks
+                .text("MODL")?
+                .lines()
+                .map(|s| s.to_string())
+                .collect(),
+            animated: Vec::new(),
+            animated_instances: Vec::new(),
+            object_defs: HashMap::new(),
+            source_icons: Vec::new(),
+            terrain_rebuilt: None,
+        };
+        if scene.link.len() != tile_count
+            || scene.object_count.len() != tile_count
+            || scene.object_flags.len() != tile_count * 5
+        {
+            return Err(RenderError::InvalidAsset(
+                "scene per-tile arrays size".into(),
+            ));
+        }
+        let paints = chunks.ints("PANT")?;
+        for r in paints.as_chunks::<8>().0 {
+            scene.paints.insert(
+                r[0] as usize,
+                TilePaint {
+                    sw: r[1],
+                    se: r[2],
+                    ne: r[3],
+                    nw: r[4],
+                    texture: r[5],
+                    flat: r[6] != 0,
+                    rgb: r[7],
+                },
+            );
+        }
+        let tm = chunks.ints("TMOD")?;
+        let mut cursor = 0usize;
+        while cursor < tm.len() {
+            if cursor + 9 > tm.len() {
+                return Err(RenderError::Format("tile model header truncated".into()));
+            }
+            let head: Vec<i32> = tm[cursor..cursor + 9].to_vec();
+            let vcount = head[6] as usize;
+            let fcount = head[7] as usize;
+            let has_tex = head[8] != 0;
+            cursor += 9;
+            let mut take = |n: usize| -> Result<Vec<i32>, RenderError> {
+                let end = cursor + n;
+                if end > tm.len() {
+                    return Err(RenderError::Format("tile model truncated".into()));
+                }
+                let v = tm[cursor..end].to_vec();
+                cursor = end;
+                Ok(v)
+            };
+            let model = TileModel {
+                shape: head[1],
+                rotation: head[2],
+                flat: head[3] != 0,
+                underlay_rgb: head[4],
+                overlay_rgb: head[5],
+                xs: take(vcount)?,
+                ys: take(vcount)?,
+                zs: take(vcount)?,
+                face_a: take(fcount)?,
+                face_b: take(fcount)?,
+                face_c: take(fcount)?,
+                color_a: take(fcount)?,
+                color_b: take(fcount)?,
+                color_c: take(fcount)?,
+                textures: if has_tex { Some(take(fcount)?) } else { None },
+            };
+            for arr in [&model.face_a, &model.face_b, &model.face_c] {
+                if arr.iter().any(|&i| i < 0 || i as usize >= vcount) {
+                    return Err(RenderError::InvalidAsset("tile model face index".into()));
+                }
+            }
+            scene.tile_models.insert(head[0] as usize, model);
+        }
+        for r in chunks.ints("WALL")?.as_chunks::<10>().0 {
+            scene.walls.insert(
+                r[0] as usize,
+                Wall {
+                    model_a: r[1],
+                    model_b: r[2],
+                    orientation_a: r[3],
+                    orientation_b: r[4],
+                    x: r[5],
+                    height: r[6],
+                    z: r[7],
+                    hash: join(r[8], r[9]),
+                    config: -1,
+                },
+            );
+        }
+        for r in chunks.ints("WDEC")?.as_chunks::<14>().0 {
+            scene.wall_decorations.insert(
+                r[0] as usize,
+                WallDecoration {
+                    model_a: r[1],
+                    model_b: r[2],
+                    orientation: r[3],
+                    orientation2: r[4],
+                    x: r[5],
+                    height: r[6],
+                    z: r[7],
+                    offset_x: r[8],
+                    offset_z: r[9],
+                    offset_x2: r[10],
+                    offset_z2: r[11],
+                    hash: join(r[12], r[13]),
+                },
+            );
+        }
+        for r in chunks.ints("FDEC")?.as_chunks::<7>().0 {
+            scene.floor_decorations.insert(
+                r[0] as usize,
+                FloorDecoration {
+                    model: r[1],
+                    x: r[2],
+                    height: r[3],
+                    z: r[4],
+                    hash: join(r[5], r[6]),
+                },
+            );
+        }
+        // The same original object instance is referenced from every tile it spans; group the
+        // per-slot records back into one object so draw-state (frame marker, distance) is shared.
+        let mut identity: HashMap<(i64, i32, i32, i32, i32, i32), usize> = HashMap::new();
+        let mut intern = |scene: &mut SceneData, object: GameObject| -> usize {
+            let key = (
+                object.hash,
+                object.x,
+                object.z,
+                object.height,
+                object.orientation,
+                object.model,
+            );
+            if let Some(&id) = identity.get(&key) {
+                return id;
+            }
+            let id = scene.game_objects.len();
+            scene.game_objects.push(object);
+            identity.insert(key, id);
+            id
+        };
+        for r in chunks.ints("GOBJ")?.as_chunks::<16>().0 {
+            let object = GameObject {
+                model: r[2],
+                orientation: r[3],
+                x: r[4],
+                height: r[5],
+                z: r[6],
+                min_x: r[7],
+                max_x: r[8],
+                min_y: r[9],
+                max_y: r[10],
+                config: r[11],
+                slot_flag: r[12],
+                dynamic: r[13] != 0,
+                hash: join(r[14], r[15]),
+            };
+            let id = intern(&mut scene, object);
+            scene.slots.insert(r[0] as usize * 5 + r[1] as usize, id);
+        }
+        for r in chunks.ints("ZDYN")?.as_chunks::<14>().0 {
+            let object = GameObject {
+                model: r[2],
+                orientation: r[3],
+                x: r[4],
+                height: r[5],
+                z: r[6],
+                min_x: r[7],
+                max_x: r[8],
+                min_y: r[9],
+                max_y: r[10],
+                config: r[11],
+                slot_flag: 0,
+                dynamic: true,
+                hash: join(r[12], r[13]),
+            };
+            let id = intern(&mut scene, object);
+            scene.zone_dynamic.entry((r[0], r[1])).or_default().push(id);
+        }
+        let model_count = scene.model_keys.len() as i32;
+        let check = |m: i32| -> Result<(), RenderError> {
+            if m < -1 || m >= model_count {
+                return Err(RenderError::InvalidAsset(format!(
+                    "scene model reference {m} out of range"
+                )));
+            }
+            Ok(())
+        };
+        for w in scene.walls.values() {
+            check(w.model_a)?;
+            check(w.model_b)?;
+        }
+        for d in scene.wall_decorations.values() {
+            check(d.model_a)?;
+            check(d.model_b)?;
+        }
+        for f in scene.floor_decorations.values() {
+            check(f.model)?;
+        }
+        for g in &scene.game_objects {
+            check(g.model)?;
+        }
+        Ok(scene)
+    }
+
+    /// `ez.vy(plane, x, y)` in extended coordinates.
+    #[inline]
+    pub fn tile_index(&self, plane: i32, x: i32, y: i32) -> usize {
+        ((plane << self.plane_shift) | (x << self.y_bits) | y) as usize
+    }
+
+    #[inline]
+    pub fn height(&self, plane: i32, x: i32, y: i32) -> i32 {
+        let w = (self.width + 1) as usize;
+        let h = (self.height + 1) as usize;
+        self.heights[plane as usize * w * h + x as usize * h + y as usize]
+    }
+
+    #[inline]
+    pub fn roof(&self, plane: i32, x: i32, y: i32) -> i32 {
+        let w = self.width as usize;
+        let h = self.height as usize;
+        self.roofs[plane as usize * w * h + x as usize * h + y as usize]
+    }
+
+    /// Decodes a tile index into (plane, x, y) in extended coordinates.
+    #[inline]
+    pub fn decode_index(&self, index: usize) -> (i32, i32, i32) {
+        let i = index as i32;
+        let plane = (i >> self.plane_shift) & 3;
+        let x = (i >> self.y_bits) & ((1 << (self.plane_shift - self.y_bits)) - 1);
+        let y = i & ((1 << self.y_bits) - 1);
+        (plane, x, y)
+    }
+}
+
+fn join(lo: i32, hi: i32) -> i64 {
+    ((hi as i64) << 32) | (lo as u32 as i64)
+}

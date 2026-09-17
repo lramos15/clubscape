@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "kind": "reference_pack",
+  "authority": "owner",
+  "decision": "approved",
+  "recorded_at": "2026-09-15T00:38:01Z",
+  "owner_record": "Approve this exact reference pack and its stated implementation criteria",
+  "reference_pack": "research/reference-pack/v1/manifest.json",
+  "reference_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "version": "1.3.0",
+  "approved_scope": [
+    "Qualified original/public source evidence and complete case/family/state factoring",
+    "Seven source-framed web-only compositions and minimal ClubScape branding direction",
+    "Original penguin NPC2063/model21547 at source75/128 scale, native idle/walk and explicit modular equipment-fit criteria",
+    "Stock Resizable-Classic layout,1920x1080,DPR1,UIscale1,100percent zoom",
+    "Supported1024x768 through2560x1440 resize range and all stated numeric comparison tolerances",
+    "Previously approved audio triggers remain approved adaptations, not source observations"
+  ],
+  "does_not_approve": [
+    "Completed game or any unimplemented control/mechanic",
+    "Final visual/audio presentation acceptance",
+    "Unexecuted Chrome/Edge or owner Mac performance evidence",
+    "Later milestones or a release"
+  ]
+}

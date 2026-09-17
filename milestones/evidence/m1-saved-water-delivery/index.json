@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "preparation.json",
+      "source": ".local/saved-water-delivery-01/preparation.json",
+      "bytes": 4631,
+      "sha256": "2c592f42a68ada3c4102837654283b0d373335a52ec5703956bad3a97dc43e54"
+    },
+    {
+      "path": "delivery-files.json",
+      "source": ".local/saved-water-delivery-01/delivery-files.json",
+      "bytes": 6131,
+      "sha256": "b4eeee21e9bf45db2a104ca1110305155069632bb371c8a563d9cb7ee7b75cb8"
+    },
+    {
+      "path": "inspect-artifact.json",
+      "source": ".local/saved-water-delivery-01/inspect-artifact.json",
+      "bytes": 212843,
+      "sha256": "a0d6526444420d0e3a370ec071362d4261dad7768d99008887f67e18bb7084c1"
+    },
+    {
+      "path": "inspect-artifact.stderr.log",
+      "source": ".local/saved-water-delivery-01/inspect-artifact.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "raw_evidence_preserved": true,
+  "protected_state_included": false,
+  "milestone_accepted": false
+}

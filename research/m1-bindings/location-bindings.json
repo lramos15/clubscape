@@ -1,0 +1,365 @@
+{
+  "location.death.office": {
+    "classification": "inference",
+    "purpose": "Source-area navigation anchor, not a certified player spawn, NPC observation or camera.",
+    "region": "region.osrs.12633",
+    "source_binding": "spawn.death",
+    "tile": {
+      "plane": 0,
+      "x": 3180,
+      "y": 5727
+    }
+  },
+  "location.death.player_arrival": {
+    "classification": "inference",
+    "purpose": "Walkable player arrival, distinct from nonwalking Death NPC anchor; source capture remains required.",
+    "region": "region.osrs.12633",
+    "tile": {
+      "plane": 0,
+      "x": 3174,
+      "y": 5726
+    }
+  },
+  "location.lumbridge.bank": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12850",
+    "source_candidate": [
+      3208,
+      3220,
+      2
+    ],
+    "tile": {
+      "plane": 2,
+      "x": 3208,
+      "y": 3220
+    }
+  },
+  "location.lumbridge.castle_arrival": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12850",
+    "source_candidate": [
+      3222,
+      3218,
+      0
+    ],
+    "tile": {
+      "plane": 0,
+      "x": 3222,
+      "y": 3218
+    }
+  },
+  "location.lumbridge.cellar": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12950",
+    "source_candidate": [
+      3210,
+      9616,
+      0
+    ],
+    "tile": {
+      "plane": 0,
+      "x": 3210,
+      "y": 9616
+    }
+  },
+  "location.lumbridge.death_entrance": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12849",
+    "source_candidate": [
+      3237,
+      3194,
+      0
+    ],
+    "tile": {
+      "plane": 0,
+      "x": 3237,
+      "y": 3194
+    }
+  },
+  "location.lumbridge.east_bridge_goblins": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12850",
+    "source_candidate": [
+      3246,
+      3235,
+      0
+    ],
+    "tile": {
+      "plane": 0,
+      "x": 3246,
+      "y": 3235
+    }
+  },
+  "location.lumbridge.east_cows": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12851",
+    "source_candidate": [
+      3253,
+      3275,
+      0
+    ],
+    "tile": {
+      "plane": 0,
+      "x": 3253,
+      "y": 3275
+    }
+  },
+  "location.lumbridge.east_swamp_mine": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12849",
+    "source_candidate": [
+      3228,
+      3146,
+      0
+    ],
+    "tile": {
+      "plane": 0,
+      "x": 3228,
+      "y": 3146
+    }
+  },
+  "location.lumbridge.general_store": {
+    "classification": "inference",
+    "purpose": "Source-area navigation anchor, not a certified player spawn, NPC observation or camera.",
+    "region": "region.osrs.12850",
+    "source_binding": "spawn.shopkeeper",
+    "tile": {
+      "plane": 0,
+      "x": 3211,
+      "y": 3247
+    }
+  },
+  "location.lumbridge.jon_arrival": {
+    "classification": "inference",
+    "purpose": "Source-area navigation anchor, not a certified player spawn, NPC observation or camera.",
+    "region": "region.osrs.12850",
+    "source_binding": "spawn.adventurer_jon",
+    "tile": {
+      "plane": 0,
+      "x": 3232,
+      "y": 3234
+    }
+  },
+  "location.lumbridge.kitchen": {
+    "classification": "inference",
+    "purpose": "Source-area navigation anchor, not a certified player spawn, NPC observation or camera.",
+    "region": "region.osrs.12850",
+    "source_binding": "spawn.cook",
+    "tile": {
+      "plane": 0,
+      "x": 3209,
+      "y": 3213
+    }
+  },
+  "location.lumbridge.mill_ground": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12595",
+    "source_candidate": [
+      3165,
+      3307,
+      0
+    ],
+    "tile": {
+      "plane": 0,
+      "x": 3165,
+      "y": 3307
+    }
+  },
+  "location.lumbridge.mill_middle": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12595",
+    "source_candidate": [
+      3165,
+      3307,
+      1
+    ],
+    "tile": {
+      "plane": 1,
+      "x": 3165,
+      "y": 3307
+    }
+  },
+  "location.lumbridge.mill_top": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12595",
+    "source_candidate": [
+      3165,
+      3307,
+      2
+    ],
+    "tile": {
+      "plane": 2,
+      "x": 3165,
+      "y": 3307
+    }
+  },
+  "location.lumbridge.north_cows": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12595",
+    "source_candidate": [
+      3171,
+      3317,
+      0
+    ],
+    "tile": {
+      "plane": 0,
+      "x": 3171,
+      "y": 3317
+    }
+  },
+  "location.lumbridge.west_coop": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12595",
+    "source_candidate": [
+      3172,
+      3300,
+      0
+    ],
+    "tile": {
+      "plane": 0,
+      "x": 3172,
+      "y": 3300
+    }
+  },
+  "location.lumbridge.wheat": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12595",
+    "source_candidate": [
+      3160,
+      3296,
+      0
+    ],
+    "tile": {
+      "plane": 0,
+      "x": 3160,
+      "y": 3296
+    }
+  },
+  "location.tutorial.account_room": {
+    "classification": "inference",
+    "purpose": "Source-area navigation anchor, not a certified player spawn, NPC observation or camera.",
+    "region": "region.osrs.12336",
+    "source_binding": "spawn.account_guide",
+    "tile": {
+      "plane": 0,
+      "x": 3128,
+      "y": 3124
+    }
+  },
+  "location.tutorial.bank": {
+    "classification": "inference",
+    "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",
+    "region": "region.osrs.12336",
+    "source_candidate": [
+      3119,
+      3123,
+      0
+    ],
+    "tile": {
+      "plane": 0,
+      "x": 3119,
+      "y": 3123
+    }
+  },
+  "location.tutorial.chapel": {
+    "classification": "inference",
+    "purpose": "Source-area navigation anchor, not a certified player spawn, NPC observation or camera.",
+    "region": "region.osrs.12336",
+    "source_binding": "spawn.brother_brace",
+    "tile": {
+      "plane": 0,
+      "x": 3125,
+      "y": 3106
+    }
+  },
+  "location.tutorial.kitchen": {
+    "classification": "inference",
+    "purpose": "Source-area navigation anchor, not a certified player spawn, NPC observation or camera.",
+    "region": "region.osrs.12336",
+    "source_binding": "spawn.master_chef",
+    "tile": {
+      "plane": 0,
+      "x": 3075,
+      "y": 3085
+    }
+  },
+  "location.tutorial.magic_house": {
+    "classification": "inference",
+    "purpose": "Source-area navigation anchor, not a certified player spawn, NPC observation or camera.",
+    "region": "region.osrs.12592",
+    "source_binding": "spawn.magic_instructor",
+    "tile": {
+      "plane": 0,
+      "x": 3141,
+      "y": 3087
+    }
+  },
+  "location.tutorial.mine": {
+    "classification": "inference",
+    "purpose": "Source-area navigation anchor, not a certified player spawn, NPC observation or camera.",
+    "region": "region.osrs.12436",
+    "source_binding": "spawn.mining_instructor",
+    "tile": {
+      "plane": 0,
+      "x": 3081,
+      "y": 9504
+    }
+  },
+  "location.tutorial.quest_house": {
+    "classification": "inference",
+    "purpose": "Source-area navigation anchor, not a certified player spawn, NPC observation or camera.",
+    "region": "region.osrs.12336",
+    "source_binding": "spawn.quest_guide",
+    "tile": {
+      "plane": 0,
+      "x": 3086,
+      "y": 3122
+    }
+  },
+  "location.tutorial.rat_cave": {
+    "classification": "inference",
+    "purpose": "Source-area navigation anchor, not a certified player spawn, NPC observation or camera.",
+    "region": "region.osrs.12436",
+    "source_binding": "spawn.combat_instructor",
+    "tile": {
+      "plane": 0,
+      "x": 3105,
+      "y": 9508
+    }
+  },
+  "location.tutorial.start_house": {
+    "classification": "inference",
+    "purpose": "Source-area navigation anchor, not a certified player spawn, NPC observation or camera.",
+    "region": "region.osrs.12336",
+    "source_binding": "spawn.gielinor_guide",
+    "tile": {
+      "plane": 0,
+      "x": 3094,
+      "y": 3107
+    }
+  },
+  "location.tutorial.survival": {
+    "classification": "inference",
+    "purpose": "Source-area navigation anchor, not a certified player spawn, NPC observation or camera.",
+    "region": "region.osrs.12336",
+    "source_binding": "spawn.survival_expert",
+    "tile": {
+      "plane": 0,
+      "x": 3103,
+      "y": 3095
+    }
+  }
+}

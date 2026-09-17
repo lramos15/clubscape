@@ -1,0 +1,39 @@
+name: M1 infrastructure
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m1-infrastructure-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  account-foundations:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Install pinned workspace toolchain
+        run: rustup toolchain install 1.98.1 --profile minimal --component rustfmt,clippy --target wasm32-unknown-unknown
+      - name: Format and lint
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --quiet --workspace --all-targets --locked -- -D warnings
+      - name: Unit and checkpoint regression checks
+        run: |
+          cargo test --quiet --workspace --locked
+          python3 -m unittest discover -s tests/workflow -v
+          python3 tools/milestone.py validate
+          python3 tools/reference_inputs.py verify
+      - name: Shared protocol WASM compatibility
+        run: cargo check --quiet -p clubscape-protocol --target wasm32-unknown-unknown --locked
+      - name: Real isolated PostgreSQL and HTTP account checks
+        run: python3 tools/dev.py integration
+      - name: Report unpassed milestone gates separately
+        run: python3 tools/milestone.py status

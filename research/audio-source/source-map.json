@@ -1,0 +1,3768 @@
+{
+  "actions": [
+    {
+      "identified_sound_ids": [
+        3220
+      ],
+      "journey_rule_id": "rule.mining.copper",
+      "note": "Source frame event; not a success/XP-only sound.",
+      "source_frame_events": [
+        {
+          "frame": 11,
+          "id": 3220,
+          "location": 1,
+          "loops": 1,
+          "nominal_frame_start_ms": 1000,
+          "retain": 0,
+          "sequence_id": 625,
+          "source_frame_start_cycle_sum": 50,
+          "wall_clock_enqueue_offset_verified": false,
+          "weight": 100
+        }
+      ],
+      "source_sequence_ids": [
+        625
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        3220
+      ],
+      "journey_rule_id": "rule.mining.tin",
+      "note": "Same original bronze-pickaxe frame event.",
+      "source_frame_events": [
+        {
+          "frame": 11,
+          "id": 3220,
+          "location": 1,
+          "loops": 1,
+          "nominal_frame_start_ms": 1000,
+          "retain": 0,
+          "sequence_id": 625,
+          "source_frame_start_cycle_sum": 50,
+          "wall_clock_enqueue_offset_verified": false,
+          "weight": 100
+        }
+      ],
+      "source_sequence_ids": [
+        625
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        2735,
+        2734
+      ],
+      "journey_rule_id": "rule.woodcutting.normal",
+      "note": "Chop2735 is a source frame event. Falling2734 is a named source input; its depletion timing is not observed.",
+      "source_frame_events": [
+        {
+          "frame": 3,
+          "id": 2735,
+          "location": 1,
+          "loops": 1,
+          "nominal_frame_start_ms": 360,
+          "retain": 0,
+          "sequence_id": 879,
+          "source_frame_start_cycle_sum": 18,
+          "wall_clock_enqueue_offset_verified": false,
+          "weight": 100
+        }
+      ],
+      "source_sequence_ids": [
+        879
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        2603
+      ],
+      "journey_rule_id": "rule.fishing.shrimps",
+      "note": "Actual net-fishing frame4 sound. Do not play a replacement splash on every catch.",
+      "source_frame_events": [
+        {
+          "frame": 4,
+          "id": 2603,
+          "location": 1,
+          "loops": 1,
+          "nominal_frame_start_ms": 320,
+          "retain": 0,
+          "sequence_id": 621,
+          "source_frame_start_cycle_sum": 16,
+          "wall_clock_enqueue_offset_verified": false,
+          "weight": 100
+        }
+      ],
+      "source_sequence_ids": [
+        621
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        2597,
+        2596
+      ],
+      "journey_rule_id": "rule.firemaking.normal",
+      "note": "Tinder2597 occurs at source frames8/10. Fire2596 is named but ignition scheduling is not observed.",
+      "source_frame_events": [
+        {
+          "frame": 8,
+          "id": 2597,
+          "location": 1,
+          "loops": 1,
+          "nominal_frame_start_ms": 900,
+          "retain": 0,
+          "sequence_id": 733,
+          "source_frame_start_cycle_sum": 45,
+          "wall_clock_enqueue_offset_verified": false,
+          "weight": 100
+        },
+        {
+          "frame": 10,
+          "id": 2597,
+          "location": 1,
+          "loops": 1,
+          "nominal_frame_start_ms": 1400,
+          "retain": 0,
+          "sequence_id": 733,
+          "source_frame_start_cycle_sum": 70,
+          "wall_clock_enqueue_offset_verified": false,
+          "weight": 100
+        }
+      ],
+      "source_sequence_ids": [
+        733
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        2577
+      ],
+      "journey_rule_id": "rule.cooking.shrimps",
+      "note": "Named cooking sound; no embedded sound in the selected source cooking sequence.",
+      "source_frame_events": [],
+      "source_sequence_ids": [
+        897
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        2577
+      ],
+      "journey_rule_id": "rule.cooking.bread",
+      "note": "Named cooking sound; success/burn timing needs observation.",
+      "source_frame_events": [],
+      "source_sequence_ids": [
+        896
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [],
+      "journey_rule_id": "rule.cooking.dough",
+      "note": "No verified source sound; do not invent one.",
+      "source_frame_events": [],
+      "source_sequence_ids": [],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [],
+      "journey_rule_id": "rule.smelting.bronze",
+      "note": "No verified current sound binding. Candidate2725 is prepared separately, based only on an independent server implementation using a different animation.",
+      "source_frame_events": [],
+      "source_sequence_ids": [
+        899
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        3790,
+        3791
+      ],
+      "journey_rule_id": "rule.smithing.bronze_dagger",
+      "note": "Four actual alternating source frame events:5,7,9,11.",
+      "source_frame_events": [
+        {
+          "frame": 5,
+          "id": 3790,
+          "location": 1,
+          "loops": 1,
+          "nominal_frame_start_ms": 400,
+          "retain": 0,
+          "sequence_id": 898,
+          "source_frame_start_cycle_sum": 20,
+          "wall_clock_enqueue_offset_verified": false,
+          "weight": 100
+        },
+        {
+          "frame": 7,
+          "id": 3791,
+          "location": 1,
+          "loops": 1,
+          "nominal_frame_start_ms": 820,
+          "retain": 0,
+          "sequence_id": 898,
+          "source_frame_start_cycle_sum": 41,
+          "wall_clock_enqueue_offset_verified": false,
+          "weight": 100
+        },
+        {
+          "frame": 9,
+          "id": 3790,
+          "location": 1,
+          "loops": 1,
+          "nominal_frame_start_ms": 1240,
+          "retain": 0,
+          "sequence_id": 898,
+          "source_frame_start_cycle_sum": 62,
+          "wall_clock_enqueue_offset_verified": false,
+          "weight": 100
+        },
+        {
+          "frame": 11,
+          "id": 3791,
+          "location": 1,
+          "loops": 1,
+          "nominal_frame_start_ms": 1660,
+          "retain": 0,
+          "sequence_id": 898,
+          "source_frame_start_cycle_sum": 83,
+          "wall_clock_enqueue_offset_verified": false,
+          "weight": 100
+        }
+      ],
+      "source_sequence_ids": [
+        898
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        2498
+      ],
+      "journey_rule_id": "rule.combat.melee",
+      "note": "Named attack-hit input only; weapon-specific launch/hit assignment is not observed. Independently named unarmed2564/2565/2566 inputs remain candidates, not sword replacements.",
+      "source_frame_events": [],
+      "source_sequence_ids": [
+        386,
+        390,
+        422,
+        423
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [],
+      "journey_rule_id": "rule.combat.ranged",
+      "note": "No verified bow-specific sound binding in the selected source sequence; do not substitute a melee sound.",
+      "source_frame_events": [],
+      "source_sequence_ids": [
+        426
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        220,
+        221,
+        227
+      ],
+      "journey_rule_id": "rule.magic.wind_strike",
+      "note": "Wind Strike cast/hit names from pinned independent symbols; source spot90/91/92 -> sequence658/659/660. Launch, impact and splash selection/offsets still need original-session observation.",
+      "source_frame_events": [],
+      "source_sequence_ids": [
+        711,
+        658,
+        659,
+        660
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        193,
+        194,
+        195,
+        196,
+        200
+      ],
+      "journey_rule_id": "rule.magic.home_teleport",
+      "note": "Original named teleport components; precise channel/sequence/queue offsets not observed.",
+      "source_frame_events": [],
+      "source_sequence_ids": [],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        2739
+      ],
+      "journey_rule_id": "rule.inventory.drop",
+      "note": "Named source input; no generic click replacement.",
+      "source_frame_events": [],
+      "source_sequence_ids": [],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        2238
+      ],
+      "journey_rule_id": "rule.equipment.equip",
+      "note": "Independent default-equipment symbol; exact item-specific selection unverified.",
+      "source_frame_events": [],
+      "source_sequence_ids": [],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        2738
+      ],
+      "journey_rule_id": "rule.prayer.bones",
+      "note": "Named original bones-bury sound.",
+      "source_frame_events": [],
+      "source_sequence_ids": [
+        827
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        2690,
+        2663,
+        2672
+      ],
+      "journey_rule_id": "rule.prayer.thick_skin",
+      "note": "Named activation/deactivation/depletion inputs; not an altar or prayer-level-up replacement.",
+      "source_frame_events": [],
+      "source_sequence_ids": [],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [],
+      "journey_rule_id": "rule.bank.deposit",
+      "note": "No blanket banking sound assignment verified.",
+      "source_frame_events": [],
+      "source_sequence_ids": [],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [],
+      "journey_rule_id": "rule.bank.withdraw",
+      "note": "No blanket banking sound assignment verified.",
+      "source_frame_events": [],
+      "source_sequence_ids": [],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [],
+      "journey_rule_id": "rule.shop.lumbridge",
+      "note": "No blanket shop sound assignment verified.",
+      "source_frame_events": [],
+      "source_sequence_ids": [],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        2393
+      ],
+      "journey_rule_id": "rule.food.healing",
+      "note": "Current sound-enabled sequence12526 is byte-semantically the same motion as829 plus frame1 cue2393 (loops1/location5/weight100). Sequence829 itself remains silent. Do not add a duplicate game-trigger cue when12526 already emits it; ordinary-food server choice of829 versus12526 is not present in client metadata.",
+      "source_frame_events": [
+        {
+          "frame": 1,
+          "id": 2393,
+          "location": 5,
+          "loops": 1,
+          "nominal_frame_start_ms": 80,
+          "retain": 0,
+          "sequence_id": 12526,
+          "source_frame_start_cycle_sum": 4,
+          "wall_clock_enqueue_offset_verified": false,
+          "weight": 100
+        }
+      ],
+      "source_sequence_ids": [
+        829,
+        12526
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        469,
+        471,
+        472
+      ],
+      "journey_rule_id": "rule.goblin.level_2",
+      "note": "Current cue identities469(unarmed attack),472(hit),471(death) are independently named and match two public ordinary-goblin recordings; these are not animation-embedded events. Recordings are historical, not a current server packet trace. Armed-weapon substitutions and exact server delay remain unbound.",
+      "source_frame_events": [],
+      "source_sequence_ids": [
+        6182,
+        6183,
+        6184,
+        6185
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        711,
+        713
+      ],
+      "journey_rule_id": "rule.combat.tutorial_rat",
+      "note": "Source NPC3313/3314/3315 uses the493x rat-update family, not legacy138/139/141. Source cue713(hit) and711(death) match a public tutorial recording strongly; attack710 remains a named candidate without a decisive recording match. No embedded frame sounds occur in4933/4934/4935.",
+      "source_frame_events": [],
+      "source_sequence_ids": [
+        4933,
+        4934,
+        4935
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        512
+      ],
+      "journey_rule_id": "rule.death.first_office",
+      "note": "Independent player-death symbol; player hit variants509/510/518..521 and jingles89/90 are prepared, but exact live selection is not observed.",
+      "source_frame_events": [],
+      "source_sequence_ids": [],
+      "source_session_trigger_verified": false
+    }
+  ],
+  "additional_prepared_candidates": {
+    "player_hits": [
+      509,
+      510,
+      511,
+      518,
+      519,
+      520,
+      521
+    ],
+    "smelting": [
+      2725
+    ],
+    "unarmed": [
+      2564,
+      2565,
+      2566
+    ]
+  },
+  "ambient_objects": [
+    {
+      "name": "Cooking range",
+      "object_id": 114,
+      "region_ids_with_original_placements": [
+        12850
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 2065,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Fountain",
+      "object_id": 153,
+      "region_ids_with_original_placements": [
+        12340
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 2151,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Grandfather Clock",
+      "object_id": 683,
+      "region_ids_with_original_placements": [
+        12082,
+        12336,
+        12592,
+        12597,
+        12850,
+        12851
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 3120,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Weather vane",
+      "object_id": 685,
+      "region_ids_with_original_placements": [
+        12336
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2185,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Fountain",
+      "object_id": 879,
+      "region_ids_with_original_placements": [
+        12337,
+        12850,
+        13105
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 7,
+        "ambientSoundId": 2150,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Vat",
+      "object_id": 1028,
+      "region_ids_with_original_placements": [
+        13105
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 2223,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Millstones",
+      "object_id": 1778,
+      "region_ids_with_original_placements": [
+        12595
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2226,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Sails",
+      "object_id": 1779,
+      "region_ids_with_original_placements": [
+        12595
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 25,
+        "ambientSoundId": 2227,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Cauldron",
+      "object_id": 2024,
+      "region_ids_with_original_placements": [
+        11826
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 2197,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 2099,
+      "region_ids_with_original_placements": [
+        12436,
+        12850,
+        13105
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 2209,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Lathe",
+      "object_id": 2280,
+      "region_ids_with_original_placements": [
+        12853
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 3673,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Drill",
+      "object_id": 2281,
+      "region_ids_with_original_placements": [
+        12335,
+        12853
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 3672,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Hearth",
+      "object_id": 2282,
+      "region_ids_with_original_placements": [
+        12853
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2066,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Panning point",
+      "object_id": 2363,
+      "region_ids_with_original_placements": [
+        13364
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 2168,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Sails",
+      "object_id": 2569,
+      "region_ids_with_original_placements": [
+        12597
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 25,
+        "ambientSoundId": 2227,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Mill",
+      "object_id": 2572,
+      "region_ids_with_original_placements": [
+        12597
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2226,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Smoking vent",
+      "object_id": 5097,
+      "region_ids_with_original_placements": [
+        12853
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 3142,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Fountain",
+      "object_id": 5125,
+      "region_ids_with_original_placements": [
+        12853
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2149,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 5500,
+      "region_ids_with_original_placements": [
+        12341,
+        12694
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 2065,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Aggie's Cauldron",
+      "object_id": 5558,
+      "region_ids_with_original_placements": [
+        12338
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 2143,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Water wheel",
+      "object_id": 5589,
+      "region_ids_with_original_placements": [
+        12851
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2422,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Rock",
+      "object_id": 5604,
+      "region_ids_with_original_placements": [
+        12082,
+        12850,
+        12851
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 3087,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Spit roast",
+      "object_id": 5608,
+      "region_ids_with_original_placements": [
+        12850
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 2220,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 5911,
+      "region_ids_with_original_placements": [
+        12693,
+        12949
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 2171,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Gas hole",
+      "object_id": 5917,
+      "region_ids_with_original_placements": [
+        12693,
+        12949,
+        12950,
+        13206
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 3073,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Gas hole",
+      "object_id": 5918,
+      "region_ids_with_original_placements": [
+        12693,
+        12949
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 3073,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Fountain",
+      "object_id": 7143,
+      "region_ids_with_original_placements": [
+        12853
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2151,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Range",
+      "object_id": 7183,
+      "region_ids_with_original_placements": [
+        12596,
+        12597,
+        12852,
+        12853
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2199,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Range",
+      "object_id": 7184,
+      "region_ids_with_original_placements": [
+        12853
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2200,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Fireplace",
+      "object_id": 7185,
+      "region_ids_with_original_placements": [
+        12853
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2065,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Magic tree",
+      "object_id": 8408,
+      "region_ids_with_original_placements": [],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 3134,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Magic tree",
+      "object_id": 8409,
+      "region_ids_with_original_placements": [],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 3134,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Betty's cauldron",
+      "object_id": 9515,
+      "region_ids_with_original_placements": [
+        12082
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 2143,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Range",
+      "object_id": 9736,
+      "region_ids_with_original_placements": [
+        12336
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 2198,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Furnace",
+      "object_id": 10082,
+      "region_ids_with_original_placements": [
+        12436
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 2208,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Statue",
+      "object_id": 10738,
+      "region_ids_with_original_placements": [
+        13363
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 3144,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Statue",
+      "object_id": 10739,
+      "region_ids_with_original_placements": [
+        13363
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 3144,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Fireplace",
+      "object_id": 10824,
+      "region_ids_with_original_placements": [
+        12340
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 2065,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Magic tree",
+      "object_id": 10834,
+      "region_ids_with_original_placements": [
+        13363
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 3134,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Grandfather clock",
+      "object_id": 11493,
+      "region_ids_with_original_placements": [
+        12340
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 3120,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Pottery Oven",
+      "object_id": 11601,
+      "region_ids_with_original_placements": [
+        12341
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 2208,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Portal",
+      "object_id": 12355,
+      "region_ids_with_original_placements": [],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 3139,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Cooking pot",
+      "object_id": 12969,
+      "region_ids_with_original_placements": [
+        12595
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 2199,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16392,
+      "region_ids_with_original_placements": [
+        12596,
+        12850
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2168,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16393,
+      "region_ids_with_original_placements": [
+        12340,
+        12596,
+        12852,
+        13360
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2169,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16394,
+      "region_ids_with_original_placements": [
+        12341,
+        12851
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2170,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16395,
+      "region_ids_with_original_placements": [
+        12341,
+        12850,
+        12949
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 2147,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16396,
+      "region_ids_with_original_placements": [
+        12335,
+        13360
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 3078,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16400,
+      "region_ids_with_original_placements": [
+        12335,
+        12849,
+        13360,
+        13364
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 3087,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16403,
+      "region_ids_with_original_placements": [
+        12078,
+        12079,
+        12334,
+        12335,
+        12591
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 3083,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16406,
+      "region_ids_with_original_placements": [
+        12335
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2160,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16407,
+      "region_ids_with_original_placements": [
+        12597,
+        12850,
+        12852,
+        13363
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2184,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16408,
+      "region_ids_with_original_placements": [
+        12852
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2185,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16410,
+      "region_ids_with_original_placements": [
+        12341,
+        13104,
+        13107
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2182,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16411,
+      "region_ids_with_original_placements": [
+        12341,
+        12593,
+        13107,
+        13361,
+        13365
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2183,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16412,
+      "region_ids_with_original_placements": [
+        12335
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2186,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16415,
+      "region_ids_with_original_placements": [
+        12340,
+        12596,
+        12846
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2180,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16418,
+      "region_ids_with_original_placements": [
+        11824
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 1991,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16419,
+      "region_ids_with_original_placements": [
+        12591,
+        12593,
+        13106
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 1992,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16421,
+      "region_ids_with_original_placements": [
+        12593
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 1994,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16422,
+      "region_ids_with_original_placements": [
+        12593
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 1995,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16424,
+      "region_ids_with_original_placements": [
+        12593,
+        12693,
+        12849,
+        12949
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2041,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16426,
+      "region_ids_with_original_placements": [
+        12951
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 2049,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16428,
+      "region_ids_with_original_placements": [
+        11825
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2088,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16429,
+      "region_ids_with_original_placements": [
+        11822
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2083,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16430,
+      "region_ids_with_original_placements": [
+        12181
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2077,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16431,
+      "region_ids_with_original_placements": [
+        12181
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2079,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16432,
+      "region_ids_with_original_placements": [
+        12181
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2080,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16433,
+      "region_ids_with_original_placements": [
+        11826,
+        12082,
+        12335,
+        12336,
+        12338,
+        12339,
+        12341,
+        12594,
+        12595,
+        12597,
+        12850,
+        12851,
+        12852,
+        12853,
+        13108,
+        13109,
+        13364,
+        13365
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 300,
+        "ambientSoundChangeTicksMin": 150,
+        "ambientSoundDistance": 15,
+        "ambientSoundId": 2184,
+        "ambientSoundIds": [
+          1984,
+          1985,
+          1986,
+          1987,
+          1988
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16434,
+      "region_ids_with_original_placements": [
+        11826,
+        12594,
+        12851,
+        12852
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 300,
+        "ambientSoundChangeTicksMin": 150,
+        "ambientSoundDistance": 15,
+        "ambientSoundId": 2185,
+        "ambientSoundIds": [
+          1997,
+          2015,
+          2018,
+          1999,
+          3047,
+          3046
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16435,
+      "region_ids_with_original_placements": [
+        12339,
+        12340
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 500,
+        "ambientSoundChangeTicksMin": 300,
+        "ambientSoundDistance": 15,
+        "ambientSoundId": 2184,
+        "ambientSoundIds": [
+          2010,
+          2012,
+          2011,
+          2073
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16436,
+      "region_ids_with_original_placements": [
+        12338,
+        12340,
+        12595,
+        12597,
+        12853,
+        13109
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 400,
+        "ambientSoundChangeTicksMin": 200,
+        "ambientSoundDistance": 15,
+        "ambientSoundId": 2184,
+        "ambientSoundIds": [
+          2019,
+          2020,
+          2013,
+          2014,
+          2057,
+          2076,
+          2012
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16437,
+      "region_ids_with_original_placements": [
+        12078,
+        12849
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 300,
+        "ambientSoundChangeTicksMin": 150,
+        "ambientSoundDistance": 15,
+        "ambientSoundId": 2185,
+        "ambientSoundIds": [
+          2084,
+          2085,
+          2086,
+          2087,
+          2092,
+          2076,
+          2093,
+          2094
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16438,
+      "region_ids_with_original_placements": [
+        11826,
+        12079,
+        12336,
+        12338,
+        12339,
+        12593,
+        12594,
+        12595,
+        12596,
+        12597,
+        12850,
+        12851,
+        12852,
+        12853,
+        13108,
+        13109,
+        13364,
+        13365
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 500,
+        "ambientSoundChangeTicksMin": 250,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2184,
+        "ambientSoundIds": [
+          2184,
+          2185,
+          2073,
+          2074,
+          2075
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16439,
+      "region_ids_with_original_placements": [
+        12593,
+        12849
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 500,
+        "ambientSoundChangeTicksMin": 250,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 3095,
+        "ambientSoundIds": [
+          1994,
+          1995,
+          1996,
+          2135,
+          2138,
+          2008,
+          2009,
+          2095,
+          2136,
+          2137,
+          2194,
+          2204,
+          2145,
+          2143
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16441,
+      "region_ids_with_original_placements": [
+        11825
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 500,
+        "ambientSoundChangeTicksMin": 250,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2083,
+        "ambientSoundIds": [
+          2089,
+          2090,
+          2091,
+          2094,
+          2009,
+          2067,
+          2185,
+          1999,
+          2069
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16442,
+      "region_ids_with_original_placements": [
+        12339,
+        12340
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 500,
+        "ambientSoundChangeTicksMin": 250,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2184,
+        "ambientSoundIds": [
+          2070,
+          2071,
+          2073,
+          2074,
+          2075,
+          2072,
+          2184
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16443,
+      "region_ids_with_original_placements": [
+        12340
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 500,
+        "ambientSoundChangeTicksMin": 250,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 3061,
+        "ambientSoundIds": [
+          2179,
+          2180,
+          2181,
+          2071,
+          2074,
+          2182,
+          2183,
+          2072,
+          2188,
+          2068,
+          2224
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16446,
+      "region_ids_with_original_placements": [
+        11822,
+        11823,
+        11824,
+        11825,
+        12078,
+        12079,
+        12080,
+        12081,
+        12082,
+        12334,
+        12336,
+        12337,
+        12590,
+        12592,
+        12848,
+        12849
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 500,
+        "ambientSoundChangeTicksMin": 250,
+        "ambientSoundDistance": 25,
+        "ambientSoundId": 3094,
+        "ambientSoundIds": [
+          2004,
+          2005,
+          2006,
+          2007,
+          2186,
+          2187,
+          2183,
+          2003
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16448,
+      "region_ids_with_original_placements": [
+        12590,
+        12591,
+        12846,
+        12847,
+        12848,
+        13104,
+        13105,
+        13106,
+        13360,
+        13361,
+        13363
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 500,
+        "ambientSoundChangeTicksMin": 250,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 3109,
+        "ambientSoundIds": [
+          3107,
+          3108,
+          3105,
+          3106,
+          3110,
+          3111,
+          3112,
+          3113
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16449,
+      "region_ids_with_original_placements": [
+        12436,
+        12695,
+        12950,
+        13206
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 500,
+        "ambientSoundChangeTicksMin": 250,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 3093,
+        "ambientSoundIds": [
+          2040,
+          2043,
+          2044,
+          2048,
+          2045,
+          2050,
+          2052,
+          2046
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16453,
+      "region_ids_with_original_placements": [
+        11822,
+        11823,
+        11824,
+        11825,
+        12078,
+        12079,
+        12080,
+        12334,
+        12335,
+        12591,
+        12592,
+        12593,
+        12848,
+        13104,
+        13364
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 400,
+        "ambientSoundChangeTicksMin": 400,
+        "ambientSoundDistance": 25,
+        "ambientSoundId": 2184,
+        "ambientSoundIds": [
+          3083,
+          3084,
+          3085,
+          3086
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16455,
+      "region_ids_with_original_placements": [
+        11823,
+        11824,
+        12078,
+        12081,
+        12082
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 250,
+        "ambientSoundChangeTicksMin": 150,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2184,
+        "ambientSoundIds": [
+          2153,
+          2154,
+          2148,
+          2167
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16456,
+      "region_ids_with_original_placements": [
+        12693,
+        12951
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 250,
+        "ambientSoundChangeTicksMin": 50,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": -1,
+        "ambientSoundIds": [
+          2152,
+          3080,
+          3081
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 16555,
+      "region_ids_with_original_placements": [
+        12595
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 20,
+        "ambientSoundId": 2227,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 17410,
+      "region_ids_with_original_placements": [
+        12340
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 500,
+        "ambientSoundChangeTicksMin": 300,
+        "ambientSoundDistance": 15,
+        "ambientSoundId": -1,
+        "ambientSoundIds": [
+          2016,
+          2017
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 17411,
+      "region_ids_with_original_placements": [
+        12851
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 150,
+        "ambientSoundChangeTicksMin": 50,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": -1,
+        "ambientSoundIds": [
+          3056,
+          3057,
+          3058,
+          3059,
+          3060
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 17417,
+      "region_ids_with_original_placements": [
+        12853
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 250,
+        "ambientSoundChangeTicksMin": 50,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": -1,
+        "ambientSoundIds": [
+          2021,
+          2024,
+          2023,
+          2025,
+          2026,
+          2027,
+          2119,
+          2115,
+          2116
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 17418,
+      "region_ids_with_original_placements": [
+        12853
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 500,
+        "ambientSoundChangeTicksMin": 250,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 3096,
+        "ambientSoundIds": [
+          2015,
+          880
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 18405,
+      "region_ids_with_original_placements": [
+        12693,
+        12949
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2141,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 1
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 18407,
+      "region_ids_with_original_placements": [
+        12849
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 3048,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 18408,
+      "region_ids_with_original_placements": [
+        12849
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 3049,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Range",
+      "object_id": 21792,
+      "region_ids_with_original_placements": [
+        13105
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2200,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Fireplace",
+      "object_id": 21795,
+      "region_ids_with_original_placements": [
+        13105
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2065,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 23541,
+      "region_ids_with_original_placements": [
+        12853,
+        13109
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 100,
+        "ambientSoundChangeTicksMin": 25,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": -1,
+        "ambientSoundIds": [
+          3595,
+          3596,
+          3597,
+          3598,
+          3599
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Furnace",
+      "object_id": 24009,
+      "region_ids_with_original_placements": [
+        12850,
+        13105
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 2209,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Fireplace",
+      "object_id": 24969,
+      "region_ids_with_original_placements": [
+        11826,
+        12081,
+        12082,
+        12336,
+        12338,
+        12339,
+        12850
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2198,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Fireplace",
+      "object_id": 24970,
+      "region_ids_with_original_placements": [
+        12336,
+        12850
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2066,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Cooking pot",
+      "object_id": 26180,
+      "region_ids_with_original_placements": [
+        12850,
+        12851
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2200,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Range",
+      "object_id": 26181,
+      "region_ids_with_original_placements": [
+        12082,
+        12340,
+        12849,
+        13105,
+        13106
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2065,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Fire",
+      "object_id": 26185,
+      "region_ids_with_original_placements": [
+        11822,
+        12341,
+        13364
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2065,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Fire",
+      "object_id": 26577,
+      "region_ids_with_original_placements": [
+        11825,
+        12594
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2199,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 29629,
+      "region_ids_with_original_placements": [
+        13361
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 3077,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 29630,
+      "region_ids_with_original_placements": [
+        13361
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 2144,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Fire of Eternal Light",
+      "object_id": 33320,
+      "region_ids_with_original_placements": [],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 2063,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 33645,
+      "region_ids_with_original_placements": [
+        12335
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 900,
+        "ambientSoundChangeTicksMin": 400,
+        "ambientSoundDistance": 15,
+        "ambientSoundId": -1,
+        "ambientSoundIds": [
+          1984,
+          1985,
+          1986,
+          1987,
+          1988
+        ],
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 34815,
+      "region_ids_with_original_placements": [
+        12593
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 3141,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 34817,
+      "region_ids_with_original_placements": [
+        13106
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 3141,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Portal",
+      "object_id": 39549,
+      "region_ids_with_original_placements": [
+        12633
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 3139,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "null",
+      "object_id": 39551,
+      "region_ids_with_original_placements": [
+        12633
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 6,
+        "ambientSoundId": 2065,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Range",
+      "object_id": 40149,
+      "region_ids_with_original_placements": [],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2199,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Furnace",
+      "object_id": 42824,
+      "region_ids_with_original_placements": [
+        12335
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2066,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Fire",
+      "object_id": 43475,
+      "region_ids_with_original_placements": [
+        12338,
+        12341
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 5,
+        "ambientSoundId": 2065,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Whetstone",
+      "object_id": 44912,
+      "region_ids_with_original_placements": [
+        13363
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 3146,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Treadmill",
+      "object_id": 44913,
+      "region_ids_with_original_placements": [
+        13363
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 10,
+        "ambientSoundId": 3121,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    },
+    {
+      "name": "Cooking pot",
+      "object_id": 58025,
+      "region_ids_with_original_placements": [
+        12078
+      ],
+      "source_fields": {
+        "ambientSoundChangeTicksMax": 0,
+        "ambientSoundChangeTicksMin": 0,
+        "ambientSoundDistance": 3,
+        "ambientSoundId": 2065,
+        "ambientSoundIds": null,
+        "ambientSoundRetain": 0,
+        "soundDistanceFadeCurve": 0,
+        "soundFadeInCurve": 0,
+        "soundFadeInDuration": 300,
+        "soundFadeOutCurve": 0,
+        "soundFadeOutDuration": 300,
+        "soundVisibility": 2
+      },
+      "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
+    }
+  ],
+  "binding_audit": "research/audio-source/bindings.json",
+  "browser_presentation_approved": false,
+  "jingles": [
+    {
+      "id": 29,
+      "name": "Attack Level Up!"
+    },
+    {
+      "id": 30,
+      "name": "Attack Level Up! (Unlocks)"
+    },
+    {
+      "id": 33,
+      "name": "Cooking Level Up!"
+    },
+    {
+      "id": 34,
+      "name": "Cooking Level Up! (Unlocks)"
+    },
+    {
+      "id": 37,
+      "name": "Defence Level Up!"
+    },
+    {
+      "id": 38,
+      "name": "Defence Level Up! (Unlocks)"
+    },
+    {
+      "id": 39,
+      "name": "Firemaking Level Up!"
+    },
+    {
+      "id": 40,
+      "name": "Firemaking Level Up! (Unlocks)"
+    },
+    {
+      "id": 41,
+      "name": "Fishing Level Up!"
+    },
+    {
+      "id": 42,
+      "name": "Fishing Level Up! (Unlocks)"
+    },
+    {
+      "id": 47,
+      "name": "Hitpoints Level Up! (2-49)"
+    },
+    {
+      "id": 51,
+      "name": "Magic Level Up!"
+    },
+    {
+      "id": 52,
+      "name": "Magic Level Up! (Unlocks)"
+    },
+    {
+      "id": 53,
+      "name": "Mining Level Up!"
+    },
+    {
+      "id": 54,
+      "name": "Mining Level Up! (Unlocks)"
+    },
+    {
+      "id": 55,
+      "name": "Prayer Level Up!"
+    },
+    {
+      "id": 56,
+      "name": "Prayer Level Up! (Unlocks)"
+    },
+    {
+      "id": 57,
+      "name": "Ranged Level Up!"
+    },
+    {
+      "id": 58,
+      "name": "Ranged Level Up! (Unlocks)"
+    },
+    {
+      "id": 63,
+      "name": "Smithing Level Up!",
+      "trigger_note": "Preserved comparison input; the current wiki says this normal variant is not played because every Smithing level unlocks content."
+    },
+    {
+      "id": 64,
+      "name": "Smithing Level Up! (Unlocks)"
+    },
+    {
+      "id": 65,
+      "name": "Strength Level Up! (2-49)"
+    },
+    {
+      "id": 69,
+      "name": "Woodcutting Level Up!"
+    },
+    {
+      "id": 70,
+      "name": "Woodcutting Level Up! (Unlocks)"
+    },
+    {
+      "id": 89,
+      "identity_note": "Pinned RSMod symbol; current death variant/timing requires source observation.",
+      "name": "death_jingle"
+    },
+    {
+      "id": 90,
+      "identity_note": "Pinned RSMod symbol; current death variant/timing requires source observation.",
+      "name": "death_jingle_2"
+    },
+    {
+      "id": 152,
+      "name": "Quest Complete 1"
+    },
+    {
+      "id": 153,
+      "name": "Quest Complete 2"
+    },
+    {
+      "id": 154,
+      "name": "Quest Complete 3"
+    },
+    {
+      "id": 299,
+      "name": "Combat Level Up!"
+    }
+  ],
+  "music_scopes": [
+    {
+      "exact_region_boundary_and_transition_verified": false,
+      "id": 0,
+      "index": 6,
+      "name": "Scape Main",
+      "scope": "startup/title"
+    },
+    {
+      "exact_region_boundary_and_transition_verified": false,
+      "id": 62,
+      "index": 6,
+      "name": "Newbie Melody",
+      "scope": "Tutorial Island surface"
+    },
+    {
+      "exact_region_boundary_and_transition_verified": false,
+      "id": 144,
+      "index": 6,
+      "name": "Scape Cave",
+      "scope": "Tutorial Island dungeon"
+    },
+    {
+      "exact_region_boundary_and_transition_verified": false,
+      "id": 76,
+      "index": 6,
+      "name": "Harmony",
+      "scope": "Lumbridge"
+    },
+    {
+      "exact_region_boundary_and_transition_verified": false,
+      "id": 2,
+      "index": 6,
+      "name": "Autumn Voyage",
+      "scope": "Lumbridge farms"
+    }
+  ],
+  "quest_and_gathering": [
+    {
+      "action": "Cook's Assistant: collect egg/items",
+      "basis": "RuneLite ITEM_PICKUP symbol; exact context timing not observed",
+      "sound_ids": [
+        2582
+      ]
+    },
+    {
+      "action": "Cook's Assistant: pick wheat",
+      "basis": "RuneLite PICK_PLANT_BLOOP symbol; exact context timing not observed",
+      "sound_ids": [
+        2581
+      ]
+    },
+    {
+      "action": "Cook's Assistant: milk cow",
+      "basis": "Independent milk_cow symbol; no frame sound in selected original sequence",
+      "sound_ids": [
+        372
+      ],
+      "source_sequence_ids": [
+        2305
+      ]
+    },
+    {
+      "action": "Cook's Assistant: mill flour",
+      "basis": "Use original object ambience where present; no new standalone milling sound invented",
+      "sound_ids": [],
+      "source_sequence_ids": [
+        472
+      ]
+    },
+    {
+      "action": "Learning the Ropes / Cook's Assistant completion",
+      "basis": "Pinned named source jingles; exact per-quest selection and XP/quest-jingle precedence require source observation",
+      "jingle_candidates": [
+        152,
+        153,
+        154
+      ]
+    },
+    {
+      "action": "UI",
+      "basis": "Named UI_BOOP input, not permission to sound every click/tab/menu",
+      "sound_ids": [
+        2266
+      ]
+    }
+  ],
+  "reference_only_candidates": {
+    "ordinary_shortbow": [
+      2692,
+      2693,
+      2702
+    ],
+    "tutorial_rat_attack": [
+      710
+    ]
+  },
+  "region_reference": {
+    "farms_mill_seed_region": 12595,
+    "lumbridge_seed_region": 12850,
+    "note": "Existing source extraction seeds, not certified music-switch boundaries or approved game fences.",
+    "tutorial_dungeon_seed_region": 12436,
+    "tutorial_surface_seed_regions": [
+      12336,
+      12592
+    ]
+  },
+  "remaining_observations": [
+    "Stock source-session region/playlist transitions and music repeat behavior; the exported tracks are one-pass with original release.",
+    "Ordinary shortbow selection among named launch/draw cues2692/2693/2702; current tutorial-rat attack710 confirmation; current food selection of829/game-triggered2393 versus sound-enabled12526; current bronze-smelting2725 callback. None is inferred from a plausible sound.",
+    "Event/packet delay, frame entry phase, positional attenuation, mute/volume defaults and fade behavior in the actual source session.",
+    "Exact server MIDI_JINGLE payload (including a possible no-request outcome) for Learning the Ropes/Cook's Assistant and its emission order versus level-up jingles. Native client requests are last-wins, with no quest/skill ranking and an ignored auxiliary integer. Browser gesture/autoplay/reconnect behavior remains after pack approval."
+  ],
+  "schema_version": 1,
+  "sequence_sound_events": [
+    {
+      "frame": 4,
+      "id": 2603,
+      "location": 1,
+      "loops": 1,
+      "nominal_frame_start_ms": 320,
+      "retain": 0,
+      "sequence_id": 621,
+      "source_frame_start_cycle_sum": 16,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 100
+    },
+    {
+      "frame": 11,
+      "id": 3220,
+      "location": 1,
+      "loops": 1,
+      "nominal_frame_start_ms": 1000,
+      "retain": 0,
+      "sequence_id": 625,
+      "source_frame_start_cycle_sum": 50,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 100
+    },
+    {
+      "frame": 8,
+      "id": 2597,
+      "location": 1,
+      "loops": 1,
+      "nominal_frame_start_ms": 900,
+      "retain": 0,
+      "sequence_id": 733,
+      "source_frame_start_cycle_sum": 45,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 100
+    },
+    {
+      "frame": 10,
+      "id": 2597,
+      "location": 1,
+      "loops": 1,
+      "nominal_frame_start_ms": 1400,
+      "retain": 0,
+      "sequence_id": 733,
+      "source_frame_start_cycle_sum": 70,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 100
+    },
+    {
+      "frame": 3,
+      "id": 2735,
+      "location": 1,
+      "loops": 1,
+      "nominal_frame_start_ms": 360,
+      "retain": 0,
+      "sequence_id": 879,
+      "source_frame_start_cycle_sum": 18,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 100
+    },
+    {
+      "frame": 5,
+      "id": 3790,
+      "location": 1,
+      "loops": 1,
+      "nominal_frame_start_ms": 400,
+      "retain": 0,
+      "sequence_id": 898,
+      "source_frame_start_cycle_sum": 20,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 100
+    },
+    {
+      "frame": 7,
+      "id": 3791,
+      "location": 1,
+      "loops": 1,
+      "nominal_frame_start_ms": 820,
+      "retain": 0,
+      "sequence_id": 898,
+      "source_frame_start_cycle_sum": 41,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 100
+    },
+    {
+      "frame": 9,
+      "id": 3790,
+      "location": 1,
+      "loops": 1,
+      "nominal_frame_start_ms": 1240,
+      "retain": 0,
+      "sequence_id": 898,
+      "source_frame_start_cycle_sum": 62,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 100
+    },
+    {
+      "frame": 11,
+      "id": 3791,
+      "location": 1,
+      "loops": 1,
+      "nominal_frame_start_ms": 1660,
+      "retain": 0,
+      "sequence_id": 898,
+      "source_frame_start_cycle_sum": 83,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 100
+    },
+    {
+      "frame": 1,
+      "id": 2393,
+      "location": 5,
+      "loops": 1,
+      "nominal_frame_start_ms": 80,
+      "retain": 0,
+      "sequence_id": 12526,
+      "source_frame_start_cycle_sum": 4,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 100
+    },
+    {
+      "frame": 1,
+      "id": 2411,
+      "location": 10,
+      "loops": 1,
+      "nominal_frame_start_ms": 120,
+      "retain": 0,
+      "sequence_id": 13612,
+      "source_frame_start_cycle_sum": 6,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 74
+    },
+    {
+      "frame": 1,
+      "id": 10983,
+      "location": 10,
+      "loops": 1,
+      "nominal_frame_start_ms": 120,
+      "retain": 0,
+      "sequence_id": 13612,
+      "source_frame_start_cycle_sum": 6,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 5
+    },
+    {
+      "frame": 1,
+      "id": 10984,
+      "location": 10,
+      "loops": 1,
+      "nominal_frame_start_ms": 120,
+      "retain": 0,
+      "sequence_id": 13612,
+      "source_frame_start_cycle_sum": 6,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 6
+    },
+    {
+      "frame": 1,
+      "id": 10985,
+      "location": 10,
+      "loops": 1,
+      "nominal_frame_start_ms": 120,
+      "retain": 0,
+      "sequence_id": 13612,
+      "source_frame_start_cycle_sum": 6,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 5
+    },
+    {
+      "frame": 1,
+      "id": 10986,
+      "location": 10,
+      "loops": 1,
+      "nominal_frame_start_ms": 120,
+      "retain": 0,
+      "sequence_id": 13612,
+      "source_frame_start_cycle_sum": 6,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 5
+    },
+    {
+      "frame": 1,
+      "id": 10987,
+      "location": 10,
+      "loops": 1,
+      "nominal_frame_start_ms": 120,
+      "retain": 0,
+      "sequence_id": 13612,
+      "source_frame_start_cycle_sum": 6,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 5
+    }
+  ],
+  "source_selection": "osrs-live-240-cache2695-injected1.12.38-20260913",
+  "source_silence_policy": "Original sound2411 has a5ms instrument and the actual original synth returns110 zero samples. It is the74-weight branch of sequence13612/frame1. Preserve that silent outcome and the original weights; do not invent a tone, count it as playable audio, or renormalize the other choices.",
+  "timing_policy": "Frame-start sums retain native source cycles. Nominal20ms conversion is descriptive, not calibrated enqueue time; original >frameLength boundary behavior, packet delay, channel volume and source-session evidence remain separate.",
+  "verified_source_silence_ids": [
+    2411
+  ]
+}

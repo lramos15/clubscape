@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-09-14T16:15:10.284565+00:00",
+  "media": [
+    {
+      "id": "wiki.account-guide-chathead-png",
+      "result": "retrieved_exact_original",
+      "sha256": "914f9e5e63d8ebaee486e3145b134414af56928045cadb5d3ba50cdf867088a4",
+      "original_or_archived_url": "https://oldschool.runescape.wiki/images/Account_Guide_chathead.png?cf628",
+      "attempts": [
+        {
+          "url": "https://oldschool.runescape.wiki/images/Account_Guide_chathead.png?cf628&download=1&reference_original=74a6e642134e7a405a8bc6ecd2b0149ad21efb3f-1789402508388619954",
+          "sha1": "74a6e642134e7a405a8bc6ecd2b0149ad21efb3f",
+          "sha256": "914f9e5e63d8ebaee486e3145b134414af56928045cadb5d3ba50cdf867088a4",
+          "size_bytes": 2236
+        }
+      ]
+    },
+    {
+      "id": "wiki.account-management-tab-png",
+      "result": "retrieved_exact_original",
+      "sha256": "6f3936908e0b27c24235857cca09e89318bbf7fa8435891de8a8b694491c076f",
+      "original_or_archived_url": "https://oldschool.runescape.wiki/images/Account_Management_tab.png?34fed",
+      "attempts": [
+        {
+          "url": "https://oldschool.runescape.wiki/images/Account_Management_tab.png?34fed&download=1&reference_original=4187df667793265520996435297c885446fddc2d-1789402509014841267",
+          "sha1": "4187df667793265520996435297c885446fddc2d",
+          "sha256": "6f3936908e0b27c24235857cca09e89318bbf7fa8435891de8a8b694491c076f",
+          "size_bytes": 6383
+        }
+      ]
+    },
+    {
+      "id": "wiki.activating-quick-prayers-gif",
+      "result": "retrieved_exact_original",
+      "sha256": "b5b43e0fe0307f9b3caba2cba4af239a783a5d6e9618de262446cd940f8e9c22",
+      "original_or_archived_url": "https://oldschool.runescape.wiki/images/Activating_quick_prayers.gif?9f380",
+      "attempts": [
+        {
+          "url": "https://oldschool.runescape.wiki/images/Activating_quick_prayers.gif?9f380&download=1&reference_original=a481818ee5711791cabfad64088656c98a2a3538-1789402509605457290",
+          "sha1": "a481818ee5711791cabfad64088656c98a2a3538",
+          "sha256": "b5b43e0fe0307f9b3caba2cba4af239a783a5d6e9618de262446cd940f8e9c22",
+          "size_bytes": 1198
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "title": "Account Management",
+      "revision": 15327969,
+      "sha256_utf8_wikitext": "d4f7bf0f771756ea6d8a7ae0fd180a6976b94457233fff050ba96430a82d5d25",
+      "result": "exact_pinned_revision"
+    },
+    {
+      "title": "Adventure Paths",
+      "revision": 14741525,
+      "sha256_utf8_wikitext": "dc2f4df9e8c1572139225605d3b9863c4b319604b94c85e4abfe671be7a557df",
+      "result": "exact_pinned_revision"
+    },
+    {
+      "title": "Audio",
+      "revision": 15313930,
+      "sha256_utf8_wikitext": "d302b5595f9ccdb8c98c109a0fdcd58ecdc3b783b3f5db438dca6cb1b1a38722",
+      "result": "exact_pinned_revision"
+    }
+  ],
+  "source_identity_changed": false,
+  "account_login": false,
+  "owner_approval": false
+}

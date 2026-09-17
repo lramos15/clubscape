@@ -1,0 +1,314 @@
+{
+  "scope": "ORIGINAL pinned UI/effect runtime with explicit fixture fields, never production balances",
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "references": [
+    {
+      "kind": "flames",
+      "name": "cycle-1.png",
+      "sha256": "c8966dc008409150131075a859db214cc9655ce682be77260b6a3c02e93bd650"
+    },
+    {
+      "kind": "flames",
+      "name": "cycle-10.png",
+      "sha256": "cd5b1bae3af93d2ba79a0071f3363b64006a1559d06000a751413b96474363d6"
+    },
+    {
+      "kind": "flames",
+      "name": "cycle-1024.png",
+      "sha256": "e6bad08d1a00b49ed5deb226bf103dff27e1405b91d1069e7b69c2e302e817ee"
+    },
+    {
+      "kind": "flames",
+      "name": "cycle-128.png",
+      "sha256": "ec22915bb24bdcb292ec02d6329f9d34b444819eaf66ee9dac32f8a5d57f283c"
+    },
+    {
+      "kind": "flames",
+      "name": "cycle-2.png",
+      "sha256": "c8966dc008409150131075a859db214cc9655ce682be77260b6a3c02e93bd650"
+    },
+    {
+      "kind": "flames",
+      "name": "cycle-2048.png",
+      "sha256": "b50c6060fe3c228cb285803feb3eb30a0c00da559da18786acecbecd3f029978"
+    },
+    {
+      "kind": "flames",
+      "name": "cycle-257.png",
+      "sha256": "5d80b5b5e09d08d1647e516141ea536f8857d6c62b3733efeaff721038b6615d"
+    },
+    {
+      "kind": "flames",
+      "name": "cycle-3.png",
+      "sha256": "733b4cd3eb5794823736297960445e1cae93917648a0068a81104613c5b570b9"
+    },
+    {
+      "kind": "flames",
+      "name": "cycle-320.png",
+      "sha256": "668bb57b1543ca808b5b83785e6975188af2b01e0219af10ccd68925e710698b"
+    },
+    {
+      "kind": "flames",
+      "name": "cycle-40.png",
+      "sha256": "5af9a4970f8aeb3ec29e58983ee6a4bdcbe44de84c5a855ef929a33ed31bff99"
+    },
+    {
+      "kind": "flames",
+      "name": "cycle-640.png",
+      "sha256": "99ac628ba2bcb32b94645b6f33471c290e5e199a9eb50c153be6eb52d25f8edc"
+    },
+    {
+      "kind": "flames",
+      "name": "reconnect.png",
+      "sha256": "dea25abd22f82257a90c7aff1a573351c4fa9ce4f29afc834942f7bfd63d4bda"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-filters.png",
+      "sha256": "aa5133f499bad85e1a1efa3ab91606335b12cbf4e27d1b9a593dce6057ddaa42"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-0-filters.png",
+      "sha256": "aa5133f499bad85e1a1efa3ab91606335b12cbf4e27d1b9a593dce6057ddaa42"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-0.png",
+      "sha256": "4926d0297a004bf7851e5736238e1986827871357b87fe2c226c7ddf6556604f"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-1-filters.png",
+      "sha256": "5c47418db5673951000ddd7e228615c9ecf57083b7feea49179389cf324ff2f2"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-1.png",
+      "sha256": "0ff90e02b5a53b4648110e1bc6e98da51c91c3ed7b0bf3ed0cebe4bd68bfe7c6"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-127-filters.png",
+      "sha256": "c27253e349356350ec8cf25b9d0b4d3795d10984495633c7038672225d49e954"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-127.png",
+      "sha256": "2e765be78d0452daf0dc08ff5f8988983d47da12f35f8bb0717efbbc39bba8ca"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-16-filters.png",
+      "sha256": "ddc0597fb7d62a0d4d80c37f2c266359aeb219e6de88bba1a9855b7d8c1c35a0"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-16.png",
+      "sha256": "97b4aabbc9963853e6cfabf70e6055aedecf84d759e7a45ba4849d9cb2128d19"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-2-filters.png",
+      "sha256": "cae5489a11bf7478125300880500c8c13217426b6bdf142f903216994cac8150"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-2.png",
+      "sha256": "41806556a3bdd77843e24f01579ced8ad35babd89ad00399e3ceb7de44c575e0"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-32-filters.png",
+      "sha256": "635001576af42a7bb2eb7661a0e9948afca3037b8cea2fb9b1848179cb2725fb"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-32.png",
+      "sha256": "6c2e5b8572f2139a1d80cf099eff9b7d65c6dd27722092d412947bc734944f78"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-4-filters.png",
+      "sha256": "9cb4bf2de9bfb869fa921e913a2e64f980ed85c13a9b6d32129f421292d613fa"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-4.png",
+      "sha256": "8b7964cc090eec6e636cdb61ff1cdaba11ed253856bc5cc64aa4b701f135f6c9"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-64-filters.png",
+      "sha256": "b9d404cb5fd86f072e22dac1f97e33e9a3907dc70fee5920af77329554fc928f"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-64.png",
+      "sha256": "4926d0297a004bf7851e5736238e1986827871357b87fe2c226c7ddf6556604f"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-72-filters.png",
+      "sha256": "af4bca6ad06c5e537234fd19dbc5cc8ff9a12a443c32deddde24f1cac6a82fdf"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-72.png",
+      "sha256": "eb7156965dc9554b761b641ebf8a2955779cd43f6eea26da44717d148e09e4a9"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-8-filters.png",
+      "sha256": "62a6a661f5afcabab6eb95d098386cdff3d0412c0bc48c19b7f9d4d33c44227c"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-8.png",
+      "sha256": "3dd099d701a3b57024f162ab637d8b4abfb6ba2b3c545aa244d94e5d03909331"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-88-filters.png",
+      "sha256": "eae45fbbac8470c74bf1e23c77b0c346f090519ff690f2227a497aef9b3e5fce"
+    },
+    {
+      "kind": "ui",
+      "name": "native-magic-mask-88.png",
+      "sha256": "e2ef68e7a7953c96804b1eedcc59804be229dadad419e08aa2173937bac1b0bb"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-filters.png",
+      "sha256": "c620b502702f653b4ad42d0e6dd3050e626903d78fa9e9540d841fd4d9cbe7ae"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-0-filters.png",
+      "sha256": "c620b502702f653b4ad42d0e6dd3050e626903d78fa9e9540d841fd4d9cbe7ae"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-0.png",
+      "sha256": "d824324a2976b5a998beb2e48408c8cdb62e299bd547e613e821929a1bfdee08"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-1-filters.png",
+      "sha256": "dea7250845188034d1a4f617ac04f6914a62c8af6f45c90beb23526f7a6ff781"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-1.png",
+      "sha256": "d824324a2976b5a998beb2e48408c8cdb62e299bd547e613e821929a1bfdee08"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-16-filters.png",
+      "sha256": "c2376e0e0fb84c9df33ba5f16020e810a63c41906ec3e10672a1d7979a8ef4ce"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-16.png",
+      "sha256": "4deb5e5b987676efb6d49a0632ce6b35991f0757cae059b8af1cfa9f0abfbb91"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-2-filters.png",
+      "sha256": "c620b502702f653b4ad42d0e6dd3050e626903d78fa9e9540d841fd4d9cbe7ae"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-2.png",
+      "sha256": "d824324a2976b5a998beb2e48408c8cdb62e299bd547e613e821929a1bfdee08"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-31-filters.png",
+      "sha256": "226c2099ae0b33e2d5f6ced6ad7868063f687f7de3b6d4bf2900540131556859"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-31.png",
+      "sha256": "8eef5c2c84c18eaa1993c8c9ffff05ad5cc8f5ec850897c7191fc86f8ff72a10"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-4-filters.png",
+      "sha256": "9826c07c68c550089bd32191b57e926e3fe7c35fb3ffd58620883d970d10c70d"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-4.png",
+      "sha256": "1f52401268ab10f7e19a39a5681e72ec4ce5afa26bbc6317ab0aab3452be02be"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-8-filters.png",
+      "sha256": "a2b3ebecb1ef8150c596cb2649108640771348a245dbfaec649c4dc5185a6dd4"
+    },
+    {
+      "kind": "ui",
+      "name": "native-prayer-mask-8.png",
+      "sha256": "8eef5c2c84c18eaa1993c8c9ffff05ad5cc8f5ec850897c7191fc86f8ff72a10"
+    },
+    {
+      "kind": "ui",
+      "name": "native-retrieval-602-34-0-0.png",
+      "sha256": "c0b1f90996b4bc404054bc0415d0ba27d0b1a37303fb1c5bd79ee7e8e155bbfb"
+    },
+    {
+      "kind": "ui",
+      "name": "native-retrieval-602-35-0-1.png",
+      "sha256": "8f2d1074a41a55325cc6fef90d117366756af4eb3f9ac88d2e930fb5376b23cb"
+    },
+    {
+      "kind": "ui",
+      "name": "native-retrieval-669-0-7-1.png",
+      "sha256": "ba95ae31efc2975c4980d4e82fd492edf31ac4cfb1a6c4013fcd53fa39ad8f09"
+    },
+    {
+      "kind": "ui",
+      "name": "native-retrieval-669-12345--1-0.png",
+      "sha256": "e4ad8356757b3a4ef3fd4d860ddb4e146f5d1ebe4a7a08a58f2872555090641b"
+    },
+    {
+      "kind": "ui",
+      "name": "native-retrieval-669-12345-0-42.png",
+      "sha256": "092b3547218efa825aef4364c1d7faa4ce3c8241c70639b7d84501cefa3c6e10"
+    },
+    {
+      "kind": "ui",
+      "name": "native-retrieval-669-12345-7-42.png",
+      "sha256": "708461fe1b898121143436f16c1408d73d3a332bb1197e5250be626cae3c2d3c"
+    },
+    {
+      "kind": "ui",
+      "name": "native-retrieval-long-602.png",
+      "sha256": "944bc8a7eec5fed0651a669b719b5ad19c415b56ee5aa8f07ea0e2c8d7914bc6"
+    },
+    {
+      "kind": "ui",
+      "name": "native-retrieval-long-669.png",
+      "sha256": "1aef96d89bfbf87e70c0694e1c01ae8e9068a1af186d690a45eed8644fd9363e"
+    },
+    {
+      "kind": "ui",
+      "name": "native-retrieval-scroll-602.png",
+      "sha256": "08cd85ef5fc612604c10b9f5f1210d924a601a2f076a700b7a74d1be0d5be2a2"
+    },
+    {
+      "kind": "ui",
+      "name": "native-retrieval-scroll-669.png",
+      "sha256": "7e798b6d8da4aaaf6bd01181b6d6cfbd16240c867b61f2583db4c4c862869513"
+    }
+  ],
+  "tools": {
+    "tools/ui-assets/UiAbilityCatalog.java": "7c4e67c6ab4b6dbd90022774cafa342ae6897505975ce7244fdfae4544004c14",
+    "tools/ui-assets/UiAssetExport.java": "25e441231cc8e41a8572655a87ab8f874d368946aae0625f70b6f91c22041659",
+    "tools/ui-assets/UiFlameCapture.java": "d3864664f96a53649a9a7ef775610b0de04482580b4f625d3bcecbb849967c3f",
+    "tools/ui-assets/UiModeCapture.java": "d277e223ffbe2f3c07838bbc7438a00e7e8904cf039035a8efc8188b769426eb",
+    "tools/ui-assets/UiScriptDump.java": "16f043968683d16b775f799c0c30004cc8e4c15961d4d4d65cfcd68985595990"
+  },
+  "finalAcceptance": false
+}

@@ -1,0 +1,96 @@
+{
+  "content_schema_version": 4,
+  "artifact_version": 4,
+  "runtime_schema_version": 1,
+  "former_v1_representation_gap_count": 17,
+  "former_v1_gaps_resolved_by_shared_contracts": true,
+  "parent_numeric_map_decoder_fix": "7150464",
+  "wind_strike_source_table": {"1": 2, "5": 4, "9": 6, "13": 8},
+  "wind_strike_current_binding": "bound; exact parent semantic replacement preserved",
+  "canonical_source_application": "research/m1-bindings/application-result.json",
+  "source_bindings_consumed": 104,
+  "coupled_updates": 7,
+  "source_supported_inferences_not_observations_or_approvals": 98,
+  "approved_adaptation": "adaptation.m1.goblin_energy_potion_provisional",
+  "approval_record": "milestones/m1-goblin-loot-approval.json",
+  "source_binding_inventory": "research/m1-bindings/unresolved-bindings.json",
+  "active_vs_inactive_proofs": "research/m1-bindings/application-result.json#residuals",
+  "active_source_binding_count": 0,
+  "inactive_source_binding_count": 6,
+  "conditional_vital_policy": {
+    "field": "mechanics.vitals.level_up",
+    "required_semantics": "Raise current to new base only when it equaled old base; drained/boosted values are unchanged.",
+    "example": {"old_base": 10, "new_base": 11, "current": [5, 10, 15], "expected": [5, 11, 15]},
+    "bound_source_variant": "raise_if_at_old_base_otherwise_preserve",
+    "selection": "The actual declared shared enum is bound, not a substitute or forked type.",
+    "runtime_scope": "Consult only on actual HP/Prayer base-level changes, never on Mining/Cooking-only XP gains.",
+    "current_resolution": "Bound and Runtime-compiled; no remaining conditional-vital representation gap."
+  },
+  "inactive_full_target_dependencies": [
+    "Two unacquired ordinary-route conditional/charged alternatives retain definitions and source requirements.",
+    "Three fishing respawn fields cannot be read when the bound depletion numerator is exactly zero.",
+    "Office overflow is unreachable under the proved non-instanced ordinary-item merge/universe capacity; recheck on any acquisition/universe/instance-merge change."
+  ],
+  "verified_asset_publication": {
+    "item_definitions": [3010, 3011],
+    "models": [2697],
+    "placeholder": 19365,
+    "source": "research/m1-bindings/application-item-definitions.json.gz",
+    "prior_potion_closure_references": 5257,
+    "current_product_asset_references": 5266,
+    "missing_requested_ids": [],
+    "publication": "assets/manifests/osrs/cache2695-consumables-published.json",
+    "water_fill_asset_additions": []
+  },
+  "declared_v3_selectors_authored": true,
+  "native_execution_requirements": [
+    {
+      "id": "single_and_make_x_one",
+      "status": "resolved",
+      "surface": "WorldEngine::require_world_target, touch_edge and solid-target contact/sight",
+      "source_target": "spawn.range.lumbridge.3212.3215.p0.t10.r2",
+      "actor_source_tile": {"x": 3211, "y": 3215, "plane": 0},
+      "input": "ProduceSelected recipe.cooking.bread.lumbridge_range, quantity1, Single versus MakeX",
+      "expected": "Accept from the walkable allowed west side and schedule source single1 versus first-MakeX3 ticks.",
+      "historical_executor_result": "Both requests returned OutOfReach because the target footprint itself is movement/sight clipped. This was a native component result, not an OSRS observation.",
+      "resolution": "The near cardinal face of a declared solid source footprint is reachable while preserving approach-side walls/sight, source access masks, distance, plane, instance and availability. Native source Single1/Make-X-one3 deadlines pass with unchanged collision.",
+      "new_content_field_required": false
+    },
+    {
+      "id": "fresh_manual_drop_offline_clock",
+      "status": "resolved",
+      "surface": "GroundItemPolicy and WorldEngine::advance_ground_clocks for GroundProducer::PlayerDrop",
+      "source_policy": "ground_policy.player_drop.m1_fresh",
+      "source": "research/m1-bindings/runtime3-policy.json#fresh_normal_manual_drop_profile",
+      "expected": "A fresh manual drop's300 owner-online ticks pause offline; after one offline engine tick, absolute expiry moves300->301 and the25 coins remain owned.",
+      "historical_executor_result": "The correct private policy/origin was selected and quantity conserved, but expiry remained300 because pause dispatch covered DeathSupply only.",
+      "resolution": "GroundItemPolicy.clock and frozen GroundProvenance.clock explicitly select owner-online ticks without changing PlayerDrop origin. Persisted PlayedTime drives before_playtime selection at120000 ticks, with untradeable and tutorial overrides. Unknown legacy history is not silently zeroed. The native offline and boundary probes pass.",
+      "new_content_field_required": false,
+      "full_target_follow_up": "Owner-private ground transfer across worlds must carry remaining lifetime and identity before world hopping is exposed; M1 has one authoritative world. The live20-hour boundary remains source-supported inference, not an observed source test."
+    }
+  ],
+  "current_native_evidence": "research/m1-bindings/schema-validation.json#native_source_policy_probes",
+  "water_fill": {
+    "status": "blocked_on_item_on_only_binding",
+    "source_recipe": "recipe.water.bucket",
+    "source_object": 14868,
+    "source_object_menu_operations": [],
+    "data": "research/water-fill/facts.json",
+    "profiles_and_hashes": "research/water-fill/handoff.json",
+    "native_evidence": "research/water-fill/validation.json",
+    "precise_seam": "UseItem matches the exact source recipe, but check_recipe_target requires a Production interaction. InteractionDefinition has no item-on-only channel, and interaction_options publishes every entry. A synthetic Fill/Use object menu would violate the original empty operation table.",
+    "required_action": "Shared owner must provide/document item-on-only facility authorization and source contact without changing source geometry or allowing anywhere-water conversion. Re-run positive replacement/cadence/duplicate-outcome cases before Director reviews any fenced same-world upgrade.",
+    "three_prior_source_unknowns_preserved": ["normal_grave_bank_all", "recipe.cooking.dough.motion", "empty_container.motion"],
+    "additional_water_motion": "Explicitly unverified; no sequence or deliberate silence selected.",
+    "migration_or_actual_gameplay_admitted": false
+  },
+  "validation_command": "python3 tools/m1-content/validate.py --repeat",
+  "unverified_full_target_follow_up": [
+    "Retained beginner-clue/member-only tertiary acquisition and ownership families are not certified by the potion approval.",
+    "New engagement/leash/default/attribution policies remain source-supported reversible inferences, not live captures or owner-approved deviations."
+  ],
+  "currency_conservation": "Departure cleanup/provisions/entitlements/completed transport/acknowledgement are atomic and do not reset, relocate, duplicate or recreate coins.",
+  "native_source_policy_conformance_passed": true,
+  "full_journey_executed": false,
+  "presentation_approved": false
+}

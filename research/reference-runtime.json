@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "purpose": "Original reference-client acquisition and offline inspection; not an approved capture pack.",
+  "source": "https://static.runelite.net/bootstrap.json",
+  "manifest_observed_on": "2026-09-13",
+  "version": "1.12.38",
+  "artifacts": [
+    {
+      "id": "injected-client",
+      "url": "https://repo.runelite.net/net/runelite/injected-client/1.12.38/injected-client-1.12.38.jar",
+      "path": ".local/reference-runtime/injected-client-1.12.38.jar",
+      "size_bytes": 4235748,
+      "sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947"
+    },
+    {
+      "id": "runelite-api",
+      "url": "https://repo.runelite.net/net/runelite/runelite-api/1.12.38/runelite-api-1.12.38-runtime.jar",
+      "path": ".local/reference-runtime/runelite-api-1.12.38-runtime.jar",
+      "size_bytes": 272846,
+      "sha256": "6d50aa843c070120a5093c5ead29d72e92742074346241e0359a133dad008852"
+    }
+  ],
+  "loader_source": {
+    "revision": "ac79ed8bd8926bec7bf172aa291574b4d944b0e7",
+    "path": "runelite-client/src/main/java/net/runelite/client/rs/ClientLoader.java",
+    "finding": "Loads the injected client from the runtime classpath and sets RSAppletStub configuration; it does not load an archived legacy JAR as a compatible ClubScape client."
+  },
+  "legacy_archive": {
+    "url": "https://github.com/runetech/osrs-gamepacks",
+    "revision": "2e92962075cfbc0df227cc783c37633d5e92f297",
+    "date": "2026-01-28T18:21:37Z",
+    "last_real_build": 235,
+    "build_240_present": false,
+    "finding": "The pinned README and complete Git tree contain archived builds through 235; osrs--1.jar is a farewell image, not a game renderer.",
+    "disposition": "Historical reference only; do not downgrade the frozen build-240 target or use the farewell image as startup fidelity evidence."
+  },
+  "reference_pack_approved": false,
+  "runtime_execution_authorized_by_this_manifest": false,
+  "clubscape_compatibility_verified": false
+}

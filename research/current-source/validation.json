@@ -1,0 +1,879 @@
+{
+  "schema_version": 1,
+  "result": "passed",
+  "counts": {
+    "region": 61,
+    "placed_objects": 151019,
+    "object": 4837,
+    "npc": 30,
+    "item": 83,
+    "interface": 30,
+    "underlay": 48,
+    "overlay": 99,
+    "model": 3433,
+    "texture": 39,
+    "sequence": 138,
+    "skeleton": 115,
+    "frame": 2133,
+    "cached-animation": 1,
+    "font": 4,
+    "sprite": 119,
+    "music": 5,
+    "sound": 184,
+    "title": 1,
+    "music-sample": 581,
+    "music-patch": 187
+  },
+  "nonempty_models": 3419,
+  "verified_output_files": 25465,
+  "verified_original_payloads": 13987,
+  "verified_source_groups": 4869,
+  "bundle": {
+    "path": ".local/current-source/extracted/bundle.json",
+    "size_bytes": 8227407,
+    "sha256": "d219904d00e894fefa0d25a6d464b879ff59b9c1fdbacfa030c878e6d4d756fe"
+  },
+  "source_capture_or_gameplay_acceptance": false,
+  "verified_at": "2026-09-14T00:14:19.518372+00:00",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/cache-import",
+        "-p",
+        "test_*.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "log": "research/current-source/commands/unit-tests.log",
+      "log_sha256": "6c14f328c0906a2340f7bae1731960c6baf13751eccb0affcd000ca8704b10b4"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/cache-import/import_cache.py",
+        "fetch"
+      ],
+      "exit_code": 0,
+      "log": "research/current-source/commands/fetch.log",
+      "log_sha256": "969b8cb34b45a72ead2889f27596273ad5abbaabb239bf74449d8decd4c8aed9"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/cache-import/import_cache.py",
+        "verify"
+      ],
+      "exit_code": 0,
+      "log": "research/current-source/commands/verify.log",
+      "log_sha256": "4b3dfd7bdecb8e2402cdc1fb347073b6ea4f0eb887bc4113f13eec591f10705c"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/cache-import/import_cache.py",
+        "probe"
+      ],
+      "exit_code": 0,
+      "log": "research/current-source/commands/probe.log",
+      "log_sha256": "01a13facb371e9f56f4f6a28eec18a30bd220f0bdb8c813ee6d48e69ce5dea82"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/cache-import/import_cache.py",
+        "test-integrity"
+      ],
+      "exit_code": 0,
+      "log": "research/current-source/commands/test-integrity.log",
+      "log_sha256": "5cad4b641b1ccb8f809b792e46c62180a00b8e940d379dfe928450cb54d65ad0"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/cache-import/import_cache.py",
+        "extract"
+      ],
+      "exit_code": 0,
+      "log": "research/current-source/commands/extract.log",
+      "log_sha256": "60f4dcdf9518e7a02aeed9380e67344555c89cdaaa08fbef7b50ebb4653e177c"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/cache-import/import_cache.py",
+        "validate"
+      ],
+      "exit_code": 0,
+      "log": "research/current-source/commands/validate.log",
+      "log_sha256": "60a1ab39d9fed3ceeb5346405d0fcba4bee9b14d195815e01f556697dd936ad6"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/cache-import/import_cache.py",
+        "publish"
+      ],
+      "exit_code": 0,
+      "log": "research/current-source/commands/publish.log",
+      "log_sha256": "773937345931cf6a980b287271a1a3089c04cfad58dd903966f67201e99676b3"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/cache-import/import_cache.py",
+        "validate-published"
+      ],
+      "exit_code": 0,
+      "log": "research/current-source/commands/validate-published.log",
+      "log_sha256": "324ed3f687b870078bf2590b7f2d6085f9222a0a8d144774e3e1fc5849089b69"
+    }
+  ],
+  "repeat_extraction_identical": true,
+  "runtime_probe": {
+    "exit_code": 0,
+    "revision_before": 0,
+    "revision_after": 240,
+    "init_exception": null,
+    "scope": "Isolated configuration initialization, no login/terms/capture."
+  },
+  "negative_input_tests": {
+    "unit_tests": 16,
+    "passed": true,
+    "actual_cache_crc_test": "Original tree1570 container passes; in-memory byte corruption and wrong CRC both rejected; all original cache file hashes unchanged afterward."
+  },
+  "source_request": {
+    "path": "research/current-source/m1-request.json",
+    "size_bytes": 4379,
+    "sha256": "53a20dc22a9c92c60f9ea3ad6b2345404d3e581199ebdde87fb627ae9e54cdef"
+  },
+  "source_selection": {
+    "path": "research/current-source/selection.json",
+    "size_bytes": 8853,
+    "sha256": "b1a8d65cec6143946dba7172bc29142c8aa47cc4383abaffefef5b2ea3b2b028"
+  },
+  "toolchain": {
+    "java": "Temurin17.0.20.1+1 Linux ARM64",
+    "python": "3.12.3",
+    "runelite_decoder_revision": "ac79ed8bd8926bec7bf172aa291574b4d944b0e7"
+  },
+  "tool_files": [
+    {
+      "path": "tools/cache-import/CacheExtractor.java",
+      "size_bytes": 40089,
+      "sha256": "f760b9c358a4d20bf9085399bf9152ab414d6ff34a44cd10032390043938695e"
+    },
+    {
+      "path": "tools/cache-import/CacheIntegrityTest.java",
+      "size_bytes": 1746,
+      "sha256": "eb7d588685b88076e7c5e2aa8fecc23665822772beab19c4e118f75fe7dddaa3"
+    },
+    {
+      "path": "tools/cache-import/README.md",
+      "size_bytes": 10028,
+      "sha256": "bdeec99c5f1b9ab25333d2e7381fea1160a61e83d64a079419847157a55bef76"
+    },
+    {
+      "path": "tools/cache-import/RuntimeProbe.java",
+      "size_bytes": 3409,
+      "sha256": "b271736d462af5761b6a632c8e7a1dc4b1ed489f9ee2179ea4be1393a4aeaa92"
+    },
+    {
+      "path": "tools/cache-import/THIRD_PARTY_NOTICES.txt",
+      "size_bytes": 2126,
+      "sha256": "1e12cd50478a8a217c833216f1254c626cb61960d6c2e3bb353bc6f5b17429b2"
+    },
+    {
+      "path": "tools/cache-import/dependencies.json",
+      "size_bytes": 2950,
+      "sha256": "cd3d731fc45b12d7515d7ded9df6b5c53d70e27a33011a78d254c3421be0d8e4"
+    },
+    {
+      "path": "tools/cache-import/import_cache.py",
+      "size_bytes": 28555,
+      "sha256": "b3e15354857323dea0273308ed3093b431d9a9045fb5b10e2a0d863bfedbac89"
+    },
+    {
+      "path": "tools/cache-import/test_import_cache.py",
+      "size_bytes": 8565,
+      "sha256": "819f1570f5d252af1d95d7140152d5c7f062033276e8130ec129ce862af44b57"
+    }
+  ],
+  "published_manifest": {
+    "path": "assets/manifests/osrs/cache2695-published.json",
+    "size_bytes": 121738,
+    "sha256": "84f48642594a6805f5f89c341d178345b7b0ca33f056242f4cb624517cafdb87"
+  },
+  "representative_evidence": [
+    {
+      "asset_id": "asset.source.osrs.cache2695.region.12336",
+      "source": [
+        {
+          "group_key": "5/12336",
+          "file": 0,
+          "size_bytes": 54945,
+          "sha256": "6d139a8bc406bd19ca3cfca5788d0fb3272a90d4f48c90cf39e8745608dced46"
+        },
+        {
+          "group_key": "5/12336",
+          "file": 1,
+          "size_bytes": 8424,
+          "sha256": "193445b7f020d7cafafc058403e83602c6a8477a4157695d3b5c27c91b7ab49c"
+        }
+      ],
+      "statistics": {
+        "tiles": 16384,
+        "placements": 3773,
+        "height_min": -2080,
+        "height_max": 0
+      },
+      "decoded_outputs": [
+        {
+          "path": "world/12336.json.gz",
+          "size_bytes": 39088,
+          "sha256": "9fd3f8f64aad06e3056920d698635c12ffb80bbc750e931bd7676d029a4e9dbb",
+          "json_size_bytes": 395058,
+          "json_sha256": "2136aec30e73629901995f449b6a319316142104470a17f23d0f3953dc874966"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.region.12436",
+      "source": [
+        {
+          "group_key": "5/12436",
+          "file": 0,
+          "size_bytes": 64643,
+          "sha256": "4f477f5415fa170a0ee1b496489195df716c39116b9dc79c90bcc4747624c48a"
+        },
+        {
+          "group_key": "5/12436",
+          "file": 1,
+          "size_bytes": 8627,
+          "sha256": "5dbb90f22cc6c3edcb296896ddb80e2f5b033de55b291bc9c0f88b8e7cb1dcd2"
+        }
+      ],
+      "statistics": {
+        "tiles": 16384,
+        "placements": 4198,
+        "height_min": -1600,
+        "height_max": 0
+      },
+      "decoded_outputs": [
+        {
+          "path": "world/12436.json.gz",
+          "size_bytes": 36236,
+          "sha256": "017c2fdd1a02e1375eade431c840e686096e34f17a026da5c59b55185202e1d1",
+          "json_size_bytes": 409830,
+          "json_sha256": "b72fe14ff6e2abea84c377053ab63d769ca46e2acc97d55783e497f84912a84f"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.region.12595",
+      "source": [
+        {
+          "group_key": "5/12595",
+          "file": 0,
+          "size_bytes": 50659,
+          "sha256": "da533a9a2aa8b6c7ac7f9940e2ab4277acc4d1d95001a22515fab368e2d52f68"
+        },
+        {
+          "group_key": "5/12595",
+          "file": 1,
+          "size_bytes": 6874,
+          "sha256": "c22c82747b8ebaed6673c20f8f71e3019adcf39233f0f6ba4f22c417b1c2f982"
+        }
+      ],
+      "statistics": {
+        "tiles": 16384,
+        "placements": 2996,
+        "height_min": -1360,
+        "height_max": -96
+      },
+      "decoded_outputs": [
+        {
+          "path": "world/12595.json.gz",
+          "size_bytes": 31899,
+          "sha256": "caf0135ddc519e03f6ed278850edd14d83a080ef35569c05bd9e36e60e62ff44",
+          "json_size_bytes": 373128,
+          "json_sha256": "b161075d479d42041d1b312a45eda9e76c3123d4ff91149bc528fd181054b926"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.region.12633",
+      "source": [
+        {
+          "group_key": "5/12633",
+          "file": 0,
+          "size_bytes": 46286,
+          "sha256": "5ecfa302a75770bd3c9c93daf8bc55bae1c9c5051a37cd168215766b4df57fea"
+        },
+        {
+          "group_key": "5/12633",
+          "file": 1,
+          "size_bytes": 820,
+          "sha256": "2bd5a7b1439d650caa74baa5acdcdefc7f025ece2d01107030a8d9284abd9e68"
+        }
+      ],
+      "statistics": {
+        "tiles": 16384,
+        "placements": 307,
+        "height_min": -992,
+        "height_max": -200
+      },
+      "decoded_outputs": [
+        {
+          "path": "world/12633.json.gz",
+          "size_bytes": 2624,
+          "sha256": "380585d7ed17110943be67e593e5adf952584547b46bc7b6667d029b327aafdb",
+          "json_size_bytes": 303135,
+          "json_sha256": "90f3b826bcfdd10aafd8b9b0e7d199ebdd996040d1f3ccf31b635b9d159fb7cf"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.region.12850",
+      "source": [
+        {
+          "group_key": "5/12850",
+          "file": 0,
+          "size_bytes": 60239,
+          "sha256": "067e565019479e4a147b670f6821a7fc0c5113d4bb9cb272ab2dc14ccea401d4"
+        },
+        {
+          "group_key": "5/12850",
+          "file": 1,
+          "size_bytes": 11157,
+          "sha256": "e93debadd5573f8db0fe764d7e2148ede79c8db918b51c78429075c201bc797b"
+        }
+      ],
+      "statistics": {
+        "tiles": 16384,
+        "placements": 4726,
+        "height_min": -1192,
+        "height_max": 0
+      },
+      "decoded_outputs": [
+        {
+          "path": "world/12850.json.gz",
+          "size_bytes": 36664,
+          "sha256": "b1e8c8e44273ffa23766131fcc31e645da5bb1f7d47fa1a893fcd7624c8f05e5",
+          "json_size_bytes": 410978,
+          "json_sha256": "2bb9e862f45809831be05c33ef446c90ae6503ba95caec1045d24ce124a8aef7"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.model.1570",
+      "source": [
+        {
+          "group_key": "7/1570",
+          "file": 0,
+          "size_bytes": 1308,
+          "sha256": "31c798ef3957f602a62f8a1494c94ef9a56b0f29865a0b0baa709ff8280dc1df"
+        }
+      ],
+      "statistics": {
+        "vertices": 90,
+        "faces": 110,
+        "bounds_min": [
+          -119,
+          -290,
+          -78
+        ],
+        "bounds_max": [
+          107,
+          0,
+          78
+        ],
+        "source_empty_mesh": false
+      },
+      "decoded_outputs": [
+        {
+          "path": "models/1570.json.gz",
+          "size_bytes": 2314,
+          "sha256": "60761922e93ee89879a1c22df5adebb7e6eb26b2c10ed21cbf31d0ddab35f731",
+          "json_size_bytes": 9766,
+          "json_sha256": "340a593fe5b8a831e36ae169c0d548efc834a198c9a2e60d91da9b99e420a47b"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.model.21547",
+      "source": [
+        {
+          "group_key": "7/21547",
+          "file": 0,
+          "size_bytes": 3387,
+          "sha256": "c8f092dde71d17103132b05e956219aaefd4f6454906eb25bc64108531f15c1c"
+        }
+      ],
+      "statistics": {
+        "vertices": 200,
+        "faces": 396,
+        "bounds_min": [
+          -31,
+          -161,
+          -43
+        ],
+        "bounds_max": [
+          31,
+          0,
+          46
+        ],
+        "source_empty_mesh": false
+      },
+      "decoded_outputs": [
+        {
+          "path": "models/21547.json.gz",
+          "size_bytes": 4295,
+          "sha256": "98b61c326c55c6d256a5895c2a4c69224bd417e287daf5c57257dfd26247974c",
+          "json_size_bytes": 22408,
+          "json_sha256": "f628b78f8f06090595c5f76f90763709917fdeaafdce6f5902e8e0e15db7e573"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.model.24431",
+      "source": [
+        {
+          "group_key": "7/24431",
+          "file": 0,
+          "size_bytes": 2425,
+          "sha256": "53bd56114c3f059f89adce8584a1339035bc8639c02700eb1e40bc78eb2cc96e"
+        }
+      ],
+      "statistics": {
+        "vertices": 172,
+        "faces": 314,
+        "bounds_min": [
+          -65,
+          -138,
+          -15
+        ],
+        "bounds_max": [
+          65,
+          -90,
+          8
+        ],
+        "source_empty_mesh": false
+      },
+      "decoded_outputs": [
+        {
+          "path": "models/24431.json.gz",
+          "size_bytes": 3778,
+          "sha256": "03d8312c34847a10500defe0af82d116de3af5c348d0599a5d5dbc0da609d143",
+          "json_size_bytes": 18679,
+          "json_sha256": "f8f1083d446600a7d89c9cd8a91b1ac8f6c8a526b301705baaa9a6df407c8702"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.model.24441",
+      "source": [
+        {
+          "group_key": "7/24441",
+          "file": 0,
+          "size_bytes": 922,
+          "sha256": "102243ed5f2653f746f4765c3bf9f4b80a96d1fbee0b79bc720ebccc18fc41a1"
+        }
+      ],
+      "statistics": {
+        "vertices": 68,
+        "faces": 124,
+        "bounds_min": [
+          -36,
+          -15,
+          -29
+        ],
+        "bounds_max": [
+          36,
+          0,
+          2
+        ],
+        "source_empty_mesh": false
+      },
+      "decoded_outputs": [
+        {
+          "path": "models/24441.json.gz",
+          "size_bytes": 1518,
+          "sha256": "c37fbd7375d11697946e1f3bee4320f38573c209372614a573d69e4ce7961e84",
+          "json_size_bytes": 7390,
+          "json_sha256": "cd19d91f05dd503edb1ade952c70e1fd8028e506aea93f297435c1692014dcdb"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.model.24448",
+      "source": [
+        {
+          "group_key": "7/24448",
+          "file": 0,
+          "size_bytes": 1423,
+          "sha256": "edf0f0ca4b1d39af1bb5b1f0f6af71b8a23f3e3a6df77c92a6b16940bc35e7df"
+        }
+      ],
+      "statistics": {
+        "vertices": 88,
+        "faces": 158,
+        "bounds_min": [
+          -81,
+          -108,
+          -20
+        ],
+        "bounds_max": [
+          81,
+          -76,
+          -3
+        ],
+        "source_empty_mesh": false
+      },
+      "decoded_outputs": [
+        {
+          "path": "models/24448.json.gz",
+          "size_bytes": 2065,
+          "sha256": "fca9ff724f8fee66e835ccdcac399cfa2b7b11b99062de6b80cae5378e5f7acf",
+          "json_size_bytes": 9830,
+          "json_sha256": "546ca62dd8299d3de8336a4e4aa6920f836282986ccaeded7f466b18acc79a2f"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.model.24458",
+      "source": [
+        {
+          "group_key": "7/24458",
+          "file": 0,
+          "size_bytes": 1628,
+          "sha256": "db835fa17835cf0c624585fb7e9c7eab6538576e2a09ebfd0a6a979f48337274"
+        }
+      ],
+      "statistics": {
+        "vertices": 111,
+        "faces": 212,
+        "bounds_min": [
+          -17,
+          -173,
+          -34
+        ],
+        "bounds_max": [
+          17,
+          -125,
+          10
+        ],
+        "source_empty_mesh": false
+      },
+      "decoded_outputs": [
+        {
+          "path": "models/24458.json.gz",
+          "size_bytes": 2546,
+          "sha256": "d61e6478bb67f0d3905556d5e0d51a2c83924ef8573405d8bf2a93c1b77786d2",
+          "json_size_bytes": 12392,
+          "json_sha256": "c6518a6b96b2c73799ffce58ead7af32289799cb0ae52e55639f4e07e7ba6a8f"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.model.24472",
+      "source": [
+        {
+          "group_key": "7/24472",
+          "file": 0,
+          "size_bytes": 2649,
+          "sha256": "efc6c063b05859f40b73787b24056e4147d271679f4d8cc5e4832a1e6e853150"
+        }
+      ],
+      "statistics": {
+        "vertices": 131,
+        "faces": 282,
+        "bounds_min": [
+          -26,
+          -86,
+          -22
+        ],
+        "bounds_max": [
+          26,
+          -15,
+          13
+        ],
+        "source_empty_mesh": false
+      },
+      "decoded_outputs": [
+        {
+          "path": "models/24472.json.gz",
+          "size_bytes": 2897,
+          "sha256": "7feec0e6763f9ac7de49d5d3dc63ceb9bc31bdd9a3ca8e57259e25c993504162",
+          "json_size_bytes": 16232,
+          "json_sha256": "e59a9d69d1d8073a1348d575b2eec9a8cce79116da82ece2582ec9a4bba56cf5"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.model.24482",
+      "source": [
+        {
+          "group_key": "7/24482",
+          "file": 0,
+          "size_bytes": 1977,
+          "sha256": "d3335487f1fd0adb46bb9849aad523f60a4fea4311435f02fc7370b72b21c129"
+        }
+      ],
+      "statistics": {
+        "vertices": 141,
+        "faces": 250,
+        "bounds_min": [
+          -19,
+          -137,
+          -22
+        ],
+        "bounds_max": [
+          19,
+          -84,
+          22
+        ],
+        "source_empty_mesh": false
+      },
+      "decoded_outputs": [
+        {
+          "path": "models/24482.json.gz",
+          "size_bytes": 3064,
+          "sha256": "a4874053e2cda55d0cb9ac1cce0e74d5e61b2c273a44789d899e371cf8fdbf14",
+          "json_size_bytes": 14849,
+          "json_sha256": "92d1d8b10cfee57b224e1eb00bc75686ab594a7ead6bd2d7fd6821a193d161ad"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.font.494",
+      "source": [
+        {
+          "group_key": "13/494",
+          "file": 0,
+          "size_bytes": 257,
+          "sha256": "299172d0b685fa8d56c4de4fe48ad97e13f7ae92dae4744bbe955d829d96562c"
+        }
+      ],
+      "statistics": {
+        "glyphs": 256,
+        "ascent": 10
+      },
+      "decoded_outputs": [
+        {
+          "path": "fonts/494.json",
+          "size_bytes": 720,
+          "sha256": "34eaba944b3927fe9c3f3938de80acf73c3787f276032cc32cab4ad5cc165f16"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.font.495",
+      "source": [
+        {
+          "group_key": "13/495",
+          "file": 0,
+          "size_bytes": 257,
+          "sha256": "01e6d6c080143a4a436361dc5c3ea40f83cb188bfda38f64f4e7ea0154680d0d"
+        }
+      ],
+      "statistics": {
+        "glyphs": 256,
+        "ascent": 12
+      },
+      "decoded_outputs": [
+        {
+          "path": "fonts/495.json",
+          "size_bytes": 732,
+          "sha256": "1477a4d650b51fb9800c8035db30a5c47d839586fbf7c9968cdd3d7effc042c2"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.font.496",
+      "source": [
+        {
+          "group_key": "13/496",
+          "file": 0,
+          "size_bytes": 257,
+          "sha256": "af04acc07d927ffd1a53fc1b903f663bc220c32772d72dc16011b4d94b85cc38"
+        }
+      ],
+      "statistics": {
+        "glyphs": 256,
+        "ascent": 12
+      },
+      "decoded_outputs": [
+        {
+          "path": "fonts/496.json",
+          "size_bytes": 743,
+          "sha256": "3e7e6f01d7c67e8e10ea99e98b3c9718edbddbb38c8d4f0287e8ff59fc349f92"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.sprite.494",
+      "source": [
+        {
+          "group_key": "8/494",
+          "file": 0,
+          "size_bytes": 8582,
+          "sha256": "b33a1eb555abcf579661d655168bac1a5ad1e1fb7841cbe3a9e0372efbecb143"
+        }
+      ],
+      "statistics": {
+        "frames": 256,
+        "atlas_width": 176,
+        "atlas_height": 192,
+        "nontransparent_pixels": 2689
+      },
+      "decoded_outputs": [
+        {
+          "path": "sprites/494.png",
+          "size_bytes": 3758,
+          "sha256": "7ff3a06f72d3f6212b0d7d8d13be6c6a8c6e7c83b76f0ea3b6c6fbf9cb672cdd"
+        },
+        {
+          "path": "sprites/494.json.gz",
+          "size_bytes": 3798,
+          "sha256": "7835603b33c3970f30af8adeb7e3a6d5a52849bd0aa474c004bc4091ac920711",
+          "json_size_bytes": 57340,
+          "json_sha256": "8fdc465686c7b1a5d2d2002ba487b3e082c73005c0fc3311cf4e5e4dc0f447c3"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.sprite.495",
+      "source": [
+        {
+          "group_key": "8/495",
+          "file": 0,
+          "size_bytes": 11669,
+          "sha256": "c7da41b4e540f6305b31672295b5aea929e9d7ef6d51902162d0631baaa6d10e"
+        }
+      ],
+      "statistics": {
+        "frames": 256,
+        "atlas_width": 208,
+        "atlas_height": 256,
+        "nontransparent_pixels": 3479
+      },
+      "decoded_outputs": [
+        {
+          "path": "sprites/495.png",
+          "size_bytes": 5431,
+          "sha256": "30fbc285651a890aa2e50d45675c1acd1ed4419cd8bb90306969d3dd287bb386"
+        },
+        {
+          "path": "sprites/495.json.gz",
+          "size_bytes": 4218,
+          "sha256": "9fdfb35841363d81a87542a9bc16c692ce62449631a6708038d18ee67930f692",
+          "json_size_bytes": 63684,
+          "json_sha256": "49386b3de4960d10b199c81d552a5601aeda3798afa6d46d7dc2b26845f24269"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.sprite.496",
+      "source": [
+        {
+          "group_key": "8/496",
+          "file": 0,
+          "size_bytes": 13521,
+          "sha256": "4b23a0094bd69ffb9e069be3f2675ef0182e09be54dcea249602bd69c65416b4"
+        }
+      ],
+      "statistics": {
+        "frames": 256,
+        "atlas_width": 224,
+        "atlas_height": 256,
+        "nontransparent_pixels": 5659
+      },
+      "decoded_outputs": [
+        {
+          "path": "sprites/496.png",
+          "size_bytes": 5756,
+          "sha256": "0d0aa702975511a494aff9ffb3f0c70f07fe0cf4b5f04184db2982e6b8ea9c6d"
+        },
+        {
+          "path": "sprites/496.json.gz",
+          "size_bytes": 4345,
+          "sha256": "b515c4eb66486f0e62fa2a63b4ab6cb89072c695a9afc44befbfdf3b36e8d49d",
+          "json_size_bytes": 67400,
+          "json_sha256": "4102b3fa7bccafc0acfdb2a62164e7ad6b1dd8d285023c44abf763c6e8cfe9eb"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.sprite.499",
+      "source": [
+        {
+          "group_key": "8/499",
+          "file": 0,
+          "size_bytes": 72067,
+          "sha256": "6d1bb257e153ed2ab6765e602c4d850f1d35387d656960817f5db991f661b6dd"
+        }
+      ],
+      "statistics": {
+        "frames": 1,
+        "atlas_width": 360,
+        "atlas_height": 200,
+        "nontransparent_pixels": 70864
+      },
+      "decoded_outputs": [
+        {
+          "path": "sprites/499.png",
+          "size_bytes": 33113,
+          "sha256": "6f82b7e3c20d1a141da5bcb74dd419ffe9d8c2aa72659bc33d63f7e4456775e6"
+        },
+        {
+          "path": "sprites/499.json.gz",
+          "size_bytes": 26920,
+          "sha256": "dd61ff4c1ffdfef9444fe6a1cede92ed9b322af81e376fda5b0db795538d2f18",
+          "json_size_bytes": 178753,
+          "json_sha256": "1fc6aac96d49dfeffc99fa32bc5f394356b20801650b07f0fd2f485e0aa4e2d2"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.title.background",
+      "source": [
+        {
+          "group_key": "10/0",
+          "file": 0,
+          "size_bytes": 172493,
+          "sha256": "8903fd680577ac4ca37cfd73a90e5415739aff7f8d589e02b07f012ad5795636"
+        }
+      ],
+      "statistics": {
+        "width": 383,
+        "height": 503,
+        "source_game_capture": false
+      },
+      "decoded_outputs": [
+        {
+          "path": "title/title.jpg",
+          "size_bytes": 172493,
+          "sha256": "8903fd680577ac4ca37cfd73a90e5415739aff7f8d589e02b07f012ad5795636"
+        }
+      ]
+    }
+  ],
+  "repeat_bundle_sha256": "d219904d00e894fefa0d25a6d464b879ff59b9c1fdbacfa030c878e6d4d756fe",
+  "production_network_fetch_check": {
+    "url": "https://repo.runelite.net/net/runelite/runelite-api/1.12.38/runelite-api-1.12.38-runtime.jar",
+    "size_bytes": 272846,
+    "sha256": "6d50aa843c070120a5093c5ead29d72e92742074346241e0359a133dad008852",
+    "result": "Successfully fetched with production streaming downloader during this task; verified duplicate removed afterward."
+  },
+  "published_only_validation": {
+    "result": "passed",
+    "published_files": 559,
+    "original_source_inventory_records": 12128,
+    "source_capture_or_gameplay_acceptance": false
+  }
+}

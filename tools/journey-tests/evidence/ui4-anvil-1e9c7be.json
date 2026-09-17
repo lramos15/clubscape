@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "scope": "Actual canonical4 source anvil menu opening, typed selection and dagger outcome",
+  "anvil_contextual_entry_verified": true,
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_visual_audio_performance_or_runelite_claims": false,
+  "authorized_final_parent_candidate": "78fcec42226e17d715f422f8e9cc2be8a1fb8762",
+  "local_candidate": "1e9c7be1d2a881ba0f1540bea05cd23fbe693d6a",
+  "candidate": {
+    "revision": "m1.source-backed.v4.67e4f1fcc55d71d5",
+    "content_artifact_version": 4,
+    "state_runtime_version": 1,
+    "ui_state_version": 1,
+    "raw_artifact_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3",
+    "compressed_artifact_sha256": "f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6",
+    "old_bb99_world_repinned": false,
+    "root_lock_and_milestones_imported_or_edited": false,
+    "generated_conflict_resolution": "Final authorized worker candidate, not older v3 generated artifacts."
+  },
+  "actual_run": {
+    "run_id": "798cf03d51344667",
+    "command": "python3 tools/journey-tests/run.py --report .local/evidence/m1-ui4-source-controls.json",
+    "fresh_normal_public_account": "47897a93-82de-4bf3-a3e3-2a4dcd39cf0f",
+    "world_id": "90d04741-ccc0-4a4e-a1eb-1c5b143323db",
+    "anvil_open": {
+      "target": "spawn.anvil.tutorial.3075.9497.p0.t10.r0",
+      "input": "Interact Smith",
+      "sequence": 105,
+      "operation_id": "6698af58-a8e8-44d4-8c09-3b318456e9fc",
+      "acknowledged_tick": 498,
+      "next_sequence": 106,
+      "source_event": "interface_opened / interface.smithing",
+      "source_stage_after": "stage.tutorial.smith_dagger",
+      "source_interface_id": 312,
+      "actual_ui_menu_id": "ui.4",
+      "actual_ui_target": "spawn.anvil.tutorial.3075.9497.p0.t10.r0",
+      "available_recipe": "recipe.smithing.bronze_dagger",
+      "single_and_make_x_permissions": true,
+      "no_items_or_xp_granted_by_menu_open": true,
+      "bronze_bar_before_selection": 1,
+      "hammer_before_selection": 1,
+      "smithing_xp_tenths_before_selection": 62
+    },
+    "actual_typed_selection": {
+      "request": "WorldInput.ui / GameplayUiRequest.production",
+      "menu_id": "ui.4",
+      "recipe": "recipe.smithing.bronze_dagger",
+      "quantity": 1,
+      "mode": "SINGLE",
+      "sequence": 106,
+      "operation_id": "038f3ed2-a48a-41ff-88ca-748ec17d61fe",
+      "acknowledged_tick": 499,
+      "no_immediate_dagger_or_xp_before_source_phase": true
+    },
+    "actual_source_completion": {
+      "observed_tick": 505,
+      "source_event": "production_resolved / recipe.smithing.bronze_dagger",
+      "bronze_bar_consumed": 1,
+      "bronze_dagger_produced": 1,
+      "hammer_retained": 1,
+      "smithing_xp_delta_tenths": 125,
+      "smithing_xp_total_tenths": 187,
+      "stage_after": "stage.tutorial.mining_exit"
+    },
+    "further_progress_in_this_account": "Equipment tab, actual equipment-stats context, dagger/sword/shield equipment and rat-pen entry; 42 source transitions before the owned approach selector was corrected.",
+    "owned_resources_cleaned": true,
+    "source_service_exit_clean": true
+  },
+  "source_data_or_gameplay_sql_mutated": false,
+  "generic_interface_or_direct_dagger_stage_bypass": false,
+  "source_geometry_rng_or_cadence_overridden": false,
+  "exact_deployment_identity": {
+    "descriptor_sha256": "a7cbf0532abe04c8b9015a48395a686bd18fec6c557e95ef4062f233d665a4c3",
+    "assets_manifest_sha256": "b711446250e8480a9e0251350ee39ec50213734d0aec95525eeaa335faf2e3ae"
+  },
+  "ui_contract_adaptation": [
+    "Require real game.ui.v1/game.observer.v1 capabilities and complete UIstate1 snapshots.",
+    "Open target-bound world production via actual source interaction, then select exact actual menu ID/recipe/mode.",
+    "Use actual flour-pot/water-bucket inventory item use for a nullable-target dough menu; absence is never replaced by a fake facility.",
+    "Normal source raw-item-on-fire control is validated by an exact executed recipe/target observer when no menu is opened; the separately denied generic Cook-menu path is not claimed as working.",
+    "Use actual source reward/document continuation IDs and echo current decimal UI bank revision for typed bank controls.",
+    "Preserve existing chronological event-suffix proof and every acknowledged input identity."
+  ],
+  "later_full_journey_result": "See ui4-departure-1e9c7be.json; anvil completion is not full M1 acceptance."
+}

@@ -1,0 +1,21 @@
+{
+  "command": [
+    "cargo",
+    "build",
+    "--quiet",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/integration-tests/service-probe/Cargo.toml"
+  ],
+  "exit_code": 0,
+  "source_revision": "c841f6a6dcd4a1a2b3e7a9e121c62849140c8634",
+  "root_lock_sha256": "cb2aed73414ea9d8c35f988a8dc7cef08cf7a95d8a094861fa1e56de7a1583a3",
+  "probe_lock_sha256": "ef9483d12abf89211438a17b3bbcefe7c24063128d8ccdae3a968d52c0adeda3",
+  "probe_main_sha256": "d96e0faeafca2c378ea84ff1fffbc3d872c77646bbb54a3b7265d9603c11d3b9",
+  "server_config_sha256": "ea9c8764da422f6f59c334fcb1d72c2da718d9944950fb4ec451f7c055049926",
+  "server_content_loader_sha256": "9c914d88b9d97a8dba841ff78625cd6c4c49faa48862f7f504c07b9e8b3c09c9",
+  "shared_authority_modified": false,
+  "binary_sha256": "627491e69fe3320cf663005c5ef3468a52c2fb520d2f67e3e64151afa5717daa",
+  "compatibility_verified": false
+}

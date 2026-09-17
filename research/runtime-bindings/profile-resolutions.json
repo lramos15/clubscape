@@ -1,0 +1,293 @@
+{
+  "schema_version": 1,
+  "scope": "Supplemental already-bound/profile fields; not additional members of the112 unresolved-path inventory.",
+  "retained": [
+    {
+      "path": "initial_state.tile",
+      "pointer": [
+        "initial_state",
+        "tile"
+      ],
+      "value": {
+        "plane": 0,
+        "x": 3094,
+        "y": 3106
+      },
+      "classification": "source_supported_inference",
+      "reason": "Retain the existing starting-house tile3094,3106. It is a source-area starting candidate, not an observed exact account spawn/camera.",
+      "source_refs": [
+        "wiki.15315138",
+        "wiki.15275369"
+      ],
+      "observed_source_state": false
+    },
+    {
+      "path": "mechanics.travels.travel.tutorial.departure.destination",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial.departure",
+        "destination"
+      ],
+      "value": {
+        "source": [
+          {
+            "notes": "Pinned behavioral reference; not an executed game trace.",
+            "reference": "https://oldschool.runescape.wiki/w/Lumbridge_Home_Teleport?oldid=15322888",
+            "revision": "15322888",
+            "status": "verified_reference"
+          },
+          {
+            "notes": "Pinned behavioral reference; not an executed game trace.",
+            "reference": "https://oldschool.runescape.wiki/w/Transcript:Learning_the_Ropes?oldid=15309360",
+            "revision": "15309360",
+            "status": "verified_reference"
+          },
+          {
+            "notes": "Pinned behavioral reference; not an executed game trace.",
+            "reference": "https://oldschool.runescape.wiki/w/Tutorial_Island?oldid=15275369",
+            "revision": "15275369",
+            "status": "verified_reference"
+          },
+          {
+            "notes": "Typed source rule binding; arithmetic/content validation is not observed runtime gameplay.",
+            "reference": "research/journey-rules/activities.json#rule.magic.home_teleport",
+            "revision": "source-contract-v1",
+            "status": "verified_reference"
+          },
+          {
+            "notes": "Pinned behavioral reference; not an executed game trace.",
+            "reference": "https://oldschool.runescape.wiki/w/Learning_the_Ropes?oldid=15315138",
+            "revision": "15315138",
+            "status": "verified_reference"
+          },
+          {
+            "notes": "Separate player-arrival candidates in the correct Lumbridge source areas; the Jon NPC anchor is not reused as the player tile. Exact arrival capture remains required.",
+            "reference": "research/m1-bindings/location-bindings.json",
+            "revision": "240/cache2695",
+            "status": "inference"
+          }
+        ],
+        "status": "bound",
+        "value": {
+          "branches": {
+            "experience.brand_new": {
+              "instance": null,
+              "region": "region.osrs.12850",
+              "tile": {
+                "plane": 0,
+                "x": 3232,
+                "y": 3233
+              }
+            },
+            "experience.experienced": {
+              "instance": null,
+              "region": "region.osrs.12850",
+              "tile": {
+                "plane": 0,
+                "x": 3222,
+                "y": 3218
+              }
+            },
+            "experience.returning": {
+              "instance": null,
+              "region": "region.osrs.12850",
+              "tile": {
+                "plane": 0,
+                "x": 3232,
+                "y": 3233
+              }
+            }
+          },
+          "kind": "experience"
+        }
+      },
+      "classification": "source_supported_inference",
+      "reason": "Retain the current experience branches: brand-new/returning normal accounts south of Jon at3232,3233; experienced at3222,3218 in the castle area. Area/branch is documented; exact tile is a bounded existing candidate.",
+      "source_refs": [
+        "wiki.15275369",
+        "wiki.15322888",
+        "wiki.15309360"
+      ],
+      "observed_source_state": false
+    },
+    {
+      "path": "mechanics.death.respawn",
+      "pointer": [
+        "mechanics",
+        "death",
+        "respawn"
+      ],
+      "value": {
+        "source": [
+          {
+            "notes": "Pinned behavioral reference; not an executed game trace.",
+            "reference": "https://oldschool.runescape.wiki/w/Items_Kept_on_Death?oldid=15322198",
+            "revision": "15322198",
+            "status": "inference"
+          },
+          {
+            "notes": "Pinned behavioral reference; not an executed game trace.",
+            "reference": "https://oldschool.runescape.wiki/w/Grave?oldid=15272680",
+            "revision": "15272680",
+            "status": "inference"
+          },
+          {
+            "notes": "Pinned behavioral reference; not an executed game trace.",
+            "reference": "https://oldschool.runescape.wiki/w/Transcript:Death_%28NPC%29?oldid=15255834",
+            "revision": "15255834",
+            "status": "inference"
+          },
+          {
+            "notes": "Reversible assumption; not owner approval. Pinned behavioral reference; not an executed game trace.",
+            "reference": "research/journey-rules/decisions.json#assumption.death_tie_break",
+            "revision": "source-contract-v1",
+            "status": "inference"
+          },
+          {
+            "notes": "Typed source rule binding; arithmetic/content validation is not observed runtime gameplay.",
+            "reference": "research/journey-rules/activities.json#rule.death.retention",
+            "revision": "source-contract-v1",
+            "status": "verified_reference"
+          },
+          {
+            "notes": "Source-area walkable respawn candidate, not the Cook/Jon/Death NPC tile or an observed camera.",
+            "reference": "research/m1-bindings/location-bindings.json#location.lumbridge.castle_arrival",
+            "revision": "240/cache2695",
+            "status": "inference"
+          }
+        ],
+        "status": "bound",
+        "value": {
+          "instance": null,
+          "region": "region.osrs.12850",
+          "tile": {
+            "plane": 0,
+            "x": 3222,
+            "y": 3218
+          }
+        }
+      },
+      "classification": "source_supported_inference",
+      "reason": "Retain the source-area Lumbridge respawn candidate. Do not claim one deterministic tile is the source's whole respawn area.",
+      "source_refs": [
+        "code.rsmod.PlayerDeath",
+        "wiki.15341882"
+      ],
+      "observed_source_state": false
+    },
+    {
+      "path": "mechanics.death.first_office",
+      "pointer": [
+        "mechanics",
+        "death",
+        "first_office"
+      ],
+      "value": {
+        "source": [
+          {
+            "notes": "Pinned behavioral reference; not an executed game trace.",
+            "reference": "https://oldschool.runescape.wiki/w/Transcript:Death_%28NPC%29?oldid=15255834",
+            "revision": "15255834",
+            "status": "verified_reference"
+          },
+          {
+            "notes": "Pinned behavioral reference; not an executed game trace.",
+            "reference": "https://oldschool.runescape.wiki/w/Grave?oldid=15272680",
+            "revision": "15272680",
+            "status": "verified_reference"
+          },
+          {
+            "notes": "Typed source rule binding; arithmetic/content validation is not observed runtime gameplay.",
+            "reference": "research/journey-rules/activities.json#rule.death.first_office",
+            "revision": "source-contract-v1",
+            "status": "verified_reference"
+          },
+          {
+            "notes": "Player arrival is an explicit walkable source-Office candidate at3174,5726 inside the private chunk mapping; Death remains at his distinct, nonwalking3180,5727 map pin. Exact original arrival remains unobserved.",
+            "reference": "research/m1-bindings/location-bindings.json#location.death.player_arrival",
+            "revision": "240/cache2695",
+            "status": "inference"
+          }
+        ],
+        "status": "bound",
+        "value": {
+          "instance": "instance_template.death.office",
+          "region": "region.osrs.12633",
+          "tile": {
+            "plane": 0,
+            "x": 3174,
+            "y": 5726
+          }
+        }
+      },
+      "classification": "source_supported_inference",
+      "reason": "Retain separate walkable player arrival3174,5726 rather than placing the player on scenery-bound Death. Exact arrival pixel/camera is not established.",
+      "source_refs": [
+        "wiki.15273706",
+        "wiki.15255834"
+      ],
+      "observed_source_state": false
+    },
+    {
+      "path": "initial_state.runtime.settings.run_enabled",
+      "pointer": [
+        "initial_state",
+        "runtime",
+        "settings",
+        "run_enabled"
+      ],
+      "value": false,
+      "classification": "source_supported_inference",
+      "reason": "Retain explicit run-off until the lesson/user toggles it; do not turn off the actual run-energy system. The new-player update does not specify this toggle.",
+      "source_refs": [
+        "wiki.15309360",
+        "wiki.15319891"
+      ],
+      "observed_source_state": false
+    },
+    {
+      "path": "initial_state.runtime.settings.auto_retaliate",
+      "pointer": [
+        "initial_state",
+        "runtime",
+        "settings",
+        "auto_retaliate"
+      ],
+      "value": true,
+      "classification": "source_supported_inference",
+      "reason": "Retain explicit on as a starter profile inference. The source documents the control/retaliation timing, not the fresh-account default.",
+      "source_refs": [
+        "wiki.15265794"
+      ],
+      "observed_source_state": false
+    }
+  ],
+  "corrected_via_coupled_updates": [
+    "initial_death_auto_equip",
+    "initial_death_supply_piles"
+  ],
+  "new_player_update_facts": {
+    "source_refs": [
+      "wiki.15010818",
+      "wiki.15105128"
+    ],
+    "classification": "known_fact",
+    "all_players": {
+      "afk_minutes": 25,
+      "death_auto_equip": true,
+      "player_attack_options": "always_right_click",
+      "npc_attack_options": "left_click_where_available",
+      "hide_roofs": true,
+      "rune_picking": true,
+      "ammo_picking": true,
+      "music_percent": 10,
+      "sound_percent": 20,
+      "area_sound_percent": 15,
+      "source_default_layout": "resizable_modern"
+    },
+    "quest_tracking": "Quest Guide unlocks Learning the Ropes in Quest List; Wind Strike on chicken completes it and pays1QP.",
+    "presentation_constraint": "Section30 explicitly chooses Resizable-Classic for M1. Do not switch the product to Modern or self-approve another presentation layout because the default list says Modern."
+  },
+  "world_binding_note": "Retaining the integrated source-area landing candidates is a localized inference, not a request to create a source account or permission to relocate source areas."
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "kind": "unchanged_source_pack",
+  "artifact_sha256": "a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62",
+  "content_revision": "m1.source-backed.v3.327d3a78f3bdad7c",
+  "referenced_source_assets": 5010,
+  "source_bytes": 7658110,
+  "descriptor_bytes": 283075,
+  "descriptor_sha256": "7e0ca06b1667a2b6dd509e17ca6032baf8be102b9ee28c1c1897947e6bfadb88",
+  "strict_server_descriptor_limit_bytes_at_base": 262144,
+  "minimum_assets_object_bytes_even_if_every_asset_shared_shortest_legal_url": 267049,
+  "fits_base_server_descriptor_limit": false,
+  "source_content_changed": false,
+  "server_guards_changed": false,
+  "game_root": "runelite/compatibility/artifacts/game-faa8002",
+  "adapter_catalog": "runelite/compatibility/artifacts/game-faa8002/adapter-catalog.json",
+  "compatibility_verified": false
+}

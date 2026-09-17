@@ -1,0 +1,32 @@
+{
+  "scope": "Original native component frames and explicit-field projection ONLY; synthetic source-only inputs, not live gameplay",
+  "names": [
+    "native-production-choice-11",
+    "native-production-choice-14",
+    "native-production-choice-8",
+    "native-production-choice-12",
+    "native-production-choice-10",
+    "native-production-choice-17",
+    "native-production-choice-1",
+    "native-production-amount-5",
+    "native-production-choice-9",
+    "native-production-hover",
+    "native-production-choice-5",
+    "native-production-choice-3",
+    "native-production-choice-15",
+    "native-production-choice-4",
+    "native-death-preview-populated",
+    "native-smithing-bronze",
+    "native-production-choice-6",
+    "native-production-choice-13",
+    "native-production-choice-2",
+    "native-production-choice-18",
+    "native-production-choice-7",
+    "native-production-choice-16",
+    "native-reward-fields"
+  ],
+  "errors": [],
+  "browser": "153.0.8010.12",
+  "dpr": 1,
+  "finalAcceptance": false
+}

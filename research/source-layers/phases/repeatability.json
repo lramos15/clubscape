@@ -1,0 +1,9 @@
+{
+  "result": "passed",
+  "source_cases": 3,
+  "native_placement_observations_byte_identical": 27,
+  "replayed_png_and_argb_hashes_match_original": true,
+  "phase_sidecars_byte_identical": 3,
+  "candidate_data_used": false,
+  "scene_or_animation_state_changed_by_probe": false
+}

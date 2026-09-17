@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "mode": "live",
+  "name": "live-a1",
+  "recorded_at": "2026-09-15T02:18:47.557659+00:00",
+  "architecture": "A",
+  "compatibility_verified": false,
+  "exit_code": 1,
+  "evidence_directory": "runelite/compatibility/artifacts/live-a1",
+  "error": "TypeError: Path.open() got an unexpected keyword argument 'opener'"
+}

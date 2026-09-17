@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "baseline": "osrs-240-cache-2695",
+  "verified_on": "2026-09-13",
+  "research_task": "M1-REF",
+  "research_agent": "598d83d0-6ce2-40ac-b6d5-01d566c68b99",
+  "official_update": {
+    "title": "A Ruff Situation & Crab Quest Out Today!",
+    "date": "2026-09-08",
+    "url": "https://secure.runescape.com/m=news/a-ruff-situation--crab-quest-out-today?oldschool=1",
+    "limitation": "The dated announcement does not itself establish the cache build number or every server-side hotfix."
+  },
+  "cache": {
+    "build": 240,
+    "id": 2695,
+    "scope": "runescape",
+    "game": "oldschool",
+    "environment": "live",
+    "language": "en",
+    "timestamp": "2026-09-08T10:30:08.897945Z",
+    "source": "Jagex",
+    "url": "https://archive.openrs2.org/caches/runescape/2695",
+    "metadata_url": "https://archive.openrs2.org/caches.json",
+    "api_documentation": "https://archive.openrs2.org/api",
+    "indexes": {"present": 25, "total": 25},
+    "groups": {"present": 117441, "total": 117441},
+    "size_bytes": 191236221,
+    "whole_cache_sha256": null,
+    "coverage_note": "Archive completeness is not player-facing inventory classification or verified gameplay coverage."
+  },
+  "inputs": [
+    {
+      "id": "osrs-240-master-index",
+      "archive": 255,
+      "group": 255,
+      "url": "https://archive.openrs2.org/caches/runescape/2695/archives/255/groups/255.dat",
+      "path": "research/inputs/osrs-240/master-index.dat",
+      "size_bytes": 205,
+      "sha256": "b48b26c8a4cadca917fe6ca265a1099e9844d4f2b6ddb27c30c08898e337e1a6"
+    },
+    {
+      "id": "osrs-240-map-index",
+      "archive": 255,
+      "group": 5,
+      "url": "https://archive.openrs2.org/caches/runescape/2695/archives/255/groups/5.dat",
+      "path": "research/inputs/osrs-240/map-index.dat",
+      "size_bytes": 27486,
+      "sha256": "7b78f32c55f6b1ac8704f98bac01038fe909e25efc1ebed64e24576bdd6ec7c0"
+    }
+  ],
+  "decoder_reference": {
+    "repository": "https://github.com/runelite/runelite",
+    "revision": "ac79ed8bd8926bec7bf172aa291574b4d944b0e7",
+    "date": "2026-09-03T22:07:20Z",
+    "role": "Source-inspected decoder/tooling reference, not the OSRS build identity or ClubScape compatibility proof.",
+    "map_index": {"protocol": 7, "revision": 1788780617, "flags": 4, "named": false, "groups": 2937},
+    "map_group_format": "Group ID is map-square ID; inner file 0 terrain, file 1 locations. JS5 download omits two-byte version trailer.",
+    "region_seed_groups": [12336, 12592, 12436, 12850, 12595],
+    "region_bounds_complete": false
+  },
+  "wiki_sources": [
+    {"page": "Skills", "oldid": 15321845, "date": "2026-08-27"},
+    {"page": "Hitpoints", "oldid": 15337461, "date": "2026-09-09"},
+    {"page": "Learning_the_Ropes", "oldid": 15315138, "date": "2026-08-21"},
+    {"page": "Transcript:Learning_the_Ropes", "oldid": 15309360, "date": "2026-08-19"},
+    {"page": "Tutorial_Island", "oldid": 15275369, "date": "2026-07-25"},
+    {"page": "Cook%27s_Assistant", "oldid": 15320469, "date": "2026-08-26"},
+    {"page": "Transcript:Cook%27s_Assistant", "oldid": 15263168, "date": "2026-07-14"},
+    {"page": "Transcript:Cook%27s_Assistant/Journal", "oldid": 15105447, "date": "2026-01-14"},
+    {"page": "Bronze_pickaxe", "oldid": 15182812, "date": "2026-04-22"},
+    {"page": "Copper_rocks", "oldid": 15209140, "date": "2026-05-10"},
+    {"page": "Grave", "oldid": 15272680, "date": "2026-07-22"},
+    {"page": "Death%27s_Office", "oldid": 15273706, "date": "2026-07-24"},
+    {"page": "Scape_Main", "oldid": 15341502, "date": "2026-09-12"},
+    {"page": "Newbie_Melody", "oldid": 15330643, "date": "2026-09-04"},
+    {"page": "Scape_Cave", "oldid": 15333690, "date": "2026-09-08"},
+    {"page": "Harmony_(music_track)", "oldid": 15330698, "date": "2026-09-04"},
+    {"page": "Autumn_Voyage", "oldid": 15329193, "date": "2026-09-03"},
+    {"page": "Music_Player", "oldid": 15300649, "date": "2026-08-14"}
+  ],
+  "wiki_url_template": "https://oldschool.runescape.wiki/w/{page}?oldid={oldid}",
+  "known_reference_gaps": [
+    "Full player-facing source inventory and inclusion reconciliation",
+    "Pre-dialogue inventory/equipment/flags and bank initialization timing",
+    "Tutorial deposit/drop/departure retention and exact state transitions",
+    "Missing departure transcript text and conflicts with older music/emote descriptions",
+    "Experience-selection-dependent arrival branch, exact tiles and cameras",
+    "Full region/scenery bounds, collision and transitive asset closure",
+    "First Death's Office flow and complete baseline item-retention/recovery behavior",
+    "Goblin variant/spawn, shop stock/repricing and copper/bank route endpoints",
+    "Calibrated visual/audio captures, complete music/SFX trigger timing and owner approval"
+  ]
+}

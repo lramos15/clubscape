@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "command": [
+    "cargo",
+    "test",
+    "--quiet",
+    "--locked",
+    "--offline",
+    "-p",
+    "clubscape-world-engine",
+    "--test",
+    "actor_review",
+    "--test",
+    "shop_review"
+  ],
+  "exit_code": 0,
+  "stdout": "\nrunning 15 tests\n...............\ntest result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n\nrunning 18 tests\n..................\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n",
+  "stderr": "",
+  "scope": "Complete actor pair and shop review component regressions only; no live integration or milestone acceptance",
+  "compatibility_verified": false
+}

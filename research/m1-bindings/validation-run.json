@@ -1,0 +1,259 @@
+{
+  "active_executor_failures": [],
+  "checks": [
+    {
+      "command": [
+        "/usr/bin/python3",
+        "tools/m1-content/build.py",
+        "--json-output",
+        "tools/m1-content/.local/game-content.json"
+      ],
+      "exit_code": 0,
+      "name": "build_and_strict_runtime_compile",
+      "stderr": "",
+      "stdout": "{\"runtime_compile_passed\": true, \"exit_code\": 0, \"diagnostic\": null, \"artifact\": {\"path\": \"content/m1/game-content.csc.gz\", \"bytes\": 528842, \"sha256\": \"3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d\", \"uncompressed_bytes\": 13222639, \"uncompressed_sha256\": \"adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc\", \"artifact_version\": 4, \"schema_version\": 4}, \"unresolved_binding_count\": 6, \"record\": \"research/m1-bindings/compiler-validation.json\"}\n{\"revision\": \"m1.source-backed.v4.71c86749d02088ee\", \"counts\": {\"items\": 122, \"skills\": 24, \"regions\": 29, \"spawns\": 536, \"objects\": 4837, \"npcs\": 26, \"recipes\": 14, \"dialogues\": 21, \"quests\": 2, \"interfaces\": 31, \"shops\": 1, \"mechanics\": {\"counters\": 134, \"grants\": 18, \"entitlements\": 13, \"reconciliations\": 1, \"object_transforms\": 68, \"temporary_objects\": 1, \"ground_policies\": 7, \"instances\": 1, \"travels\": 26, \"experiences\": 3, \"combat_styles\": 27, \"spells\": 2, \"projectiles\": 2, \"prayers\": 1, \"value_providers\": 1, \"traversal\": 9, \"collision_groups\": 49}, \"runtime_collision_cells\": 46358, \"runtime_walkable_cells\": 29814, \"runtime_blocked_cells\": 16544, \"equipment_slots\": 11, \"tutorial_states\": 71, \"tutorial_source_transitions\": 73, \"tutorial_projected_edges\": 73, \"tutorial_blocked_edges\": 0, \"cooks_states\": 10, \"cooks_source_transitions\": 22, \"cooks_projected_edges\": 22, \"death_source_states\": 4, \"death_source_transitions\": 6, \"source_transit_pairs\": 11, \"source_rules\": 52, \"normal_note_pairs\": 55}, \"asset_closure_passed\": true, \"unpublished_asset_ids\": [], \"runtime_ready\": false, \"structural_checks\": \"passed\", \"runtime_compile_passed\": true, \"unresolved_binding_count\": 6}\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "tools/m1-content/build_water_legacy.py"
+      ],
+      "exit_code": 0,
+      "name": "legacy5e_water_strict_artifact",
+      "stderr": "",
+      "stdout": "{\"legacy5e_exact_recompile\": true, \"legacy5e_water_artifact\": {\"path\": \"content/m1/legacy5e-water/game-content.csc.gz\", \"bytes\": 521255, \"sha256\": \"12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232\", \"uncompressed_bytes\": 13125018, \"uncompressed_sha256\": \"b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650\", \"artifact_version\": 4, \"schema_version\": 4}, \"changed_json_paths\": [\"/recipes/recipe.water.bucket\", \"/revision\"], \"broader_5b_difference_count\": 82, \"item_on_dispatch_declared\": true, \"native_execution_claimed\": false, \"migration_admitted\": false}\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/m1-content",
+        "-p",
+        "test_*.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "name": "content_tests",
+      "stderr": "----------------------------------------------------------------------\nRan 104 tests (elapsed time omitted)\n\nOK\n",
+      "stdout": "{\"prior_asset_closure\": \"preserved\", \"requested_resolved\": {\"item_definition_ids\": 72, \"model_ids\": 68, \"npc_definition_ids\": 6, \"interface_groups\": 13}, \"product_assets\": 5266, \"prior_request_missing\": [], \"new_verified_definition_publication_needed\": {\"interface_groups\": [], \"item_definition_ids\": [], \"model_ids\": [], \"npc_definition_ids\": []}, \"behavior_unchanged\": false, \"source_application_audited\": true, \"unresolved_behavior_bindings\": 6}\n{\"source_bindings_consumed\": 104, \"coupled_updates\": 7, \"loot_joint_vectors\": 8192, \"currency_vectors\": 5, \"active_residuals\": 0, \"inactive_full_target_dependencies\": 6}\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "tools/m1-content/verify_assets.py"
+      ],
+      "exit_code": 0,
+      "name": "source_asset_closure",
+      "stderr": "",
+      "stdout": "{\"prior_asset_closure\": \"preserved\", \"requested_resolved\": {\"item_definition_ids\": 72, \"model_ids\": 68, \"npc_definition_ids\": 6, \"interface_groups\": 13}, \"product_assets\": 5266, \"prior_request_missing\": [], \"new_verified_definition_publication_needed\": {\"interface_groups\": [], \"item_definition_ids\": [], \"model_ids\": [], \"npc_definition_ids\": []}, \"behavior_unchanged\": false, \"source_application_audited\": true, \"unresolved_behavior_bindings\": 6}\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "tools/m1-content/verify_runtime_bindings.py"
+      ],
+      "exit_code": 0,
+      "name": "source_application",
+      "stderr": "",
+      "stdout": "{\"source_bindings_consumed\": 104, \"coupled_updates\": 7, \"loot_joint_vectors\": 8192, \"currency_vectors\": 5, \"active_residuals\": 0, \"inactive_full_target_dependencies\": 6}\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "tools/m1-content/verify_routes.py"
+      ],
+      "exit_code": 0,
+      "name": "source_routes",
+      "stderr": "",
+      "stdout": "{\"connected\": 30, \"required\": 30, \"failed\": [], \"runtime_journey_passed\": false}\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "tools/m1-content/verify_state_oracles.py"
+      ],
+      "exit_code": 0,
+      "name": "source_state_oracles",
+      "stderr": "",
+      "stdout": "{\"independent_graph_oracles_passed\": 23, \"tutorial_edges_bound\": 73, \"cook_edges_bound\": 22, \"death_edges_bound\": 6, \"runtime_journey_passed\": false}\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "tools/runtime-bindings/validate.py",
+        "--baseline-commit",
+        "e9073ab",
+        "--self-test"
+      ],
+      "exit_code": 0,
+      "name": "original_source_oracles",
+      "stderr": "",
+      "stdout": "{\n  \"exact_paths\": 112,\n  \"rule_groups\": 29,\n  \"classification_counts\": {\n    \"codebug_parent_fixed\": 1,\n    \"codebug_parent_required\": 1,\n    \"inactive_dependency\": 6,\n    \"known_fact\": 5,\n    \"owner_decision\": 1,\n    \"source_supported_inference\": 98\n  },\n  \"applyable_bindings\": 104,\n  \"coupled_updates\": 7,\n  \"unpromoted_dispositions\": [\n    \"items.item.ensouled_goblin_head.stackable.rule\",\n    \"items.item.milk.bottomless_bucket.stackable.rule\",\n    \"mechanics.death.office_overflow\",\n    \"mechanics.vitals.level_up\",\n    \"npcs.npc.goblin.level_2.combat.mechanics.loot[3]\",\n    \"spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn\",\n    \"spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn\",\n    \"spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn\"\n  ],\n  \"oracle_checks\": {\n    \"projectile_distances\": 10,\n    \"wind_strike_levels\": 8,\n    \"shop_price_vectors\": 8,\n    \"shop_bulk_vectors\": 2,\n    \"restock_vectors\": 4,\n    \"timing_groups\": 6,\n    \"cooking_queue_vectors\": 1,\n    \"npc_damage_vectors\": 4,\n    \"ground_origin_vectors\": 3,\n    \"per_item_value_audits\": 116,\n    \"valuation_vectors\": 10,\n    \"valuation_rankings\": 1,\n    \"departure_currency_cases\": 5,\n    \"repeat_death_cases\": 4,\n    \"death_restoration_cases\": 2,\n    \"conditional_level_vectors\": 3,\n    \"existing_vital_policies_disproved\": 3,\n    \"inactive_fishing_proofs\": 3,\n    \"default_setting_bindings\": 2\n  },\n  \"numeric_and_edge_checks\": 195,\n  \"outcome\": \"source_binding_contract_valid\",\n  \"gameplay_executed\": false,\n  \"presentation_approved\": false,\n  \"source_snapshots\": 77,\n  \"all_raw_source_hashes_checked\": false,\n  \"strict_typecheck_report_sha256\": \"ba6424a4a19c0c9611cf4b56df00c318faa6a5a2bc72113168a3a55eed2c7960\",\n  \"invalid_mutations_rejected\": 8\n}\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "tools/m1-content/schema-check/Cargo.toml",
+        "--check"
+      ],
+      "exit_code": 0,
+      "name": "rust_format",
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "tools/m1-content/schema-check/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "name": "rust_typecheck",
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "tools/simulator/Cargo.toml",
+        "water_fill_",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "name": "water_driver_source_tests",
+      "stderr": "",
+      "stdout": "\nrunning 2 tests\n..\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 42 filtered out; finished in 0.94s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "tools/m1-content/check.py"
+      ],
+      "exit_code": 0,
+      "name": "strict_reload_and_native_source_probes",
+      "stderr": "",
+      "stdout": "{\"structural_checks_passed\": true, \"strict_runtime_compiler_passed\": true, \"asset_closure_passed\": true, \"unpublished_asset_ids\": [], \"artifact_reloaded\": true, \"artifact_sha256\": \"adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc\", \"engine_constructed\": true, \"native_source_policy_checks_passed\": true, \"native_water_fill_passed\": true, \"unresolved_bindings\": 6, \"gameplay_executed\": false}\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "tools/m1-content/verify_water_fill.py"
+      ],
+      "exit_code": 0,
+      "name": "both_water_profile_native_probes",
+      "stderr": "",
+      "stdout": "{\"water_native_passed\": true, \"profiles\": [{\"profile\": \"current5b-water\", \"passed\": true, \"exit_code\": 0, \"raw_artifact_sha256\": \"adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc\", \"positive_passed\": 4, \"negative_passed\": 15}, {\"profile\": \"legacy5e-water\", \"passed\": true, \"exit_code\": 0, \"raw_artifact_sha256\": \"b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650\", \"positive_passed\": 4, \"negative_passed\": 15}], \"migration_admitted\": false}\n"
+    }
+  ],
+  "compiled_artifact": {
+    "artifact_version": 4,
+    "bytes": 528842,
+    "path": "content/m1/game-content.csc.gz",
+    "schema_version": 4,
+    "sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+    "uncompressed_bytes": 13222639,
+    "uncompressed_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc"
+  },
+  "failed_checks": [],
+  "full_journey_executed": false,
+  "passed": true,
+  "repeatability_checked": true,
+  "repeatable_outputs": true,
+  "schema_version": 4,
+  "source_binding_residuals": {
+    "active_or_conditionally_active": [],
+    "active_or_conditionally_active_count": 0,
+    "inactive_full_target": [
+      {
+        "path": "items.item.ensouled_goblin_head.stackable.rule",
+        "proof": {
+          "ordinary_acquisition_absent": true,
+          "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+          "rare_items": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ]
+        },
+        "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+        "rule_group": "conditional_stack_alternatives"
+      },
+      {
+        "path": "items.item.milk.bottomless_bucket.stackable.rule",
+        "proof": {
+          "ordinary_acquisition_absent": true,
+          "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+          "rare_items": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ]
+        },
+        "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+        "rule_group": "conditional_stack_alternatives"
+      },
+      {
+        "path": "mechanics.death.office_overflow",
+        "proof": {
+          "excluded_unacquired_conditional_keys": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ],
+          "office_capacity": 120,
+          "ordinary_acquired_instance_items": 0,
+          "ordinary_item_key_upper_bound": 120,
+          "precondition": "Office must merge ordinary non-instanced item keys. Recheck on universe, acquisition or instance/merge-rule changes; never unconditionally discard overflow.",
+          "represented_item_keys": 122
+        },
+        "reason": "Deletion order above120 Office entries is not source-bound.",
+        "rule_group": "office_capacity_unreachable"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      }
+    ],
+    "inactive_full_target_count": 6,
+    "policy": "A source binding is required only when its proved branch is reachable. Inactive definitions remain in the full target; no unresolved value is replaced by a success-shaped default.",
+    "unresolved_total": 6
+  }
+}

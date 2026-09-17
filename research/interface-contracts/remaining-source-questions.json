@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "scope": "Final bounded source-only follow-up for normal-grave Bank-All, inventory dough motion and Empty motion",
+  "status": "parked_unverified_source_facts",
+  "checked_code_commit": "f0ac784bb5f8a70293df38795769719de14a396a",
+  "method": {
+    "source_revision_cutoff": "2026-09-08T10:30:08Z",
+    "retained_evidence": "Existing frozen recovery references, original native recovery scripts and pinned animation/variable symbols were reviewed without modifying their packs.",
+    "supplemental_query": "Seven individual MediaWiki action=query requests, formatversion=2, prop=revisions, rvprop=ids|timestamp|content, rvslots=main, rvlimit=1, redirects=1 and rvstart at the cutoff. Exact returned revisions and response/text hashes are recorded below.",
+    "text_hash_encoding": "SHA256 of the returned main-slot wikitext encoded as UTF-8, without normalization",
+    "original_server_trace_obtained": false,
+    "negative_evidence_policy": "Missing documentation, a missing named sequence, or an unconfigured native control does not establish deliberate no-animation or source-disabled permission.",
+    "stop_reason": "The bounded retained/native/public evidence pass did not establish the three original-server facts. Repeating client metadata probes cannot supply server dispatch or authorization."
+  },
+  "candidate_unchanged": {
+    "revision": "m1.source-backed.v4.bdbf8a3788b842be",
+    "path": "content/m1/game-content.csc.gz",
+    "raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "compressed_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6"
+  },
+  "retained_sources": [
+    {
+      "id": "native-recovery-controls",
+      "path": "research/interface-contracts/control-bindings.json",
+      "sha256": "02abc6c4deb8c1f3395f9358f7c7a77cd7bf2a221da1b212c370d8fa0f3c3758",
+      "source_groups": [602, 669, 672],
+      "script_hashes": {
+        "1987": "ca575c9c08125ad54d05c6476693ff716b9e2c42d3c8bc2960e7d8ec376d61e6",
+        "3490": "ce88ed570774a3ee8498e05294eab4c540d126fff5c3aefc7a2460d0b0c1ae72",
+        "3492": "217cc9f74d5975f0d63c20ae11139405642c71843e971dc6d6b7c0f044543d84"
+      },
+      "finding": "Retrieval602 script1987 conditionally exposes Bank-All when varp263 is1 and the retrieval service is unlocked. Enums1753/1756/1757 interpret the service selected by varp261. Office669 instead uses varp263 as a unit fee and exposes1/5/X/All and Take-All, not Bank-All. Generic672 is a distinct normal-grave layout.",
+      "limit": "The client condition does not establish the values or permission supplied by the original server for an ordinary M1 grave."
+    },
+    {
+      "id": "native-interface-scratch-symbols",
+      "source_url": "https://raw.githubusercontent.com/runelite/runelite/ac79ed8bd8926bec7bf172aa291574b4d944b0e7/runelite-api/src/main/java/net/runelite/api/gameval/VarPlayerID.java",
+      "sha256": "35cef2039d1ad526ba990f029e1c28f6d80c2079365c16f6214f4312140d5ab4",
+      "original_file_pin_recorded_in": "research/interface-contracts/audio-authority/inputs.json",
+      "reviewed_symbols": {
+        "261": "IF1",
+        "262": "IF2",
+        "263": "IF3"
+      },
+      "finding": "These are generic interface scratch variables. The differing602/669 uses of IF3 do not define a global character banking entitlement."
+    },
+    {
+      "id": "native-animation-authority",
+      "path": "research/interface-contracts/animation-authority/inputs.json",
+      "sha256": "43fafa676d29a22f4d7b57bd545860993350b5c627494e20ee52db98496ca4b0",
+      "finding": "The retained native sequence inventory and qualified dispatch references do not bind inventory dough or Empty to a sequence or deliberate absence. Sequence883 is pottery, not dough.",
+      "limit": "Cache sequence existence or naming cannot establish which sequence an original server sends for an item action."
+    },
+    {
+      "id": "frozen-grave",
+      "source_url": "https://oldschool.runescape.wiki/w/Grave?oldid=15272680",
+      "path": "research/reference-pack/v1/sources/83783-15272680.json.gz",
+      "sha256": "a829a87985747063b40db9dab8e21f129e1dabb41b9edcc16e557c465994a45a",
+      "finding": "Ordinary graves and Item Retrieval Services are distinct contexts; this reference does not establish ordinary-grave Bank-All permission or deliberate disablement."
+    },
+    {
+      "id": "frozen-death-transcript",
+      "source_url": "https://oldschool.runescape.wiki/w/Transcript:Death_(NPC)?oldid=15255834",
+      "path": "research/reference-pack/v1/sources/268272-15255834.json.gz",
+      "sha256": "dbbd29077303f8c9fa4bc043f1b4d802246a0812edb4ea44370ebdd2a531ffb6",
+      "finding": "The ability to pay retrieval fees from a bank is not authorization to retrieve items into that bank."
+    },
+    {
+      "id": "frozen-grave-object-image",
+      "path": "assets/reference/wiki/grave-png.png",
+      "sha256": "b3a63c085d3da09efb908107f956e167351446e5978c2d13a831e85462a05ccb",
+      "finding": "This is a gravestone object image, not a recovery-interface screenshot. It cannot establish Bank-All control state."
+    }
+  ],
+  "supplemental_pages": [
+    {
+      "id": "item-retrieval-service",
+      "title": "Item Retrieval Service",
+      "revision": 15124878,
+      "timestamp": "2026-02-10T18:40:49Z",
+      "source_url": "https://oldschool.runescape.wiki/w/Item_Retrieval_Service?oldid=15124878",
+      "response_sha256": "02d6278b1db0d99a83276fd25a03b0829a25c6c09a0f9983488afb41a1b54a7b",
+      "text_sha256": "7c8df956122260f5cdcda60993dc4fe573f014dcbafcdceae92a1d80dae97819",
+      "finding": "Does not supply ordinary-grave Bank-All authorization or an explicit source-disabled rule."
+    },
+    {
+      "id": "bread-dough",
+      "title": "Bread dough",
+      "revision": 15182635,
+      "timestamp": "2026-04-22T02:45:07Z",
+      "source_url": "https://oldschool.runescape.wiki/w/Bread_dough?oldid=15182635",
+      "response_sha256": "e63ae8d31f11f67722414c48f620b922ee9ceb2da56b4a25264c56f80a535cbd",
+      "text_sha256": "db4110b372539e27fa2f3195e298e2f00d121c66eedd116815b3412aba293cf7",
+      "finding": "Documents mixing flour with water, including the Tutorial Island ingredients. It supplies neither an actor sequence nor an explicit no-animation statement."
+    },
+    {
+      "id": "pot-of-flour",
+      "title": "Pot of flour",
+      "revision": 15286977,
+      "timestamp": "2026-08-04T11:17:47Z",
+      "source_url": "https://oldschool.runescape.wiki/w/Pot_of_flour?oldid=15286977",
+      "response_sha256": "dc9bccf3168d812118ae0ab3111fa386db419e98597393dbddc379c56c088359",
+      "text_sha256": "b7e436be5cac85d0c0b3e51184f71f8a27ec39c211d810085baebd0cc4a955b4",
+      "finding": "Documents the Empty option and use in dough. It does not establish actor motion or deliberate absence for either action."
+    },
+    {
+      "id": "bucket-of-water",
+      "title": "Bucket of water",
+      "revision": 15183449,
+      "timestamp": "2026-04-22T02:54:18Z",
+      "source_url": "https://oldschool.runescape.wiki/w/Bucket_of_water?oldid=15183449",
+      "response_sha256": "a73d86cf993e839c0e33b0edf6ee36bff1ec0339b9ddf8114d406dd72bd48164",
+      "text_sha256": "64b046c1f1fa7fc1399df8ee27c2977a8fa59882aa4331e2f5521f31e0d18b46",
+      "finding": "Documents the Empty option but not its actor motion or deliberate absence."
+    },
+    {
+      "id": "bucket-of-milk",
+      "title": "Bucket of milk",
+      "revision": 15281482,
+      "timestamp": "2026-07-29T21:42:13Z",
+      "source_url": "https://oldschool.runescape.wiki/w/Bucket_of_milk?oldid=15281482",
+      "response_sha256": "c0fc8d28cae79fa50b303528125d9815c9db40c3f6a7a0d5093426f0e2be7708",
+      "text_sha256": "62169ae0622ec4b685e7c4d2020404818ce644131aa45c66c56632c8f19bf690",
+      "finding": "Documents the Empty option but not its actor motion or deliberate absence. Milking is a different action."
+    },
+    {
+      "id": "energy-potion",
+      "title": "Energy potion",
+      "revision": 15320560,
+      "timestamp": "2026-08-26T08:43:42Z",
+      "source_url": "https://oldschool.runescape.wiki/w/Energy_potion?oldid=15320560",
+      "response_sha256": "f79567f8f6d94c8f29dcede164be82e5302da3eb8c067de041529a27ce3024ee",
+      "text_sha256": "ce146d79465e96be119e952f3c0e58fe92a0edfb58731f1abaa1ced62d5b325e",
+      "finding": "Lists Drink and Empty separately; it does not establish an Empty sequence or deliberate no-animation."
+    },
+    {
+      "id": "potions",
+      "title": "Potions",
+      "revision": 15315536,
+      "timestamp": "2026-08-21T07:49:33Z",
+      "source_url": "https://oldschool.runescape.wiki/w/Potions?oldid=15315536",
+      "response_sha256": "146e233ffb26e4a446a1f6eb3f51eb37f171e6cdefd63edb7a78efbdf0d2995f",
+      "text_sha256": "e429113b13b7cb3eaee11d76177ad4b6f8e412f666bedd37520d5b695a2b59a6",
+      "finding": "The three-tick consumption timer concerns drinking, not Empty; it is not Empty-motion evidence."
+    }
+  ],
+  "questions": [
+    {
+      "id": "normal_grave_bank_all",
+      "status": "unverified",
+      "source_ids": ["native-recovery-controls", "native-interface-scratch-symbols", "frozen-grave", "frozen-death-transcript", "frozen-grave-object-image", "item-retrieval-service"],
+      "missing_fact": "Actual original-server Bank-All permission, or verified deliberate disablement, for the ordinary M1 grave context.",
+      "rejected_inferences": [
+        "A conditional602 button or an unconfigured IF3 value is not source authorization or verified source disablement.",
+        "Paying fees from the bank does not grant retrieval into the bank.",
+        "Office669 and Generic672 cannot silently replace the accepted602 association.",
+        "No mention in a page or no control in an object image is not a disabled-permission rule."
+      ],
+      "retained_behavior": "Canonical normal-grave Bank-All remains explicitly unavailable because its source permission is unverified. This is not a claim that the original game deliberately disables it. The real generic source-gated banking implementation remains unchanged.",
+      "unblock_requires": "A revision-qualified original-server observation of the correctly configured ordinary-grave context, including relevant IF1/IF2/IF3 values, control state and authorized action/result, or an explicit authoritative source rule establishing deliberate disablement for that context. Forced client variables, other retrieval services and Office fee semantics are insufficient."
+    },
+    {
+      "id": "recipe.cooking.dough",
+      "status": "unverified",
+      "source_ids": ["native-animation-authority", "bread-dough", "pot-of-flour", "bucket-of-water"],
+      "actual_bound_action": {
+        "method": "action.cooking.dough",
+        "input_original_item_ids": [1933, 1929],
+        "output_original_item_ids": [2307, 1931, 1925],
+        "unchanged_bound_cadence_ticks": {"first": 1, "single": 1, "repeat": 1}
+      },
+      "missing_fact": "The original actor sequence and its action-relative timing, or verified deliberate absence, for flour-pot plus water-bucket inventory dough production.",
+      "rejected_inferences": [
+        "The existing one-tick gameplay cadence does not prove no animation.",
+        "No dough-named cache sequence or no animation statement in the ingredient page does not prove no animation.",
+        "Pottery883, a nearby cooking object or animation0 is not a verified binding."
+      ],
+      "retained_behavior": "Keep the real recipe/action identity and current timing/output semantics. The motion rule remains Unverified, not a guessed sequence or asserted source silence.",
+      "unblock_requires": "A revision-qualified original action/actor-sequence trace covering the inventory interaction through completion, or an explicit authoritative per-action statement establishing deliberate absence. It must distinguish mixing dough from baking bread and pottery."
+    },
+    {
+      "id": "empty_container",
+      "status": "unverified",
+      "source_ids": ["native-animation-authority", "pot-of-flour", "bucket-of-water", "bucket-of-milk", "energy-potion", "potions"],
+      "actual_bound_variants": [
+        {"input_original_item_ids": [3008, 3010, 3012, 3014], "output_original_item_id": 229},
+        {"input_original_item_ids": [1933], "output_original_item_id": 1931},
+        {"input_original_item_ids": [1927, 1929], "output_original_item_id": 1925}
+      ],
+      "missing_fact": "The original actor sequence and its action-relative timing, or verified deliberate absence, for the seven bound Empty variants.",
+      "rejected_inferences": [
+        "The Empty menu option proves an operation exists, not whether the actor animates.",
+        "Drink829, pickup827, pottery883, milking2305 and animation0 do not establish Empty behavior.",
+        "Drinking's three-tick timer cannot be used as Empty-motion evidence."
+      ],
+      "retained_behavior": "Preserve selected-item identity, existing container outcomes and gameplay semantics. Empty motion remains Unverified, not silently replaced with drink motion or deliberate no-animation.",
+      "unblock_requires": "Revision-qualified original Empty action/actor-sequence observations for the actual variants, or a verified common source dispatch rule covering them, sufficient to establish the sequence/timing or explicit deliberate absence. A drinking or milking trace is not an Empty trace."
+    }
+  ],
+  "preservation": {
+    "runtime_or_public_api_changed": false,
+    "content_or_artifact_regenerated": false,
+    "frozen_reference_or_asset_pack_changed": false,
+    "world_restart_migration_or_repin_attempted": false,
+    "character_inventory_bank_claims_clocks_rng_or_replay_changed": false,
+    "new_permission_or_animation_default_introduced": false,
+    "whole_ui_presentation_or_m1_acceptance_claimed": false
+  }
+}

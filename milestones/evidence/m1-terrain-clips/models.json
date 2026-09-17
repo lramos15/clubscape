@@ -1,0 +1,1510 @@
+[
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5666-frame-0.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5666-frame-0.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4876,
+  "interior_pixels": 2068724,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5666-frame-1.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5666-frame-1.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4391,
+  "interior_pixels": 2069209,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5666-frame-2.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5666-frame-2.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4643,
+  "interior_pixels": 2068957,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5666-frame-3.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5666-frame-3.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4580,
+  "interior_pixels": 2069020,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5666-frame-4.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5666-frame-4.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4261,
+  "interior_pixels": 2069339,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5666-frame-5.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5666-frame-5.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4275,
+  "interior_pixels": 2069325,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5666-frame-6.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5666-frame-6.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4528,
+  "interior_pixels": 2069072,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5666-frame-7.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5666-frame-7.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4844,
+  "interior_pixels": 2068756,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-0.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-0.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4183,
+  "interior_pixels": 2069417,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-1.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-1.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4233,
+  "interior_pixels": 2069367,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-10.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-10.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4599,
+  "interior_pixels": 2069001,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-11.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-11.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4465,
+  "interior_pixels": 2069135,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-12.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-12.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4564,
+  "interior_pixels": 2069036,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-13.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-13.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4456,
+  "interior_pixels": 2069144,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-2.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-2.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4456,
+  "interior_pixels": 2069144,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-3.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-3.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4564,
+  "interior_pixels": 2069036,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-4.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-4.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4465,
+  "interior_pixels": 2069135,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-5.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-5.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4531,
+  "interior_pixels": 2069069,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-6.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-6.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4599,
+  "interior_pixels": 2069001,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-7.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-7.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4578,
+  "interior_pixels": 2069022,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-8.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-8.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4684,
+  "interior_pixels": 2068916,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-2063-sequence-5668-frame-9.png",
+  "source": "assets/reference/osrs240/models/npc-2063-sequence-5668-frame-9.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 4578,
+  "interior_pixels": 2069022,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-0.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-0.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6499,
+  "interior_pixels": 2067101,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-1.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-1.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6525,
+  "interior_pixels": 2067075,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-10.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-10.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6558,
+  "interior_pixels": 2067042,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-11.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-11.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6652,
+  "interior_pixels": 2066948,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-12.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-12.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6627,
+  "interior_pixels": 2066973,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-13.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-13.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6995,
+  "interior_pixels": 2066605,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-14.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-14.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7049,
+  "interior_pixels": 2066551,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-15.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-15.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6509,
+  "interior_pixels": 2067091,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-2.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-2.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6354,
+  "interior_pixels": 2067246,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-3.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-3.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6118,
+  "interior_pixels": 2067482,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-4.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-4.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6087,
+  "interior_pixels": 2067513,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-5.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-5.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6124,
+  "interior_pixels": 2067476,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-6.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-6.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6086,
+  "interior_pixels": 2067514,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-7.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-7.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6602,
+  "interior_pixels": 2066998,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-8.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-8.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6359,
+  "interior_pixels": 2067241,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6180-frame-9.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6180-frame-9.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 6164,
+  "interior_pixels": 2067436,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-0.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-0.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7331,
+  "interior_pixels": 2066269,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-1.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-1.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7372,
+  "interior_pixels": 2066228,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-10.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-10.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7500,
+  "interior_pixels": 2066100,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-11.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-11.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7522,
+  "interior_pixels": 2066078,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-12.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-12.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7207,
+  "interior_pixels": 2066393,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-13.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-13.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7437,
+  "interior_pixels": 2066163,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-14.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-14.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7278,
+  "interior_pixels": 2066322,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-15.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-15.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7335,
+  "interior_pixels": 2066265,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-2.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-2.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7455,
+  "interior_pixels": 2066145,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-3.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-3.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7263,
+  "interior_pixels": 2066337,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-4.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-4.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7479,
+  "interior_pixels": 2066121,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-5.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-5.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7519,
+  "interior_pixels": 2066081,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-6.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-6.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7560,
+  "interior_pixels": 2066040,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-7.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-7.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7685,
+  "interior_pixels": 2065915,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-8.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-8.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7688,
+  "interior_pixels": 2065912,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/npc-3028-sequence-6181-frame-9.png",
+  "source": "assets/reference/osrs240/models/npc-3028-sequence-6181-frame-9.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 7598,
+  "interior_pixels": 2066002,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/tree-1277-yaw-0.png",
+  "source": "assets/reference/osrs240/models/tree-1277-yaw-0.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 35221,
+  "interior_pixels": 2038379,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/tree-1277-yaw-1024.png",
+  "source": "assets/reference/osrs240/models/tree-1277-yaw-1024.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 18493,
+  "interior_pixels": 2055107,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/tree-1277-yaw-256.png",
+  "source": "assets/reference/osrs240/models/tree-1277-yaw-256.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 25155,
+  "interior_pixels": 2048445,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/models/tree-1277-yaw-512.png",
+  "source": "assets/reference/osrs240/models/tree-1277-yaw-512.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 13811,
+  "interior_pixels": 2059789,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ }
+]

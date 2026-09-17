@@ -1,0 +1,50 @@
+[
+  {
+    "path": "web/generated/protocol/clubscape_wasm.js",
+    "status": "preserved",
+    "bytes": 16205,
+    "sha256": "814aacee775820099ce5c447b6323847130cb1248267722c51023fe3a3276793"
+  },
+  {
+    "path": "web/generated/protocol/clubscape_wasm_bg.wasm",
+    "status": "preserved",
+    "bytes": 2240898,
+    "sha256": "e1af2f326faf5c8cafb511eb1fc577ab2166a59005e2ae7efa058f6b6c23ef49"
+  },
+  {
+    "path": "web/generated/protocol/clubscape_wasm.d.ts",
+    "status": "preserved",
+    "bytes": 3936,
+    "sha256": "ce9cff6f8f808e79f2919a0811545c21b35d72b6f88727b19db9e3ed15e9cd08"
+  },
+  {
+    "path": "web/generated/protocol/clubscape_wasm_bg.wasm.d.ts",
+    "status": "preserved",
+    "bytes": 2011,
+    "sha256": "30e813b56c44a77fe3037a78646aceb1d28243ed6e802a06f971723ee33cfbec"
+  },
+  {
+    "path": "web/renderer/pkg/clubscape_renderer.js",
+    "status": "preserved",
+    "bytes": 122091,
+    "sha256": "e63a0c4ae2b9d061671b21f0d5379cacd275c3f96027a6a3d5417e61f2597f0f"
+  },
+  {
+    "path": "web/renderer/pkg/clubscape_renderer_bg.wasm",
+    "status": "preserved",
+    "bytes": 979422,
+    "sha256": "d06005a0d9c41ee3673257154193e0c4315375b7b36f80570f3d4609d140abf9"
+  },
+  {
+    "path": "web/renderer/pkg/clubscape_renderer.d.ts",
+    "status": "preserved",
+    "bytes": 30988,
+    "sha256": "e07d72bea4c572ac6a0cc27076f4ac2e918519e99a581b392f13d4154a4c3531"
+  },
+  {
+    "path": "web/renderer/pkg/clubscape_renderer_bg.wasm.d.ts",
+    "status": "preserved",
+    "bytes": 11715,
+    "sha256": "81cfad4d6f8fd32114e68f8597d39b85d98a8a4efaed11ac88857e07fd656a56"
+  }
+]

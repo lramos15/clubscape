@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "evidence_commit": "089639ebc0123107fdceb7d12dec06b8e18dfd40",
+  "evidence_path": "tools/journey-tests/evidence/anvil-open-f2b1870.json",
+  "historical_v3_artifact": "bb99ad96add9669fd49c4162832fbd8e9cb151997a4e4c4682b33b1f1882e2e1",
+  "scope": "Recorded public preconditions for a controlled canonical4 regression, not a production state seed or fresh-account journey.",
+  "stage": "stage.tutorial.anvil_open",
+  "target": "spawn.anvil.tutorial.3075.9497.p0.t10.r0",
+  "source_object": 2097,
+  "tile": {"x": 3075, "y": 9498, "plane": 0},
+  "action": "Smith",
+  "sequence": 102,
+  "operation": "2eb81048-9337-495a-96ac-27a6d6f15fa6",
+  "tick": 500,
+  "interface": "interface.smithing",
+  "source_interface": 312,
+  "expected_stage": "stage.tutorial.smith_dagger",
+  "recipe": "recipe.smithing.bronze_dagger",
+  "inventory": [
+    {"slot": 0, "item": "item.fishing_net.small", "quantity": 1},
+    {"slot": 1, "item": "item.shrimps.cooked", "quantity": 1},
+    {"slot": 2, "item": "item.axe.bronze", "quantity": 1},
+    {"slot": 3, "item": "item.tinderbox", "quantity": 1},
+    {"slot": 4, "item": "item.bread", "quantity": 1},
+    {"slot": 5, "item": "item.pot", "quantity": 1},
+    {"slot": 6, "item": "item.bucket", "quantity": 1},
+    {"slot": 7, "item": "item.pickaxe.bronze", "quantity": 1},
+    {"slot": 8, "item": "item.bar.bronze", "quantity": 1},
+    {"slot": 9, "item": "item.hammer", "quantity": 1}
+  ],
+  "xp_tenths": {
+    "skill.hitpoints": 11540,
+    "skill.fishing": 100,
+    "skill.woodcutting": 250,
+    "skill.firemaking": 400,
+    "skill.cooking": 700,
+    "skill.mining": 350,
+    "skill.smithing": 62
+  },
+  "all_other_skill_xp_tenths": 0,
+  "source_interface_precondition": "interface.smithing is unlocked by the preceding source mining_hammer transition; no contextual OpenInterface workaround."
+}

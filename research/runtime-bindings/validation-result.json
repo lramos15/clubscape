@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "validated_at": "2026-09-14T21:16:54.613960+00:00",
+  "command": "python3 tools/runtime-bindings/validate.py --sources --self-test --report",
+  "input_sha256": {
+    "resolutions.json": "56f1a2703f9ae4be2290eeaa3de07dfb5ed1641fc51d2d974c9653540b195737",
+    "sources.json": "732d3bf9ced13aea68baf00a232d3911ba18b96d61be9cf6794d7606e2b065f8",
+    "oracles.json": "8ea68c20e43b14b7ef2f47d9bc636d7823a8e23f643db69f1564d818c4c4d50c",
+    "death-values.json": "91a2c645e923fe9d0c1d22445066bed6b57f662a91b95410ae5fc62ad60f1cf9",
+    "profile-resolutions.json": "579b9d9a781edc92349ea6855a7c8620446f92585b5e3500d8ae13d1a7abb076",
+    "inputs/guide-prices.json.gz": "edb8af4e33318b2700163cade3e856b458165dba08e16387951ead444ee0886b"
+  },
+  "tool_sha256": {
+    "build.py": "f61ea3f40fc40b1b103e0a9ca74d902f0121a95db183b7f49399c2c31daac8d4",
+    "sources.py": "9c327d30ddbd833d826b30b7927fcb4d82ec1817cd35bdbf7a4c490e2cb86b7d",
+    "apply.py": "fc422caca4ad138b96e5ab426f1ad675f82ff45bc6bddb88dd3b54269db58e4f",
+    "validate.py": "f0590cb44e51953ebc42d7d223e4fc9bba5c242e6fe2d355c9947294a28cade9",
+    "typecheck/src/main.rs": "fd59c7fe96932c461db695cc1338920d25d8681a1e563f5176e7dce1d4424f6a",
+    "typecheck/Cargo.toml": "16b15d64dc826379d7849fc1c554598e832991b66e14f45ef34c955a385c1eb7",
+    "typecheck/Cargo.lock": "07bf6485968a094ed23e827bf457fcbe03e932c3223d18eb353016fe34d6af9a"
+  },
+  "result": {
+    "exact_paths": 112,
+    "rule_groups": 29,
+    "classification_counts": {
+      "codebug_parent_fixed": 1,
+      "codebug_parent_required": 1,
+      "inactive_dependency": 6,
+      "known_fact": 5,
+      "owner_decision": 1,
+      "source_supported_inference": 98
+    },
+    "applyable_bindings": 104,
+    "coupled_updates": 7,
+    "unpromoted_dispositions": [
+      "items.item.ensouled_goblin_head.stackable.rule",
+      "items.item.milk.bottomless_bucket.stackable.rule",
+      "mechanics.death.office_overflow",
+      "mechanics.vitals.level_up",
+      "npcs.npc.goblin.level_2.combat.mechanics.loot[3]",
+      "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+      "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+      "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn"
+    ],
+    "oracle_checks": {
+      "projectile_distances": 10,
+      "wind_strike_levels": 8,
+      "shop_price_vectors": 8,
+      "shop_bulk_vectors": 2,
+      "restock_vectors": 4,
+      "timing_groups": 6,
+      "cooking_queue_vectors": 1,
+      "npc_damage_vectors": 4,
+      "ground_origin_vectors": 3,
+      "per_item_value_audits": 116,
+      "valuation_vectors": 10,
+      "valuation_rankings": 1,
+      "departure_currency_cases": 5,
+      "repeat_death_cases": 4,
+      "death_restoration_cases": 2,
+      "conditional_level_vectors": 3,
+      "existing_vital_policies_disproved": 3,
+      "inactive_fishing_proofs": 3,
+      "default_setting_bindings": 2
+    },
+    "numeric_and_edge_checks": 195,
+    "outcome": "source_binding_contract_valid",
+    "gameplay_executed": false,
+    "presentation_approved": false,
+    "source_snapshots": 77,
+    "all_raw_source_hashes_checked": true,
+    "strict_typecheck_report_sha256": "ba6424a4a19c0c9611cf4b56df00c318faa6a5a2bc72113168a3a55eed2c7960",
+    "invalid_mutations_rejected": 8
+  }
+}

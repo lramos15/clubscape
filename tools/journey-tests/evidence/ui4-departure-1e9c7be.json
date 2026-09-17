@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "status": "blocked",
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_visual_audio_performance_or_runelite_claims": false,
+  "source_seeding_forced_rolls_cadence_change_or_event_fabrication": false,
+  "pinned_candidate": {
+    "parent": "78fcec42226e17d715f422f8e9cc2be8a1fb8762",
+    "local": "1e9c7be1d2a881ba0f1540bea05cd23fbe693d6a",
+    "revision": "m1.source-backed.v4.67e4f1fcc55d71d5",
+    "raw_artifact_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3",
+    "compressed_artifact_sha256": "f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6",
+    "content_artifact_version": 4,
+    "state_runtime_version": 1,
+    "ui_state_version": 1,
+    "existing_world_repinned": false,
+    "root_lock_or_milestones_modified": false
+  },
+  "actual_run": {
+    "run_id": "37b566d34a474437",
+    "recorded_at_unix_ms": 1789485316306,
+    "command": "python3 tools/journey-tests/run.py --report .local/evidence/m1-ui4-source-bank.json",
+    "account_id": "4ba18564-9143-4835-b5a6-d7ca1baf1158",
+    "actor_id": "actor.a245c396328c4aae87f47ac50cf1b5d5",
+    "world_id": "cee8fb42-d1de-4da3-a9b2-93c8d5e88152",
+    "creation": "Real public normal Register/Login/CreateCharacter(empty options)/JoinWorld",
+    "acknowledged_tutorial_edges": 66,
+    "source_success_path_edges": 70,
+    "source_checks_passed": 263,
+    "coverage_not_combined_across_accounts": true,
+    "completed_source_work": [
+      "All Guide/Survival/Chef/Quest Guide/Mining Instructor lessons before combat",
+      "Real net, shrimp catch, axe/tinderbox, log cutting and fire",
+      "Actual raw-item-on-fire shrimp cooking; this run legitimately burnt shrimp with zero cooking XP for the burn",
+      "Actual nullable-target dough menu and typed source bread-range selection",
+      "Real tin/copper mining and bronze furnace smelting",
+      "Target-bound anvil menu, typed source dagger selection, one dagger and125XP-tenths",
+      "Actual equipment/stats, source sword/shield/bow/ammo and melee/ranged credited rat kills",
+      "Source tutorial bank-booth Use opening with exactly25bankcoins and400capacity, bank close and poll inspection",
+      "Account lessons, Prayer interface and actual prayer activation/deactivation",
+      "Magic lessons and one valid source Wind Strike",
+      "Learning the Ropes completed for1QP before departure, actual reward card and typed continuation"
+    ],
+    "onboarding_recovery": {
+      "status": "passed",
+      "transport_reconnect_logout_login_and_replay": true,
+      "same_isolated_postgresql_data": true,
+      "same_pinned_artifact_descriptor_and_server_binary": true,
+      "restart_request_id": "6a7adfa5-b01d-4e89-842e-7264bcf929c4",
+      "old_server_pid": 1655188,
+      "new_server_pid": 1656625,
+      "original_grant_replay_did_not_repeat_items_xp_stage_or_sequence": true,
+      "old_and_future_sequence_rejections": true
+    },
+    "final_observed_skill_xp_tenths": {
+      "skill.hitpoints": 11540,
+      "skill.fishing": 100,
+      "skill.woodcutting": 250,
+      "skill.firemaking": 400,
+      "skill.cooking": 400,
+      "skill.mining": 350,
+      "skill.smithing": 187,
+      "skill.attack": 120,
+      "skill.ranged": 120,
+      "skill.magic": 75,
+      "all_other_skills": 0
+    },
+    "last_observed_quests": {
+      "quest.learning_the_ropes": "stage.learning_the_ropes.completed",
+      "quest.cooks_assistant": "stage.cooks.not_started"
+    },
+    "last_observed_quest_points": 1,
+    "learning_the_ropes_reward": {
+      "observed_tick": 660,
+      "presentation_id": "ui.5",
+      "kind": "quest",
+      "quest": "quest.learning_the_ropes",
+      "source_qp": 1,
+      "source_items": [],
+      "source_xp": [],
+      "actual_continuation": "GameplayUiRequest.dismiss ui.5",
+      "continuation_sequence": 178,
+      "continuation_operation": "be02aa29-5e36-436c-bf27-ceb0ff8c8d9f",
+      "continuation_acknowledged": true
+    },
+    "event_history": {
+      "verified_exact_last_event_suffix_overlaps": 100,
+      "acknowledged_input_replayed_for_history": false,
+      "missing_events_invented": false,
+      "genuine_history_gaps_ignored": false
+    },
+    "actual_typed_production_selections": 4,
+    "actual_direct_item_use_recipe_target_observer_checks": 1,
+    "source_service_exit_clean": true,
+    "owned_resources_cleaned": true
+  },
+  "new_exact_failure": {
+    "last_acknowledged_stage": "stage.tutorial.departure_offer",
+    "last_observed_tick": 665,
+    "last_observed_world_revision": 851,
+    "last_observed_position": {"x": 3141, "y": 3087, "plane": 0},
+    "last_observed_next_sequence": 181,
+    "prior_dialogue_open": {
+      "speaker": "spawn.magic_instructor",
+      "sequence": 180,
+      "operation_id": "b506f13d-8fd2-4800-ad14-2b068c08f73a",
+      "acknowledged": true,
+      "actual_eligible_choice": "offer_mainland"
+    },
+    "failing_input": {
+      "kind": "DialogueChoice",
+      "speaker": "spawn.magic_instructor",
+      "choice": "offer_mainland",
+      "sequence": 181,
+      "operation_id": "569e861c-3721-4741-811f-7c1340463702"
+    },
+    "http_status": 500,
+    "protocol_code": "Internal",
+    "error_id": "e8aa60d2-f3f5-42bd-a7b2-235604842d9f",
+    "server_error_kind": "game_source_view",
+    "server_engine_error_mapping": "InvalidContent",
+    "successful_acknowledgment_for_that_choice": false,
+    "commit_or_rollback_assumed": false,
+    "unknown_write_retried": false
+  },
+  "canonical_primary_entry_overlap": {
+    "dialogue": "dialogue.magic_instructor",
+    "source_effect_of_offer_mainland": "Set counter.tutorial.departure_offer.completed=true and tutorial stage departure_confirmation",
+    "three_primary_entry_nodes": [
+      {"id": "transition.tutorial.decline_departure", "choice": "stay_on_island"},
+      {"id": "transition.tutorial.ironman_information", "choice": "ask_ironman_tutor"},
+      {"id": "transition.tutorial.confirm_normal_departure", "choice": "confirm_normal_mainland"}
+    ],
+    "identical_guard_on_each": "tutorial_stage == stage.tutorial.departure_confirmation",
+    "source_recovery_normalization": "Current lowering excludes recovery when a primary is eligible, but leaves these three same-stage primary branch entries separate.",
+    "engine_contract": "dialogue_entry rejects a second matching entry as InvalidContent(Multiple dialogue entries match.); current public target/source view maps that error to game_source_view HTTP500.",
+    "required_source_owner_fix": "One intentional source confirmation menu containing the original eligible choices/effects, or equivalent genuinely exclusive source entry routing. Do not choose the first engine entry, mutate stage/flags, repin this world or force Home Teleport."
+  },
+  "owned_v4_adaptations": [
+    "Require actual game.ui.v1/game.observer.v1 and UIstate1 snapshots; record complete UI, action and dynamic-object observers.",
+    "Actual source target-bound production menu plus typed menu ID/recipe/quantity/mode selection; null inventory-only targets remain absent.",
+    "Ordinary source tinderbox/logs and raw-item-on-fire controls; direct cooking must identify the exact executed recipe and target when no menu is opened.",
+    "Read and execute actual source reward/document continuations; no automatic confirmation acceptance.",
+    "Typed bank withdrawal uses the real entry ID and canonical decimal ui.bank.revision; uncertain original intents remain unchanged.",
+    "Use the source inside-pen west face for the2x2 rat; use the actual tutorial bank-booth action Use, not an obsolete Bank alias."
+  ],
+  "earlier_v4_diagnostics_preserved": [
+    {"run_id": "58b2f21665b14ff1", "edges": 13, "result": "Generic fire Cook menu requires a cooking interface not yet unlocked. That route is not certified as working; the ordinary source raw-item-on-fire control subsequently executed and was observer-verified."},
+    {"run_id": "798cf03d51344667", "edges": 42, "result": "Actual anvil/menu/dagger proof; initial client approach selected the2x2 rat east face outside its source pen permission. Corrected to a real inside-pen west tile."},
+    {"run_id": "55d4fad29f0543b9", "edges": 48, "result": "Actual melee/ranged source kills; obsolete tutorial bank action Bank corrected to the current declared Use action."}
+  ],
+  "validation": [
+    {"command": "cargo fmt --package clubscape-sim --check", "result": "passed"},
+    {"command": "cargo test --quiet --package clubscape-sim --package clubscape-protocol --all-features", "result": "passed", "passed_tests": 48},
+    {"command": "cargo test --quiet --package clubscape-server --test shop_intent_compatibility", "result": "passed", "passed_tests": 2},
+    {"command": "cargo clippy --quiet --package clubscape-sim --all-features --all-targets -- -D warnings", "result": "passed"},
+    {"command": "python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q", "result": "passed", "passed_tests": 12}
+  ],
+  "exact_identity": {
+    "server_revision_label": "1e9c7be1d2a881ba0f1540bea05cd23fbe693d6a",
+    "server_sha256": "1e577262790a96357964ba24a40bc9881d16c102bbb1fb020279bdae0a3e3d97",
+    "simulator_sha256": "3089e870fabbd974368a3e24c31c6739c23c8d7465b2067f2d5c8e95ff60e870",
+    "descriptor_sha256": "65dca3bd681a2225d42f6251f43df9f7b4eac6a8d4ebf6580b878aade2c216f4",
+    "assets_manifest_sha256": "b711446250e8480a9e0251350ee39ec50213734d0aec95525eeaa335faf2e3ae",
+    "generated_protocol_descriptor_sha256": "d66a326fa3c02c493efbd636bcaaa31c7fe94d0246dba377123a32efefc44614"
+  },
+  "independent_source_oracles": "research/journey-rules and tests/scenarios/m1_fresh_account.json; all exact input/source/protocol hashes are retained in the actual report, not derived from gameplay outputs.",
+  "remaining_unchecked": "Four tutorial transitions through valid confirmation/Home Teleport/mainland arrival; Lumbridge mining/inventory/bank/shop/goblin/death/grave, Cook ingredients/partial/reward flow, and required post-quest reconnect/logout/restart/replay.",
+  "raw_report": ".local/evidence/m1-ui4-source-bank.json"
+}

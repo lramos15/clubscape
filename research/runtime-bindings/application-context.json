@@ -1,0 +1,164 @@
+{
+  "accepted_current_targets": {
+    "items.item.ensouled_goblin_head.stackable.rule": {
+      "current_source": [
+        {
+          "notes": "Original selected-cache item definition 13447; source assets, not approved presentation or observed gameplay.",
+          "reference": "assets/source/osrs/cache2695/content-v2/collections/item.json.gz#asset.source.osrs.cache2695.item.13447",
+          "revision": "240/cache2695",
+          "status": "verified_reference"
+        },
+        {
+          "notes": "Pinned behavioral reference; not an executed game trace.",
+          "reference": "https://oldschool.runescape.wiki/w/Goblin?oldid=15318086",
+          "revision": "15318086",
+          "status": "inference"
+        }
+      ],
+      "original_binding_sha256": "8c524ac54f227e5a5e7e56e973bcba81a887cf67a110ec358145f9c4f4e0bde7",
+      "reason": "asset_provenance_only",
+      "sha256": "1ee07c6a9fc5926eea369d6c105177ed97d55177a597e21e3127d7e560466868"
+    },
+    "items.item.milk.bottomless_bucket.stackable.rule": {
+      "current_source": [
+        {
+          "notes": "Original selected-cache item definition 33089; source assets, not approved presentation or observed gameplay.",
+          "reference": "assets/source/osrs/cache2695/content-v2/collections/item.json.gz#asset.source.osrs.cache2695.item.33089",
+          "revision": "240/cache2695",
+          "status": "verified_reference"
+        },
+        {
+          "notes": "Pinned behavioral reference; not an executed game trace.",
+          "reference": "https://oldschool.runescape.wiki/w/Cook%27s_Assistant?oldid=15320469",
+          "revision": "15320469",
+          "status": "verified_reference"
+        }
+      ],
+      "original_binding_sha256": "a8e16976657dc94acf5275085e34a648ce5c2026a44694ffa183e29041009011",
+      "reason": "asset_provenance_only",
+      "sha256": "7c513ece783c5c9f521538a9633d338888e28de7ed7e11baba55b524deb3e01e"
+    },
+    "mechanics.combat_styles.style.magic.wind_strike.maximum_hit": {
+      "current_source": [
+        {
+          "notes": "Pinned behavioral reference; not an executed game trace.",
+          "reference": "https://oldschool.runescape.wiki/w/Wind_Strike?oldid=15341514",
+          "revision": "15341514",
+          "status": "verified_reference"
+        },
+        {
+          "notes": "Pinned behavioral reference; not an executed game trace.",
+          "reference": "https://oldschool.runescape.wiki/w/Combat_spells?oldid=15336309",
+          "revision": "15336309",
+          "status": "verified_reference"
+        },
+        {
+          "notes": "Pinned behavioral reference; not an executed game trace.",
+          "reference": "https://oldschool.runescape.wiki/w/Magic?oldid=15337462",
+          "revision": "15337462",
+          "status": "verified_reference"
+        },
+        {
+          "notes": "Pinned behavioral reference; not an executed game trace.",
+          "reference": "https://oldschool.runescape.wiki/w/Damage_per_second/Magic?oldid=15321382",
+          "revision": "15321382",
+          "status": "verified_reference"
+        },
+        {
+          "notes": "Typed source rule binding; arithmetic/content validation is not observed runtime gameplay.",
+          "reference": "research/journey-rules/activities.json#rule.magic.wind_strike",
+          "revision": "source-contract-v1",
+          "status": "verified_reference"
+        }
+      ],
+      "original_binding_sha256": "e9e006c7696b953be9da564f8ef1c1d3bd3985e18a9901ef2f92009ec8dcc0a3",
+      "reason": "parent_bound_semantic_replacement",
+      "sha256": "6272fec540a30b86fd544a4fa4e0085e2d54925f57de59cc98c2a499544b71b7"
+    },
+    "npcs.npc.adventurer_jon.navigation.step_ticks": {
+      "current_source": [
+        {
+          "notes": "Original selected-cache npc definition 9244; source assets, not approved presentation or observed gameplay.",
+          "reference": "assets/source/osrs/cache2695/content-v2/collections/npc.json.gz#asset.source.osrs.cache2695.npc.9244",
+          "revision": "240/cache2695",
+          "status": "verified_reference"
+        }
+      ],
+      "original_binding_sha256": "f92becb257ead476c4dc8149fbff12ffc9c409a1a218f8d548cee86c132ad7a6",
+      "reason": "asset_provenance_only",
+      "sha256": "0ab4827a0c2b3eded0c93715c9cbd226ee499f0c510bd03e45c0d0ad4ecd8a33"
+    },
+    "npcs.npc.cook.navigation.step_ticks": {
+      "current_source": [
+        {
+          "notes": "Original selected-cache npc definition 4626; source assets, not approved presentation or observed gameplay.",
+          "reference": "assets/source/osrs/cache2695/content-v2/collections/npc.json.gz#asset.source.osrs.cache2695.npc.4626",
+          "revision": "240/cache2695",
+          "status": "verified_reference"
+        }
+      ],
+      "original_binding_sha256": "9126548f3579b9438693d39971b3c08dbe1edf693a1dfe3867a1bac97e5c08f5",
+      "reason": "asset_provenance_only",
+      "sha256": "ea4976e20c01106a98497a636aaa794444acdb97731465ab40db56af9d8f51d3"
+    },
+    "npcs.npc.gillie_groats.navigation.step_ticks": {
+      "current_source": [
+        {
+          "notes": "Original selected-cache npc definition 4628; source assets, not approved presentation or observed gameplay.",
+          "reference": "assets/source/osrs/cache2695/content-v2/collections/npc.json.gz#asset.source.osrs.cache2695.npc.4628",
+          "revision": "240/cache2695",
+          "status": "verified_reference"
+        }
+      ],
+      "original_binding_sha256": "3a98e95571c87c7b6774ebde9c29fb05646cb6a64aafeb89964fcb7ab54fec93",
+      "reason": "asset_provenance_only",
+      "sha256": "e59ca9b8f0002e8621570c1f84369addb144ac928c7683e078ea0124e63c5bec"
+    },
+    "npcs.npc.ironman_tutor.mainland.navigation.step_ticks": {
+      "current_source": [
+        {
+          "notes": "Original selected-cache npc definition 311; source assets, not approved presentation or observed gameplay.",
+          "reference": "assets/source/osrs/cache2695/content-v2/collections/npc.json.gz#asset.source.osrs.cache2695.npc.311",
+          "revision": "240/cache2695",
+          "status": "verified_reference"
+        }
+      ],
+      "original_binding_sha256": "32caa692a6b8d571bd2a4e4680a8a363e852b988c094c25b5b05e381bc914ca9",
+      "reason": "asset_provenance_only",
+      "sha256": "82a21238ce2fc8eba0ebc3233b80e3f4863f606563169d1bf5a4a65b3cc9f10d"
+    },
+    "npcs.npc.ironman_tutor.navigation.step_ticks": {
+      "current_source": [
+        {
+          "notes": "Original selected-cache npc definition 7941; source assets, not approved presentation or observed gameplay.",
+          "reference": "assets/source/osrs/cache2695/content-v2/collections/npc.json.gz#asset.source.osrs.cache2695.npc.7941",
+          "revision": "240/cache2695",
+          "status": "verified_reference"
+        }
+      ],
+      "original_binding_sha256": "6c24a7f58a3c97f1947b17fc476f1ed8f3c017018796400a3033c64cc4ec770e",
+      "reason": "asset_provenance_only",
+      "sha256": "d28891127918f5e4d93d143e08c7d3d90b0fb60e720b0d14763df73b62018c2f"
+    },
+    "npcs.npc.lumbridge_guide.navigation.step_ticks": {
+      "current_source": [
+        {
+          "notes": "Original selected-cache npc definition 306; source assets, not approved presentation or observed gameplay.",
+          "reference": "assets/source/osrs/cache2695/content-v2/collections/npc.json.gz#asset.source.osrs.cache2695.npc.306",
+          "revision": "240/cache2695",
+          "status": "verified_reference"
+        }
+      ],
+      "original_binding_sha256": "42b3e979cc5ee86afb0379a6e5db5668f2330e6e56c31865e9a48d1f10a03bbc",
+      "reason": "asset_provenance_only",
+      "sha256": "2824e22eaaf69730d0b5c9f067486bc4530fee3450cd84431a5eede7b178e9b1"
+    }
+  },
+  "current_content_sha256": "e16610724b18ac6164a3d094085a0e28e843f31c00c45763bb95be6d35590b12",
+  "original_content_sha256": "18a617a855e6b8dfa07ea5cee5faa1cd6a1d7dd65ecc83d6f1d3eb0c8fbcaf92",
+  "original_source_base": "e9073ab",
+  "parent_base": "0aea6c0",
+  "policy": "Every source/coupled target retains an exact fingerprint. Exceptions are only the audited asset-locator refreshes and the parent's identical bound Wind Strike semantic value. No broad changed-field tolerance or source reclassification is authorized.",
+  "resolutions_sha256": "de543dd243b50da862b35c80a829d4ac97319157ccc7a91262261aa83dbfec6d",
+  "schema_version": 1
+}

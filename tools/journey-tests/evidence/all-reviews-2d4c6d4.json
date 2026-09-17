@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "status": "blocked",
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_claims": false,
+  "gameplay_sql_or_state_seeding_used": false,
+  "authorized_integrations_in_order": [
+    {
+      "parent": "62a003c6a8d87c42cd46643509ff3757ae541355",
+      "local": "0d31957c00be60ec82d1d55761838824365d16c4"
+    },
+    {
+      "parent": "e1076a87c25e8aafaa5478cc64d7a10c54ce7e46",
+      "local": "e844639ae0e116cfce5866e70e32a532d9394f24"
+    },
+    {
+      "parent": "3a74cbe5911e699fd30e51cdedf944e4616f86b5",
+      "local": "2d4c6d457f0c64c73452e94b836b30b4de70495b",
+      "conflict_resolution": "Only milestones/m1-tasks.json conflicted. Retained the existing director-owned milestone record unchanged; all source/runtime refresh changes applied. No acceptance metadata was promoted by this worker."
+    }
+  ],
+  "complete_actor_pair_applied_before_testing": true,
+  "partial_actor_or_c58f_candidate_used": false,
+  "previous_shop_identity_and_native_clock_repairs_preserved": true,
+  "source_refresh": {
+    "previous_revision": "m1.source-backed.v3.327d3a78f3bdad7c",
+    "current_revision": "m1.source-backed.v3.0e506f3dab24bbe0",
+    "structural_comparison": "Compared decoded previous/new committed JSON: after removing only /revision the complete values are equal.",
+    "content_schema_version": 3,
+    "artifact_version": 3,
+    "archive_bytes": 503151,
+    "archive_sha256": "0c3812b97bce2ff14c72eb1fa1643612101dae274c6a2e8e4ea3d00db1622fbf",
+    "raw_bytes": 11794799,
+    "raw_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+    "manifest_sha256": "59fac0b20e3ca2518dadf01c18529d1d881a44a81a1a83231ebb998862a040ee",
+    "older_owned_runs_active_before_update": 0,
+    "older_evidence_preserved": true,
+    "existing_world_artifact_replaced": false,
+    "new_candidate_policy": "Fresh isolated PostgreSQL/account/world candidate using the actual current manifest. Within-run restarts still require the exact same artifact/descriptor/binary identities."
+  },
+  "validation": [
+    {"command": "cargo fmt --package clubscape-sim --check", "result": "passed"},
+    {
+      "command": "cargo test --quiet --package clubscape-sim --package clubscape-protocol --all-features",
+      "result": "passed",
+      "passed_tests": 35
+    },
+    {
+      "command": "cargo test --quiet --package clubscape-server --test shop_intent_compatibility",
+      "result": "passed",
+      "passed_tests": 2
+    },
+    {
+      "command": "cargo clippy --quiet --package clubscape-sim --all-features --all-targets -- -D warnings",
+      "result": "passed"
+    },
+    {
+      "command": "python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q",
+      "result": "passed",
+      "passed_tests": 10
+    }
+  ],
+  "real_run": {
+    "run_id": "a43f87251a134d47",
+    "recorded_at_unix_ms": 1789444321448,
+    "revision_label": "2d4c6d457f0c64c73452e94b836b30b4de70495b",
+    "command": "python3 tools/journey-tests/run.py --server-entrypoint public-api --report .local/evidence/m1-headless-all-reviews.json",
+    "exit_code": 1,
+    "entrypoint": "Unchanged real Service::bind/serve with explicit Config::with_game_root",
+    "real_account_checks_passed": 11,
+    "real_account_only_negative_readiness_check": "passed; never counted as gameplay",
+    "compiler_required_assets_and_genuine_mappings": 5010,
+    "original_collection_deliveries": 4981,
+    "original_payload_files": 35,
+    "world_id": "2ae42e73-a79f-4c3c-b762-f91acee34cee",
+    "descriptor_sha256": "9b6a7920247612e90127b655a6e3864c73720b1a5cd60582e28397ce4c449f70",
+    "first_failure": {
+      "phase": "strict_product_server_startup",
+      "event": "startup_failure",
+      "stage": "game_content",
+      "error_kind": "game_file_size",
+      "error_id": "11b10905-f7fc-4cf4-9e65-409f0fead599",
+      "file": "crates/server/src/game_service/content.rs",
+      "line": 46,
+      "actual_descriptor_bytes": 272433,
+      "private_limit_bytes": 262144,
+      "classification": "Unchanged deployment descriptor budget; not one of the four repaired engine findings, not a source binding/approval failure."
+    },
+    "binary_sha256": {
+      "production_account_server": "c114db18f82915c049f20728dc5dd53874236d6c5f7092f494fbaf22c51f2d58",
+      "real_service_launcher": "0cc441b57b6c993aa687e0bb501dfcb990efc314b868dea6558e83843b4b54c4",
+      "simulator": "213da2184f942455d9b3c8dcc524c9213c8112dab40dab89e7dd8fb8d52eb420"
+    },
+    "protocol_version": 1,
+    "generated_protocol_descriptor_sha256": "648448015cd056b77fdce0c7b9d1fb3dd7243f22236123eb0e3c5e8cb189c0eb",
+    "game_proto_sha256": "3e00a9029cffb89788182728e15a6e1f8460693c7244201cf0181fecbad6bcd7",
+    "owned_processes_container_credentials_and_root_cleaned": true
+  },
+  "current_code_inspection": {
+    "independent_game_root_env_bug_still_present": true,
+    "file": "crates/server/src/config.rs",
+    "lines": [58, 65],
+    "detail": "GameRoot is still read only inside the WebRoot branch; the explicit Config entry point reaches the independent size gate without changing that production-binary code."
+  },
+  "source_oracles": "Unchanged independent research/journey-rules requirements and tests/scenarios/m1_fresh_account.json; all current source/protocol/artifact hashes are retained in .local/evidence/m1-headless-all-reviews.json.",
+  "remaining_parent_work": [
+    "Raise the private deployment descriptor byte limit to accommodate the complete real source asset map, retaining public RPC, source/profile and asset checks.",
+    "Parse GameRoot independently of WebRoot in the production binary."
+  ],
+  "engine_review_findings_reported_as_still_missing": [],
+  "product_characters_created": 0,
+  "product_tutorial_edges_executed": 0,
+  "required_gameplay_restarts_executed": 0,
+  "unchecked_original_scope": "All source tutorial/Learning-the-Ropes, Lumbridge gameplay, goblin death/Office/grave, Cook acquisition/partial/reward flow and onboarding/post-quest recovery remain unexecuted until real startup succeeds."
+}

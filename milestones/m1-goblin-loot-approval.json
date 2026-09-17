@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "adaptation_id": "adaptation.m1.goblin_energy_potion_provisional",
+  "authority": "owner",
+  "decision": "approved",
+  "owner_record": "Approve the provisional 1-in-16 roll with equal 1–4-dose weights",
+  "source_context": "Official 2026-08-19 source update establishes 1-4-dose energy potion drops at a fairly common rate, but available sources do not establish numeric odds.",
+  "approved_policy": {
+    "scope": "The ordinary M1 goblin loot binding; normal F2P applicability retained",
+    "independent_event": {"numerator": 1, "denominator": 16},
+    "dose_weights": {"1": 1, "2": 1, "3": 1, "4": 1},
+    "primary_loot_table": "Preserve the published mutually exclusive 128-weight table unchanged",
+    "guaranteed_and_other_source_drops": "Preserve their separately bound source behavior"
+  },
+  "classification": "approved_adaptation",
+  "verified_osrs_probability": false,
+  "acceptance_requirements": [
+    "Independent potion event does not replace or renormalize the primary table",
+    "Exactly one uniformly selected 1-4-dose potion is granted on the event",
+    "Actual source item identities and ordinary ownership/ground-item rules apply",
+    "Invalid/replayed kills cannot duplicate loot",
+    "Keep the provisional odds and source uncertainty visible in parity and release records"
+  ],
+  "limits": "No approval of other inferred gameplay changes, reference pack, final presentation, performance, release or later milestone."
+}

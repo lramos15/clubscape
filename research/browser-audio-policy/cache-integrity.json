@@ -1,0 +1,8 @@
+{
+  "source_cache": 2695,
+  "result": "passed",
+  "files": 25,
+  "read_only_reader": "BindingCache RandomAccessFile mode r",
+  "source_manifest_sha256": "8f473271eb810624731eef42d42c125fbf33d9e851911967034b5f93cc6e8747",
+  "verified_after_native_probes": true
+}

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ClubScape renderer fixture (developer only)</title>
+  <link rel="icon" href="data:," />
+  <style>
+    /* No page scrollbars: the auxiliary canvases below the world canvas must never overlay a
+       Chrome scrollbar onto element screenshots of the world canvas. */
+    html, body { margin: 0; background: #000; overflow: hidden; }
+    canvas[width="0"] { display: none; }
+    canvas { display: block; }
+    #status { position: fixed; left: 8px; bottom: 8px; color: #9f9; font: 12px monospace; background: rgba(0,0,0,.6); padding: 4px 6px; white-space: pre; }
+  </style>
+</head>
+<body>
+  <canvas id="surface" data-clubscape-surface></canvas>
+  <!-- Interface preview readback target; kept out of the world canvas so screenshots never overlap. -->
+  <canvas id="preview" data-clubscape-preview width="0" height="0" style="display: block; background: #3e3529;"></canvas>
+  <!-- Source minimap surface (region mode): the renderer's client.bm port over the streamed blocks. -->
+  <canvas id="minimap" data-clubscape-minimap width="0" height="0" style="display: block;"></canvas>
+  <div id="status" hidden></div>
+  <script type="module" src="/web/renderer/dist/renderer/dev/main.js"></script>
+</body>
+</html>

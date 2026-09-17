@@ -1,0 +1,25 @@
+{
+  "existing_playable_manifest_unchanged": true,
+  "existing_published_audio_payloads_unchanged": 264,
+  "owner_pack_approved": false,
+  "parent_handoff_commit": "9740655",
+  "recording_date_qualifications_retained": true,
+  "running_browser_audio_accepted": false,
+  "schema_version": 1,
+  "source_login": false,
+  "source_observation_report_sha256": "b50d7f68fa34efbb3ba86caad0eb684f0177bedad2caf21b9954d194d694c340",
+  "source_observation_selector_ids": {
+    "bronze_smelt_start": 2725,
+    "normal_cooks_assistant_quest_jingle": 152,
+    "ordinary_shortbow_release": 2693,
+    "reward_levelup_after_quest_scroll": 33,
+    "tutorial_rat_attack": 710
+  },
+  "task": "m1-audio-bindings",
+  "test_log_sha256": "90ef5cb37b1b80abdd79e9ac1af2d353b0f25564f6f1bc2b35d8e7f68818f5d1",
+  "tests_passed": 46,
+  "unresolved_rules": [
+    "quest.learning_the_ropes",
+    "rule.food.healing"
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-09-14T02:41:49.821876+00:00",
+  "result": "passed",
+  "validation": {
+    "schema_version": 1,
+    "result": "passed",
+    "captures": 93,
+    "counts": {
+      "original-runtime-model": 58,
+      "original-runtime-item-icon": 24,
+      "original-runtime-component-fixture": 1,
+      "original-runtime-scene-fixture": 5,
+      "original-runtime-title-state-fixture": 5
+    },
+    "complete_native_animation_cycles": [
+      5666,
+      5668,
+      6180,
+      6181
+    ],
+    "manifest_sha256": "1ea61e13890747c29000ae778642337e101850472f12861c3ad9e49d71f8818e",
+    "owner_reference_pack_approved": false,
+    "source_journey_verified": false
+  },
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "tools/source-capture/capture.py"
+      ],
+      "exit_code": 0,
+      "log": "research/source-capture/commands/capture.log",
+      "log_sha256": "ca663457bc1b697a10833652d401c2a3da01a397d04143a96d6e04fbfea3827f"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/source-capture/capture.py",
+        "--verify-only"
+      ],
+      "exit_code": 0,
+      "log": "research/source-capture/commands/verify-captures.log",
+      "log_sha256": "ca663457bc1b697a10833652d401c2a3da01a397d04143a96d6e04fbfea3827f"
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/source-capture",
+        "-p",
+        "test_*.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "log": "research/source-capture/commands/unit-tests.log",
+      "log_sha256": "bede3e7a2fca977d889e01b8df834cdaeadb7c7ddc7f0117f0387e9f6ce9af3a"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/source-capture/capture.py",
+        "--output",
+        ".local/source-capture/final-repeat"
+      ],
+      "exit_code": 0,
+      "log": "research/source-capture/commands/capture-repeat.log",
+      "log_sha256": "ca663457bc1b697a10833652d401c2a3da01a397d04143a96d6e04fbfea3827f"
+    }
+  ],
+  "unit_tests": 11,
+  "repeatability": {
+    "seed": 0,
+    "captured_images": 93,
+    "byte_identical_images": 93,
+    "different_images": [],
+    "manifest_identical": true
+  },
+  "original_render_exception_audit": {
+    "enabled": true,
+    "swallowed_render_errors": 0,
+    "strategy": "HotSpot exception tracing inspected for native renderer/loader errors, not only process exit/nonblank output"
+  },
+  "capture_manifest": {
+    "path": "assets/reference/osrs240/captures.json",
+    "size_bytes": 107327,
+    "sha256": "1ea61e13890747c29000ae778642337e101850472f12861c3ad9e49d71f8818e"
+  },
+  "provenance": {
+    "path": "assets/reference/osrs240/provenance.json",
+    "size_bytes": 5826,
+    "sha256": "c749b34289de106aa267973c860699137a4c8ccb02f69f9d7a352b7ebe080e94"
+  },
+  "capture_source_files": [
+    {
+      "path": "tools/source-capture/MutedAnimationAudio.java",
+      "size_bytes": 565,
+      "sha256": "5c6fa7c9853215420c542dd1b5cb65903a888af3d3350ec7ee112f5340f07bcb"
+    },
+    {
+      "path": "tools/source-capture/OriginalCache.java",
+      "size_bytes": 2798,
+      "sha256": "44be32c02c097ae8872426e0a052707dd625194c696d0babeaf58c710091e2c3"
+    },
+    {
+      "path": "tools/source-capture/OriginalCapture.java",
+      "size_bytes": 17484,
+      "sha256": "f858ef34edc0704e5697a2b18ecb7d7fc3b92e51529d70d1fa96c015be1ee94b"
+    },
+    {
+      "path": "tools/source-capture/README.md",
+      "size_bytes": 9545,
+      "sha256": "3acb0d9c3994f1da50d8fff5084c47532b1ad642665f66824904c6d6cef15602"
+    },
+    {
+      "path": "tools/source-capture/TitleCapture.java",
+      "size_bytes": 5590,
+      "sha256": "4e187c56c0f44ecdbb25724c73a29be7088ed2b407cec368be30999f082b868d"
+    },
+    {
+      "path": "tools/source-capture/WorldCapture.java",
+      "size_bytes": 9340,
+      "sha256": "340b7c9304b51b5395d70b9ed2a84dfd351246705e9723e297a2c9989d0f13a8"
+    },
+    {
+      "path": "tools/source-capture/capture.py",
+      "size_bytes": 15130,
+      "sha256": "c5b8ed117611cad91b4187fc27389be62b0abf1585ddf242a56f71056828f23d"
+    },
+    {
+      "path": "tools/source-capture/dependencies.json",
+      "size_bytes": 713,
+      "sha256": "540d4966ce3baaab346edce246a26ca5fe7b8d59f42d29cb4867389c7780c072"
+    },
+    {
+      "path": "tools/source-capture/test_capture.py",
+      "size_bytes": 4079,
+      "sha256": "43bd067efce756cc38eb3828a9ee1bb6636f4060b73f56f69b16dbcf081f6515"
+    }
+  ],
+  "image_total_bytes": 10132768,
+  "source_journey_observed": false,
+  "terms_accepted": false,
+  "owner_reference_pack_approved": false,
+  "final_presentation_accepted": false
+}

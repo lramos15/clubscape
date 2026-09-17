@@ -1,0 +1,76 @@
+{
+  "scope": "Published game.ui.v1 component integration ONLY; deterministic service double, not backend/protobuf implementation proof",
+  "cases": [
+    {
+      "name": "legacy/unknown version is explicit unsupported capability, not empty v1 success",
+      "passed": true
+    },
+    {
+      "name": "opaque inventory action IDs and item/instance identities are retained",
+      "passed": true
+    },
+    {
+      "name": "source interface and ability permissions replace legacy inferred availability",
+      "passed": true
+    },
+    {
+      "name": "stable bank entries, placeholders, options, tabs and equipment deposits dispatch exact v1 requests",
+      "passed": true
+    },
+    {
+      "name": "bank drag reorders by entry identity and cancels cleanly on blur or outside release",
+      "passed": true
+    },
+    {
+      "name": "public chat checks UTF-8 bytes and never optimistically echoes or drops a rejected draft",
+      "passed": true
+    },
+    {
+      "name": "production single/make-X modes keep menu IDs, reject locked controls and retain failed amounts",
+      "passed": true
+    },
+    {
+      "name": "native smithing preserves unavailable source rows and sends only declared recipe identities",
+      "passed": true
+    },
+    {
+      "name": "inventory-only null target renders native controls and preserves authority on reject/cancel",
+      "passed": true
+    },
+    {
+      "name": "death preview uses actual kept/lost rows and exact monetary strings, not fixture classifications",
+      "passed": true
+    },
+    {
+      "name": "live recovery projects only real rows and sends discard requests through versioned confirmation flow",
+      "passed": true
+    },
+    {
+      "name": "current recovery sends partial and All quantities with exact source records, fees and independent bank revision",
+      "passed": true
+    },
+    {
+      "name": "malformed nested projections surface errors and cannot dispatch through legacy fallbacks",
+      "passed": true
+    },
+    {
+      "name": "selected combat style remains identity-bound when projection order changes",
+      "passed": true
+    },
+    {
+      "name": "declared body-type permissions are respected in character phase without extra cosmetics",
+      "passed": true
+    },
+    {
+      "name": "reward continuation and confirmation IDs stay authoritative with no local reward/credit grants",
+      "passed": true
+    },
+    {
+      "name": "unpublished level-up layout bindings remain explicitly incomplete, never a fake quest scroll",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "browser": "153.0.8010.12",
+  "finalAcceptance": false
+}

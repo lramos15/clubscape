@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "result": "passed",
+  "native_images_byte_identical": 12,
+  "native_case_states_and_geometry_identical": 12,
+  "pair_metrics_byte_identical": 8,
+  "fixture_seed": 0,
+  "different_render_or_script_failures": 0,
+  "ignored_nondeterministic_fields": [
+    "capture wall-clock timestamp",
+    "JVM log timings and memory addresses"
+  ],
+  "case_pixel_hashes": {
+    "tutorial-door-closed": "5587016b2119a5f70d3a79c526f6235451a38e1cff8e30d27040d94d6389b68a",
+    "tutorial-door-open": "2e904e45a3466c56e323101762b59209df95cd5e34c625ee4101bd927e0128f4",
+    "lumbridge-ground-single": "6382fd2d487f04a254d2d19fea6a3ed1c593d865cfb64a6b252390df2dc50046",
+    "lumbridge-ground-stack": "a2d4352b4b69864851c3213a5e51e864acef61bd49d985a3c44d3371aa8d51d6",
+    "lumbridge-ground-top-three": "a983b9eb32ce41e0a2850bb9701b63bec90336d6804c479960b8cf083be68749",
+    "lumbridge-fire-frame-zero": "4362e8a59faa2177ca2b31067bd9f8cf1c7a41e64373f421a3e058644eaa2b78",
+    "lumbridge-fire-frame-three": "4acd50423d685881bb1d51df9b3941a346787ce21af5102518d9626f4fcae237",
+    "tutorial-roofs-outside": "6d629829ebae7199307051d2d29279eaeff634cf511470091415cb277895f20e",
+    "tutorial-roofs-inside": "535625c36ccbc931967d7a1bb4ed6bad6ca8e04aec0b5321be5cf3d59586945c",
+    "tutorial-roofs-hidden": "bd4d14c63733c3acdfc87146083ac6c3dc6be84a46145ebc7da28dd44f2dcf05",
+    "lumbridge-minimap-plane-one": "fab344ee200324e702e01b1f236eab6dd84c423883b45382cc2326e9c25c9aec",
+    "lumbridge-minimap-mapped-chunk": "670bb099d4c5022367b81f6b10b6c579d00151c9989daef3b5f70730a69d57a6"
+  }
+}

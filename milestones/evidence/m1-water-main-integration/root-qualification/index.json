@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "report.json",
+      "source": ".local/water-main-integration-01/root-qualification-01/report.json",
+      "bytes": 8134,
+      "sha256": "8b6b4c34c32da5bdf97d917ee89a3f1b92ea918146e4cef97d97b2ced8bd7e94"
+    },
+    {
+      "path": "wasm-clippy.log",
+      "source": ".local/water-main-integration-01/root-qualification-01/wasm-clippy.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "affected-format.log",
+      "source": ".local/water-main-integration-01/root-qualification-01/affected-format.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "production-binaries.log",
+      "source": ".local/water-main-integration-01/root-qualification-01/production-binaries.log",
+      "bytes": 237513,
+      "sha256": "ca1e0334b35e133af2ed5403fe855f2f64dcf890a1c21610ae66b39dfeafc9b6"
+    }
+  ],
+  "raw_evidence_preserved": true,
+  "milestone_accepted": false
+}

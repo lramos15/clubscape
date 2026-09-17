@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "task": "M1-SAVED-WATER-BINDING-02-INTEGRATION",
+  "status": "completed_code_only",
+  "result": "milestones/evidence/m1-saved-water-binding-02-root-qualification.json",
+  "integrated_root_revision": "3c9c43d66e3839d9b4aef66913f4d966d494fefa",
+  "authority": "director",
+  "executor": "director",
+  "recorded_at": "2026-09-17T11:32:35.295217+00:00",
+  "owner_approval": "milestones/approvals/m1-saved-water-continuation-02.json",
+  "review": "milestones/evidence/m1-saved-water-binding-02-review.json",
+  "candidate": "milestones/evidence/m1-saved-water-binding-02-candidate.json",
+  "candidate_revision": "0b6105d66a615fcaf47886cc97f094d6063320e8",
+  "candidate_base_revision": "76971ee95040130ddd2084f7fa7c9fd275982e2c",
+  "root_before_review_publication": "58e4de10d195fa08fb96ea0bf8e8534b5b6abfa3",
+  "root_branch": "milestone/01-starter-journey",
+  "allowed_source_paths": ["tools/journey-tests/saved_water_gate.py", "tools/journey-tests/test_saved_water.py", "tools/journey-tests/SAVED_WATER.md"],
+  "requirements": [
+    "Verify the three current root paths match769 and import only the exact independently reviewed0b bytes; commit the source before the root qualification.",
+    "Verify the reviewed worker remains clean at0b and preserve all other worktrees and source/native/dependency inputs.",
+    "Run the existing eight-module Python selector once on the committed root with synthetic fixtures only and a120-second cap; retain actual stdout/stderr, timing and exit status.",
+    "Record exact source/log identities and distinguish this committed-root qualification from the earlier98-case precommit result and read-only review.",
+    "Do not repeat the completed769/2ed bootstrap qualification, actual entrypoint or any native game invocation. No original52 or real01 journal/report access."
+  ],
+  "validation": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/journey-tests timeout 120 python3 -m unittest test_saved_water test_saved_water_runtime test_private_checkpoint test_resume test_run test_cook_continue test_mainland_continue test_dying_observe",
+    "suite_invocations": 1,
+    "maximum_seconds": 120,
+    "output": ".local/saved-water-binding-02-root-01",
+    "fixture_data_only": true
+  },
+  "actual_saved_entrypoint_or_protected_accesses": 0,
+  "native_builds_game_binary_invocations_or_elf_rehashes": 0,
+  "databases_services_restores_migrations_or_gameplay": 0,
+  "source_generation_operator_browser_gpu_or_runelite": 0,
+  "camera_or_renderer_integration": false,
+  "new_agents_or_factories": 0,
+  "executable_successor_admission_created": false,
+  "original_attempts_remaining": 0,
+  "owner_conditionally_authorized_new_attempts_unconsumed": 1,
+  "unrelated_allowances_renewed": false,
+  "milestone_accepted": false
+}

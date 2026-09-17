@@ -1,0 +1,37 @@
+{
+  "scope": "Source audio UI/real WebAudio observer controls ONLY; browser output muted for shared-host privacy, not audible world/M1 acceptance",
+  "cases": [
+    {
+      "name": "real observer defaults and integer source position, not linear gain",
+      "passed": true
+    },
+    {
+      "name": "native master is pre-lookup and channel mute restores an observed value",
+      "passed": true
+    },
+    {
+      "name": "drag, focus, Escape and external updates preserve source slider values",
+      "passed": true
+    },
+    {
+      "name": "actual audio failures surface exact codes and unbound/disposed controls cannot dispatch",
+      "passed": true
+    },
+    {
+      "name": "native music mode IDs retain required authoritative selection feedback, without fabricated tracks",
+      "passed": true
+    },
+    {
+      "name": "title toggle uses real activation and global mute without rewriting source channel positions",
+      "passed": true
+    },
+    {
+      "name": "UI disposal detaches the observer but does not dispose the shell's audio graph",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "browser": "153.0.8010.12",
+  "browserOutputMuted": true,
+  "finalAcceptance": false
+}

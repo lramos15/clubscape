@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "kind": "m1_saved_water_continuation_code_review",
+  "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
+  "status": "passed",
+  "latest_review_scope": "code_only_fixed_successor_binding_delta_at0b, appended to the completed baseline/deadline/bootstrap review chain",
+  "reviewer": "ce4d0723-ee8e-45fa-8219-94a7210fa308",
+  "reviewer_role": "independent_director_authored_successor_binding_delta",
+  "baseline_reviewer": "director",
+  "implementer": "115554cb-8e25-40c8-854a-4f9dc8936166",
+  "deadline_repair_author": "director",
+  "bootstrap_repair_author": "director",
+  "successor_binding_author": "director",
+  "baseline_reviewed_at": "2026-09-17T03:29:05.131437+00:00",
+  "reviewed_at": "2026-09-17T11:32:35.295217+00:00",
+  "latest_review_timestamp_basis": "Director collection record for reviewer turn3, not a separately captured completion timestamp.",
+  "baseline_candidate_revision": "b958cc44425804dd56ef4a940a416588f23b059b",
+  "code_revision": "0b6105d66a615fcaf47886cc97f094d6063320e8",
+  "bootstrap_repair_revision": "76971ee95040130ddd2084f7fa7c9fd275982e2c",
+  "deadline_repair_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
+  "implementation_revision": "2fbf5afae6c548981dafd660c523d0ead758de81",
+  "implementation_admission": "milestones/evidence/m1-saved-water-continuation-implementation.json",
+  "candidate_qualification": "tools/journey-tests/evidence/saved-water-continuation-code.json",
+  "baseline_owned_candidate_paths": 15,
+  "baseline_owned_implementation_files_verified": 14,
+  "deadline_append_paths": 7,
+  "bootstrap_append_paths": 6,
+  "successor_binding_append_paths": 3,
+  "combined_candidate_paths": 18,
+  "review_scope": [
+    "All new Python admission, reservation, reader, execution, preservation and fixture code; all native remaining-only and recovery changes.",
+    "Existing checkpoint writers, source selection, typed operation/control decoding, source contact/production helpers and public report schema consumed by the new path.",
+    "Pre-I/O canonical admission and exclusive journal, source/executor containment, native claims and completed-segment/trace preservation.",
+    "Owned empty restore and original private identity comparison before the existing production migrate-ui call, exact migration conservation oracle, lifecycle-only entry and new-operation-only duplicate proof.",
+    "Source success or burn, additional-input accounting, bounded owned lifecycle and fresh checkpoint before cleanup, with unknown outcomes and capture failures retained."
+  ],
+  "findings": [
+    {
+      "id": "saved-water-cli-module-identity",
+      "severity": "HIGH",
+      "file": "tools/journey-tests/saved_water.py",
+      "reporter": "director",
+      "status": "resolved",
+      "problem": "Actual script execution creates __main__.Admission, while the imported runtime reader creates saved_water.Admission. Nominal equality rejects the handoff before protected I/O. Import-based unit fixtures did not exercise this CLI boundary.",
+      "evidence": "milestones/evidence/m1-saved-water-execution-result.json",
+      "required_repair": "Use one canonical authority module from a thin launcher and runtime, with synthetic actual-script bootstrap coverage. Preserve the equality guard, failed attempt and exhausted journal; no retry is admitted.",
+      "resolved_by_code_revision": "76971ee95040130ddd2084f7fa7c9fd275982e2c",
+      "independent_resolution": "milestones/evidence/m1-saved-water-bootstrap-review.json"
+    },
+    {
+      "id": "saved-water-native-deadline",
+      "severity": "HIGH",
+      "file": "tools/journey-tests/saved_water_runtime.py",
+      "lines": "480-500",
+      "problem": "The native subprocess deadline is checked only between parent-loop iterations. Blocking owned restart handling can leave the subprocess running beyond the admitted cap.",
+      "evidence": "milestones/evidence/m1-saved-water-continuation-review/deadline-index.json",
+      "reproduced": "With a one-second synthetic cap, the no-block control is stopped at the1.5-second sample; a two-second restart block leaves the actual harmless process alive at1.500441687 seconds. Parent enforcement occurs only at2.051394044 seconds.",
+      "required_repair": "Enforce the native process cap independently of blocking restart work, keep explicit deadline outcomes and owned reaping, and propagate the remaining phase/overall budget through blocking helpers without consuming the reserved preservation window.",
+      "status": "resolved",
+      "resolved_by_code_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
+      "independent_resolution": "milestones/evidence/m1-saved-water-deadline-review.json"
+    }
+  ],
+  "superseding_review": {
+    "recorded_at": "2026-09-17T03:52:25.999118+00:00",
+    "initial_passed_review_revision": "dd043bce998e3253f45de9542e6576fa3b77db88",
+    "initial_regression_results_preserved": true,
+    "additional_test_commit": "e5267810c0c271e513c282697e3819ead8c35ac1",
+    "saved_execution_ever_admitted": false
+  },
+  "review_chain": [
+    {"reviewer": "director", "scope": "Complete originalb958 continuation implementation and public callers; original83/53 regressions", "historical_review_revision": "dd043bce998e3253f45de9542e6576fa3b77db88"},
+    {"reviewer": "director", "scope": "Additional actual-process deadline counterexample, preserving and superseding the initial passed review", "evidence": "milestones/evidence/m1-saved-water-continuation-review/deadline-index.json"},
+    {"reviewer": "22b898a4-8850-4fc0-be15-af0b7440e32a", "scope": "Independent exact seven-file Director-authored4526 deadline append, not a repeated full baseline review", "evidence": "milestones/evidence/m1-saved-water-deadline-review.json"},
+    {"reviewer": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "scope": "Independent exact six-path Director-authored769 canonical-module bootstrap append and public callers; static assessment, not an independent test rerun or repeated full baseline review", "evidence": "milestones/evidence/m1-saved-water-bootstrap-review.json"},
+    {"reviewer": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "scope": "Independent exact three-path Director-authored0b fixed successor binding and necessary public/runtime/native callers; full normalized gate text identical to769, exact owner/proposal pins verified, no new findings or test/private execution", "evidence": "milestones/evidence/m1-saved-water-binding-02-review.json"}
+  ],
+  "qualification": "The actualce09 failure and consumed authority remain preserved. Completed769 review and2ed5b9c/96-case root qualification are unchanged historical stages. Independentce4 assessed the exact0b successor append with no significant findings, confirming fixed02 selection, independent owner pin and complete normalized gate text identity with769. The exact three paths are now integrated3c9c43d; all tracked journey Python source matches0b and the existing98-case selector passes on that committed root in6.62seconds. This is distinct from the earlier98-case precommit result and read-only review. No executable successor authority is granted by this review.",
+  "bootstrap_candidate": "milestones/evidence/m1-saved-water-bootstrap-candidate.json",
+  "baseline_independent_checks": {
+    "worktree": ".worktrees/m1-saved-water-review",
+    "index": "milestones/evidence/m1-saved-water-continuation-review/index.json",
+    "python": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/journey-tests timeout 120 python3 -m unittest test_saved_water test_saved_water_runtime test_private_checkpoint test_resume test_run test_cook_continue test_mainland_continue test_dying_observe",
+      "exit_code": 0,
+      "tests_passed": 83,
+      "elapsed_seconds": 3.42
+    },
+    "native": {
+      "command": "CARGO_BUILD_JOBS=4 CARGO_TARGET_DIR=$PWD/.local/review-target timeout 600 cargo test --locked --offline --quiet -p clubscape-sim --bin clubscape-sim",
+      "exit_code": 0,
+      "tests_passed": 53,
+      "elapsed_seconds": 26.01,
+      "actual_test_binary": ".worktrees/m1-saved-water-review/.local/review-target/debug/deps/clubscape_sim-df458c8d8e14b8bc",
+      "actual_test_binary_sha256": "528558968cb484b4ac518941fe65467a47122180239e90702a180c7070f70481"
+    },
+    "candidate_qualification_logs_hash_verified": 5,
+    "candidate_retained_initial_failure_logs_hash_verified": 2,
+    "candidate_source_files_hash_verified": 14,
+    "candidate_and_root_lock_identical": true,
+    "cargo_lock_sha256": "eb443059216fdd402c6c94e8aa76ed84dd1b5678f37aa0540533fc4f4008f70c",
+    "candidate_non_test_build_records_and_actual_aarch64_elfs_verified": 3,
+    "candidate_clippy_and_non_test_builds_rerun_by_director": false,
+    "host": "Linux aarch64; Python3.12.3, Rust/Cargo1.98.1; no environment changes"
+  },
+  "binaries": {
+    "migrator": {
+      "path": ".local/saved-water-target/debug/clubscape-server",
+      "sha256": "ccfd9f1bd084a2483e5d6238154b037a18453ea9e84c4788e18a8fe6462620b3"
+    },
+    "server": {
+      "path": ".local/saved-water-target/debug/clubscape-journey-server",
+      "sha256": "c82915e8a5c20bbb2853ffbfe955f4cf6c996ffc30e0e4cc590cb858521af749"
+    },
+    "simulator": {
+      "path": ".local/saved-water-target/debug/clubscape-sim",
+      "sha256": "f1416752b87390b1954c63967cb13f93c11e6c86aad4802b07e3e67ceb0a267b"
+    }
+  },
+  "public_delivery_review": {
+    "inline_game_root_and_delivered_manifest_claims": "both_verified_unchanged",
+    "receipt": "milestones/evidence/m1-saved-water-delivery-preparation.json",
+    "prepared_files": 40,
+    "existing_copy_helper_preserves_all_prepared_files": true,
+    "preparation_or_inspection_repeated": false
+  },
+  "remaining_execution_gates": [
+    "Successor0b is independently reviewed and its exact three-path import3c9c43d passes98 synthetic tests on committed root code. All tracked journey Python source matches0b; the earlier769/2ed qualification is preserved, not repeated.",
+    "The solece09 saved entrypoint remains consumed1/remaining0. Owner approvalfacac6a3 conditionally grants one separate fixed02 attempt, not a refund. A new exact committed admission after successor qualification is required before reservation/protected access; no old journal reuse or automatic retry.",
+    "Actual original identity, target service readiness, restore, fenced migration, remaining gameplay and fresh protected capture are unexecuted and may still fail their strict runtime guards.",
+    "No old operator, preparation, restore, browser, audio or RuneLite allowance is renewed."
+  ],
+  "deadline_repair_qualification": "milestones/evidence/m1-saved-water-deadline-repair-candidate.json",
+  "independent_deadline_review": "milestones/evidence/m1-saved-water-deadline-review.json",
+  "independent_bootstrap_review": "milestones/evidence/m1-saved-water-bootstrap-review.json",
+  "independent_successor_binding_review": "milestones/evidence/m1-saved-water-binding-02-review.json",
+  "successor_integration_admission": "milestones/evidence/m1-saved-water-binding-02-integration-admission.json",
+  "successor_main_qualification": "milestones/evidence/m1-saved-water-binding-02-root-qualification.json",
+  "bootstrap_main_qualification": "milestones/evidence/m1-saved-water-bootstrap-root-qualification.json",
+  "protected_checkpoint_accesses": 0,
+  "actual_databases_services_restores_migrations_or_gameplay": 0,
+  "gpu_browser_source_capture_generation_or_runelite_invocations": 0,
+  "main_qualification": "milestones/evidence/m1-saved-water-continuation-review/main/index.json",
+  "saved_execution_admitted": false,
+  "saved_execution_performed": false,
+  "automatic_resume": false,
+  "full_journey_passed": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "approval": {
+    "path": "milestones/approvals/m1-water-fill-upgrade-v1.json",
+    "sha256": "438ba1e44c35f3ad7ebbe8e4c099b02f594df851bd2092a7f767bc4928b4c9d1",
+    "owner_record": "approve_bounded_water_fill_upgrade"
+  },
+  "profiles": {
+    "current5b": {
+      "commit": "00229843ab08b724b33eae29e92917f12dc86a53",
+      "repository_path": "content/m1/game-content.json.gz",
+      "input": "research/water-fill/inputs/current5b-source.json.gz",
+      "source_sha256": "2782a2fbb164ca4c11a964778adf0ca544986f6b2e17aa9bb9bd55f730092ed2",
+      "revision": "m1.source-backed.v4.bdbf8a3788b842be",
+      "semantic_sha256_without_revision": "fc0f4fb5e73c6d9800b88bb62001b3acfc058c8c37321947f58fc5058835fc74",
+      "raw_artifact_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+      "compressed_artifact_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6"
+    },
+    "legacy5e": {
+      "public_supplied_copy": ".local/source5e-input/game-content.json.gz",
+      "input": "research/water-fill/inputs/legacy5e-source.json.gz",
+      "source_sha256": "294ede7e3d8e08633051338385f189c0d420000e74cd2344ce54b13bbfa28706",
+      "revision": "m1.source-backed.v4.3ff4292b311453cc",
+      "semantic_sha256_without_revision": "00f994caf1320993c69d96b833254a5684dbf235cf3bb71f812cff3ad72671a5",
+      "raw_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+      "compressed_artifact_sha256": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f"
+    }
+  },
+  "scope": "Public immutable content inputs only. No private checkpoint, account snapshot, operation receipt or database is read or changed.",
+  "migration_admitted": false
+}

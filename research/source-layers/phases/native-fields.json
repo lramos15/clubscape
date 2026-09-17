@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "runtime": "unchanged injected-client1.12.38",
+  "runtime_sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947",
+  "native_class_hashes": "assets/reference/osrs240/m1-dynamic/phases/phase-index.json#native_class_sha256",
+  "observation_access": "Read-only exact native fields and API getters; no original method or JAR instrumentation.",
+  "fields": [
+    {"field": "dy.ac", "meaning": "Active qr controller used by dy.ae and dy.rf", "verification": "dy.ae invokes dy.rf then renders using its ac controller"},
+    {"field": "dy.aa", "meaning": "Auxiliary previous qr controller; not the active rendered frame", "verification": "Separate field retained by original dy construction"},
+    {"field": "qr.ab", "decode_multiplier": 292569817, "meaning": "Native frame index", "verification": "qr.ax getter and DynamicObject.getAnimFrame; API/field equality asserted"},
+    {"field": "qr.as", "decode_multiplier": -1399668821, "meaning": "Native within-frame cycle accumulator", "verification": "qr.ac getter; qr.ai initializes from a source frame length, write multiplier -1873132797"},
+    {"field": "qr.ag", "decode_multiplier": 1684838611, "meaning": "Source sequence ID", "verification": "qr.as(int) getter and original animation API ID; equality asserted"},
+    {"field": "dy.ao", "decode_multiplier": 1618438999, "meaning": "Last source animation-update cycle", "verification": "dy.rf subtracts decoded ao from native client.cm, then writes current cycle with multiplier1780002919"},
+    {"field": "client.cm", "decode_multiplier": 1612595797, "meaning": "Original scene/client cycle", "verification": "Client.getGameCycle and dy.rf; API/field equality asserted"},
+    {"field": "DynamicObject.getAnimCycle()", "observed_result": -1, "meaning": "Unavailable API clock", "verification": "Original implementation returns constant -1; no phase inferred from this API"},
+    {"field": "qr.ax and qr.af", "meaning": "Raw auxiliary clock fields only", "verification": "Read and preserved without assigning unverified semantics"}
+  ],
+  "native_progression": {
+    "path": "dy.rf -> ou.pl -> rd.az",
+    "consumed_delta": "source cycle minus decoded dy.ao",
+    "boundary": "rd.az uses if_icmple at its source frame-length comparison; equality does not advance",
+    "source_observation": "Frame477:4 with frame-cycle1 remains frame4 although that frame's source duration is1",
+    "no_probe_progression_call": true
+  },
+  "original_randomization": {
+    "path": "qr.ai(byte)",
+    "source_behavior": "Original Math.random selects a native frame and source-duration offset; the probe observes existing state and does not call this method",
+    "fixture_rng": "The exact existing seed0 source execution, not a new seed or candidate-derived target"
+  },
+  "qualifications": [
+    "Only the three existing admitted source cases and three specified visible placements are observed.",
+    "The observed scene clock0 and offsets0/1 are measured native state, not invented defaults.",
+    "The sidecars are controlled offline original-client evidence, not authenticated gameplay or general world-clock observations."
+  ]
+}

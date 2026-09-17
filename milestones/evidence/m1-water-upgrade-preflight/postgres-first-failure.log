@@ -1,0 +1,26 @@
+/home/lramos15/clubscape/.worktrees/m1-water-integration/target/debug/deps/clubscape_server-edd05d8cb1a2fada failed (exit 101):
+
+running 2 tests
+test game_service::tests::water_migration::current_water_migration_preserves_fences_journals_and_resolves_once_after_restart ... FAILED
+test game_service::tests::water_migration::legacy_water_migration_preserves_fences_journals_and_resolves_once_after_restart ... FAILED
+
+failures:
+
+failures:
+    game_service::tests::water_migration::current_water_migration_preserves_fences_journals_and_resolves_once_after_restart
+    game_service::tests::water_migration::legacy_water_migration_preserves_fences_journals_and_resolves_once_after_restart
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 83 filtered out; finished in 42.01s
+
+
+thread 'game_service::tests::water_migration::current_water_migration_preserves_fences_journals_and_resolves_once_after_restart' (3846753) panicked at crates/server/src/game_service/tests/water_migration.rs:503:5:
+assertion `left == right` failed
+  left: 0
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'game_service::tests::water_migration::legacy_water_migration_preserves_fences_journals_and_resolves_once_after_restart' (3846938) panicked at crates/server/src/game_service/tests/water_migration.rs:503:5:
+assertion `left == right` failed
+  left: 0
+ right: 1
+

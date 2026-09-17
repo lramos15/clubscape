@@ -1,0 +1,65 @@
+{
+  "command": [
+    "/usr/bin/python3",
+    "tools/runtime-bindings/validate.py",
+    "--baseline-commit",
+    "e9073ab",
+    "--self-test"
+  ],
+  "resolutions_sha256": "56f1a2703f9ae4be2290eeaa3de07dfb5ed1641fc51d2d974c9653540b195737",
+  "result": {
+    "all_raw_source_hashes_checked": false,
+    "applyable_bindings": 104,
+    "classification_counts": {
+      "codebug_parent_fixed": 1,
+      "codebug_parent_required": 1,
+      "inactive_dependency": 6,
+      "known_fact": 5,
+      "owner_decision": 1,
+      "source_supported_inference": 98
+    },
+    "coupled_updates": 7,
+    "exact_paths": 112,
+    "gameplay_executed": false,
+    "invalid_mutations_rejected": 8,
+    "numeric_and_edge_checks": 195,
+    "oracle_checks": {
+      "conditional_level_vectors": 3,
+      "cooking_queue_vectors": 1,
+      "death_restoration_cases": 2,
+      "default_setting_bindings": 2,
+      "departure_currency_cases": 5,
+      "existing_vital_policies_disproved": 3,
+      "ground_origin_vectors": 3,
+      "inactive_fishing_proofs": 3,
+      "npc_damage_vectors": 4,
+      "per_item_value_audits": 116,
+      "projectile_distances": 10,
+      "repeat_death_cases": 4,
+      "restock_vectors": 4,
+      "shop_bulk_vectors": 2,
+      "shop_price_vectors": 8,
+      "timing_groups": 6,
+      "valuation_rankings": 1,
+      "valuation_vectors": 10,
+      "wind_strike_levels": 8
+    },
+    "outcome": "source_binding_contract_valid",
+    "presentation_approved": false,
+    "rule_groups": 29,
+    "source_snapshots": 77,
+    "strict_typecheck_report_sha256": "ba6424a4a19c0c9611cf4b56df00c318faa6a5a2bc72113168a3a55eed2c7960",
+    "unpromoted_dispositions": [
+      "items.item.ensouled_goblin_head.stackable.rule",
+      "items.item.milk.bottomless_bucket.stackable.rule",
+      "mechanics.death.office_overflow",
+      "mechanics.vitals.level_up",
+      "npcs.npc.goblin.level_2.combat.mechanics.loot[3]",
+      "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+      "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+      "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn"
+    ]
+  },
+  "schema_version": 4,
+  "source_evidence_rewritten": false
+}

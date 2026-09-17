@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "contract_id": "osrs240.normal-camera.source-v1",
+  "scope": "M1 normal stock Resizable-Classic camera, measured through unchanged injected-client1.12.38; no free-camera/plugin option expansion.",
+  "source": {
+    "cache": 2695,
+    "game_revision": 240,
+    "injected_client": "1.12.38",
+    "injected_sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947",
+    "decoder_and_dependency_lock": "tools/cache-import/dependencies.json",
+    "qualification": "Controlled offline native method readbacks; no original account, server session or network pump."
+  },
+  "coordinates": {
+    "source_units_per_tile": 128,
+    "height_sign": "Negative is up; retain original source heights and plane/bridge flags.",
+    "scene_angle_units_per_turn": 16384,
+    "legacy_angle_units_per_turn": 2048,
+    "native_legacy_angle_conversion": "eg.ax(value,byte) shifts left3",
+    "trace_camera_order": ["local_horizontal_x", "height", "local_horizontal_y"],
+    "camera_api": "Client.getCameraX/Y/Z are horizontalX/horizontalY/height; trace reorders them to X/height/Y.",
+    "focal_float_api": "Client.getCameraFocalPointX/Y/Z are horizontalX/height/horizontalY. Do not assume the same naming as camera integer getters.",
+    "world_horizontal_position": "world_base_tile*128 + local coordinate; do not follow actor tile coordinates as if they were camera eye coordinates."
+  },
+  "required_state": [
+    "Normal mode and source focus-entity identity, including the missing/unbound focus state",
+    "Logical20ms cycle, held native key states, native mouse button and previous mouse samples",
+    "Signed integer yaw/pitch motor velocities and the injected source legacy-unit velocity state",
+    "Target pitch/yaw in native units and float-radian target state",
+    "Float focal horizontal coordinates, source focal height and native integer readbacks",
+    "Actor render/focus coordinates, source plane, source footprint and terrain samples",
+    "Source follow-height offset and terrain-dependent minimum-pitch accumulator",
+    "Separate viewport-distance scale shorts, logical FOV settings, encoded FOV shorts and viewport pixel projection zoom",
+    "Camera FOV bounds/current values and native wheel-disable/configuration state",
+    "World base/rebase state, actual orbit eye coordinates and native render-frame elapsed nanoseconds"
+  ],
+  "timing": {
+    "logical_period_nanoseconds": 20000000,
+    "source_authority": "Unchanged tq.run calls mh.bs(20,1), then qm for each admitted source cycle.",
+    "input_update": "Original logged-in cycle calls zj.be(1161256214). The probe invokes only the isolated camera branch, not the network/game loop.",
+    "render_update": "Original client.ds obtains System.nanoTime elapsed time, normalizes actor interpolation by2e7 and calls client.ft(elapsed_ns), then client.dq(elapsed_ns).",
+    "probe_boundary": "The probe supplies controlled actor logical/render coordinates, then calls those exact camera frame functions with declared elapsed_ns. It does not claim actor movement interpolation or physical wall-clock pacing was measured.",
+    "integration": "Keep fixed input cycles distinct from render-frame updates. Do not substitute RAF-only constant angular speed or multiply the fixed-cycle acceleration by arbitrary frame delta."
+  },
+  "keyboard": {
+    "native_codes": {"left": 96, "right": 97, "up": 98, "down": 99},
+    "source_method": "zj.be plus the unchanged client.vx input hook",
+    "native_velocity_targets": {"left": -192, "right": 192, "up": 96, "down": -96},
+    "source_legacy_velocity_targets_at_default_speed1": {"left": -24, "right": 24, "up": 12, "down": -12},
+    "acceleration": "velocity += trunc_toward_zero((target-velocity)/2)",
+    "release": "velocity = trunc_toward_zero(velocity/2); residual rotation continues until it decays.",
+    "opposed_key_precedence": "Left before right; up before down.",
+    "native_target_update": "Yaw adds trunc(velocity/2) through up.bc; pitch adds trunc(velocity/2), then kc.bk clamps.",
+    "injected_frame_update": "client.ft uses the legacy-unit velocities through client.rn, applies elapsed_ns/2e7, divides angle delta by2, and writes target angles from its float state. Retain both stages rather than double-applying one velocity.",
+    "normal_pitch_bounds": [1024, 3064],
+    "yaw_wrap": "Native up angle wrapping uses one16384-unit turn; retain native float-to-angle rounding from the traces.",
+    "release_example": "Native negative yaw motor approaches -191, not -192, because of integer truncation. The source injected legacy-unit motor has its own truncation; it is not interchangeable with the native integer motor."
+  },
+  "middle_mouse": {
+    "native_button": 4,
+    "gate": "Original on.hd mouse-camera option; default source injected button mask0 does not introduce alternate buttons.",
+    "deltas": "pitch uses currentMouseY-previousMouseY; yaw uses previousMouseX-currentMouseX.",
+    "native_motor": "2*pixel_delta converted through eg.ax (x8) in zj.be; unchanged injected hook retains its legacy-unit motor at source camera speed1.",
+    "sample_smoothing": "For a delta of +1 or -1, set prior sample directly to current. Otherwise use trunc((prior+current)/2).",
+    "release": "Returns to native keyboard/release damping; do not zero velocities immediately.",
+    "qualification": "Enabled and disabled source-option branches were explicitly controlled and measured. This is not an observed account preference."
+  },
+  "follow": {
+    "source_methods": ["client.dq(long)", "client.fa(dz,float,float,int,int)", "client.yq(dz,float,float,int)"],
+    "focus": "The actual original CameraFocusableEntity render-coordinate getters, not the camera eye or raw world tile.",
+    "teleport_threshold": "If either horizontal coordinate differs by more than500 source units, snap both focal coordinates. Equality at500 still smooths.",
+    "smoothing": "focal += (target-focal)*(elapsed_ns/320000000.0), with original double intermediate and float storage. At20ms this is1/16; at10ms it is1/32.",
+    "height": "For an actor, source client.fa takes the minimum sampled footprint/center/corner height using source bilinear terrain and bridge-plane rules; client.dq subtracts8 and then the source follow-height offset.",
+    "normal_ctor_follow_height_offset": 50,
+    "controlled_helper_ui_follow_height_offset": 25,
+    "height_qualification": "The controlled native player has footprint0 in these fixtures; the original function supports footprint sampling when nonzero. Actor render coordinates are explicit inputs. Terrain remains the original cache, not generated flat heights.",
+    "terrain_pitch_floor": "zj.be scans the source9x9 neighborhood, retains bridge flags, derives/clamps the minimum-pitch accumulator and smooths rises/falls with source24/80 divisors. client.sl source hooks and client.tz consume that state; target pitch alone is insufficient."
+  },
+  "orbit_and_projection": {
+    "source_methods": ["cz.az", "client.tz", "rl.cu"],
+    "effective_pitch": "Uses source target pitch plus terrain/shake constraints, not merely the last input pitch.",
+    "radial_base": "3*legacy_effective_pitch +600",
+    "viewport_distance_factor": "fi + trunc((fb-fi)*clamp(viewport_height-334,0,100)/100)",
+    "radial_distance": "trunc(radial_base*viewport_distance_factor/256)",
+    "orbit": "Original inverse pitch/yaw sine/cosine rotation of the radial vector, then subtraction from the focal X/height/Y. The eye moves when yaw/pitch changes.",
+    "source_numeric_paths": "cz.az keeps native integer/table calculations; client.tz publishes the original float-radian render camera. Both readbacks are retained in traces.",
+    "distance_scale_defaults": [256, 320],
+    "distance_scale_entrypoint": "Native viewport opcode6201",
+    "projection_entrypoint": "Native viewport opcode6200 plus rl.cu",
+    "separation_proof": "Changing distance factors256/320 to320/384 moves the original eye while projection zoom stays410. Stock wheel changes a different FOV setting and follow height.",
+    "resize": "Native root161 layout and rl.cu are rerun. At the recorded controlled FOV,1024x768,1920x1080,2560x1440 yield projection zoom292,410,547 without relocating the focal world point.",
+    "fixture_warning": "The older five chosen fixed cameras and their zoom662 viewport-only path remain chosen fixture evidence, never spawn/arrival defaults."
+  },
+  "wheel": {
+    "source_route": "Original tc MouseWheelEvent accumulator -> pq.as/qs wheel input -> root161:1 native listener39 -> script42 and original viewport opcodes.",
+    "listener_argument": "Native event mouseY is wheel rotation; the real source listener includes sentinel -2147483646.",
+    "source_programs": [39, 42, 603, 604, 605, 626, 1045, 1046, 1049],
+    "matching_runtime_overlays": "Actual loaded39/1049 overlays and original payload hashes are both retained; no camera plugin override changes their source callback defaults.",
+    "source_callback_defaults": {"scrollWheelZoom": 1, "scrollWheelZoomIncrement": 25},
+    "logical_change": "Subtract wheel_rotation*25 from the native inverse-decoded logical FOV values, clamp through script42, and retain native conversion/rounding. This is not a constant increment of pixel projection zoom.",
+    "effects": "Changes encoded FOV/projection and source follow-height offset via script42/opcode5530. Native orbit-distance scale fi/fb is unchanged by these wheel events.",
+    "gates": "Original pointer/widget routing, source varbits6357 and4606, and native disabled state remain part of the contract. Sidebar wheel did not change camera settings.",
+    "source_named_preset": {"script": 626, "logical_bounds": [128, 896, 128, 896], "qualification": "Exact source-coded preset, invoked as a controlled probe; not asserted as the authenticated startup choice."},
+    "configurable_bounds": "Scripts603/604 accept four integers and forward to605, which writes Varcs1338..1341. Their actual source-session arguments are not supplied by this offline task.",
+    "current_values": "Varcs73/74 retain logical current settings after script42. Full-HUD helper-only setup leaves them -1 and bound fields0; that partial setup is not a usable source-session zoom default."
+  },
+  "initial_and_reset_provenance": {
+    "client_constructor_observed": {"mode": 0, "camera_locked": false, "focus_selector": -1, "target_yaw": 0, "target_pitch": 1024, "eye_source_units": [0, 0, 0], "focal_source_units": [0, 0, 0], "mouse_camera_enabled": false, "follow_height_offset": 50, "distance_scales": [256, 320], "raw_fov_shorts": [256, 205]},
+    "classification": "Client class/constructor defaults only; not a valid world-space spawn eye or observed account preference.",
+    "region_transition": "Original client.yk(rl4) subtracts128*base_delta_tiles from local actor, camera and focal coordinates, preserving absolute world coordinates; it resets camera_locked tofalse. Native +8/+8 and reverse transitions were measured.",
+    "controlled_recenter": "The original follow path snaps when the focus displacement exceeds500; source target/cycle state is retained, not reset to a chosen capture.",
+    "genuine_unknowns": [
+      "Authenticated Tutorial/Lumbridge first camera focus/angle/position and any incoming camera/CS2 overrides for the normal account/experience branch.",
+      "The actual startup invocation/arguments of configurable zoom-bounds scripts603/604/605 versus source preset626, and session/persisted current FOV values.",
+      "The source account's initial mouse-camera preference and any camera reset packets around spawn, departure or arrival."
+    ],
+    "not_requested": "No source-account credentials, login, network-pump run or broad freshness research is needed or requested by this handoff."
+  },
+  "downstream_requirements": {
+    "owner": "Rust/WASM camera/world/input state, with browser event transport only",
+    "existing_shell_shape": "SourceCameraControls scalar rates/minmax/zoom-per-step cannot represent this stateful contract. Do not fill camera:null/controls:null with fixture positions or familiar constants.",
+    "integration": "Implement/validate the separate fixed-cycle motor, source frame follow/orbit, native FOV program, terrain sampling and region rebasing against the exact traces. Supply justified initial focus/state/configuration separately.",
+    "normal_entry_gate": "Remain explicit about missing source-session initialization facts. The class defaults and controlled probe coordinates do not authorize inventing Tutorial/Lumbridge entry cameras."
+  },
+  "source_gameplay_observed": false,
+  "production_implemented": false,
+  "new_reference_policy_or_acceptance": false
+}

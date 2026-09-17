@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "current_native_recovery_caption_and_context_gate_blocked",
+  "candidate_revision": "2f3704d7132e02e15bf5c306549abcd3ccd21962",
+  "regression_revision": "31203c6354866cfc4237a09c74cb22f0e85fb2ff",
+  "regression_worktree": ".worktrees/m1-ui-recovery",
+  "regression_path": "web/ui/tests/recovery-context.test.ts",
+  "command": "node --test web/ui/tests/recovery-context.test.ts",
+  "result_before": {"passed": 1, "failed": 1},
+  "log": ".worktrees/m1-ui-recovery/.local/recovery-caption-before.log",
+  "log_sha256": "34c9b160c14f39f439c7b62e8fac1ea82cc509afa52d0a8e4b6aef5efda2abf2",
+  "source": {
+    "manifest_sha256": "6601f1de45324ff23e88df577b3e467d74878f09b6f0f1759c52c6870452b329",
+    "provenance_sha256": "2fe20ff58e8cb5bf8299f86ac6879a8125e6c2c06a7787c63b12ebae78988042",
+    "control_bindings": "research/interface-contracts/control-bindings.json",
+    "control_bindings_sha256": "02abc6c4deb8c1f3395f9358f7c7a77cd7bf2a221da1b212c370d8fa0f3c3758",
+    "original_template": "native-retrieval-scroll-669",
+    "capture_program": "tools/ui-assets/UiModeCapture.java",
+    "native_script": 3492,
+    "controlled_items": 80,
+    "selected_slot": 7,
+    "selected_slot_quantity": 7,
+    "matching_arrow_slots": 5,
+    "source_selected_type_quantity": 35,
+    "controlled_unit_fee": 42,
+    "controlled_coffer": 12345,
+    "new_source_capture_or_reference_change": false
+  },
+  "expected_original_caption": "35 x Bronze arrow:<br>Fee: <col=ffffff>42 coins</col> each (<col=ffffff>1,470</col>)<br>Death's Coffer: <col=ffffff>12,345 coins</col>",
+  "actual_current_caption": "7 x Bronze arrow:<br>Fee: <col=ffffff>42 coins</col> each (<col=ffffff>294</col>)<br>Death's Coffer: <col=ffffff>12,345 coins</col>",
+  "positive_control": "The unchanged legacy explicit native-input path matches the complete original caption before testing the current per-entry quote extension.",
+  "context_gaps": [
+    "The current authoritative management view contains all Office recovery panels, while world-view.ts displays only the singular legacy matching record.",
+    "Source whole-context Take-All cannot be represented by client-side loops or inferred sums of per-entry permissions, fees and executable capacities.",
+    "The native storage caption needs actual source-policy/container count and capacity, not capacity:null or a guessed120 from the controlled fixture."
+  ],
+  "non_inferences": [
+    "INV_TOTAL establishes the source caption's selected-type quantity, not unseen original-server selected-All cross-record semantics.",
+    "The controlled120-slot native fixture does not by itself establish the actual server storage limit.",
+    "Per-entry capacities and full-stack fees do not define an additive whole-context transaction plan.",
+    "This evidence does not change ordinary-grave Bank-All permission, dough/Empty motion, source artifact5b or the protected source5e journey."
+  ],
+  "backend_task": "M1-NATIVE-RECOVERY-CONTRACT",
+  "ui_task": "M1-NATIVE-RECOVERY-UI",
+  "production_fix_implemented": false,
+  "failing_regression_merged_to_root": false,
+  "ui_or_milestone_accepted": false,
+  "later_milestone_authorized": false
+}

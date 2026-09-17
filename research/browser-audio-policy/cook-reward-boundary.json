@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "result": "passed_source_boundary_and_native_transport",
+  "scope": "Source-derived committed-projection regression inputs, not a played/seeded quest or server journey.",
+  "source_reward_xp_tenths_unchanged": 3000,
+  "source_reward_atomicity": "Complete status, once-only claim ledger, 1 QP, 3000 Cooking XP tenths and range permission commit together before the completion acknowledgement. Transaction failure must leave the prior ready-for-thanks state, not half a reward.",
+  "boundaries": [
+    {
+      "case": "observed-level4-compatible",
+      "skillId": "skill.cooking",
+      "successful_source_cooking": {
+        "bread": 1,
+        "shrimps": 1
+      },
+      "before": {
+        "xpTenths": "700",
+        "baseLevel": 1
+      },
+      "after": {
+        "xpTenths": "3700",
+        "baseLevel": 4
+      },
+      "levelChanged": true
+    },
+    {
+      "case": "pretrained-level5",
+      "skillId": "skill.cooking",
+      "successful_source_cooking": {
+        "bread": 1,
+        "shrimps": 2
+      },
+      "before": {
+        "xpTenths": "1000",
+        "baseLevel": 2
+      },
+      "after": {
+        "xpTenths": "4000",
+        "baseLevel": 5
+      },
+      "levelChanged": true
+    },
+    {
+      "case": "pretrained-no-level",
+      "skillId": "skill.cooking",
+      "successful_source_cooking": {
+        "bread": 1,
+        "shrimps": 172
+      },
+      "before": {
+        "xpTenths": "52000",
+        "baseLevel": 21
+      },
+      "after": {
+        "xpTenths": "55000",
+        "baseLevel": 21
+      },
+      "levelChanged": false
+    }
+  ],
+  "native_transport": {
+    "schema_version": 1,
+    "result": "passed",
+    "runtime": "unmodified injected-client-1.12.38",
+    "opcode": 3202,
+    "argument_roles": [
+      "original_index11_group",
+      "unused_auxiliary_integer"
+    ],
+    "cases": [
+      {
+        "submitted": [
+          152,
+          33
+        ],
+        "pending": [
+          33
+        ],
+        "level_or_quest_argument_present": false
+      },
+      {
+        "submitted": [
+          152,
+          34
+        ],
+        "pending": [
+          34
+        ],
+        "level_or_quest_argument_present": false
+      },
+      {
+        "submitted": [
+          34,
+          152
+        ],
+        "pending": [
+          152
+        ],
+        "level_or_quest_argument_present": false
+      },
+      {
+        "submitted": [
+          152,
+          -1
+        ],
+        "pending": [
+          152
+        ],
+        "level_or_quest_argument_present": false
+      }
+    ],
+    "new_quest_selectors_inferred": false,
+    "xp_or_quest_events_generated": false,
+    "external_account": false
+  },
+  "selector_qualification": {
+    "observed_cook_jingle": 152,
+    "observed_reward_level": 4,
+    "observed_reward_jingle": 33,
+    "later_level5_jingle_not_a_quest_reward": 34,
+    "new_level_to_jingle_mapping": null,
+    "policy": "Preserve the source-selected group in the committed event; 33/level4 is one dated case, never a universal Cook condition."
+  },
+  "inputs": [
+    {
+      "path": "content/m1/game-content.json.gz",
+      "sha256": "ecdeabdcb4270698b4706c014459f3ec719d63c03bcd9731bc81b7ae2b6dfd10",
+      "size_bytes": 472368
+    },
+    {
+      "path": "research/journey-rules/cooks-assistant.json",
+      "sha256": "ccb21048828e1d1a774f09c809d01aaf6900425bc52ea2e1bc471142ff4295cf",
+      "size_bytes": 58266
+    },
+    {
+      "path": "research/audio-source/selector-observations.json",
+      "sha256": "b50d7f68fa34efbb3ba86caad0eb684f0177bedad2caf21b9954d194d694c340",
+      "size_bytes": 6907
+    }
+  ],
+  "native_artifacts": [
+    {
+      "path": "../m1-audio-bindings/.local/audio-import/tooling/cache-1.12.39-SNAPSHOT.jar",
+      "sha256": "8056039bee74da629e596896048645085f7753159a064da51c24e9bd99f13e8e",
+      "size_bytes": 444766
+    },
+    {
+      "path": "../m1-audio-bindings/.local/audio-import/tooling/client-1.12.38.jar",
+      "sha256": "6dcd0da2fdbf48d35c3d8f666d801d05afa964030c553e806eb173dba97323d5",
+      "size_bytes": 5261401
+    },
+    {
+      "path": "../m1-audio-bindings/.local/audio-import/tooling/commons-compress-1.10.jar",
+      "sha256": "807c95293e41e8159477442077da6d0962a7f486d4b980be61f60a8db9cb290f",
+      "size_bytes": 409475
+    },
+    {
+      "path": "../m1-audio-bindings/.local/audio-import/tooling/gson-2.8.5.jar",
+      "sha256": "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81",
+      "size_bytes": 241622
+    },
+    {
+      "path": "../m1-audio-bindings/.local/audio-import/tooling/guava-23.2-jre.jar",
+      "sha256": "5be9a7d05ba0ccd74708bc8018ae412255f85843c0b92302e9b9befa6ed52564",
+      "size_bytes": 2649860
+    },
+    {
+      "path": "../m1-audio-bindings/.local/audio-import/tooling/injected-client-1.12.38.jar",
+      "sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947",
+      "size_bytes": 4235748
+    },
+    {
+      "path": "../m1-audio-bindings/.local/audio-import/tooling/jna-5.9.0.jar",
+      "sha256": "eafcc780b445434d3c5ae7fa2fb6665de1a7560d537d2c408a8e80cd14d27161",
+      "size_bytes": 1729586
+    },
+    {
+      "path": "../m1-audio-bindings/.local/audio-import/tooling/json-20090211.jar",
+      "sha256": "055be110a570f9cda3eba8d70a006ff46c77a048bc67868524879211c48b330a",
+      "size_bytes": 45944
+    },
+    {
+      "path": "../m1-audio-bindings/.local/audio-import/tooling/runelite-api-1.12.38-runtime.jar",
+      "sha256": "6d50aa843c070120a5093c5ead29d72e92742074346241e0359a133dad008852",
+      "size_bytes": 272846
+    },
+    {
+      "path": "../m1-audio-bindings/.local/audio-import/tooling/slf4j-api-1.7.25.jar",
+      "sha256": "18c4a0095d5c1da6b817592e767bb23d29dd2f560ad74df75ff3961dbde25b79",
+      "size_bytes": 41203
+    },
+    {
+      "path": "../m1-audio-bindings/.local/audio-import/tooling/slf4j-simple-1.7.25.jar",
+      "sha256": "0966e86fffa5be52d3d9e7b89dd674d98a03eed0a454fbaf7c1bd9493bd9d874",
+      "size_bytes": 15257
+    }
+  ],
+  "probe_sources": [
+    {
+      "path": "tools/audio-import/SourceAudio.java",
+      "sha256": "1ece6e31e04c5ea51ff899f483dbb57a08ee1565ac283c59d29adeaf26f59555",
+      "size_bytes": 18150
+    },
+    {
+      "path": "tools/audio-import/BindingCache.java",
+      "sha256": "4730fe7ec8cc16e91a6f40f6cc8e587fb42b25dd92ef853a7619f104a59cae43",
+      "size_bytes": 6484
+    },
+    {
+      "path": "tools/audio-import/BindingExtract.java",
+      "sha256": "53ac21f8928b3edaec00815a8a64bfee7fb60c511a24d0b81735fb5e5d9626ec",
+      "size_bytes": 11128
+    },
+    {
+      "path": "tools/source-capture/FixturePreferenceWrites.java",
+      "sha256": "7ca846b781906131e57594db73c57db0f87d17bfaf0fa9f06f200ec87135391a",
+      "size_bytes": 905
+    },
+    {
+      "path": "tools/browser-audio-tests/native/CookRewardBoundary.java",
+      "sha256": "9be7240c959780938eb17dca8296f06a13d12970777573fba8ec31f51e646d9f",
+      "size_bytes": 1891
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativeArchive.java",
+      "sha256": "48ecaa0e9c12387dab5724029759d1394a5782830e5c91e01f7bcde9a3f364a4",
+      "size_bytes": 2115
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativeMusicPcm.java",
+      "sha256": "8dd50e45d66657b66cdc055977d6efe73926365db0ef71ce943f1164c8eec927",
+      "size_bytes": 4753
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativeObjects.java",
+      "sha256": "bd3e4fd050ead78d14e4c10d5b55796d2e20032db2006f74eb4ed8cc279e1642",
+      "size_bytes": 4566
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativePolicyProbe.java",
+      "sha256": "448c059f0bf7792f1d3fc69f428a5845a0ddcf74f35c28276b6300a4f19e6bf6",
+      "size_bytes": 26884
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativeScriptPolicy.java",
+      "sha256": "84ccc3ffc7918910b153c751ed98bdc442bfb69caf700cc03f096f6123552bc5",
+      "size_bytes": 3836
+    },
+    {
+      "path": "/home/lramos15/clubscape/.worktrees/m1-browser-audio/tools/browser-audio-tests/native/cook_reward_boundary.py",
+      "sha256": "e22e7c75204dff6b40283880f5a4d7ab18bed5540c905d7836734dcd41c7f174",
+      "size_bytes": 5656
+    }
+  ],
+  "gameplay_xp_changed": false,
+  "quest_events_created_by_audio": false,
+  "source_pack_modified": false,
+  "m1_acceptance": false
+}

@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "task": "m1-gameplay-ui-contracts",
+  "latest_animation_authority": {
+    "verification": "research/interface-contracts/animation-authority/verification.json",
+    "implementation_candidate_commit": "c66286922652d103e8cae7728e7f8b171e849ced",
+    "raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "compressed_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+    "remaining_source_gaps": ["inventory_dough_motion", "empty_container_motion"],
+    "additional_original_actor_clips_and_fit_publication_needed": 12,
+    "whole_presentation_accepted": false
+  },
+  "record_scope": "Historical All/recovery/level-up candidate. The later audio-authority candidate and current artifact hashes are recorded separately below.",
+  "later_audio_authority": {
+    "verification": "research/interface-contracts/audio-authority/verification.json",
+    "contract_commit": "8d3b4004cd66b720d5bd7d96f10765c3b034eb25",
+    "implementation_candidate_commit": "5b4006f3a14f85da8b017d4bf20c124f188c7d3d",
+    "authority_item_implemented_and_verified": true,
+    "raw_sha256": "0dec331c94d434b4ed67f142d92f60ebbdfa0a49d764deb757b8e8dd24a9358d",
+    "compressed_sha256": "177089d214f4938b663df7a23918fe3b17c6cc1e3b3ab50dc91191011bb5c340",
+    "existing_6f_worlds_repin_attempted": false
+  },
+  "shared_contract_commit": "e48e6f52d68aa97fbbb4f5664bf6e1c5ef7e71e8",
+  "nullable_production_contract_commit": "351847f3f5255f6de6e345d5217a7910eaa145a3",
+  "renderer_observer_contract_commit": "e0e42d714793d5fa815d3fcc4dff63b36f0a2a3f",
+  "current_scene_contract_commit": "c7f3578e4b31cb659fd52b68c685200d970646ba",
+  "amount_recovery_contract_commit": "005204affcd098e85cf63349cb1993410134e6a9",
+  "native_control_binding_commit": "2fef76d1fba50ca03dc8c38e16ed7c2c84634fc9",
+  "control_candidate_commit": "79c11c6b89ec2d8abcc16012977737ab93dc4385",
+  "owned_followup_sequence": [
+    "c7f3578e4b31cb659fd52b68c685200d970646ba",
+    "005204affcd098e85cf63349cb1993410134e6a9",
+    "2fef76d1fba50ca03dc8c38e16ed7c2c84634fc9",
+    "79c11c6b89ec2d8abcc16012977737ab93dc4385"
+  ],
+  "source_entry_parent_commit": "2f775f7971a78ad990e7ed80f2cf04c3e89e4c89",
+  "source_entry_local_commit": "747871a15587c4ce247d63517adf2bd00357dd17",
+  "implementation_verified": true,
+  "overall_status": "control_candidate_verified_normal_grave_bank_permission_pending",
+  "previous_passed_candidate": {
+    "commit": "78fcec42226e17d715f422f8e9cc2be8a1fb8762",
+    "handoff_commit": "de0a7b6f08a4f52bfd7395cef67e88442e2c71df",
+    "revision": "m1.source-backed.v4.67e4f1fcc55d71d5",
+    "raw_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3",
+    "compressed_sha256": "f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6",
+    "original_validation": {"native": 548, "postgresql": 41, "source": 71, "repeatable_outputs": 83},
+    "new_control_code_compatibility": {
+      "postgresql_http": 43,
+      "independent_account_checks": 11,
+      "report": ".local/evidence/m1-ui-amounts-6f.json",
+      "artifact_unchanged_during_compatibility_run": true
+    },
+    "existing_worlds_migrated_or_restarted_by_this_followup": false
+  },
+  "additional_control_work": {
+    "reported_by_parent": "8d99bf1",
+    "exact_residuals": "web/ui/contract-gaps.json",
+    "does_not_block_passed_candidate_handoff": true,
+    "pending_backend_source_contracts": [
+      "normal_grave_bank_all: original retrieval602 requires a server permission flag that is not verified for the normal M1 grave profile. Explicitly unavailable, never inferred from the button or Office unit fee."
+    ],
+    "implemented_and_verified": [
+      "Source-input-derived ProductionSelectAll, including actual Make-X cadence for All-of-one.",
+      "Semantic bank amount selection, persisted layout2 with required amount_all, exact legacy literals, corruption refusal, auth renewal/restart and post-dedup bank revision checks.",
+      "Source unit/full-entry/combined fee strings; paid credit, capped selection fees, executable per-row capacities, partial 1/5/X/All and exact source-gated Bank-All record identities.",
+      "Same-bank note normalization and placeholder-aware capacity; shared immutable actor-record/container planning with legacy reclaim and atomic receipts.",
+      "Exact original233 chat and660 generic notification associations, real source prayer level gain, persisted continuation, no quest scroll or invented second reward.",
+      "Actual source first-item-loss Office lifecycle produces the opaque owned instance and its real template/four identity chunks."
+    ],
+    "existing_contracts_to_preserve": [
+      "Actual BankContext.banker and ordinary WorldView.bank context alongside open ui.bank.",
+      "expected_bank_revision echoes ui.bank.revision and is validated after durable duplicate lookup.",
+      "Nullable inventory-only production target, source UI4 menu hooks, completed four-layer publication and post-binding exclusive recovery entries."
+    ],
+    "separately_owned": [
+      "UI original layouts/local settings and complete source comparisons.",
+      "Audio skip/numbered playlist/remembered mute helpers and original mixing policy.",
+      "Renderer/shell observer, dynamic minimap/model previews and real source audio composition."
+    ],
+    "whole_ui_completion_claimed": false
+  },
+  "authorized_consumables_parent_commit": "82e0a41acaaa8c69fe70369aaa559c05844253b8",
+  "authorized_consumables_local_commit": "4677409552f33d211819504efacfee1a760d597a",
+  "versions": {
+    "content": 4,
+    "artifact": 4,
+    "persisted_state": 1,
+    "runtime": 1,
+    "ui_state": 1,
+    "ui_view": 1,
+    "bank_layout_legacy": 1,
+    "bank_layout_semantic_amount": 2,
+    "capability": "game.ui.v1",
+    "additive_capabilities": ["game.ui.amounts.v1", "game.ui.recovery.v1", "game.observer.v1"]
+  },
+  "artifact": {
+    "path": "content/m1/game-content.csc.gz",
+    "revision": "m1.source-backed.v4.f1ee211ae8aa27ea",
+    "raw_sha256": "7db3f6ae58712d253ba09a95ef212a62dfc514929300003e60f8732c0a0a9069",
+    "compressed_sha256": "e42204b6b6ebf479d7baffb283ea67bcccf82e2497b96714ef3644b99eec00aa",
+    "strict_runtime_compile": true,
+    "strict_reload": true,
+    "byte_identical_generated_paths_across_two_builds": 89,
+    "asset_closure_passed": true
+  },
+  "validation": {
+    "native": {
+      "command": "cargo test -p clubscape-game-types -p clubscape-simulation -p clubscape-world-engine -p clubscape-content -p clubscape-protocol -p clubscape-server -p clubscape-client-core --all-targets --quiet",
+      "binaries": 43,
+      "passed": 562,
+      "failed": 0,
+      "ignored_postgresql_tests": 43
+    },
+    "postgresql_http": {
+      "command": "python3 /home/lramos15/clubscape/tools/dev.py integration --workspace /home/lramos15/clubscape/.worktrees/m1-gameplay-ui-contracts --report .local/evidence/m1-ui-controls-final.json",
+      "passed": 43,
+      "new_control_integration_cases": 2,
+      "independent_account_client_checks": 11,
+      "exact_new_artifact_verified": true,
+      "owned_server_container_database_cleaned_up": true
+    },
+    "source_tests": {
+      "command": "python3 -m unittest discover -s tools/m1-content -p 'test_*.py'",
+      "passed": 74,
+      "source_bindings_preserved": 104,
+      "coupled_updates_preserved": 7,
+      "loot_joint_vectors": 8192,
+      "currency_vectors": 5,
+      "active_unresolved_bindings": 0,
+      "proof_scoped_inactive_bindings": 6
+    },
+    "additional_control_regressions": {
+      "native_priced_recovery_cases": 6,
+      "exact_source_unit_fee_at_value_100000": 5000,
+      "partial_quantities": [1, 5, 2],
+      "all_is_semantic_not_a_numeric_sentinel": true,
+      "unit_stack_and_combined_fee_quotes_distinct": true,
+      "funds_and_container_capacity_refusals_atomic": true,
+      "paid_credit_and_partial_entry_identity_survive_serialization": true,
+      "same_bank_normalizes_notes_without_inventory_staging": true,
+      "source_unavailable_bank_all_is_not_enabled_by_a_client": true,
+      "bank_layout2_missing_amount_history_refused": true,
+      "mutable_bank_revision_checked_after_durable_duplicates": true,
+      "account_token_renewal_and_repository_restart_replay_verified": true,
+      "canonical_scene": {
+        "template": "instance_template.death.office",
+        "identity_chunks": [[3168,5720,0],[3168,5728,0],[3176,5720,0],[3176,5728,0]],
+        "source_created_opaque_instance": true,
+        "private_owner_checked": true,
+        "scope": "Controlled depleted-HP/first-item-loss boundary through the actual canonical source lifecycle; not a fresh-account death journey."
+      },
+      "canonical_level": {
+        "skill": "skill.prayer",
+        "source_bury_xp_tenths": 45,
+        "actual_earned_level": 2,
+        "chat_group": 233,
+        "generic_notification_association": 660,
+        "forced_second_modal_or_reward": false,
+        "pending_history_preserved": true
+      }
+    },
+    "source_dialogue_entries": {
+      "normalized_dialogues": 5,
+      "focused_source_state_tests": 6,
+      "native_canonical_cases": 2,
+      "owned_net_primary_lesson": "woodcutting_firemaking_intro",
+      "missing_net_recovery_choice": "replace.net",
+      "one_recovery_entry": "tutorial_supply_recovery",
+      "source_grants_and_choice_effects_preserved": true,
+      "v2_source_application_fingerprints_preserved": true,
+      "original_progression_builder_unchanged": true,
+      "engine_ambiguity_checks_unchanged": true,
+      "native_fixture_correction": "The pre-existing net entitlement is complete only with its satisfied item set populated; no runtime validation was weakened and no inventory item was granted by this fixture correction.",
+      "scope": "Post-104+7 source normalization and real native UI/entry checks on controlled source states, not a fresh player journey."
+    },
+    "canonical_anvil_legacy_protocol": {
+      "checkpoint": "research/interface-contracts/anvil-checkpoint.json",
+      "evidence_commit": "089639ebc0123107fdceb7d12dec06b8e18dfd40",
+      "source_stage_before": "stage.tutorial.anvil_open",
+      "source_stage_after": "stage.tutorial.smith_dagger",
+      "source_object_id": 2097,
+      "source_interface_id": 312,
+      "target": "spawn.anvil.tutorial.3075.9497.p0.t10.r0",
+      "actor_tile": {"x": 3075, "y": 9498, "plane": 0},
+      "captured_sequence": 102,
+      "captured_tick": 500,
+      "legacy_interact_smith_decoded_through_public_protobuf": true,
+      "actual_canonical4_engine_and_public_menu_projection": true,
+      "interface_opened_before_recipe_selection": true,
+      "inventory_xp_entitlements_unchanged_before_selection": true,
+      "locked_interface_wrong_stage_range_and_generic_interface_refusals_atomic": true,
+      "real_authenticated_postgresql_command_receipt_and_duplicate_replay": true,
+      "gameplay_fix_required": false,
+      "scope": "Exact observed stage/items/XP/location reconstructed only as controlled test preconditions against the real canonical4 artifact. Native public-protocol/view regression plus real authenticated PostgreSQL journal; not a full fresh-account HTTP journey."
+    },
+    "canonical_engine_ui_probes": {
+      "report": "research/m1-bindings/schema-validation.json#native_ui_control_probes",
+      "immutable_semantic_states": 71,
+      "source_body_types": [0, 1],
+      "approved_source_npc": 2063,
+      "selected_original_potion_doses": 4,
+      "run_units_per_dose": 1500,
+      "independent_drink_ticks": 3,
+      "selected_burial_ticks": 2,
+      "selected_burial_xp_tenths": 45,
+      "source_menu_single_ticks": 1,
+      "source_menu_make_x_one_ticks": 3,
+      "inventory_only_dough": {
+        "target": null,
+        "selected_slots": [8, 9],
+        "earlier_matching_copies_preserved": true,
+        "declared_dough_and_empty_container_outputs_preserved": true
+      },
+      "actual_movement_observer": {
+        "running": true,
+        "movement_tick": "1",
+        "queued_input_does_not_claim_movement": true,
+        "passed": true
+      },
+      "passed": true,
+      "scope": "Real unmodified source content and engine on controlled component preconditions; not a fresh journey."
+    },
+    "cargo_fmt_check": "passed",
+    "native_clippy_all_targets_warnings_denied": "passed",
+    "wasm32_libraries_compile_and_clippy_warnings_denied": "passed",
+    "shared_typescript_strict_typecheck": "passed"
+  },
+  "required_asset_publication": {
+    "status": "published_verified",
+    "manifest": "assets/manifests/osrs/cache2695-consumables-published.json",
+    "manifest_sha256": "2340ea5e3e6eeeeecdbda5de7f371f3ff2eb57576f4c783009344a1c348dbede",
+    "publication_layers": 4,
+    "item_ids": [229, 230, 1919, 1920],
+    "model_ids": [561, 2548, 2747, 8234],
+    "new_original_placeholder_ids": [15245, 19159],
+    "reused_existing_dependencies": 7,
+    "importer_tests_passed": 73,
+    "source_definitions": "research/m1-bindings/ui-item-definitions.json.gz",
+    "definition_import_sha256": "27d6b60e109a5a42cdbf704aaf4b882403aa4ea37a2cfa80944a79027e444014",
+    "build_check_and_asset_verifier_exit": 0,
+    "remaining_missing_inputs": [],
+    "policy": "All four validated immutable layers preserve source/reference/audio inputs. Required original items/models and replacement outcomes remain intact; no null icons, aliases or relaxed startup checks."
+  },
+  "caller_contract": {
+    "view": "WorldSnapshot.ui / WorldView.ui version1, capability game.ui.v1",
+    "input": "WorldInput.ui / GameplayUiIntent; ordinary operation UUID and contiguous sequence",
+    "production_target": "Option<WorldTarget> / WorldTarget|null; absent protobuf target for genuine inventory-only production",
+    "inventory_production": "UseItem on an inventory slot opens a source menu. Trusted typed selection retains both slots/stacks/instances through selection and first completion; stale identities cannot consume another matching copy.",
+    "bank_precondition": "GameplayUiRequest.expected_bank_revision must echo ui.bank.revision as a decimal string; validated after duplicate receipt lookup",
+    "amounts": "UiAmount is quantity or All; production_all22 and bank_amount23 are explicit requests, not numeric sentinels. Bank layout1 literals are preserved; layout2 requires amount_all.",
+    "recovery": "recovery_take24 carries death/storage and distinct id+amount entries. recovery_bank_all25 echoes exact current management.bankAllRecords and management.bankRevision; source permissions still apply.",
+    "recovery_pricing": "unitFee/fullStackFee/fullSelectionFee are decimal quotes from shared planners. Capacities are executable amounts for one entry alone, including funds, source permission and auto-equip, never additive estimates.",
+    "remaining_recovery_source_gap": "normal_grave_bank_all remains unavailable until its actual source authorization is verified. Current Office669 has no source Bank-All action.",
+    "renderer_observer": {
+      "capability": "game.observer.v1",
+      "scene": "WorldView.scene / WorldSnapshot.scene21: region, opaque instance, actual instanceTemplate from the runtime registry; null inner fields for the ordinary world.",
+      "player": "running?, movementTick?, action?:ActorActionView|null",
+      "visible_player_entity": "running?, movementTick?, action?:ActorActionView|null",
+      "dynamic_objects": "WorldView.dynamicObjects?:DynamicObjectView[] forwards unchanged protocol field13; canonical objectId maps to optional sourceId only through the validated catalogue",
+      "timing": "stable action-instance ID, startedAtTick, cycleStartedAtTick, nextActionTick, observedAtTick; all clocks decimal strings",
+      "movement": "actual executed current-tick movement; final run step remains true after idle/exhaustion, then clears on a nonmoving tick",
+      "animation": "explicit source reference first; baseline-qualified exact method/recipe numeric bindings; otherwise exact source action/recipe/style/spell identity, never nearby-object or unrelated sequence guessing",
+      "source_bindings": "research/interface-contracts/actor-observer-bindings.json",
+      "physics_avatar_assets_cadence_hud_audio_changed": false
+    },
+    "migration": "Stop the coordinator; configure a complete target game root; cargo run --locked -p clubscape-server -- migrate-ui --from <exact-old-raw-artifact-sha256>",
+    "migration_audit": "0005_game_content_migrations.sql",
+    "preserved": "Items, XP, entitlements, clocks, sequences, private RNG, acknowledged receipts, account-only mode, renderer/audio ABI and unchanged source gameplay checkpoints."
+  },
+  "acceptance": {
+    "full_fresh_account_journey": false,
+    "browser_presentation": false,
+    "audio_presentation": false,
+    "performance": false,
+    "owner_m1_acceptance": false,
+    "milestone_accepted": false
+  }
+}

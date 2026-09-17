@@ -1,0 +1,21 @@
+{
+  "sample_rate": 22050,
+  "frames": 12127,
+  "loop_start_frame": 0,
+  "loop_end_frame": 0,
+  "ping_pong_loop": false,
+  "source_flag_as": false,
+  "pcm_s16le_sha256": "cf4a584993b58928bc14e22388929db95c3e5f0998e3759990e0989008d73e19",
+  "kind": "sfx",
+  "index": 4,
+  "group": 710,
+  "reads": {
+    "4/710/0": {
+      "index": 4,
+      "group": 710,
+      "file": 0,
+      "size_bytes": 159,
+      "sha256": "6a151bd3d9864da7af2a253bcad1f2140b367971de9397f3308b44501afb59bc"
+    }
+  }
+}

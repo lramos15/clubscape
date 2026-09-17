@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "scope": "Pinned public documentary evidence, not gameplay observations, source-server access or motion dispatch verification.",
+  "source_cutoff": "2026-09-13T23:56:13.646340+00:00",
+  "source_selection": "research/current-source/selection.json",
+  "source_selection_sha256": "b1a8d65cec6143946dba7172bc29142c8aa47cc4383abaffefef5b2ea3b2b028",
+  "sources": [
+    {
+      "bytes_utf8_wikitext": 5969,
+      "kind": "wiki_revision",
+      "page": "Bucket of water",
+      "revision": 15183449,
+      "revision_timestamp": "2026-04-22T02:54:18Z",
+      "sha256_utf8_wikitext": "64b046c1f1fa7fc1399df8ee27c2977a8fa59882aa4331e2f5521f31e0d18b46",
+      "url": "https://oldschool.runescape.wiki/w/Bucket_of_water?oldid=15183449"
+    },
+    {
+      "bytes_utf8_wikitext": 3177,
+      "kind": "wiki_revision",
+      "page": "Water",
+      "revision": 15285916,
+      "revision_timestamp": "2026-08-02T22:08:36Z",
+      "sha256_utf8_wikitext": "2798a9879306fd27f27302bf7863d07a2e1fab4699e1e192ef1729e3b60ccb74",
+      "url": "https://oldschool.runescape.wiki/w/Water?oldid=15285916"
+    },
+    {
+      "bytes_utf8_wikitext": 1178,
+      "kind": "wiki_revision",
+      "page": "Sink",
+      "revision": 15234920,
+      "revision_timestamp": "2026-06-18T00:49:13Z",
+      "sha256_utf8_wikitext": "4fa9f73dfe58b7bb266b973f3d6dedf5788b1dc2fddce0be7b092f50fb202090",
+      "url": "https://oldschool.runescape.wiki/w/Sink?oldid=15234920"
+    },
+    {
+      "bytes_utf8_wikitext": 2503,
+      "kind": "wiki_revision",
+      "page": "Money making guide/Filling buckets with water",
+      "revision": 14542342,
+      "revision_timestamp": "2024-01-30T00:19:22Z",
+      "sha256_utf8_wikitext": "63defb72001f07f3a0f3ae60b050515a12edc3f67e728be40cdd4ccdb054bb06",
+      "url": "https://oldschool.runescape.wiki/w/Money_making_guide/Filling_buckets_with_water?oldid=14542342"
+    },
+    {
+      "bytes_utf8_wikitext": 28361,
+      "kind": "wiki_revision",
+      "page": "Module:Recipe",
+      "revision": 15224963,
+      "revision_timestamp": "2026-06-03T17:08:51Z",
+      "sha256_utf8_wikitext": "cacae1ffc292f4d5eb8929124520352889671ba886160260ea3ea5f207119003",
+      "url": "https://oldschool.runescape.wiki/w/Module:Recipe?oldid=15224963"
+    }
+  ]
+}

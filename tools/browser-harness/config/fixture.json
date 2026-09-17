@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "purpose": "tool-fixture",
+  "mode": "benchmark",
+  "url": "http://127.0.0.1:4173/?case=requires-input",
+  "allowedOrigins": ["http://127.0.0.1:4173"],
+  "captureCaseId": "tool-fixture-only",
+  "browser": {
+    "product": "chrome",
+    "expectedVersion": "153.0.8010.12",
+    "executableEnv": "BROWSER_EXECUTABLE",
+    "graphicsProfile": "sparky-vulkan-x11"
+  },
+  "contract": {
+    "id": "tool-fixture-plumbing-v1-NOT-M1",
+    "ownerApprovalRef": null,
+    "sourcePack": null,
+    "buildId": "harness-fixture/v1",
+    "sceneId": "tool-fixture-one-triangle",
+    "routeId": "no-gameplay-route",
+    "workloadId": "tool-fixture-colored-split",
+    "settingsSha256": "d46b69dad523a26c7e50190d609e8c2b04c32f46e8fe95b3a43a7d86c99a0166",
+    "assetManifestSha256": "6754fb4837812768eafc60a6946d19b99d62d81c2afc0b5db1b1f2e91b845384",
+    "requiredAssets": [
+      { "id": "fixture-triangle.wgsl", "sha256": "ca39137aa60de88329dea5d705e15de08fdb377cb21c015166d4324582a21fca" }
+    ],
+    "minimumEntities": { "fixtureTriangles": 1 },
+    "viewport": { "width": 1920, "height": 1080, "deviceScaleFactor": 1 },
+    "resizeRange": {
+      "min": { "width": 1280, "height": 720 },
+      "max": { "width": 2560, "height": 1440 }
+    },
+    "resizeChecks": [
+      { "width": 1280, "height": 720 },
+      { "width": 2560, "height": 1440 }
+    ],
+    "surfaceSelector": "#fixture-surface",
+    "setupActions": [
+      { "type": "mouse-move", "x": 400, "y": 300 },
+      { "type": "mouse-click", "x": 400, "y": 300, "button": "left" },
+      { "type": "key-press", "key": "k" }
+    ],
+    "imageChecks": {
+      "minSurfaceAreaFraction": 0.5,
+      "minOpaqueFraction": 0.99,
+      "maxDominantColorFraction": 0.995,
+      "minChannelStdDev": 2
+    },
+    "measurement": {
+      "warmupMs": 500,
+      "durationMs": 2500,
+      "pollMs": 100,
+      "staleAfterMs": 1000,
+      "readinessTimeoutMs": 10000,
+      "minimumFps": 60,
+      "p95FrameMs": 20,
+      "p99FrameMs": 33.333333333333336,
+      "stallThresholdMs": 50,
+      "maxStallsPerMinute": 1,
+      "maxGapMs": 100
+    },
+    "hardware": {
+      "id": "sparky-tool-observation-NOT-an-approved-representative-contract",
+      "representativeIntegratedGraphics": false,
+      "ownerApprovalRef": null,
+      "evidenceRefs": ["research/browser-platform/sparky-2026-09-13.md"],
+      "gpu": "NVIDIA GB10; Vulkan reports INTEGRATED_GPU; representativeness unapproved",
+      "cpu": "20 ARM cores: 10 Cortex-X925 + 10 Cortex-A725",
+      "memory": "127600748 KiB visible system RAM; GB10 unified-memory architecture",
+      "os": "Ubuntu 24.04.4 aarch64; Linux 6.17.0-1026-nvidia",
+      "driver": "NVIDIA 580.173.02",
+      "expectedAdapter": null
+    }
+  }
+}

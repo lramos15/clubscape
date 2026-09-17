@@ -1,0 +1,27 @@
+2026-09-14 22:28:26 EDT [main] INFO  n.r.client.RuntimeConfigLoader - Using local runtime config: RuntimeConfig(props={}, sysProps={}, compilerControl=null, outageMessage=null, outageLinks=null, outageStart=null, outageEnd=null, ignoreDeadNpcs=null, forceDeadNpcs=null, resetDeadOnChangeNpcs=null, forceDeadAnimations=null, healthCheckDeadNpcs=null, outdatedClientVersions=null, outdatedPluginVersions=null, updateLauncherWinVers=null, updateRollout=0.0)
+2026-09-14 22:28:27 EDT [main] INFO  n.r.client.config.ConfigManager - Creating profile: default (2109180446486216)
+java.lang.reflect.InvocationTargetException
+	at java.desktop/java.awt.EventQueue.invokeAndWait(EventQueue.java:1371)
+	at java.desktop/java.awt.EventQueue.invokeAndWait(EventQueue.java:1346)
+	at java.desktop/javax.swing.SwingUtilities.invokeAndWait(SwingUtilities.java:1480)
+	at RuneLiteComposition.screenshot(RuneLiteComposition.java:262)
+	at RuneLiteComposition.preflight(RuneLiteComposition.java:315)
+	at RuneLiteComposition.main(RuneLiteComposition.java:415)
+Caused by: java.lang.IllegalStateException: java.lang.IllegalStateException: Actual official window does not show the native framebuffer
+	at RuneLiteComposition.lambda$screenshot$7(RuneLiteComposition.java:294)
+	at java.desktop/java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:308)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:773)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:714)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:742)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+Caused by: java.lang.IllegalStateException: Actual official window does not show the native framebuffer
+	at RuneLiteComposition.lambda$screenshot$7(RuneLiteComposition.java:292)
+	... 13 more

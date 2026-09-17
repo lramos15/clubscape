@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "id": "benchmark.m1.v1",
+  "established_before_renderer_implementation": true,
+  "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "visual_settings": {
+    "layout": "resizable_classic",
+    "viewport": [1920, 1080],
+    "device_pixel_ratio": 1,
+    "ui_scale": 1,
+    "browser_zoom_percent": 100,
+    "draw_distance_tiles": 25,
+    "source_brightness": 0.8,
+    "resize_minimum": [1024, 768],
+    "resize_maximum": [2560, 1440],
+    "camera_settings": "Exact per-case controls in the approved source pack; no reduced draw distance/resolution for performance."
+  },
+  "local_development_profile": {
+    "host": "sparky",
+    "os": "Ubuntu24.04.4 Linux6.17.0-1026-nvidia ARM64",
+    "cpu": "10 Cortex-X925 plus10 Cortex-A725",
+    "memory_kib": 127600748,
+    "gpu": "NVIDIA GB10; Vulkan reports integrated GPU with unified memory",
+    "driver": "580.173.02",
+    "chrome": "Google Chrome for Testing153.0.8010.12",
+    "edge": null,
+    "status": "Owner-authorized engineering/measurement environment; not a claim of both-browser final acceptance.",
+    "sandbox_limit": "Known Vulkan GPU-process sandbox limitation must remain explicit; no disabling flags or policy bypass."
+  },
+  "owner_acceptance_profile": {
+    "family": "Apple Silicon M-series Mac, integrated graphics",
+    "chip_model": null,
+    "memory": null,
+    "macos_version": null,
+    "chrome_version": null,
+    "edge_version": null,
+    "collection": "tools/browser-harness owner handoff collects exact fields on the real owner machine.",
+    "status": "Owner will run after implementation; results cannot be claimed before execution."
+  },
+  "browser_measurement": {
+    "warmup_seconds": 30,
+    "window_seconds": 180,
+    "minimum_measured_rendered_fps": 60,
+    "frame_p95_ms_max": 20,
+    "frame_p99_ms_max": 33.333333,
+    "max_stall_ms": 100,
+    "require_contiguous_gpu_completed_frames": true,
+    "require_actual_scene_assets_and_entities": true,
+    "raf_callbacks_or_configured_limiter_are_evidence": false
+  },
+  "workloads": [
+    {"id": "tutorial", "route": "Representative complete source tutorial activity, progressive HUD and dynamic actors; never an empty scene."},
+    {"id": "lumbridge", "route": "Arrival/castle/river/bank/shop/gather/combat/Cook activities with the approved visible scenery."}
+  ],
+  "server_workloads": {
+    "real_or_synthetic_players": [1, 5],
+    "source_tick_ms": 600,
+    "tick_p95_ms_max": 60,
+    "tick_p99_ms_max": 100,
+    "acknowledged_state_loss_or_duplication": 0,
+    "scope": "M1 workload, not an owner-approved production launch concurrency target."
+  },
+  "required_measurements": [
+    "rendered frames/FPS/distributions/stalls and GPU timing availability",
+    "source-case/image/input identities and real browser product/version",
+    "server tick duration, actor counts, memory/bandwidth per player",
+    "WASM startup, initial and region asset bytes, streaming latency"
+  ],
+  "results": null,
+  "performance_accepted": false
+}

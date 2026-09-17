@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "kind": "bounded_presentation_adaptation",
+  "authority": "owner",
+  "decision": "approved",
+  "recorded_at": "2026-09-16T13:14:56Z",
+  "adaptation_id": "adaptation.m1.source_based_camera_initialization",
+  "adaptation_register_addendum": "spec/adaptations-m1-addendum.md",
+  "owner_record": "approve_source_based_initialization",
+  "owner_question": "Normal browser entry still needs an initial-camera decision. The original camera controls, follow, orbit and zoom behavior are measured, but available sources do not establish authenticated first-login settings. May I record a camera-initialization-only adaptation: take initial yaw/pitch from the approved reference views, focus on the actual player and terrain, and use measured original constructor preferences plus original preset 626 zoom bounds? These would be explicit ClubScape defaults\u2014not claimed OSRS account defaults. The measured controller behavior and all visual, performance and owner-acceptance gates would remain unchanged.",
+  "reference_pack": {
+    "path": "research/reference-pack/v1/manifest.json",
+    "sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+    "approval": "milestones/approvals/m1-reference-pack-v1.3.0.json"
+  },
+  "original_camera_contract": {
+    "path": "research/camera-source/contract.json",
+    "sha256": "745dda42fcd53d3225b9f2714e2ebbad7dbf60a76c070da1438a7289e5e0a602",
+    "source_session_initialization_observed": false
+  },
+  "approved_scope": [
+    "Explicit ClubScape camera initialization defaults only, not a claim of observed normal-account OSRS login state.",
+    "Initial yaw/pitch selected from the already-approved reference views, with the selected source case, units and exact values recorded before production binding.",
+    "Actual player render/focus coordinates and original terrain/footprint/bridge sampling determine focus and orbit; zero-world coordinates, camera-eye-as-player and guessed tile-centre fallbacks are not permitted.",
+    "Use the measured original constructor camera preferences and original source preset626 logical zoom bounds [128,896,128,896], preserving the original conversion and program semantics.",
+    "Implement the measured original fixed20ms input motor, separate frame follow/orbit, native wheel/FOV behavior, resizing and region rebasing in Rust/WASM.",
+    "Keep normal controller state across source-defined follow/rebase behavior; this initialization approval does not invent incoming camera reset packets."
+  ],
+  "does_not_approve": [
+    "Changed source movement, camera-control rates, follow smoothing, pitch bounds, wheel increments or gameplay.",
+    "A fixed diagnostic camera or scalar TypeScript camera scaffold as the production controller.",
+    "Other unresolved source facts, including ordinary-grave Bank-All permission or dough/Empty motion.",
+    "Changed frozen references, visual tolerances, numeric performance gates or final owner review.",
+    "Final visual/audio presentation acceptance, unexecuted browser/hardware checks, later milestones or release."
+  ],
+  "implementation_verified": false,
+  "presentation_accepted": false,
+  "milestone_accepted": false
+}

@@ -1,0 +1,9 @@
+{
+  "files": {
+    "resume-client-checkpoint.json": "3238651fb65193903ef92f551993c99b77fc9bb6d919ff743aaf27c1da100f45",
+    "resume-report.json": "76955e32d877b9bf6d0e513abd1c1c95af4bee3406a1b1877ec6321db748e910",
+    "resume-trace.jsonl": "77626dce598e8293d68ba27fe8dcb3b4ec49169b91e3c94ef583faa9b60e0d4f"
+  },
+  "original_inventory_sha256": "a384a9ac7f8036214eb4e4bbe14a82976e33140def7a4f3239ec0079d98f570c",
+  "run_id": "4282ed4b806b4be4"
+}

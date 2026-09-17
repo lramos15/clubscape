@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "task": "M1-NATIVE-RECOVERY-INTEGRATION",
+  "code_revision": "7f30a0aa5a1dabd89e890f16781f70f0b3d51045",
+  "result": "candidate_component_integration_passed_independent_review_pending",
+  "scope": "Native recovery consumers, binary boundary and guarded persistence components; not the saved-account browser journey or M1 acceptance",
+  "source": {
+    "raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "gzip_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+    "reference_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+    "frozen_hashes_checked": 1307,
+    "original_images_or_tolerances_changed": false
+  },
+  "validation": {
+    "web_tests": 263,
+    "native_tests": 402,
+    "server_response_encoder_tests": 1,
+    "final_shared_recovery_fixture_tests": 12,
+    "final_guarded_postgres_tests": 1,
+    "new_recovery_browser_cases": 7,
+    "existing_versioned_browser_cases": 17,
+    "existing_legacy_browser_cases": 20,
+    "unhandled_browser_errors": 0,
+    "original_full_frame_comparisons": 2,
+    "pixels_per_comparison": 2073600,
+    "different_pixels": 0,
+    "tolerance": 0,
+    "full_panel_masks": 0,
+    "typescript": "passed",
+    "strict_native_all_target_clippy": "passed",
+    "wasm32_check": "passed",
+    "rust_format": "passed",
+    "count_qualification": "The final12 recovery cases and20 direct executable identity checks are subsets of402, not additional unique tests. Browser services are controlled component doubles; the separately guarded PG case uses real storage and account authentication."
+  },
+  "commands": [
+    "pnpm --dir web typecheck",
+    "pnpm --dir web test",
+    "cargo test --locked -p clubscape-world-engine -p clubscape-game-types -p clubscape-protocol -p clubscape-client-core -p clubscape-wasm --quiet",
+    "cargo test --locked -p clubscape-server --lib recovery_context_tests --quiet",
+    "cargo clippy --locked -p clubscape-server -p clubscape-world-engine -p clubscape-game-types -p clubscape-protocol -p clubscape-client-core -p clubscape-wasm --all-targets -- -D warnings",
+    "cargo check --locked -p clubscape-wasm --target wasm32-unknown-unknown",
+    "cargo test --locked -p clubscape-world-engine --test recovery_context",
+    "cargo test --locked -p clubscape-server --test game_storage recovery_context -- --ignored --test-threads=1",
+    "CLUBSCAPE_UI_TEST_RESULTS=.local/recovery-ui-02 xvfb-run --auto-servernum --server-args='-screen 0 1280x800x24 -nolisten tcp' node web/ui/tests/recovery-browser.mjs",
+    "python3 tools/ui-assets/compare_modes.py --results .local/recovery-ui-02",
+    "CLUBSCAPE_UI_TEST_RESULTS=.local/recovery-ui-regression-01 xvfb-run --auto-servernum --server-args='-screen 0 1280x800x24 -nolisten tcp' sh -c 'node web/ui/tests/gameplay-ui-browser.mjs && node web/ui/tests/component-browser.mjs'",
+    "pnpm --dir web reference:check",
+    "pnpm --dir web build"
+  ],
+  "postgres": {
+    "report": "postgres.json",
+    "report_sha256": "9be279864098273c0a99c167fe67a0fb7c9ac5a2307d2c1057d951014a276bbb",
+    "executable_sha256": "182a0687515a42cd7b26a081102af8ad321c3f8b19e19e49d013043adecb14e7",
+    "isolated_database": "clubscape_m1_test on an owned random literal-loopback port",
+    "image": "postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685",
+    "synthetic_component_content": true,
+    "exact_stale_selection_rejected_without_commit": true,
+    "two_records_committed_once": true,
+    "combined_fee": "602",
+    "record_fees": ["294", "308"],
+    "old_repository_lease_rejected": true,
+    "replacement_world_fence_increased": true,
+    "original_receipt_replayed_after_authentication_renewal": true,
+    "recovery_gameplay_rerun_on_duplicate": false,
+    "owned_database_and_credentials_removed": true
+  },
+  "production_build": {
+    "code_revision": "7f30a0aa5a1dabd89e890f16781f70f0b3d51045",
+    "artifact": "build-artifact.json",
+    "artifact_sha256": "523e2ccd6d4bfef87c07b6d59f7e42cc93647be30c33a6680b8e990c640c52a0",
+    "normal_protocol_renderer_typecheck_vite_delivery_path": true,
+    "public_files": 11,
+    "content_configured": false,
+    "renderer_wasm_sha256": "d06005a0d9c41ee3673257154193e0c4315375b7b36f80570f3d4609d140abf9",
+    "renderer_manifest_sha256": "78fed3ca6b1549b329d6a48a47b35b68e912303b7d4698bb4cc0a8bdd2c34455",
+    "build_is_not_browser_journey_evidence": true
+  },
+  "retained_failures": [
+    {
+      "record": "before-browser.json",
+      "result": "3 passed before the fourth fixture assertion timed out; zero unhandled errors",
+      "cause": "The new fixture tried to inspect an underlying item control while the source quantity prompt intentionally owns the controls.",
+      "repair": "Inspect the retained selected outline after cancelling that prompt; keep the same-context quantity preservation and changed-context cancellation assertions."
+    },
+    {
+      "record": "before-postgres.json",
+      "result": "The one guarded test failed at restart with an actual409 world-lease conflict.",
+      "cause": "The previously unexecuted worker fixture reused the old repository's lease with a new GameStore.",
+      "repair": "Explicitly retain that rejection, release the old lease and acquire a real higher replacement fence before the original operation replay. No production lease check changed."
+    },
+    {
+      "record": "web-tests.log.gz",
+      "result": "261 individual tests passed; the viewport test file could not import absent generated renderer bindings.",
+      "repair": "Run the existing renderer build after the missing-dependency failure. The unchanged renderer hashes and the subsequent263 complete web tests pass."
+    },
+    {
+      "result": "Strict server Clippy exposed duplicate_mod in the two shared content fixture inclusions.",
+      "repair": "Import the common content helper once per test target and reuse it from the recovery fixture. No lint suppression or production schema change."
+    }
+  ],
+  "qualifications": [
+    "The80-slot original title is80/120, not16/120. Selected slot7 contains7 arrows but its native caption is35/1470; the per-entry quote remains294.",
+    "Source selected-type display, per-entry quotes and the combined executable plan remain independent values; none is reconstructed into a client transfer plan.",
+    "Take-All is one exact current-context selection with no bank precondition. Partial requests use the selected death/entry and requested context storage, not physical currentStorage.",
+    "Empty Office, stale held menu, copied semantic identity, changed instance and quantity cancellation are actual UI component checks, not an authenticated source-server capture.",
+    "Original-server selected-item All across records, ordinary-grave Bank-All, Office overflow above120 and the separate source motion gaps remain qualified.",
+    "Four actual source-bearing ELF payloads match5b and contain no decoded old5e payload. Their20 direct checks overlap the native suite.",
+    "No saved checkpoint, account journey, migration, source artifact, reference image, audio execution budget or owner approval was changed.",
+    "Independent review, root integration, full browser/presentation/animation/audio, frozen performance and owner Mac/Chrome/Edge/speaker acceptance remain separate."
+  ],
+  "root_code_integrated": false,
+  "presentation_or_performance_accepted": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

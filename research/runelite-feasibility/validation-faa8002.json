@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "checks": [
+    {
+      "name": "synthetic_java_codec_projection",
+      "command": [
+        "/home/lramos15/.local/share/jdks/temurin-17.0.20.1+1/bin/java",
+        "-ea",
+        "-Xmx256m",
+        "-XX:ActiveProcessorCount=2",
+        "-Duser.home=/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/build-home",
+        "-Djava.io.tmpdir=/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/build-home",
+        "-cp",
+        "/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/classes:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/client-1.12.38.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/http-api-1.2.23.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/okhttp-3.14.9.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/okio-1.17.2.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/discord-1.4.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/rlawt-1.8.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/slf4j-api-1.7.25.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/logback-classic-1.2.9.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/logback-core-1.2.9.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/jopt-simple-5.0.1.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/guava-23.2-jre.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/guice-4.1.0-no_aop.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/javax.inject-1.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/aopalliance-1.0.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/gson-2.8.5.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/flatlaf-3.2.5-rl4.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/commons-text-1.2.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/commons-lang3-3.7.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/jna-5.9.0.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/jna-platform-5.9.0.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/jsr305-3.0.2.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/protobuf-javalite-3.21.12.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/lwjgl-3.3.2.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/lwjgl-opengl-3.3.2.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/lwjgl-opencl-3.3.2.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/injected-client-1.12.38.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/json-20090211.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/lwjgl-3.3.2-natives-linux-arm64.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/lwjgl-opengl-3.3.2-natives-linux-arm64.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/runelite-api-1.12.38-runtime.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/cache-1.12.39-SNAPSHOT.jar:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/libraries/commons-compress-1.10.jar",
+        "ProjectionChecks"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"synthetic_projection_checks\":9,\"live_compatibility_proof\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "python_harness",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/runelite-compatibility",
+        "-p",
+        "test_*.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "----------------------------------------------------------------------\nRan 5 tests in 0.349s\n\nOK\n"
+    },
+    {
+      "name": "public_service_probe_clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "runelite/integration-tests/service-probe/Cargo.toml",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "public_service_probe_format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "runelite/integration-tests/service-probe/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "compatibility_verified": false,
+  "all_small_checks_passed": true
+}

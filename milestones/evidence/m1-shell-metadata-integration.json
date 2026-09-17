@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "status": "verified_on_main",
+  "worker": "78d01af9-70a4-4b02-8339-6a61eb377374",
+  "worker_read_through_turn": 39,
+  "worker_worktree": ".worktrees/m1-browser-shell",
+  "preserved_worker_revision": "4a205bf476d0f6c43ab360ae4066f72c72e30f6b",
+  "owned_commits": [
+    "b134136ad7b6260e539fe8009ee9bb7b0a425ea7",
+    "57f18f1b129c3968b9cf88de5cd094cc44b18b9e"
+  ],
+  "integration_worktree": ".worktrees/m1-shell-metadata",
+  "integration_base": "212535a5a7e73a3a798dfbfe84d473736e6cfa5b",
+  "excluded_import_path": "web/app/tests/source-browser.ts",
+  "candidate_revision": "b4f63046a75f90978afb432441316c70cf96f73b",
+  "candidate_mapping": [
+    {"owned":"b134136ad7b6260e539fe8009ee9bb7b0a425ea7","candidate":"d5dc29fa447e2e54e0c26081c3a8c19a5f3ae158"},
+    {"owned":"57f18f1b129c3968b9cf88de5cd094cc44b18b9e","candidate":"d3e3f204cc35e5f44ba32548653d73e963bcb762"}
+  ],
+  "parent_validation": {
+    "typescript": "passed",
+    "focused_tests": 38,
+    "complete_web_tests": 276,
+    "actual_source_inputs_fetched_and_verified": 65,
+    "controlled_source_emitters": 22,
+    "controlled_listener": {"x":396096,"y":397760},
+    "world_and_unknown_music_history_unchanged": true,
+    "metadata_probe": ".worktrees/m1-shell-metadata/.local/metadata-integration/source-inputs.json",
+    "normal_build_artifact_sha256": "4abc48d293d2855e1c0abfefe9ccd9eaa464ed5f8626a5e644ecec85d3528f76",
+    "content_configured_build_artifact_sha256": "5ea9e28efac39ebcf3237a9cf2d11ea1c2e7c778572bc3a1a4396fe4f4bfab1d",
+    "qualification": "Metadata-only source transport and controlled geometry, not actual audio playback. Browser expectations are strengthened in b4f6304 without new timing waits or threshold changes."
+  },
+  "source_browser_admission": "milestones/evidence/m1-shell-metadata-browser-authorization.json",
+  "quiet_window_confirmation": "milestones/evidence/m1-shell-metadata-quiet-window.json",
+  "source_browser_receipt": "milestones/evidence/m1-shell-metadata-browser-receipt.json",
+  "durable_candidate_evidence": [
+    {"path":"milestones/evidence/m1-shell-metadata/normal-build.log.gz","sha256":"7a9f67ca30e6cfef7930671c010b4f693e94ae39843d8ac21c62fa8988d2f18a"},
+    {"path":"milestones/evidence/m1-shell-metadata/web-tests.log.gz","sha256":"11e0f01aa0ca59a68d658285d0e115ef3e58ff68b2c50946b2962e2d28a31135"},
+    {"path":"milestones/evidence/m1-shell-metadata/source-inputs.json.gz","sha256":"87f858c99ed167615879254e77ea4a3643da45dc82ff24285c513bc81921ca35"},
+    {"path":"milestones/evidence/m1-shell-metadata/source-build-before.log.gz","sha256":"a2516807a098d1d470f20e4f0aa9c2c30dd4a817bfff8a28cd3086055bd6130e"},
+    {"path":"milestones/evidence/m1-shell-metadata/source-build.log.gz","sha256":"85ce9bfc5790d92da5d65cb3aaf32ba9c8d7eafe385774330074c8d625890e88"},
+    {"path":"milestones/evidence/m1-shell-metadata/source-run-pin.json.gz","sha256":"f0e27533d63446121b5e4bae45368b180dcb2ab419016296dd065e3d5d627a4a"},
+    {"path":"milestones/evidence/m1-shell-metadata/source-build-artifact.json","sha256":"5ea9e28efac39ebcf3237a9cf2d11ea1c2e7c778572bc3a1a4396fe4f4bfab1d"}
+  ],
+  "retained_preflight_failure": "The first content-configured build used an invalid output-directory shape and was rejected by the existing Vite guard. Only the caller path was corrected to .local/web-builds/shell-metadata-01; no guard, source pin or browser allowance was changed.",
+  "scope": "Only source preview/spatial metadata and related lifecycle/consumer tests. No modifications to the recovery candidate under independent review.",
+  "worker_reported_evidence": {
+    "handoff": ".worktrees/m1-browser-shell/.local/evidence/metadata-ui-candidate/HANDOFF.txt",
+    "source_inputs": 65,
+    "source_input_record_sha256": "00b375e5565030bc1b054193746f971844263f83d44e385e2e996f512258dd46",
+    "metadata_handoff_sha256": "7715dd67cfe10d532fdd70e23bc2dd82a077742fc05a8bd74f1b0bf9ad86ce55",
+    "completion_fence_handoff_sha256": "85ad27b97f0b75d67e39cbc1227d80f453e3609cc1650898da79026b24dbb98a",
+    "qualification": "Worker45 focused,14 completion and232 prior composed tests overlap and do not constitute fresh parent or gameplay evidence."
+  },
+  "historical_limits_to_recheck": [
+    "Independent uncreated/draft actor selection is absent from PlayerPreviewRequest; current player_gear is not an independent preview actor.",
+    "Original equipment widget84:4 exists; old UI catalogueb83d7b1 had no request and renderer projection covered only679:73. The current UI catalogue is newer, so do not repeat the old UI-gap claim without current evidence.",
+    "Source spatial metadata is not full source audio playback, timing, speaker or performance acceptance."
+  ],
+  "current_equipment_input_check": {
+    "ui_manifest_sha256": "6601f1de45324ff23e88df577b3e467d74878f09b6f0f1759c52c6870452b329",
+    "template": "native-equipment-stats",
+    "type6_widget": 5505028,
+    "model_zoom": 550,
+    "template_content_type": 0,
+    "renderer_model_widget_ids": [44499017],
+    "result": "The old missing-UI-widget claim is obsolete. Current UI has84:4, but the selected main renderer still lacks that projection. Worker9051712 has a separate unreviewed archive328 candidate; it does not authorize replacing this template's0."
+  },
+  "source_raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+  "root_code_integrated": true,
+  "main_code_commit": "da6f78554e7a835dac60b794dac3acf644490f35",
+  "owned_paths_byte_identical_at_import": 14,
+  "root_validation": {
+    "tested_code_revision": "da6f78554e7a835dac60b794dac3acf644490f35",
+    "web_tests_passed": 276,
+    "web_tests_failed_or_skipped": 0,
+    "normal_production_build_and_typecheck_passed": true,
+    "normal_build_artifact_sha256": "e67fabcefbd6d80193ecd5c0b1ad1330a07df14fc49874b28bd079a482e1cdd7",
+    "normal_build_content": null,
+    "frozen_hashes_verified": 1307,
+    "selected_current_and_legacy_water_pins_unchanged": true,
+    "additional_browser_or_operator_invocations": 0,
+    "qualification": "Fresh root code-only normal delivery. The source-browser receipt remains the exact b4/5ea candidate execution, not a second run on main."
+  },
+  "root_evidence": {
+    "index": "milestones/evidence/m1-shell-metadata/main-integration/index.json",
+    "sha256": "5b910859a67279b7dda093c757b21abf96f44969fe5ec9c400925d9b32d71da2",
+    "files": 6
+  },
+  "private_journey_accessed": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

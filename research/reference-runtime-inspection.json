@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "observed_on": "2026-09-13",
+  "source_manifest": "research/reference-runtime.json",
+  "source_manifest_sha256": "bac9e74ebd669496d8e4ad3f64e2edcbb2bcbcf44e20b5c7c00774f541bd54fb",
+  "command": "python3 tools/reference_runtime.py fetch && python3 tools/reference_runtime.py inspect",
+  "result": "artifact_integrity_verified_and_bytecode_inspected",
+  "verified_artifacts": 2,
+  "javap_version": "17.0.20.1",
+  "get_build_id": "33653951311.245",
+  "get_build_id_interpretation": "Opaque injected-client build ID; not evidence that the numeric OSRS revision is 240 or 245.",
+  "get_revision_observation": {
+    "getter": "getstatic aal.ae:I; ldc 2098754687; imul; ireturn",
+    "numeric_revision_verified": false,
+    "limitation": "Offline inspection did not establish the initialization of aal.ae. No runtime configuration or source-client session was executed."
+  },
+  "client_executed": false,
+  "gameplay_observed": false,
+  "source_capture_pack_complete": false,
+  "reference_pack_approved": false,
+  "clubscape_compatibility_verified": false
+}

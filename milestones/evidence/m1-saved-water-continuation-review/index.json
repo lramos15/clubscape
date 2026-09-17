@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "kind": "director_saved_water_code_only_regressions",
+  "candidate_revision": "b958cc44425804dd56ef4a940a416588f23b059b",
+  "implementation_revision": "2fbf5afae6c548981dafd660c523d0ead758de81",
+  "worktree": ".worktrees/m1-saved-water-review",
+  "files": [
+    {
+      "path": "python.log",
+      "bytes": 211,
+      "sha256": "b412f09a8a3b2de027733311e6b7ebc7ef4e440822f76ccc9b1b012496bbebc3",
+      "exit_code": 0,
+      "tests_passed": 83,
+      "elapsed_seconds": 3.42
+    },
+    {
+      "path": "native.log",
+      "bytes": 200,
+      "sha256": "ef8d52cfb90865550f0a548d9232c84c60ef91e0b68786bf3c70736b0f78ca8a",
+      "exit_code": 0,
+      "tests_passed": 53,
+      "elapsed_seconds": 26.01
+    }
+  ],
+  "protected_checkpoint_accesses": 0,
+  "databases_services_or_gameplay": 0,
+  "saved_execution_admitted": false,
+  "milestone_accepted": false
+}

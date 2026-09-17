@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "base_lock": "tools/cache-import/dependencies.json",
+  "runtime_selection": "research/current-source/selection.json",
+  "additional_artifacts": [
+    {
+      "name": "client-1.12.38.jar",
+      "url": "https://repo.runelite.net/net/runelite/client/1.12.38/client-1.12.38.jar",
+      "size_bytes": 5261401,
+      "sha256": "6dcd0da2fdbf48d35c3d8f666d801d05afa964030c553e806eb173dba97323d5",
+      "role": "Matching official runtime resources, including /runelite/index required by original archive API. Not a replacement model renderer.",
+      "source": "Previously retrieved official bootstrap.json, SHA256 6f8f3f03e48ad4db730ae0d59f5916b4a99789e6b2bc4464eaea116a9e8d00a3"
+    }
+  ]
+}

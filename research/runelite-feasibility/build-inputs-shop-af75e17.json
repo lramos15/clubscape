@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "runtime_version": "1.12.38",
+  "jdk": {
+    "java": "/home/lramos15/.local/share/jdks/temurin-17.0.20.1+1/bin/java",
+    "version": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)\nOpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)",
+    "sha256": "185fdd3e40d7736c600cb948403f77fd3421e8877e2ff13271673f28a501531f"
+  },
+  "libraries": [
+    {
+      "name": "client-1.12.38.jar",
+      "size_bytes": 5261401,
+      "sha256": "6dcd0da2fdbf48d35c3d8f666d801d05afa964030c553e806eb173dba97323d5"
+    },
+    {
+      "name": "http-api-1.2.23.jar",
+      "size_bytes": 40904,
+      "sha256": "afefa5239fb6e437f93cc41c54f3030cf7b1663397a6b34f1bbe3065114c9b66"
+    },
+    {
+      "name": "okhttp-3.14.9.jar",
+      "size_bytes": 430488,
+      "sha256": "2570fab55515cbf881d7a4ceef49fc515490bc027057e666776a2832465aeca0"
+    },
+    {
+      "name": "okio-1.17.2.jar",
+      "size_bytes": 91980,
+      "sha256": "f80ce42d2ffac47ad4c47e1d6f980d604d247ceb1a886705cf4581ab0c9fe2b8"
+    },
+    {
+      "name": "discord-1.4.jar",
+      "size_bytes": 681590,
+      "sha256": "6409723fd13496386dfb1335a9794dc0919db6132522f2b7486d6734fc5df6e5"
+    },
+    {
+      "name": "rlawt-1.8.jar",
+      "size_bytes": 237113,
+      "sha256": "24f9b6d77d8de814a8dacddf9c4e2227da70459375ca72cc961ae81d33eff75a"
+    },
+    {
+      "name": "slf4j-api-1.7.25.jar",
+      "size_bytes": 41203,
+      "sha256": "18c4a0095d5c1da6b817592e767bb23d29dd2f560ad74df75ff3961dbde25b79"
+    },
+    {
+      "name": "logback-classic-1.2.9.jar",
+      "size_bytes": 233855,
+      "sha256": "ad745cc243805800d1ebbf5b7deba03b37c95885e6bce71335a73f7d6d0f14ee"
+    },
+    {
+      "name": "logback-core-1.2.9.jar",
+      "size_bytes": 454201,
+      "sha256": "4a9ef7ed809b1fbc6992bf87d404087c247e7a9766e25bb84377b58ed5c9eb58"
+    },
+    {
+      "name": "jopt-simple-5.0.1.jar",
+      "size_bytes": 78826,
+      "sha256": "9f0c8d50fa4b79b6ff1502dbec8502179d6b9497cacbe17a13074001aed537ec"
+    },
+    {
+      "name": "guava-23.2-jre.jar",
+      "size_bytes": 2649860,
+      "sha256": "5be9a7d05ba0ccd74708bc8018ae412255f85843c0b92302e9b9befa6ed52564"
+    },
+    {
+      "name": "guice-4.1.0-no_aop.jar",
+      "size_bytes": 428603,
+      "sha256": "9264c6931c431e928dc64adc842584d5f57d17b2f3aff29221f2b3fdea673dad"
+    },
+    {
+      "name": "javax.inject-1.jar",
+      "size_bytes": 2497,
+      "sha256": "91c77044a50c481636c32d916fd89c9118a72195390452c81065080f957de7ff"
+    },
+    {
+      "name": "aopalliance-1.0.jar",
+      "size_bytes": 4467,
+      "sha256": "0addec670fedcd3f113c5c8091d783280d23f75e3acb841b61a9cdb079376a08"
+    },
+    {
+      "name": "gson-2.8.5.jar",
+      "size_bytes": 241622,
+      "sha256": "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81"
+    },
+    {
+      "name": "flatlaf-3.2.5-rl4.jar",
+      "size_bytes": 792432,
+      "sha256": "c518fa0427c7f6029b115541c0dbcf633fc89a65467f8472c52bb71fe18b559c"
+    },
+    {
+      "name": "commons-text-1.2.jar",
+      "size_bytes": 136544,
+      "sha256": "d4a57bbc1627da7c391308fd0fe910b83170fb66afd117236a5b111d2db1590b"
+    },
+    {
+      "name": "commons-lang3-3.7.jar",
+      "size_bytes": 499634,
+      "sha256": "6e8dc31e046508d9953c96534edf0c2e0bfe6f468966b5b842b3f87e43b6a847"
+    },
+    {
+      "name": "jna-5.9.0.jar",
+      "size_bytes": 1729586,
+      "sha256": "eafcc780b445434d3c5ae7fa2fb6665de1a7560d537d2c408a8e80cd14d27161"
+    },
+    {
+      "name": "jna-platform-5.9.0.jar",
+      "size_bytes": 1343236,
+      "sha256": "1903bc6d87f3ab92023957b91f45a9c8eb3515bad030356ce977201e5141b724"
+    },
+    {
+      "name": "jsr305-3.0.2.jar",
+      "size_bytes": 19936,
+      "sha256": "766ad2a0783f2687962c8ad74ceecc38a28b9f72a2d085ee438b7813e928d0c7"
+    },
+    {
+      "name": "protobuf-javalite-3.21.12.jar",
+      "size_bytes": 703181,
+      "sha256": "cf678ab3fbc992f4b4654a86c03557c21904d635202b67688fcb2eca442c2d40"
+    },
+    {
+      "name": "lwjgl-3.3.2.jar",
+      "size_bytes": 786196,
+      "sha256": "f8016606e74f3cafd63eae07b1331f903f999c9f40726c838399a144c3809217"
+    },
+    {
+      "name": "lwjgl-opengl-3.3.2.jar",
+      "size_bytes": 928871,
+      "sha256": "0ebaaf92d306c946ce9d3db25496b9068b7aab782b15966be2544b6a24838038"
+    },
+    {
+      "name": "lwjgl-opencl-3.3.2.jar",
+      "size_bytes": 238152,
+      "sha256": "da0392abcea5121f5edd9042012600584ac628f4a18fcf5c1bce60f3f9f6a33a"
+    },
+    {
+      "name": "injected-client-1.12.38.jar",
+      "size_bytes": 4235748,
+      "sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947"
+    },
+    {
+      "name": "json-20090211.jar",
+      "size_bytes": 45944,
+      "sha256": "055be110a570f9cda3eba8d70a006ff46c77a048bc67868524879211c48b330a"
+    },
+    {
+      "name": "lwjgl-3.3.2-natives-linux-arm64.jar",
+      "size_bytes": 90795,
+      "sha256": "f4f4c13cd70224ec443753837f6652ec7ed11c5857ffc3e7d03e216aef6e663b"
+    },
+    {
+      "name": "lwjgl-opengl-3.3.2-natives-linux-arm64.jar",
+      "size_bytes": 58627,
+      "sha256": "836e5641627f7bf3c966c93946f400cb77cdf65b8a347763e55e069d313e6def"
+    },
+    {
+      "name": "runelite-api-1.12.38-runtime.jar",
+      "size_bytes": 272846,
+      "sha256": "6d50aa843c070120a5093c5ead29d72e92742074346241e0359a133dad008852"
+    },
+    {
+      "name": "cache-1.12.39-SNAPSHOT.jar",
+      "size_bytes": 444766,
+      "sha256": "8056039bee74da629e596896048645085f7753159a064da51c24e9bd99f13e8e"
+    },
+    {
+      "name": "commons-compress-1.10.jar",
+      "size_bytes": 409475,
+      "sha256": "807c95293e41e8159477442077da6d0962a7f486d4b980be61f60a8db9cb290f"
+    }
+  ],
+  "protoc": {
+    "name": "protoc-3.21.12-linux-aarch_64.exe",
+    "sha256": "aa609ec1d4b08375a140b1a42340684932cd2cd0cd56ffe8d791a72f9f3894bc",
+    "upstream_sha1": "5c040e609f94d5d2fb2e8b0a77eb7adaa9e9148a"
+  },
+  "schemas": [
+    {
+      "path": "crates/protocol/proto/account.proto",
+      "sha256": "c777fa303f0aa0c287649de65e25cea2a40130f06d65c095b7fb79074cf21bc8"
+    },
+    {
+      "path": "crates/protocol/proto/game.proto",
+      "sha256": "3e00a9029cffb89788182728e15a6e1f8460693c7244201cf0181fecbad6bcd7"
+    }
+  ],
+  "generated_binding_sha256": {
+    "clubscape/account/v1/AccountOuterClass.java": "ccccf9e0d6747a028473d998cfec036528406ae66caf11de99c97bda6e382961",
+    "clubscape/game/v1/Game.java": "a78e2b2f1bb41ec19d3e0aabe0ef49ffe9ffd5e5e15fffd20589ef98312c4188"
+  },
+  "generation_command": [
+    "/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/protoc-3.21.12-linux-aarch_64.exe",
+    "--proto_path=/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/crates/protocol/proto",
+    "--java_out=lite:/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/generated",
+    "/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/crates/protocol/proto/account.proto",
+    "/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/crates/protocol/proto/game.proto"
+  ],
+  "compatibility_verified": false
+}

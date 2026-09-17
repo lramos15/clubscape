@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "hardware_direction": {
+    "authority": "owner",
+    "record": "I will test after everything is done on my own machine using an M series mac. I don't have a true integrated graphics machine so I'm sure what you have aavailable is also fine",
+    "interpretation": "Continue engineering and local measurements on available Sparky hardware. Prepare an owner-run real Chrome/Edge acceptance path on the owner's M-series Mac. Apple Silicon Macs have integrated graphics; exact model/OS/browser configuration and results will be recorded when the owner runs it.",
+    "measurements_completed": false,
+    "sandbox_disable_authorized": false
+  },
+  "reference_direction": {
+    "authority": "owner",
+    "record": "Keep seaching online resources such as wikis for references. This game is extremely well documented and should have screenshots of pretty much every page",
+    "interpretation": "Complete the reference pack using identifiable public/wiki screenshots and original-source fixtures; do not impose a blanket live-account prerequisite when sufficient public source evidence exists.",
+    "source_terms_acceptance_authorized": true,
+    "external_account_login_authorized": false,
+    "external_account_creation_authorized": false,
+    "credentials_supplied": false
+  },
+  "unchanged_gates": {
+    "reference_pack_owner_approval": "required; not granted by this record",
+    "final_visual_audio_owner_acceptance": "required; not granted by this record",
+    "complete_fresh_account_journey": "required",
+    "later_milestone_authorized": false
+  }
+}

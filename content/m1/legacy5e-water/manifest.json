@@ -1,0 +1,154 @@
+{
+  "actual_account_read_or_changed": false,
+  "artifact_version": 4,
+  "compiled_artifact": {
+    "artifact_version": 4,
+    "bytes": 521255,
+    "path": "content/m1/legacy5e-water/game-content.csc.gz",
+    "schema_version": 4,
+    "sha256": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+    "uncompressed_bytes": 13125018,
+    "uncompressed_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650"
+  },
+  "compiler_commands": {
+    "baseline": [
+      "cargo",
+      "run",
+      "--quiet",
+      "--locked",
+      "--offline",
+      "--manifest-path",
+      "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/crates/content/Cargo.toml",
+      "-p",
+      "clubscape-content",
+      "--",
+      "--input",
+      "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/tools/m1-content/.local/water-fill/legacy5e-baseline/game-content.json",
+      "--output",
+      "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/tools/m1-content/.local/water-fill/legacy5e-baseline/game-content.csc"
+    ],
+    "candidate": [
+      "cargo",
+      "run",
+      "--quiet",
+      "--locked",
+      "--offline",
+      "--manifest-path",
+      "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/crates/content/Cargo.toml",
+      "-p",
+      "clubscape-content",
+      "--",
+      "--input",
+      "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/tools/m1-content/.local/water-fill/legacy5e-water/game-content.json",
+      "--output",
+      "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/tools/m1-content/.local/water-fill/legacy5e-water/game-content.csc"
+    ]
+  },
+  "compiler_counts": {
+    "collision_cells": 46358,
+    "dialogue_nodes": 48,
+    "dialogues": 21,
+    "equipment_slots": 11,
+    "interfaces": 30,
+    "items": 122,
+    "npcs": 26,
+    "objects": 4837,
+    "quests": 2,
+    "recipes": 14,
+    "regions": 29,
+    "shops": 1,
+    "skills": 24,
+    "spawns": 536,
+    "tutorial_stages": 71
+  },
+  "content_schema_version": 4,
+  "current5b_ui_audio_actor_metadata_imported": false,
+  "exact_original_artifact_recompiled": true,
+  "generator": "python3 tools/m1-content/build_water_legacy.py",
+  "item_on_dispatch_declared": true,
+  "migration_admitted": false,
+  "native_execution_evidence": "research/water-fill/legacy5e-water-native.json",
+  "presentation_or_milestone_accepted": false,
+  "profile": "legacy5e-plus-water-candidate",
+  "revision": "m1.source-backed.v4.3ff4292b311453cc.water.e337c77cc5ccd980",
+  "runtime_compile_passed": true,
+  "schema_version": 1,
+  "semantic_delta": {
+    "actual_account_read_or_changed": false,
+    "base": {
+      "compressed_artifact_sha256": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f",
+      "input": "research/water-fill/inputs/legacy5e-source.json.gz",
+      "public_supplied_copy": ".local/source5e-input/game-content.json.gz",
+      "raw_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+      "revision": "m1.source-backed.v4.3ff4292b311453cc",
+      "semantic_sha256_without_revision": "00f994caf1320993c69d96b833254a5684dbf235cf3bb71f812cff3ad72671a5",
+      "source_sha256": "294ede7e3d8e08633051338385f189c0d420000e74cd2344ce54b13bbfa28706"
+    },
+    "candidate_semantic_sha256": "9a348faf5a6fe3f6236d7d5297136f35562a011efa05c8e2b2dc1f33e8d20ff8",
+    "changed_json_paths": [
+      "/recipes/recipe.water.bucket",
+      "/revision"
+    ],
+    "contact_qualification": "Original1x2 footprint, source rotation/access masks and explicit walk/sight cells. Conservative cardinal one-tile item-on contact interpretation, not an observed arrival or accepted use.",
+    "dispatch_contract": "RecipeDefinition.item_on_target is an explicit source-bound reach/guard for one conversion. The shared target admission retains availability, instance, footprint, source-side, collision/sight and near-face checks without a menu-visible Production operation.",
+    "item_on_dispatch_declared": true,
+    "migration_admitted": false,
+    "native_execution_required": true,
+    "preexisting_source_unknowns_preserved": [
+      "normal_grave_bank_all",
+      "recipe.cooking.dough.motion",
+      "empty_container.motion"
+    ],
+    "profile": "legacy5e",
+    "recipe_sha256": "49bf5b624bb74eea5c936b7fbb25a35e5ea56b3d2a785564dcde2a9c7d69dc1c",
+    "remainder_semantic_sha256": "00f994caf1320993c69d96b833254a5684dbf235cf3bb71f812cff3ad72671a5",
+    "source_contact_candidates": [
+      {
+        "plane": 0,
+        "x": 3205,
+        "y": 3214
+      },
+      {
+        "plane": 0,
+        "x": 3205,
+        "y": 3217
+      },
+      {
+        "plane": 0,
+        "x": 3206,
+        "y": 3216
+      }
+    ],
+    "water_actor_motion": {
+      "classification": "unresolved_source",
+      "no_animation_verified": false,
+      "reason": "Scenery animationID=-1 is not actor dispatch evidence. No filling sequence or deliberate absence was verified; do not use a similarly named vial, fountain or construction sequence.",
+      "sequence": null
+    }
+  },
+  "source_baseline": {
+    "compressed_artifact_sha256": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f",
+    "input": "research/water-fill/inputs/legacy5e-source.json.gz",
+    "public_supplied_copy": ".local/source5e-input/game-content.json.gz",
+    "raw_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "revision": "m1.source-backed.v4.3ff4292b311453cc",
+    "semantic_sha256_without_revision": "00f994caf1320993c69d96b833254a5684dbf235cf3bb71f812cff3ad72671a5",
+    "source_sha256": "294ede7e3d8e08633051338385f189c0d420000e74cd2344ce54b13bbfa28706"
+  },
+  "source_input": {
+    "bytes": 511197,
+    "json_bytes": 15604518,
+    "json_sha256": "7fb9abd57dea45d9bfc82a78e52bdb3e1a62c1072b0e259549bcff95614ad142",
+    "path": "content/m1/legacy5e-water/game-content.json.gz",
+    "sha256": "9659cd96567e34f9fdf98d131ca1028bcd7b6621f10c28aa2bec301684ccb552"
+  },
+  "source_observation_claimed": false,
+  "unresolved_bindings": [
+    "items.item.ensouled_goblin_head.stackable.rule",
+    "items.item.milk.bottomless_bucket.stackable.rule",
+    "mechanics.death.office_overflow",
+    "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+    "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+    "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn"
+  ]
+}

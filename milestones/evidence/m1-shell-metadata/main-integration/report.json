@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "code_revision": "da6f78554e7a835dac60b794dac3acf644490f35",
+  "status": "passed",
+  "started_at": "2026-09-17T01:13:43.338081+00:00",
+  "checks": [
+    {
+      "name": "web-tests",
+      "command": [
+        "pnpm",
+        "--dir",
+        "web",
+        "test"
+      ],
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "elapsed_seconds": 1.131,
+      "log_sha256": "5ac050105e23438949a8b9b95bdc053907737762096461a74ab68a685b291051"
+    },
+    {
+      "name": "normal-build",
+      "command": [
+        "pnpm",
+        "--dir",
+        "web",
+        "build"
+      ],
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "elapsed_seconds": 9.721,
+      "log_sha256": "d06db605ed068f977b040fc071c163bb251bef2c962dc237bbd2ea53630c204e"
+    }
+  ],
+  "browser_invocations": 0,
+  "source_generation_invocations": 0,
+  "source_operator_invocations": 0,
+  "saved_account_accessed": false,
+  "milestone_accepted": false,
+  "web_test_counts": {
+    "tests": 276,
+    "pass": 276,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "normal_build": {
+    "directory": ".local/web-builds/shell-metadata-main-01",
+    "build_id": "clubscape-da6f78554e7a835dac60b794dac3acf644490f35-e67fabcefbd6d801",
+    "artifact_sha256": "e67fabcefbd6d80193ecd5c0b1ad1330a07df14fc49874b28bd079a482e1cdd7",
+    "content": null,
+    "qualification": "Normal code-only production build and typecheck; not another source-browser run."
+  },
+  "selected_content_pins_unchanged": true,
+  "completed_at": "2026-09-17T01:13:54.245612+00:00"
+}

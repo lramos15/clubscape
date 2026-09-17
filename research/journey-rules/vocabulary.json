@@ -1,0 +1,1176 @@
+{
+  "schema_version": 1,
+  "id": "contract.journey.vocabulary",
+  "scope": "Semantic IDs only; external content extraction must bind each source variant and map link.",
+  "events": [
+    {
+      "id": "event.appearance.confirmed",
+      "required_fields": [
+        "appearance"
+      ]
+    },
+    {
+      "id": "event.experience.selected",
+      "required_fields": [
+        "choice"
+      ]
+    },
+    {
+      "id": "event.dialogue.completed",
+      "required_fields": [
+        "npc_ref",
+        "topic"
+      ]
+    },
+    {
+      "id": "event.ui.opened",
+      "required_fields": [
+        "ui_ref"
+      ]
+    },
+    {
+      "id": "event.ui.closed",
+      "required_fields": [
+        "ui_ref"
+      ]
+    },
+    {
+      "id": "event.world.transitioned",
+      "required_fields": [
+        "from_ref",
+        "to_ref",
+        "link_ref"
+      ]
+    },
+    {
+      "id": "event.gather.succeeded",
+      "required_fields": [
+        "rule_ref",
+        "item_ref",
+        "quantity"
+      ]
+    },
+    {
+      "id": "event.fire.lit",
+      "required_fields": [
+        "rule_ref",
+        "object_ref",
+        "position"
+      ]
+    },
+    {
+      "id": "event.cook.resolved",
+      "required_fields": [
+        "rule_ref",
+        "input_item_ref",
+        "output_item_ref",
+        "outcome"
+      ]
+    },
+    {
+      "id": "event.craft.succeeded",
+      "required_fields": [
+        "rule_ref",
+        "output_item_ref",
+        "quantity"
+      ]
+    },
+    {
+      "id": "event.equipment.changed",
+      "required_fields": [
+        "slot_ref",
+        "item_ref"
+      ]
+    },
+    {
+      "id": "event.combat.kill_credited",
+      "required_fields": [
+        "npc_ref",
+        "method",
+        "kill_instance"
+      ]
+    },
+    {
+      "id": "event.spell.resolved",
+      "required_fields": [
+        "spell_ref",
+        "npc_ref",
+        "outcome"
+      ]
+    },
+    {
+      "id": "event.teleport.started",
+      "required_fields": [
+        "spell_ref"
+      ]
+    },
+    {
+      "id": "event.teleport.interrupted",
+      "required_fields": [
+        "spell_ref",
+        "reason"
+      ]
+    },
+    {
+      "id": "event.teleport.completed",
+      "required_fields": [
+        "spell_ref",
+        "destination_ref"
+      ]
+    },
+    {
+      "id": "event.setting.changed",
+      "required_fields": [
+        "setting",
+        "value"
+      ]
+    },
+    {
+      "id": "event.object.inspected",
+      "required_fields": [
+        "object_ref"
+      ]
+    },
+    {
+      "id": "event.quest.accepted",
+      "required_fields": [
+        "quest_ref",
+        "npc_ref"
+      ]
+    },
+    {
+      "id": "event.quest.declined",
+      "required_fields": [
+        "quest_ref",
+        "npc_ref"
+      ]
+    },
+    {
+      "id": "event.quest.delivered",
+      "required_fields": [
+        "quest_ref",
+        "npc_ref",
+        "delivered"
+      ]
+    },
+    {
+      "id": "event.quest.reward_requested",
+      "required_fields": [
+        "quest_ref"
+      ]
+    },
+    {
+      "id": "event.player.died",
+      "required_fields": [
+        "death_instance",
+        "items_lost"
+      ]
+    },
+    {
+      "id": "event.death.topic_completed",
+      "required_fields": [
+        "topic"
+      ]
+    },
+    {
+      "id": "event.death.exit_requested",
+      "required_fields": []
+    },
+    {
+      "id": "event.death.portal_crossed",
+      "required_fields": []
+    },
+    {
+      "id": "event.grave.reclaimed",
+      "required_fields": [
+        "death_instance",
+        "items"
+      ]
+    },
+    {
+      "id": "event.grave.expired",
+      "required_fields": [
+        "death_instance"
+      ]
+    },
+    {
+      "id": "event.inventory.pickup_requested",
+      "required_fields": [
+        "ground_instance",
+        "quantity"
+      ]
+    },
+    {
+      "id": "event.inventory.drop_requested",
+      "required_fields": [
+        "item_ref",
+        "quantity"
+      ]
+    },
+    {
+      "id": "event.equipment.equip_requested",
+      "required_fields": [
+        "item_ref"
+      ]
+    },
+    {
+      "id": "event.equipment.unequip_requested",
+      "required_fields": [
+        "slot_ref"
+      ]
+    },
+    {
+      "id": "event.movement.requested",
+      "required_fields": [
+        "destination"
+      ]
+    },
+    {
+      "id": "event.activity.requested",
+      "required_fields": [
+        "rule_ref",
+        "target"
+      ]
+    },
+    {
+      "id": "event.activity.roll",
+      "required_fields": [
+        "rule_ref",
+        "rng"
+      ]
+    },
+    {
+      "id": "event.bank.deposit_requested",
+      "required_fields": [
+        "item_ref",
+        "quantity"
+      ]
+    },
+    {
+      "id": "event.bank.withdraw_requested",
+      "required_fields": [
+        "item_ref",
+        "quantity",
+        "noted"
+      ]
+    },
+    {
+      "id": "event.shop.buy_requested",
+      "required_fields": [
+        "item_ref",
+        "quantity",
+        "stock_version"
+      ]
+    },
+    {
+      "id": "event.shop.sell_requested",
+      "required_fields": [
+        "item_ref",
+        "quantity",
+        "stock_version"
+      ]
+    },
+    {
+      "id": "event.prayer.toggled",
+      "required_fields": [
+        "prayer_ref",
+        "enabled"
+      ]
+    },
+    {
+      "id": "event.altar.prayed",
+      "required_fields": [
+        "object_ref"
+      ]
+    },
+    {
+      "id": "event.food.eaten",
+      "required_fields": [
+        "item_ref"
+      ]
+    },
+    {
+      "id": "event.mill.hopper_filled",
+      "required_fields": [
+        "item_ref"
+      ]
+    },
+    {
+      "id": "event.mill.controls_operated",
+      "required_fields": [
+        "object_ref"
+      ]
+    },
+    {
+      "id": "event.mill.flour_collected",
+      "required_fields": [
+        "object_ref"
+      ]
+    },
+    {
+      "id": "event.session.disconnected",
+      "required_fields": []
+    },
+    {
+      "id": "event.session.reconnected",
+      "required_fields": []
+    },
+    {
+      "id": "event.server.restarted",
+      "required_fields": []
+    }
+  ],
+  "event_authority": {
+    "requests": "Client intents require ownership, reachability, UI unlock, stage and capacity checks.",
+    "results": "Only shared authoritative systems emit succeeded/resolved/changed/credited events after their real operation commits.",
+    "identity": "Every event has actor_id, durable operation_id, session_epoch and server_tick. A received result name is never a permission to mint items or XP.",
+    "xp": "Tutorial and quest listeners must not repeat XP already awarded by an activity.",
+    "basis": {
+      "classification": "engineering_contract",
+      "source_refs": [
+        "source.project.prompt"
+      ]
+    }
+  },
+  "guard_language": {
+    "all": "Every nested predicate must match.",
+    "any": "At least one must match.",
+    "predicate": {
+      "path": "state.* or event.*; dotted scalar lookup",
+      "op": [
+        "eq",
+        "ne",
+        "gte",
+        "lte",
+        "in"
+      ],
+      "value": "JSON literal"
+    },
+    "phase": "Guards inspect authoritative state after the input event's shared-system mutation, before transition effects.",
+    "missing_path": "Unknown/missing does not satisfy a predicate, including ne.",
+    "unmatched_event": "No stage change; may still be a legitimate shared action if independently unlocked.",
+    "order": "At most one transition per graph per operation. Never chain through a second stage on one event."
+  },
+  "guard_projection": {
+    "state.levels.<skill>": "Current usable level from the named skill record; base level from XP is used specifically for tutorial caps.",
+    "state.inventory.free_slots": "28 minus occupied backpack slots after resolving compatible stacks.",
+    "inventory_count_aliases": {
+      "tin_ore": "item.ore.tin",
+      "copper_ore": "item.ore.copper",
+      "bronze_bar": "item.bar.bronze",
+      "hammer": "item.hammer",
+      "flour": "item.flour.pot",
+      "water_bucket": "item.water.bucket",
+      "empty_bucket": "item.bucket",
+      "empty_pot": "item.pot",
+      "grain": "item.grain",
+      "air_runes": "item.rune.air",
+      "mind_runes": "item.rune.mind"
+    },
+    "inventory_alias_scope": "state.inventory.<alias> counts actual carried unnoted units, not banked/equipped/ground items.",
+    "state.tools.usable_pickaxe": "A source-level-eligible pickaxe in inventory OR weapon slot.",
+    "state.tools.usable_axe": "A source-level-eligible axe in inventory OR weapon slot.",
+    "state.tools.small_net_in_inventory": "At least one actual item.fishing_net.small in inventory.",
+    "state.tools.tinderbox_in_inventory": "At least one actual item.tinderbox in inventory.",
+    "state.equipment.<slot>": "Item semantic ID occupying the named slot, or null; ammo_quantity is the equipped stack count.",
+    "state.quests.<quest_name>": "Persisted record indexed by quest.<quest_name>.",
+    "state.rewards.<quest_name>": "Whether once-only entitlement quest.<quest_name> exists in the durable reward ledger.",
+    "state.location": "mill_ground/mill_middle/mill_top are projections of the three mapped Mill Lane Mill location IDs, not player assertions.",
+    "event.lesson_action_unlocked": "Authoritative action_unlocks plus tutorial restriction predicates in tutorial.json, never a client boolean.",
+    "event.reachable_and_other_validation_facts": "Computed by shared authority from source geometry, items, recipes, stock and clocks. Fixture facts test these boundaries but are not protocol fields a player can assert.",
+    "completed_transition_set": "Persist every traversed graph transition ID atomically; used for sticky access permissions and reconstruction, never client-supplied."
+  },
+  "effect_operations": {
+    "set": "Set a durable field in the same transaction as the triggering event.",
+    "unlock": "Enable a real UI/action; does not perform that action.",
+    "grant": "Apply referenced grant's capacity/ownership policy atomically.",
+    "reward": "Claim referenced per-character entitlement once, atomically with its quest state.",
+    "mark": "Persist evidence of a real authoritative action, not a client checkbox.",
+    "reconcile_departure": "Apply the explicitly provisional departure rule, not a generic tutorial skip.",
+    "project_journal": "Recompute text state from quest bits and current held items."
+  },
+  "uis": [
+    {
+      "id": "ui.appearance"
+    },
+    {
+      "id": "ui.experience"
+    },
+    {
+      "id": "ui.settings"
+    },
+    {
+      "id": "ui.inventory"
+    },
+    {
+      "id": "ui.skills"
+    },
+    {
+      "id": "ui.quests"
+    },
+    {
+      "id": "ui.equipment"
+    },
+    {
+      "id": "ui.equipment_stats"
+    },
+    {
+      "id": "ui.combat"
+    },
+    {
+      "id": "ui.bank"
+    },
+    {
+      "id": "ui.poll"
+    },
+    {
+      "id": "ui.account"
+    },
+    {
+      "id": "ui.logout"
+    },
+    {
+      "id": "ui.account_links"
+    },
+    {
+      "id": "ui.prayer"
+    },
+    {
+      "id": "ui.magic"
+    },
+    {
+      "id": "ui.smithing"
+    },
+    {
+      "id": "ui.cooking"
+    },
+    {
+      "id": "ui.shop"
+    },
+    {
+      "id": "ui.quest_reward"
+    },
+    {
+      "id": "ui.items_kept_on_death"
+    },
+    {
+      "id": "ui.grave"
+    },
+    {
+      "id": "ui.death_retrieval"
+    },
+    {
+      "id": "ui.music"
+    },
+    {
+      "id": "ui.emotes"
+    },
+    {
+      "id": "ui.adventure_paths"
+    }
+  ],
+  "slots": [
+    {
+      "id": "slot.head"
+    },
+    {
+      "id": "slot.cape"
+    },
+    {
+      "id": "slot.neck"
+    },
+    {
+      "id": "slot.weapon"
+    },
+    {
+      "id": "slot.body"
+    },
+    {
+      "id": "slot.shield"
+    },
+    {
+      "id": "slot.legs"
+    },
+    {
+      "id": "slot.hands"
+    },
+    {
+      "id": "slot.feet"
+    },
+    {
+      "id": "slot.ring"
+    },
+    {
+      "id": "slot.ammo"
+    }
+  ],
+  "locations": [
+    {
+      "id": "location.tutorial.start_house",
+      "description": "Starting house",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.learning_the_ropes"
+        ]
+      }
+    },
+    {
+      "id": "location.tutorial.survival",
+      "description": "Survival Expert pond and trees",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.learning_the_ropes"
+        ]
+      }
+    },
+    {
+      "id": "location.tutorial.kitchen",
+      "description": "Master Chef kitchen",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.learning_the_ropes"
+        ]
+      }
+    },
+    {
+      "id": "location.tutorial.quest_house",
+      "description": "Quest Guide house",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.learning_the_ropes"
+        ]
+      }
+    },
+    {
+      "id": "location.tutorial.mine",
+      "description": "Mining section of Tutorial Island dungeon",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.learning_the_ropes"
+        ]
+      }
+    },
+    {
+      "id": "location.tutorial.rat_cave",
+      "description": "Combat section, including distinct inside/outside pen",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_rat"
+        ]
+      }
+    },
+    {
+      "id": "location.tutorial.bank",
+      "description": "Tutorial Island bank booth and poll booth",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.learning_the_ropes"
+        ]
+      }
+    },
+    {
+      "id": "location.tutorial.account_room",
+      "description": "Account Guide room east of bank",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.learning_the_ropes"
+        ]
+      }
+    },
+    {
+      "id": "location.tutorial.chapel",
+      "description": "Brother Brace chapel",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.learning_the_ropes"
+        ]
+      }
+    },
+    {
+      "id": "location.tutorial.magic_house",
+      "description": "Magic Instructor house and chicken pen",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.learning_the_ropes"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.castle_arrival",
+      "description": "Castle-area arrival, not an exact spawn tile",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_island"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.jon_arrival",
+      "description": "Outside Sheared Ram, near Adventurer Jon",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_island"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.kitchen",
+      "description": "Castle ground-floor kitchen",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.cellar",
+      "description": "Castle cellar reached through kitchen trapdoor",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.bank",
+      "description": "Castle second floor UK / third floor US",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.lumbridge_castle"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.general_store",
+      "description": "General store north of castle",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.lumbridge_general_store"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.east_swamp_mine",
+      "description": "East Lumbridge Swamp mine",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.copper_rocks"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.west_coop",
+      "description": "Fred's chicken coop, north-west of castle",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.north_cows",
+      "description": "Dairy cow field north of Fred's coop",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.east_cows",
+      "description": "Dairy cow field across River Lum, near Gillie",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_transcript"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.wheat",
+      "description": "Wheat field near Mill Lane Mill",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.mill_ground",
+      "description": "Mill Lane Mill flour bin floor",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.mill_lane_mill"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.mill_middle",
+      "description": "Mill Lane Mill millstone floor",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.mill_lane_mill"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.mill_top",
+      "description": "Mill Lane Mill hopper and controls floor",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.mill_lane_mill"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.east_bridge_goblins",
+      "description": "Level-2 goblins east of River Lum",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      }
+    },
+    {
+      "id": "location.lumbridge.death_entrance",
+      "description": "Death's Office entrance in church graveyard",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.deaths_office"
+        ]
+      }
+    },
+    {
+      "id": "location.death.office",
+      "description": "Death's Office; separate map, not relocated into Lumbridge",
+      "position": null,
+      "binding_status": "external_source_map_required",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.deaths_office"
+        ]
+      }
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc.gielinor_guide",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.survival_expert",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.master_chef",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.quest_guide",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.mining_instructor",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.combat_instructor",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.account_guide",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.brother_brace",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.magic_instructor",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.ironman_tutor",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.adventurer_jon",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.lumbridge_guide",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.cook",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.death",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.millie_miller",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.gillie_groats",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.shopkeeper",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.tutorial_rat",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.tutorial_chicken",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.goblin.level_2",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    },
+    {
+      "id": "npc.dairy_cow",
+      "source_numeric_id": null,
+      "binding_status": "external_source_variant_required"
+    }
+  ],
+  "objects": [
+    {
+      "id": "object.tutorial.start_door",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.survival_gate",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.chef_entry",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.chef_exit",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.quest_entry",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.quest_ladder",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.mine_gate",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.rat_gate",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.combat_ladder",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.bank_booth",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.poll_booth",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.account_entry",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.account_exit",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.chapel_entry",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.chapel_exit",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.magic_entry",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tutorial.fishing_spot",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.tree.normal",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.fire.normal",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.range.tutorial",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.range.lumbridge",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.furnace.tutorial",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.anvil.tutorial",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.rock.copper",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.rock.tin",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.altar.tutorial",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.altar.lumbridge",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.mill.hopper",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.mill.controls",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.mill.flour_bin",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.mill.ladder_lower",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.mill.ladder_upper",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.lumbridge.kitchen_trapdoor",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.lumbridge.castle_stairs",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.lumbridge.bank_booth",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.lumbridge.bridge",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.death.portal",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.water_source",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.wheat",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.egg_spawn",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.pot_spawn",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    },
+    {
+      "id": "object.bucket_spawn",
+      "source_numeric_id": null,
+      "binding_status": "external_source_placement_required"
+    }
+  ],
+  "spells": [
+    {
+      "id": "spell.wind_strike"
+    },
+    {
+      "id": "spell.lumbridge_home_teleport"
+    }
+  ],
+  "prayers": [
+    {
+      "id": "prayer.thick_skin"
+    }
+  ],
+  "experience_choices": [
+    {
+      "id": "choice.experience.brand_new"
+    },
+    {
+      "id": "choice.experience.returning"
+    },
+    {
+      "id": "choice.experience.experienced"
+    }
+  ]
+}

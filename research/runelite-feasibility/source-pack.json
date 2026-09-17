@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "kind": "unchanged_source_pack",
+  "artifact_sha256": "0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5",
+  "content_revision": "m1.source-backed.v3.95f50b40601a821f",
+  "referenced_source_assets": 5010,
+  "source_bytes": 7658110,
+  "descriptor_bytes": 283075,
+  "descriptor_sha256": "ff693f357b1d105ae9f0972bf2e18c60217a440cf099ff8aee9c9b52453da1ab",
+  "strict_server_descriptor_limit_bytes_at_base": 262144,
+  "minimum_assets_object_bytes_even_if_every_asset_shared_shortest_legal_url": 267049,
+  "fits_base_server_descriptor_limit": false,
+  "source_content_changed": false,
+  "server_guards_changed": false,
+  "compatibility_verified": false
+}

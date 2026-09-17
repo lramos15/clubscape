@@ -1,0 +1,4124 @@
+{
+  "schema_version": 1,
+  "id": "contract.journey.activities",
+  "profile_ref": "profile.osrs.current_normal_f2p",
+  "scope": "Required starter activities and their shared invariants, not full-skill or all-item implementation coverage.",
+  "items": [
+    {
+      "id": "item.pickaxe.bronze",
+      "source_name": "Bronze pickaxe",
+      "stackable": false,
+      "slot_ref": "slot.weapon",
+      "base_item_value_coins": 1,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bronze_pickaxe"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants.",
+      "combat": {
+        "bonus_order": [
+          "stab",
+          "slash",
+          "crush",
+          "magic",
+          "ranged"
+        ],
+        "attack": [
+          4,
+          -2,
+          2,
+          0,
+          0
+        ],
+        "defence": [
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "melee_strength": 5,
+        "ranged_strength": 0,
+        "magic_damage_percent": 0,
+        "prayer_bonus": 0,
+        "attack_cycle_ticks": 5,
+        "base_attack_range_tiles": 1
+      }
+    },
+    {
+      "id": "item.axe.bronze",
+      "source_name": "Bronze axe",
+      "stackable": false,
+      "slot_ref": "slot.weapon",
+      "base_item_value_coins": 16,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bronze_axe"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants.",
+      "combat": {
+        "bonus_order": [
+          "stab",
+          "slash",
+          "crush",
+          "magic",
+          "ranged"
+        ],
+        "attack": [
+          -2,
+          4,
+          2,
+          0,
+          0
+        ],
+        "defence": [
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "melee_strength": 5,
+        "ranged_strength": 0,
+        "magic_damage_percent": 0,
+        "prayer_bonus": 0,
+        "attack_cycle_ticks": 5,
+        "base_attack_range_tiles": 1
+      }
+    },
+    {
+      "id": "item.tinderbox",
+      "source_name": "Tinderbox",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": 1,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tinderbox"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.fishing_net.small",
+      "source_name": "Small fishing net",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": 5,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.small_fishing_net"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.shrimps.raw",
+      "source_name": "Raw shrimps",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": 5,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.raw_shrimps"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.shrimps.cooked",
+      "source_name": "Shrimps",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": 5,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.shrimps"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.shrimps.burnt",
+      "source_name": "Burnt shrimp",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.shrimps"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.logs.normal",
+      "source_name": "Logs",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tree"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.ashes",
+      "source_name": "Ashes",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.fire"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.flour.pot",
+      "source_name": "Pot of flour",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.pot_of_flour"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.water.bucket",
+      "source_name": "Bucket of water",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bread_dough"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.bread.dough",
+      "source_name": "Bread dough",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": 4,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bread_dough"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.bread",
+      "source_name": "Bread",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": 12,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bread"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.bread.burnt",
+      "source_name": "Burnt bread",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bread"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.ore.tin",
+      "source_name": "Tin ore",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tin_rocks"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.ore.copper",
+      "source_name": "Copper ore",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.copper_rocks"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.bar.bronze",
+      "source_name": "Bronze bar",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": 8,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bronze_bar"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.hammer",
+      "source_name": "Hammer",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": 1,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.hammer"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.dagger.bronze",
+      "source_name": "Bronze dagger (unpoisoned)",
+      "stackable": false,
+      "slot_ref": "slot.weapon",
+      "base_item_value_coins": 10,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bronze_dagger"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants.",
+      "combat": {
+        "bonus_order": [
+          "stab",
+          "slash",
+          "crush",
+          "magic",
+          "ranged"
+        ],
+        "attack": [
+          4,
+          2,
+          -4,
+          1,
+          0
+        ],
+        "defence": [
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "melee_strength": 3,
+        "ranged_strength": 0,
+        "magic_damage_percent": 0,
+        "prayer_bonus": 0,
+        "attack_cycle_ticks": 4,
+        "base_attack_range_tiles": 1
+      }
+    },
+    {
+      "id": "item.sword.bronze",
+      "source_name": "Bronze sword",
+      "stackable": false,
+      "slot_ref": "slot.weapon",
+      "base_item_value_coins": 26,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bronze_sword"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants.",
+      "combat": {
+        "bonus_order": [
+          "stab",
+          "slash",
+          "crush",
+          "magic",
+          "ranged"
+        ],
+        "attack": [
+          4,
+          3,
+          -2,
+          0,
+          0
+        ],
+        "defence": [
+          0,
+          2,
+          1,
+          0,
+          0
+        ],
+        "melee_strength": 5,
+        "ranged_strength": 0,
+        "magic_damage_percent": 0,
+        "prayer_bonus": 0,
+        "attack_cycle_ticks": 4,
+        "base_attack_range_tiles": 1
+      }
+    },
+    {
+      "id": "item.shield.wooden",
+      "source_name": "Wooden shield",
+      "stackable": false,
+      "slot_ref": "slot.shield",
+      "base_item_value_coins": 20,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.wooden_shield"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants.",
+      "combat": {
+        "bonus_order": [
+          "stab",
+          "slash",
+          "crush",
+          "magic",
+          "ranged"
+        ],
+        "attack": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "defence": [
+          4,
+          5,
+          3,
+          1,
+          4
+        ],
+        "melee_strength": 0,
+        "ranged_strength": 0,
+        "magic_damage_percent": 0,
+        "prayer_bonus": 0,
+        "attack_cycle_ticks": null,
+        "base_attack_range_tiles": null
+      }
+    },
+    {
+      "id": "item.shortbow",
+      "source_name": "Shortbow",
+      "stackable": false,
+      "slot_ref": "slot.weapon",
+      "base_item_value_coins": 50,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.shortbow"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants.",
+      "occupies_slot_refs": [
+        "slot.weapon",
+        "slot.shield"
+      ],
+      "combat": {
+        "bonus_order": [
+          "stab",
+          "slash",
+          "crush",
+          "magic",
+          "ranged"
+        ],
+        "attack": [
+          0,
+          0,
+          0,
+          0,
+          8
+        ],
+        "defence": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "melee_strength": 0,
+        "ranged_strength": 0,
+        "magic_damage_percent": 0,
+        "prayer_bonus": 0,
+        "attack_cycle_ticks": 4,
+        "base_attack_range_tiles": 7
+      }
+    },
+    {
+      "id": "item.arrow.bronze",
+      "source_name": "Bronze arrow (unpoisoned)",
+      "stackable": true,
+      "slot_ref": "slot.ammo",
+      "base_item_value_coins": 1,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bronze_arrow"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants.",
+      "combat": {
+        "bonus_order": [
+          "stab",
+          "slash",
+          "crush",
+          "magic",
+          "ranged"
+        ],
+        "attack": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "defence": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "melee_strength": 0,
+        "ranged_strength": 7,
+        "magic_damage_percent": 0,
+        "prayer_bonus": 0,
+        "attack_cycle_ticks": null,
+        "base_attack_range_tiles": null
+      }
+    },
+    {
+      "id": "item.rune.air",
+      "source_name": "Air rune",
+      "stackable": true,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.inventory"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.rune.mind",
+      "source_name": "Mind rune",
+      "stackable": true,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.inventory"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.rune.water",
+      "source_name": "Water rune",
+      "stackable": true,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.inventory"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.rune.earth",
+      "source_name": "Earth rune",
+      "stackable": true,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.inventory"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.rune.body",
+      "source_name": "Body rune",
+      "stackable": true,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.inventory"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.bucket",
+      "source_name": "Bucket",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": 2,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bucket"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.pot",
+      "source_name": "Pot",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": 1,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.pot"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.coins",
+      "source_name": "Coins",
+      "stackable": true,
+      "slot_ref": null,
+      "base_item_value_coins": 1,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.inventory"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.egg",
+      "source_name": "Egg",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.egg"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.milk.bucket",
+      "source_name": "Bucket of milk",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": 6,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bucket_of_milk"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.milk.bottomless_bucket",
+      "source_name": "Bottomless bucket of milk",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.grain",
+      "source_name": "Grain",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.grain"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.bones.tutorial",
+      "source_name": "Bones (Tutorial Island), normal not 2020 variant",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": 1,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_bones"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.bones",
+      "source_name": "Bones",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bones"
+        ]
+      },
+      "binding_note": "Bind exact unnoted source definition from the chosen runtime; do not conflate visually similar variants."
+    },
+    {
+      "id": "item.shield.bronze_square",
+      "source_name": "Bronze sq shield",
+      "stackable": false,
+      "slot_ref": "slot.shield",
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.spear.bronze",
+      "source_name": "Bronze spear",
+      "stackable": false,
+      "slot_ref": "slot.weapon",
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.bolts.bronze",
+      "source_name": "Bronze bolts",
+      "stackable": true,
+      "slot_ref": "slot.ammo",
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.goblin_book",
+      "source_name": "Goblin book",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.goblin_mail",
+      "source_name": "Goblin mail",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.chefs_hat",
+      "source_name": "Chef's hat",
+      "stackable": false,
+      "slot_ref": "slot.head",
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.beer",
+      "source_name": "Beer",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.brass_necklace",
+      "source_name": "Brass necklace",
+      "stackable": false,
+      "slot_ref": "slot.neck",
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.talisman.air",
+      "source_name": "Air talisman",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.energy_potion.one_dose",
+      "source_name": "Energy potion(1)",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.energy_potion.two_dose",
+      "source_name": "Energy potion(2)",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.energy_potion.four_dose",
+      "source_name": "Energy potion(4)",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.clue.beginner",
+      "source_name": "Clue scroll (beginner), exact variant externally bound",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.clue.easy",
+      "source_name": "Clue scroll (easy), exact variant externally bound",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.ensouled_goblin_head",
+      "source_name": "Ensouled goblin head",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    },
+    {
+      "id": "item.goblin_champion_scroll",
+      "source_name": "Goblin champion scroll",
+      "stackable": false,
+      "slot_ref": null,
+      "base_item_value_coins": null,
+      "runtime_numeric_id": null,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.goblin"
+        ]
+      },
+      "binding_note": "Required drop-result identity. Stack/equip hints are not item-definition evidence; bind full definition before enabling its equipment/consumption behavior."
+    }
+  ],
+  "rules": [
+    {
+      "id": "rule.time.tick",
+      "family": "time",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": []
+      },
+      "contract": [
+        "Use a 600 ms authoritative simulation tick; don't speed time up for a small population.",
+        "Server actions become eligible at the next processing tick; local tab/context-menu rendering is not itself a server action.",
+        "The ordering of shared operations is deterministic and persisted, not a claim that this document has captured every OSRS PID tie."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.game_tick"
+        ]
+      },
+      "tick_ms": 600
+    },
+    {
+      "id": "rule.movement.path",
+      "family": "movement",
+      "event_ref": "event.movement.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.destination_in_supported_source_area",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Use real mapped tiles/floors, object footprints, walls and corner blockers.",
+        "BFS neighbor order is W,E,S,N,SW,SE,NW,NE; shortest path first within a 128x128 grid centered as specified by source.",
+        "Requested object south-west tile must lie in the 101x101 candidate area; unreachable fallback searches 21x21 around it, path length <100, minimizing squared destination distance then path length; tie iteration west then south.",
+        "Retain at most 25 path corners. Recheck actual walk edges as the environment changes.",
+        "Moving toward an unreachable interactable may stop nearby; it does not cause the interaction's success event.",
+        "NPC/player targets may repath each tick; static unreachable object/tile targets stop. Diagonal corner clipping and attacks through closed blockers are forbidden."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.pathfinding"
+        ]
+      },
+      "neighbor_order": [
+        "W",
+        "E",
+        "S",
+        "N",
+        "SW",
+        "SE",
+        "NW",
+        "NE"
+      ],
+      "binding_refs": [
+        "binding.world.source_layout"
+      ]
+    },
+    {
+      "id": "rule.movement.step",
+      "family": "movement",
+      "event_ref": "event.movement.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.same_plane",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.destination_walkable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.crossed_edges_clear",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.diagonal_cardinal_edges_clear",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Walking consumes one adjacent legal step per tick. Running consumes up to two legal adjacent steps, checking BOTH edges and intermediate tile.",
+        "A ladder/stair changes plane or dungeon coordinate via its source link only after approach; a plane change is never inferred from x/y proximity.",
+        "A closed tutorial gate additionally needs its tutorial permission even if a client predicts the open object.",
+        "Projectile/line-of-sight masks differ from walk masks: the rat fence can block walking while permitting an allowed shot."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.pathfinding",
+          "source.wiki.game_tick"
+        ]
+      },
+      "walk_tiles_per_tick": 1,
+      "run_tiles_per_tick": 2,
+      "binding_refs": [
+        "binding.world.source_layout"
+      ]
+    },
+    {
+      "id": "rule.movement.energy",
+      "family": "movement",
+      "event_ref": "event.setting.changed",
+      "guard": {
+        "all": []
+      },
+      "contract": [
+        "Maximum 10000 units; UI floors units/100. Switching run on requires >=100 units. A one-step walk does not spend run energy even with run enabled.",
+        "On two-step running ticks apply current post-2025 weight/agility drain. Inventory and equipped weight count, clamped 0..64 kg.",
+        "When not running and eligible, recover energy. No offline recovery. At exhaustion run switches off.",
+        "Death and quest completion restore run energy. No unconditional infinite running in the tutorial."
+      ],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.energy"
+        ],
+        "assumption_refs": [
+          "assumption.run_rounding"
+        ]
+      },
+      "formula_refs": [
+        "formula.run.drain",
+        "formula.run.recovery"
+      ],
+      "maximum_units": 10000
+    },
+    {
+      "id": "rule.inventory.capacity",
+      "family": "inventory",
+      "event_ref": "event.inventory.pickup_requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quantity",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.owned_or_pickable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.result_fits",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "28 backpack slots. Each ordinary unstackable unit consumes one slot; an existing compatible stack consumes no additional slot.",
+        "An equipped object is not also in inventory. Note and unnoted forms have distinct source identities.",
+        "No negative quantity, stack overflow, or silent replacement of another item.",
+        "If a one-item pickup cannot fit, keep the item on the ground and make no inventory or XP mutation.",
+        "Take stackable quantities only up to the source maximum; overflow is a rejected transaction rather than integer wrap."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.inventory",
+          "source.wiki.stackable_items",
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "slots": 28,
+      "maximum_stack": 2147483647
+    },
+    {
+      "id": "rule.inventory.drop",
+      "family": "inventory",
+      "event_ref": "event.inventory.drop_requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quantity",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.owns_quantity",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Move ownership from inventory to a ground instance, not a second copy. Picking back up does not earn XP.",
+        "Tutorial drops despawn after 30 seconds (50 ticks), before other players could see them. Tutorial drop trading cannot work.",
+        "Mainland ordinary drop visibility/expiry requires the bound ground-item policy; do not use a grave as an ordinary dropped-item bag."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_island",
+          "source.wiki.inventory"
+        ]
+      },
+      "tutorial_despawn_ticks": 50,
+      "mainland_ordinary_drop_expiry_ticks": null
+    },
+    {
+      "id": "rule.equipment.equip",
+      "family": "equipment",
+      "event_ref": "event.equipment.equip_requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.item_owned_in_inventory",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.level_requirements_met",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.equipment_action_unlocked",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.result_fits",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Move the item to its source slot and return replaced equipment to inventory atomically.",
+        "Shortbow occupies weapon+shield. Equipping it with both occupied and a full inventory fails; freeing one extra slot permits the swap.",
+        "Ammunition is usable only when equipped in ammo; arrows in the backpack do not fire.",
+        "Equipping another weapon into a two-handed setup releases the weapon; equipping a shield unequips the bow.",
+        "Tools may be used from backpack or equipped; wielding a bronze pickaxe is not required to mine.",
+        "On Tutorial Island equipping is denied before Equipment Stats instruction, not merely before receiving a weapon."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.equipment",
+          "source.wiki.tutorial_transcript",
+          "source.wiki.bronze_pickaxe"
+        ]
+      }
+    },
+    {
+      "id": "rule.equipment.unequip",
+      "family": "equipment",
+      "event_ref": "event.equipment.unequip_requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.slot_owned",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.result_fits",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "With no free space/compatible stack, leave equipment unchanged and show full-inventory feedback.",
+        "Unequipping ammunition merges a compatible existing inventory stack rather than requiring a new slot."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.equipment",
+          "source.wiki.tutorial_transcript",
+          "source.wiki.inventory"
+        ]
+      }
+    },
+    {
+      "id": "rule.xp.level",
+      "family": "xp",
+      "event_ref": "event.activity.roll",
+      "guard": {
+        "all": []
+      },
+      "contract": [
+        "XP is integer tenths, never floats in durable state. Skill level is computed from cumulative thresholds, not number of actions.",
+        "Global XP cap is 2000000000 tenths; later actions still function without adding XP.",
+        "Displayed XP is floor(xp_tenths/10); displayed drops are the change in displayed total, so fractional awards accumulate.",
+        "Use the source cumulative level formula, not a constant 100 XP per level."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.experience"
+        ]
+      },
+      "formula_refs": [
+        "formula.xp.level_threshold"
+      ],
+      "thresholds_tenths": {
+        "1": 0,
+        "2": 830,
+        "3": 1740,
+        "4": 2760,
+        "5": 3880,
+        "10": 11540
+      },
+      "maximum_xp_tenths": 2000000000
+    },
+    {
+      "id": "rule.tutorial.xp_cap",
+      "family": "tutorial",
+      "event_ref": "event.activity.roll",
+      "guard": {
+        "all": [
+          {
+            "path": "state.tutorial.departed",
+            "op": "eq",
+            "value": false
+          }
+        ]
+      },
+      "contract": [
+        "Only the listed source skills can train on the island, only to level 3. Hitpoints XP remains 11540 regardless of damage dealt.",
+        "Choose XP boundary policy explicitly; don't replace it with source-claimed 174.0 XP.",
+        "Finishing Learning the Ropes before departure does NOT lift the cap. Successful mainland teleport does.",
+        "Changing account experience choice, reconnecting or casting at an off-island target cannot bypass the cap."
+      ],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_island",
+          "source.wiki.copper_rocks"
+        ],
+        "assumption_refs": [
+          "assumption.tutorial_xp_boundary"
+        ]
+      },
+      "skill_refs": [
+        "skill.attack",
+        "skill.strength",
+        "skill.defence",
+        "skill.ranged",
+        "skill.prayer",
+        "skill.magic",
+        "skill.mining",
+        "skill.smithing",
+        "skill.fishing",
+        "skill.cooking",
+        "skill.firemaking",
+        "skill.woodcutting"
+      ],
+      "level_cap": 3,
+      "hp_xp_award_tenths": 0,
+      "cap_below_next_level_tenths": 2759
+    },
+    {
+      "id": "rule.tutorial.restrictions",
+      "family": "tutorial",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.tutorial.departed",
+            "op": "eq",
+            "value": false
+          }
+        ]
+      },
+      "contract": [
+        "Deny early fishing/chopping/mining/smelting/smithing/equipping until the corresponding shared lesson action unlocks.",
+        "Reject oak chopping (requires 15) and smithing anything except a bronze dagger even if a character somehow has materials.",
+        "Starting-house, survival, Chef, Quest ladder, mine gate, combat ladder, bank/account and chapel exits are guarded by their actual lesson graph.",
+        "Only one credited melee rat kill, then one credited ranged rat kill advances. Further melee after first kill is blocked; further ranged after second kill is blocked.",
+        "After ranged gear is granted the rat pen cannot be re-entered. Arrows must be fired from outside; actually moving to the gate is not a ranged hit.",
+        "A chicken cannot be attacked by melee/ranged, and only the first Wind Strike on a chicken is allowed. Magic on rats after spell unlock is source-described optional training, still capped.",
+        "Public chat, trading, poll voting and Node crossing by a normal account are unavailable. Poll inspection and account-information dialogue are still mandatory.",
+        "Damage to the player is nonfatal: HP may reach 1, never 0. This protection ends on departure, not at the tutorial quest reward."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript",
+          "source.wiki.tutorial_island"
+        ]
+      },
+      "tutorial_minimum_hp": 1
+    },
+    {
+      "id": "rule.mining.copper",
+      "family": "mining",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.levels.mining",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.tools.usable_pickaxe",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.target_ready",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.lesson_action_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "A success consumes the rock's available ore, adds one unnoted ore and awards XP once. A failed roll adds nothing and keeps trying while valid.",
+        "A competing depletion before this actor's successful commit gives no ore or XP. Revalidate the source rock generation.",
+        "Bronze pickaxe speed is 8 ticks, not a guaranteed ore every tick. Mining level affects success, pickaxe tier affects cadence.",
+        "A full inventory stops gathering with explicit feedback, without depleting the rock or adding XP.",
+        "For mainland copper choose the existing East Lumbridge Swamp mine and legitimate travel/bank route, not a rock placed beside the tutorial exit."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.copper_rocks",
+          "source.wiki.bronze_pickaxe",
+          "source.wiki.mining"
+        ]
+      },
+      "skill_ref": "skill.mining",
+      "required_level": 1,
+      "produced": [
+        {
+          "item_ref": "item.ore.copper",
+          "quantity": 1
+        }
+      ],
+      "consumed": [],
+      "xp_awards": [
+        {
+          "skill_ref": "skill.mining",
+          "xp_tenths": 175
+        }
+      ],
+      "roll": {
+        "formula_ref": "formula.skilling.success",
+        "low": 100,
+        "high": 350,
+        "denominator": 256
+      },
+      "timing": {
+        "cycle_ticks": 8,
+        "resource_respawn_ticks": 4,
+        "first_roll_basis_ref": "assumption.environment_timers"
+      },
+      "depletion": "one_success",
+      "object_ref": "object.rock.copper"
+    },
+    {
+      "id": "rule.mining.tin",
+      "family": "mining",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.levels.mining",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.tools.usable_pickaxe",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.target_ready",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.lesson_action_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "A success consumes the rock's available ore, adds one unnoted ore and awards XP once. A failed roll adds nothing and keeps trying while valid.",
+        "A competing depletion before this actor's successful commit gives no ore or XP. Revalidate the source rock generation.",
+        "Bronze pickaxe speed is 8 ticks, not a guaranteed ore every tick. Mining level affects success, pickaxe tier affects cadence.",
+        "A full inventory stops gathering with explicit feedback, without depleting the rock or adding XP.",
+        "For mainland copper choose the existing East Lumbridge Swamp mine and legitimate travel/bank route, not a rock placed beside the tutorial exit."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tin_rocks",
+          "source.wiki.bronze_pickaxe",
+          "source.wiki.mining"
+        ]
+      },
+      "skill_ref": "skill.mining",
+      "required_level": 1,
+      "produced": [
+        {
+          "item_ref": "item.ore.tin",
+          "quantity": 1
+        }
+      ],
+      "consumed": [],
+      "xp_awards": [
+        {
+          "skill_ref": "skill.mining",
+          "xp_tenths": 175
+        }
+      ],
+      "roll": {
+        "formula_ref": "formula.skilling.success",
+        "low": 100,
+        "high": 350,
+        "denominator": 256
+      },
+      "timing": {
+        "cycle_ticks": 8,
+        "resource_respawn_ticks": 4,
+        "first_roll_basis_ref": "assumption.environment_timers"
+      },
+      "depletion": "one_success",
+      "object_ref": "object.rock.tin"
+    },
+    {
+      "id": "rule.woodcutting.normal",
+      "family": "woodcutting",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.levels.woodcutting",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.tools.usable_axe",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.target_ready",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.lesson_action_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Use bronze axe from inventory/equipment. Each successful roll produces one log and 25 XP; an ordinary tree always becomes a stump after one log.",
+        "No forestry timer/prolonged multi-log behavior is substituted for an ordinary tree.",
+        "Failed rolls neither produce logs nor XP; inventory fullness, walking away or another player's depletion stops/revalidates the action."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tree",
+          "source.wiki.action_lengths"
+        ]
+      },
+      "skill_ref": "skill.woodcutting",
+      "required_level": 1,
+      "produced": [
+        {
+          "item_ref": "item.logs.normal",
+          "quantity": 1
+        }
+      ],
+      "consumed": [],
+      "xp_awards": [
+        {
+          "skill_ref": "skill.woodcutting",
+          "xp_tenths": 250
+        }
+      ],
+      "roll": {
+        "formula_ref": "formula.skilling.success",
+        "low": 64,
+        "high": 200,
+        "denominator": 256
+      },
+      "timing": {
+        "cycle_ticks": 4,
+        "respawn_ticks_inclusive": [
+          60,
+          100
+        ],
+        "phase_assumption_ref": "assumption.environment_timers"
+      },
+      "object_ref": "object.tree.normal"
+    },
+    {
+      "id": "rule.fishing.shrimps",
+      "family": "fishing",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.levels.fishing",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.tools.small_net_in_inventory",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.correct_fishing_spot",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.lesson_action_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "One net, no bait; a successful shrimp roll awards one raw shrimp and 10 Fishing XP.",
+        "A failed 6-tick resource roll awards nothing. Do not interpret the fishing animation as a catch.",
+        "At level 15+ small-net fishing rolls anchovies first (low24/high128), then shrimp if that fails; do not keep the tutorial's shrimp-only filter on mainland fishing forever.",
+        "Moving fishing spots must remain source-bound entities; invalid/relocated spots stop or repath the action."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.raw_shrimps",
+          "source.wiki.action_lengths"
+        ]
+      },
+      "skill_ref": "skill.fishing",
+      "required_level": 1,
+      "produced": [
+        {
+          "item_ref": "item.shrimps.raw",
+          "quantity": 1
+        }
+      ],
+      "consumed": [],
+      "xp_awards": [
+        {
+          "skill_ref": "skill.fishing",
+          "xp_tenths": 100
+        }
+      ],
+      "roll": {
+        "formula_ref": "formula.skilling.success",
+        "low": 48,
+        "high": 256,
+        "denominator": 256,
+        "domain": "Fishing 1..14; tutorial cap<=3"
+      },
+      "timing": {
+        "cycle_ticks": 6,
+        "phase_assumption_ref": "assumption.environment_timers"
+      },
+      "object_ref": "object.tutorial.fishing_spot"
+    },
+    {
+      "id": "rule.firemaking.normal",
+      "family": "firemaking",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.levels.firemaking",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.tools.tinderbox_in_inventory",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.owns_log",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.valid_fire_tile",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.lesson_action_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Using tinderbox/logs places that owned log on the ground and attempts ignition. Failure is not destruction: the log remains to retry/pick up.",
+        "Success replaces the log with a real fire and grants 40 Firemaking XP exactly once.",
+        "Fire blocks another fire at that position. If two actors compete, only the successful owner burns their log; others' logs remain.",
+        "After ignition try stepping W,E,S,N in that order; if all four blocked remain on the fire tile. Never teleport through a wall.",
+        "When the fire expires it becomes ashes. Cooking requires it still exists at operation time; obtain another log/fire if it expires.",
+        "Normal-log ignition probability is a crowdsourced assumption, not an asserted verified 100% success."
+      ],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.firemaking",
+          "source.wiki.fire"
+        ],
+        "assumption_refs": [
+          "assumption.fire_success",
+          "assumption.environment_timers"
+        ]
+      },
+      "skill_ref": "skill.firemaking",
+      "required_level": 1,
+      "consumed": [
+        {
+          "item_ref": "item.logs.normal",
+          "quantity": 1
+        }
+      ],
+      "produced_object_ref": "object.fire.normal",
+      "expired_item_ref": "item.ashes",
+      "xp_awards": [
+        {
+          "skill_ref": "skill.firemaking",
+          "xp_tenths": 400
+        }
+      ],
+      "roll": {
+        "formula_ref": "formula.skilling.success",
+        "low": 64,
+        "high": 512,
+        "denominator": 256
+      },
+      "timing": {
+        "attempt_cycle_ticks": 4,
+        "lifetime_ticks_inclusive": [
+          100,
+          199
+        ]
+      },
+      "step_priority": [
+        "W",
+        "E",
+        "S",
+        "N"
+      ]
+    },
+    {
+      "id": "rule.cooking.dough",
+      "family": "cooking",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.inventory.flour",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.inventory.water_bucket",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.result_fits",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.lesson_action_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Use flour on bucket of water or vice versa. Dough is a material conversion, not bread and not quest delivery.",
+        "No Cooking XP for mixing dough. Provisionally return empty pot and bucket, requiring one net additional slot.",
+        "Full inventory must not consume both ingredients and silently drop the dough."
+      ],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.bread_dough"
+        ],
+        "assumption_refs": [
+          "assumption.dough_containers"
+        ]
+      },
+      "consumed": [
+        {
+          "item_ref": "item.flour.pot",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.water.bucket",
+          "quantity": 1
+        }
+      ],
+      "produced": [
+        {
+          "item_ref": "item.bread.dough",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.pot",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.bucket",
+          "quantity": 1
+        }
+      ],
+      "xp_awards": [],
+      "timing": {
+        "single_conversion_ticks": 1
+      },
+      "deterministic": true
+    },
+    {
+      "id": "rule.cooking.shrimps",
+      "family": "cooking",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.levels.cooking",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.owns_raw_input",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.facility_permits_recipe",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.lesson_action_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Consume one raw input; success produces the cooked variant and the listed XP, burn produces its burnt variant and zero XP.",
+        "Bread requires a range. Shrimp can use a fire or range; its published ordinary fire/range success parameters are equal.",
+        "The Lumbridge Cook-o-matic range requires Cook's Assistant completion and uses its separate lower-burn parameters.",
+        "A disappearing fire/invalid range at action time cancels before consumption; walking interrupts the queue.",
+        "Tutorial progress listens to real cooking outcomes; do not replace normal recipes with an 'advance tutorial' command."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.shrimps",
+          "source.wiki.cooking",
+          "source.wiki.action_lengths"
+        ]
+      },
+      "skill_ref": "skill.cooking",
+      "required_level": 1,
+      "consumed": [
+        {
+          "item_ref": "item.shrimps.raw",
+          "quantity": 1
+        }
+      ],
+      "produced": [
+        {
+          "item_ref": "item.shrimps.cooked",
+          "quantity": 1
+        }
+      ],
+      "failure_produced": [
+        {
+          "item_ref": "item.shrimps.burnt",
+          "quantity": 1
+        }
+      ],
+      "xp_awards": [
+        {
+          "skill_ref": "skill.cooking",
+          "xp_tenths": 300
+        }
+      ],
+      "failure_xp_tenths": 0,
+      "roll": {
+        "formula_ref": "formula.skilling.success",
+        "low": 128,
+        "high": 512,
+        "denominator": 256,
+        "lumbridge_range": {
+          "low": 138,
+          "high": 532,
+          "requires_quest_ref": "quest.cooks_assistant"
+        }
+      },
+      "timing": {
+        "make_x_first_ticks": 3,
+        "make_x_repeat_ticks": 4,
+        "single_ticks": null,
+        "note": "Source recipe/action table distinguishes single and Make-X. Null first-phase parameters are not an instant-action instruction."
+      }
+    },
+    {
+      "id": "rule.cooking.bread",
+      "family": "cooking",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.levels.cooking",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.owns_raw_input",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.facility_permits_recipe",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.lesson_action_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Consume one raw input; success produces the cooked variant and the listed XP, burn produces its burnt variant and zero XP.",
+        "Bread requires a range. Shrimp can use a fire or range; its published ordinary fire/range success parameters are equal.",
+        "The Lumbridge Cook-o-matic range requires Cook's Assistant completion and uses its separate lower-burn parameters.",
+        "A disappearing fire/invalid range at action time cancels before consumption; walking interrupts the queue.",
+        "Tutorial progress listens to real cooking outcomes; do not replace normal recipes with an 'advance tutorial' command."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bread",
+          "source.wiki.cooking",
+          "source.wiki.action_lengths"
+        ]
+      },
+      "skill_ref": "skill.cooking",
+      "required_level": 1,
+      "consumed": [
+        {
+          "item_ref": "item.bread.dough",
+          "quantity": 1
+        }
+      ],
+      "produced": [
+        {
+          "item_ref": "item.bread",
+          "quantity": 1
+        }
+      ],
+      "failure_produced": [
+        {
+          "item_ref": "item.bread.burnt",
+          "quantity": 1
+        }
+      ],
+      "xp_awards": [
+        {
+          "skill_ref": "skill.cooking",
+          "xp_tenths": 400
+        }
+      ],
+      "failure_xp_tenths": 0,
+      "roll": {
+        "formula_ref": "formula.skilling.success",
+        "low": 118,
+        "high": 492,
+        "denominator": 256,
+        "lumbridge_range": {
+          "low": 128,
+          "high": 512,
+          "requires_quest_ref": "quest.cooks_assistant"
+        }
+      },
+      "timing": {
+        "make_x_first_ticks": null,
+        "make_x_repeat_ticks": 4,
+        "single_ticks": 1,
+        "note": "Source recipe/action table distinguishes single and Make-X. Null first-phase parameters are not an instant-action instruction."
+      }
+    },
+    {
+      "id": "rule.smelting.bronze",
+      "family": "smelting",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.levels.smithing",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.inventory.tin_ore",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.inventory.copper_ore",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.at_furnace",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.lesson_action_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Consumes one tin and one copper to produce one bronze bar. This is deterministic: bronze smelting never uses iron's failure chance.",
+        "Smithing XP is 6.2, not 6.25. A full inventory can still smelt because two slots become one.",
+        "Anvil use cannot substitute for furnace use. Missing either ore leaves all items and XP unchanged."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bronze_bar",
+          "source.wiki.smithing"
+        ]
+      },
+      "skill_ref": "skill.smithing",
+      "required_level": 1,
+      "consumed": [
+        {
+          "item_ref": "item.ore.tin",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.ore.copper",
+          "quantity": 1
+        }
+      ],
+      "produced": [
+        {
+          "item_ref": "item.bar.bronze",
+          "quantity": 1
+        }
+      ],
+      "xp_awards": [
+        {
+          "skill_ref": "skill.smithing",
+          "xp_tenths": 62
+        }
+      ],
+      "deterministic": true,
+      "timing": {
+        "single_ticks": 6,
+        "make_x_first_ticks": 4,
+        "make_x_repeat_ticks": 5
+      },
+      "object_ref": "object.furnace.tutorial"
+    },
+    {
+      "id": "rule.smithing.bronze_dagger",
+      "family": "smithing",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.levels.smithing",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.inventory.bronze_bar",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.inventory.hammer",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.at_anvil",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.lesson_action_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "The smithing menu must select a dagger; consume one bar, keep hammer, produce one dagger and 12.5 Smithing XP.",
+        "Requires a real anvil. No random failure chance. A full inventory can convert bar to dagger in place.",
+        "On Tutorial Island other bronze products remain forbidden despite shared-system recipes existing elsewhere."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bronze_dagger",
+          "source.wiki.smithing",
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "skill_ref": "skill.smithing",
+      "required_level": 1,
+      "consumed": [
+        {
+          "item_ref": "item.bar.bronze",
+          "quantity": 1
+        }
+      ],
+      "produced": [
+        {
+          "item_ref": "item.dagger.bronze",
+          "quantity": 1
+        }
+      ],
+      "tools": [
+        {
+          "item_ref": "item.hammer",
+          "quantity": 1
+        }
+      ],
+      "xp_awards": [
+        {
+          "skill_ref": "skill.smithing",
+          "xp_tenths": 125
+        }
+      ],
+      "deterministic": true,
+      "timing": {
+        "cycle_ticks": 5,
+        "menu_close_ticks": 1
+      },
+      "object_ref": "object.anvil.tutorial"
+    },
+    {
+      "id": "rule.combat.melee",
+      "family": "melee",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.attackable_npc",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.melee_reach_and_edges_clear",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.attack_cooldown_ready",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.lesson_action_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Use the selected source weapon category, attack style, bonuses, effective levels, opposed accuracy rolls and damage roll; not guaranteed damage each tick.",
+        "Player successful damage roll 0 becomes 1; misses remain 0. Cap actual damage at target HP and record actual hitpoints removed.",
+        "Dagger/sword/unarmed attack cycle 4 ticks; axe/pickaxe 5. Movement, eating and switching targets interact with the shared action queue, never grant a kill directly.",
+        "Accurate trains Attack, aggressive Strength, defensive Defence, 4 XP per damage. Only weapon categories that offer controlled may split XP.",
+        "Normal-account mainland damage also awards HP XP. Tutorial suppresses HP XP and clamps incoming lethal damage to keep the player at 1 HP."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.melee_dps",
+          "source.wiki.combat_options",
+          "source.wiki.action_lengths"
+        ]
+      },
+      "formula_refs": [
+        "formula.combat.effective_level",
+        "formula.combat.maximum_hit",
+        "formula.combat.accuracy",
+        "formula.combat.damage"
+      ],
+      "xp_per_damage_tenths": 40,
+      "hp_xp_formula_ref": "formula.combat.hp_xp"
+    },
+    {
+      "id": "rule.combat.ranged",
+      "family": "ranged",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.equipment.weapon",
+            "op": "eq",
+            "value": "item.shortbow"
+          },
+          {
+            "path": "state.equipment.ammo",
+            "op": "eq",
+            "value": "item.arrow.bronze"
+          },
+          {
+            "path": "state.equipment.ammo_quantity",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.line_of_sight",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.within_attack_range",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.attack_cooldown_ready",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.lesson_action_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Shortbow requires equipped compatible arrows. Consume one ammo unit at an accepted shot, including a miss; a rejected request consumes none.",
+        "Accurate grants +3 effective Ranged and uses 4 ticks; rapid has no style level boost and uses 3 ticks; longrange uses 4 ticks and range 9 rather than 7.",
+        "Accurate/rapid give 4 Ranged XP per damage. Longrange gives 2 Ranged +2 Defence XP per damage; neither bypasses tutorial caps.",
+        "Outside-pen shots require true projectile LOS even though melee traversal is blocked.",
+        "Without an Ava device, each shot removes one equipped arrow: 20% are lost, otherwise a ground arrow can be recovered. Arrow loss is independent of accuracy.",
+        "Projectile launch/impact requires source bindings. There is no assumption that every arrow reappears or that every shot is immediately applied."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.shortbow",
+          "source.wiki.bronze_arrow",
+          "source.wiki.arrows",
+          "source.wiki.combat_options",
+          "source.wiki.ranged_dps"
+        ]
+      },
+      "formula_refs": [
+        "formula.combat.effective_level",
+        "formula.combat.maximum_hit",
+        "formula.combat.accuracy"
+      ],
+      "attack_range_tiles": {
+        "accurate": 7,
+        "rapid": 7,
+        "longrange": 9
+      },
+      "cycle_ticks": {
+        "accurate": 4,
+        "rapid": 3,
+        "longrange": 4
+      },
+      "ammo_per_shot": 1,
+      "hp_xp_formula_ref": "formula.combat.hp_xp",
+      "projectile_binding_ref": "binding.combat.projectile_timing",
+      "ammunition_break_probability": {
+        "numerator": 1,
+        "denominator": 5
+      }
+    },
+    {
+      "id": "rule.magic.wind_strike",
+      "family": "magic",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.levels.magic",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.inventory.air_runes",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.inventory.mind_runes",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.attackable_npc",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.line_of_sight",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.within_attack_range",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.attack_cooldown_ready",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.lesson_action_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "A valid cast consumes 1 air +1 mind rune and awards 5.5 base Magic XP even on a splash. Reject early/invalid/no-rune casts without consumption or XP.",
+        "Normal casting adds 2 Magic XP per HP damage. HP XP also applies on mainland only. Defensive casting adds 1 Defence and the source 1.33 Magic term per damage; it is not selected implicitly.",
+        "At Magic 1..4 base max hit=2; 5..8=4; 9..12=6; >=13=8. This post-2024 elemental scaling must not be replaced with permanent max hit 2.",
+        "NPC Magic defence uses Magic level +9, not Defence level. Apply elemental weakness only if the selected source variant actually has one.",
+        "A valid tutorial chicken cast, not an arbitrary magic animation, emits the tutorial completion event. Don't require a chicken kill."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.wind_strike",
+          "source.wiki.combat_spells",
+          "source.wiki.magic",
+          "source.wiki.magic_dps"
+        ]
+      },
+      "spell_ref": "spell.wind_strike",
+      "consumed": [
+        {
+          "item_ref": "item.rune.air",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.rune.mind",
+          "quantity": 1
+        }
+      ],
+      "base_xp_awards": [
+        {
+          "skill_ref": "skill.magic",
+          "xp_tenths": 55
+        }
+      ],
+      "damage_magic_xp_tenths": 20,
+      "attack_range_tiles": 10,
+      "cycle_ticks": 5,
+      "base_max_hit_levels": [
+        {
+          "minimum_level": 1,
+          "max_hit": 2
+        },
+        {
+          "minimum_level": 5,
+          "max_hit": 4
+        },
+        {
+          "minimum_level": 9,
+          "max_hit": 6
+        },
+        {
+          "minimum_level": 13,
+          "max_hit": 8
+        }
+      ],
+      "formula_refs": [
+        "formula.combat.magic_attack",
+        "formula.combat.magic_defence_npc",
+        "formula.combat.accuracy"
+      ],
+      "hp_xp_formula_ref": "formula.combat.hp_xp",
+      "projectile_binding_ref": "binding.combat.projectile_timing"
+    },
+    {
+      "id": "rule.magic.home_teleport",
+      "family": "magic",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.not_in_combat",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.home_teleport_ready",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.destination_authorized",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.spell_unlocked",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "No rune cost, no Magic XP, no Magic level requirement. Default animation takes 24 ticks; cooldown is 3000 ticks.",
+        "Combat prevents starting and interrupts the channel. Movement/another interrupting action cancels before transport; provisionally begin cooldown only on completed transport.",
+        "Tutorial permission is granted only by completed departure dialogue after the chicken-cast quest completion.",
+        "Departure item reconciliation happens only once at actual successful transport, never on selecting the spell icon or opening a confirmation dialogue.",
+        "On tutorial departure select the experience-dependent arrival rather than assuming the ordinary Home Teleport destination. The ordinary spell map marks center 3221,3218 radius 2; it is not an exact tutorial spawn proof."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.home_teleport",
+          "source.wiki.tutorial_transcript",
+          "source.wiki.tutorial_island"
+        ]
+      },
+      "spell_ref": "spell.lumbridge_home_teleport",
+      "channel_ticks": 24,
+      "cooldown_ticks": 3000,
+      "rune_cost": [],
+      "xp_awards": [],
+      "interrupted_cooldown_policy": "provisional_no_cooldown_until_transport_completes",
+      "cooldown_start_basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.home_teleport"
+        ]
+      },
+      "binding_ref": "binding.world.source_layout"
+    },
+    {
+      "id": "rule.prayer.thick_skin",
+      "family": "prayer",
+      "event_ref": "event.prayer.toggled",
+      "guard": {
+        "all": [
+          {
+            "path": "state.levels.prayer",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.prayer_ui_unlocked",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.prayer_points_positive",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Thick Skin is available at Prayer 1 and gives +5% Defence. The next prayer requires level 4 and is not tutorial-unlockable.",
+        "Prayer toggles are applied on the next game tick; use a fractional drain accumulator, not one full point each click.",
+        "Without prayer bonus it drains one point per 36 seconds (60 ticks). Zero prayer points disables active prayers.",
+        "Merely opening Prayer for Brother Brace is sufficient for the lesson; activation/burying are genuine optional shared actions, not forced stages."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.prayer",
+          "source.wiki.action_lengths",
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "prayer_ref": "prayer.thick_skin",
+      "defence_multiplier": {
+        "numerator": 105,
+        "denominator": 100
+      },
+      "zero_bonus_drain_ticks_per_point": 60
+    },
+    {
+      "id": "rule.prayer.altar",
+      "family": "prayer",
+      "event_ref": "event.altar.prayed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.is_prayer_altar",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Recharge to the actual base Prayer level; no XP or item consumption. At full points give already-full feedback without increasing points.",
+        "An altar restores prayer points, not skill XP and not the tutorial progression marker."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.prayer",
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "xp_awards": []
+    },
+    {
+      "id": "rule.prayer.bones",
+      "family": "prayer",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.owns_unnoted_bones",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.action_cooldown_ready",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Bury one owned bone; ordinary Bones award 4.5 Prayer XP and take 2 ticks per bone.",
+        "Tutorial rats drop a distinct Bones (Tutorial Island) item, not a normal-bones numeric alias. Provisionally award the ordinary 4.5 XP; the variant article omits XP, so this numeric match is an inference, not verified variant data.",
+        "Tutorial cap still applies; bones are optional and dropping/recovering them never awards XP."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bones",
+          "source.wiki.tutorial_bones",
+          "source.wiki.action_lengths"
+        ]
+      },
+      "cycle_ticks": 2,
+      "ordinary_xp_tenths": 45,
+      "tutorial_variant_xp_tenths": 45,
+      "tutorial_variant_basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.bones",
+          "source.wiki.tutorial_bones"
+        ]
+      }
+    },
+    {
+      "id": "rule.food.healing",
+      "family": "food",
+      "event_ref": "event.food.eaten",
+      "guard": {
+        "all": [
+          {
+            "path": "event.owns_edible_item",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.eat_cooldown_ready",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Consume one food; shrimp restore 3 HP and bread 5, capped at base HP. Cooked food can be eaten even when no healing is needed.",
+        "Burnt variants are not edible. Food is not an XP reward.",
+        "Ordinary shrimp/bread add a 3-tick penalty to the next attack and prevent another ordinary food consumption for 3 ticks; no free spam-heal path."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.shrimps",
+          "source.wiki.bread",
+          "source.wiki.food"
+        ]
+      },
+      "heals": [
+        {
+          "item_ref": "item.shrimps.cooked",
+          "hp": 3
+        },
+        {
+          "item_ref": "item.bread",
+          "hp": 5
+        }
+      ],
+      "eat_delay_ticks": 3,
+      "attack_delay_ticks": 3
+    },
+    {
+      "id": "rule.hitpoints.regeneration",
+      "family": "food",
+      "event_ref": "event.activity.roll",
+      "guard": {
+        "all": []
+      },
+      "contract": [
+        "Ordinary player regeneration is one HP per minute (100 ticks), capped at current base maximum. Do not restore full HP each combat start or reconnect."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.hitpoints",
+          "source.wiki.game_tick"
+        ]
+      },
+      "ticks_per_hp": 100
+    },
+    {
+      "id": "rule.bank.deposit",
+      "family": "banking",
+      "event_ref": "event.bank.deposit_requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.ui.bank_open",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.bank_access_authorized",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.reachable_bank_session",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.quantity",
+            "op": "gte",
+            "value": 1
+          }
+        ]
+      },
+      "contract": [
+        "Move items between the same persistent bank and inventory; all normal source banks access the same account, not location-specific balances.",
+        "Banking unstackable items groups compatible definitions into a bank stack. Notes may be deposited as their unnoted counterpart.",
+        "Support 1/5/10/last-X/X/All and withdrawals All-but-one. Unnoted withdrawals fill only remaining inventory capacity; an existing compatible stack can receive more.",
+        "Deposit/withdraw requests transfer only available capacity/quantity and never lose the remainder. Zero/negative/spoofed quantities are rejected.",
+        "A bank-open flag without a valid source bank interaction session is not remote banking permission.",
+        "The first tutorial bank has 25 coins and ordinary deposit/withdraw controls. Closing or reopening it does not recreate withdrawn coins.",
+        "Use the castle upper bank for the journey; the Recipe for Disaster cellar bank is not unlocked by Cook's Assistant."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bank",
+          "source.wiki.tutorial_transcript",
+          "source.wiki.learning_the_ropes",
+          "source.wiki.lumbridge_castle"
+        ]
+      },
+      "base_capacity": 400,
+      "partial_transfers": true
+    },
+    {
+      "id": "rule.bank.withdraw",
+      "family": "banking",
+      "event_ref": "event.bank.withdraw_requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.ui.bank_open",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.bank_access_authorized",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.reachable_bank_session",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.quantity",
+            "op": "gte",
+            "value": 1
+          }
+        ]
+      },
+      "contract": [
+        "Move items between the same persistent bank and inventory; all normal source banks access the same account, not location-specific balances.",
+        "Banking unstackable items groups compatible definitions into a bank stack. Notes may be deposited as their unnoted counterpart.",
+        "Support 1/5/10/last-X/X/All and withdrawals All-but-one. Unnoted withdrawals fill only remaining inventory capacity; an existing compatible stack can receive more.",
+        "Deposit/withdraw requests transfer only available capacity/quantity and never lose the remainder. Zero/negative/spoofed quantities are rejected.",
+        "A bank-open flag without a valid source bank interaction session is not remote banking permission.",
+        "The first tutorial bank has 25 coins and ordinary deposit/withdraw controls. Closing or reopening it does not recreate withdrawn coins.",
+        "Use the castle upper bank for the journey; the Recipe for Disaster cellar bank is not unlocked by Cook's Assistant."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bank",
+          "source.wiki.tutorial_transcript",
+          "source.wiki.learning_the_ropes",
+          "source.wiki.lumbridge_castle"
+        ]
+      },
+      "base_capacity": 400,
+      "partial_transfers": true
+    },
+    {
+      "id": "rule.shop.lumbridge",
+      "family": "shop",
+      "event_ref": "event.shop.buy_requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.reachable_shop_session",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.item_in_stock",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.result_fits",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.can_pay",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Use finite shared normal-account stock per world, not a personal infinite vendor.",
+        "Reprice per unit within buy/sell 1/5/10/50 batches. Reduce stock and inventory coins in the same transaction; no overdrafts or stale-price duplication.",
+        "Stop a batch at capacity/coins/stock exhaustion, preserving untransferred stock and money.",
+        "For a stocked row, one item replenishes/destocks toward base stock each restock interval. Restock values are ticks per pinned template documentation.",
+        "Base prices for pot and bucket are 1 and 2 coins. Tinderbox/hammer base prices are 1. Tools do not become free quest rewards.",
+        "Only the listed required interactive rows are contracted here; other visible shop stock must remain accurately presented and explicitly unavailable if outside M1, not invented/hidden."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.lumbridge_general_store",
+          "source.wiki.store_line_docs",
+          "source.wiki.shop"
+        ]
+      },
+      "shop_sell_multiplier_per_mille": 1300,
+      "shop_buy_multiplier_per_mille": 400,
+      "delta_per_mille": 30,
+      "required_stock": [
+        {
+          "item_ref": "item.pot",
+          "base_stock": 5,
+          "restock_ticks": 10,
+          "base_buy_price": 1,
+          "base_item_value": 1
+        },
+        {
+          "item_ref": "item.bucket",
+          "base_stock": 3,
+          "restock_ticks": 10,
+          "base_buy_price": 2,
+          "base_item_value": 2
+        },
+        {
+          "item_ref": "item.tinderbox",
+          "base_stock": 2,
+          "restock_ticks": 100,
+          "base_buy_price": 1,
+          "base_item_value": 1
+        },
+        {
+          "item_ref": "item.hammer",
+          "base_stock": 5,
+          "restock_ticks": 100,
+          "base_buy_price": 1,
+          "base_item_value": 1
+        }
+      ],
+      "formula_refs": [
+        "formula.shop.buy",
+        "formula.shop.sell"
+      ]
+    },
+    {
+      "id": "rule.shop.sell",
+      "family": "shop",
+      "event_ref": "event.shop.sell_requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.reachable_shop_session",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.owns_quantity",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.tradeable_item",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "General store accepts tradeable source items; nontradeable/quest-restricted variants require an explicit refusal.",
+        "Stock increases one per sold unit and prices are recalculated. The source minimum purchase rate is 10% of base item value; integer flooring means cheap items can sell for zero.",
+        "A coins result must fit its stack bound. Selling is not deletion followed by an unguarded grant.",
+        "Overstock buy pricing has an explicit source conflict; the selected linear model is provisional."
+      ],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.shop",
+          "source.wiki.shop_module"
+        ],
+        "assumption_refs": [
+          "assumption.shop_overstock"
+        ]
+      },
+      "formula_refs": [
+        "formula.shop.buy",
+        "formula.shop.sell"
+      ]
+    },
+    {
+      "id": "rule.goblin.level_2",
+      "family": "combat_npc",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.bound_variant",
+            "op": "eq",
+            "value": "unarmed_level_2_table_1"
+          }
+        ]
+      },
+      "contract": [
+        "Use a real unarmed level-2 Lumbridge goblin with 5 HP, not a renamed/tutorial rat or a level-5/armed variant.",
+        "It is nonaggressive initially, retaliates when attacked, uses crush on a 4-tick cycle, max hit 1, and respawns in 35 ticks.",
+        "NPC death consumes that life once, creates source drops once and emits one credited kill; reconnect cannot duplicate a kill/drop.",
+        "Numerically similar spawn variants still require source binding to table 1; numeric NPC IDs are intentionally not selected without the other worker's map extraction."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.goblin",
+          "source.wiki.monster_infobox_docs"
+        ]
+      },
+      "npc_ref": "npc.goblin.level_2",
+      "stats": {
+        "hp": 5,
+        "attack": 1,
+        "strength": 1,
+        "defence": 1,
+        "magic": 1,
+        "ranged": 1,
+        "attack_crush_bonus": -21,
+        "melee_strength_bonus": -15,
+        "defence_stab": -15,
+        "defence_slash": -15,
+        "defence_crush": -15,
+        "defence_magic": -15,
+        "defence_light": -15,
+        "defence_standard": -15,
+        "defence_heavy": -15
+      },
+      "max_hit": 1,
+      "attack_cycle_ticks": 4,
+      "respawn_ticks": 35,
+      "loot_table_ref": "loot.goblin.level_2_table_1"
+    },
+    {
+      "id": "rule.combat.tutorial_rat",
+      "family": "combat_npc",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.is_tutorial_rat",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Tutorial rat is size 2, 3 HP, combat level 3, max hit 1, nonaggressive, 4-tick stab.",
+        "Attack/Strength/Defence/Magic/Ranged are 1. Stab/slash/crush and all ranged defence bonuses are -100; Magic defence bonus is 0.",
+        "On death drop exactly one distinct tutorial-bones item. Do not choose the unused or alternate-2020 source variants.",
+        "Kill credit is not necessarily last hit: the source describes a player doing 2/3 HP getting credit when another finishes. Provisionally give credit to greatest credited damage in that life, breaking equal-damage ties by earliest contribution."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_rat",
+          "source.wiki.tutorial_island"
+        ]
+      },
+      "npc_ref": "npc.tutorial_rat",
+      "hp": 3,
+      "size_tiles": 2,
+      "cycle_ticks": 4,
+      "guaranteed_drops": [
+        {
+          "item_ref": "item.bones.tutorial",
+          "quantity": 1
+        }
+      ],
+      "negative_roll_assumption_ref": "assumption.negative_combat_roll",
+      "credit_policy": {
+        "selection": "greatest_credited_damage",
+        "tie": "earliest_contribution",
+        "basis": {
+          "classification": "inference",
+          "source_refs": [
+            "source.wiki.tutorial_island"
+          ]
+        }
+      }
+    },
+    {
+      "id": "rule.death.retention",
+      "family": "death",
+      "event_ref": "event.player.died",
+      "guard": {
+        "all": [
+          {
+            "path": "state.tutorial.departed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Unsafe non-PvP, non-instance normal-account death is the M1 domain. No skull and no Protect Item keeps three most valuable carried/equipped items by effective GE/alchemy value.",
+        "Banked items, XP, quest state, delivered ingredients and tutorial completion are never death drops.",
+        "Protect Item adds one retained item; a skull normally removes the base three. Neither is silently activated for a starter account.",
+        "Rank by source-provided per-unit effective value, not equipment-first or inventory-first value. Equal-value handling is explicitly provisional.",
+        "Preserve original inventory/equipment layout metadata for July-2026 grave restoration. A grave is owner-private and world-independent.",
+        "The source first Death tutorial triggers when items are actually lost and the tutorial has not been seen, not for an empty-inventory safe death."
+      ],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.items_kept_on_death",
+          "source.wiki.grave",
+          "source.wiki.death_dialogue"
+        ],
+        "assumption_refs": [
+          "assumption.death_tie_break"
+        ]
+      },
+      "kept_items_unskulled": 3,
+      "protect_item_extra": 1,
+      "valuation_binding_ref": "binding.death.valuation"
+    },
+    {
+      "id": "rule.death.first_office",
+      "family": "death",
+      "event_ref": "event.player.died",
+      "guard": {
+        "all": [
+          {
+            "path": "state.death.tutorial_seen",
+            "op": "eq",
+            "value": false
+          },
+          {
+            "path": "event.items_lost",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.tutorial.departed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Transfer to Death's Office for the forced tutorial; retained items remain owned, lost items remain recoverable.",
+        "The introduction explains gravestones; the player must complete fees, timer and kept-items-interface topics before saying done and leaving via portal.",
+        "Early exit is refused. The grave waits without countdown throughout this first tutorial, even if the player disconnects.",
+        "On permitted portal departure, normal Lumbridge respawn and 1500 active grave ticks begin. No automatic retrieval or free replacement inventory is granted."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.death_dialogue",
+          "source.wiki.grave"
+        ]
+      },
+      "graph_ref": "graph.death.first_office",
+      "grave_timer_ticks": 1500,
+      "required_topics": [
+        "fees",
+        "timer",
+        "kept_items"
+      ]
+    },
+    {
+      "id": "rule.death.grave_timer",
+      "family": "death",
+      "event_ref": "event.activity.roll",
+      "guard": {
+        "all": [
+          {
+            "path": "state.death.grave_exists",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Countdown starts after respawning/first-Office portal exit, with 15 minutes (1500 ticks).",
+        "Pause while logged out, more than 10 seconds idle, or the grave UI is open. Bank UI does not pause it. Persist active-time remaining, not wall-clock expiry during logout.",
+        "Owner can check/loot from up to 7 tiles with line of sight, on any world.",
+        "At expiry, transfer remaining items to Death's Office storage once. Early remote collection via Death also transfers them and uses Office fees."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.grave",
+          "source.wiki.death_fees"
+        ]
+      },
+      "duration_ticks": 1500,
+      "idle_pause_after_ms": 10000,
+      "interaction_range_tiles": 7
+    },
+    {
+      "id": "rule.death.reclaim",
+      "family": "death",
+      "event_ref": "event.grave.reclaimed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.owner_matches",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.line_of_sight",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.within_seven_tiles",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.can_pay_recovery_fee",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Grave recovery below 100000 value is free; exact fee bands are recorded separately. Starter resources need no invented flat death fee.",
+        "Transfer only items that fit, leaving the rest recoverable. Restore old layout when possible; honor the source auto-equip setting rather than blindly equipping all loot.",
+        "Charge for the items actually reclaimed once, not the whole grave repeatedly; a second identical recovery cannot duplicate items or fees.",
+        "Fees come from Death's coffer then bank per the pinned fees page; current starter fee=0 does not depend on unresolved payment-order differences in old dialogue."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.grave",
+          "source.wiki.death_fees"
+        ]
+      },
+      "fee_formula_ref": "formula.death.grave_fee"
+    },
+    {
+      "id": "rule.death.office_reclaim",
+      "family": "death",
+      "event_ref": "event.grave.reclaimed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.in_deaths_office",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.owner_matches",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.can_pay_recovery_fee",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Expired items are retained indefinitely in a 120-entry Office store, not dropped publicly after 15 minutes.",
+        "Below 100000 per-item value is free; otherwise 5% for a normal account. Early remote grave collection uses the same higher Office rate.",
+        "Inventory capacity and exact-once ownership apply. Office has a source 120-entry limit; do not promise infinite storage across repeated deaths.",
+        "Exact excess-entry deletion order at the 120-slot boundary is not established in these references."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.deaths_office",
+          "source.wiki.death_fees"
+        ]
+      },
+      "storage_slots": 120,
+      "fee_formula_ref": "formula.death.office_fee",
+      "overflow_eviction_order": null
+    },
+    {
+      "id": "rule.death.repeat",
+      "family": "death",
+      "event_ref": "event.player.died",
+      "guard": {
+        "all": [
+          {
+            "path": "state.death.grave_exists",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Newly lost items normally join the old grave at its original location; timer refreshes if contents change.",
+        "Before adding new items, excess ordinary unstackables over 28 per item type in the old grave go to Death; then add incoming items.",
+        "Old bones/ores and the listed restricted resources go to Office before incoming resources arrive.",
+        "Old cooked food/potions become supply piles beneath the old grave and last one hour, instead of staying there.",
+        "If the source setting enables supply piles, new food/potions drop at death position instead of entering the grave. Support both settings; don't silently choose a fresh-account default.",
+        "Entrana/Wilderness/PvP exceptions are outside this normal Lumbridge domain and cannot be claimed implemented by this rule."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.grave"
+        ]
+      },
+      "grave_slots": 120,
+      "supply_pile_lifetime_ticks": 6000
+    },
+    {
+      "id": "rule.tutorial.departure",
+      "family": "tutorial",
+      "event_ref": "event.teleport.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "state.tutorial.departure_authorized",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.quests.learning_the_ropes.status",
+            "op": "eq",
+            "value": "completed"
+          },
+          {
+            "path": "state.tutorial.departed",
+            "op": "eq",
+            "value": false
+          },
+          {
+            "path": "event.destination_matches_experience",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "The listed 18-kind kit is source-backed as standard provisions, NOT a source-observed pre-dialogue inventory.",
+        "Tutorial-gathered resources and extra runes do not transfer as unlimited mainland stock.",
+        "Provisional reconciliation clears tutorial inventory/equipment/bank and places this kit in inventory with exactly 25 bank coins. No hammer is listed in the source kit.",
+        "One 'shrimps' item represents the source couple of shrimp; it is not two inventory items.",
+        "Keep all earned skill XP, Learning the Ropes' 1 QP and completion. Do not reset skills to an invented fixed departure level.",
+        "Replaying teleport completion, reconnecting or re-reading reward UI must never reapply reconciliation to mainland possessions."
+      ],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.learning_the_ropes",
+          "source.wiki.tutorial_island"
+        ],
+        "assumption_refs": [
+          "assumption.departure_reconciliation"
+        ]
+      },
+      "kit": [
+        {
+          "item_ref": "item.axe.bronze",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.pickaxe.bronze",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.tinderbox",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.fishing_net.small",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.shrimps.cooked",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.dagger.bronze",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.sword.bronze",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.shield.wooden",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.shortbow",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.arrow.bronze",
+          "quantity": 25
+        },
+        {
+          "item_ref": "item.rune.air",
+          "quantity": 25
+        },
+        {
+          "item_ref": "item.rune.mind",
+          "quantity": 15
+        },
+        {
+          "item_ref": "item.bucket",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.pot",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.bread",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.rune.water",
+          "quantity": 6
+        },
+        {
+          "item_ref": "item.rune.earth",
+          "quantity": 4
+        },
+        {
+          "item_ref": "item.rune.body",
+          "quantity": 2
+        }
+      ],
+      "bank": [
+        {
+          "item_ref": "item.coins",
+          "quantity": 25
+        }
+      ],
+      "ledger_key": "tutorial_departure_v1"
+    },
+    {
+      "id": "rule.persistence.acknowledged_state",
+      "family": "persistence",
+      "event_ref": "event.session.reconnected",
+      "guard": {
+        "all": []
+      },
+      "contract": [
+        "Acknowledge only committed state; inventory/XP/progression/reward and operation-id ledger are atomic.",
+        "Duplicate operation ids replay their result, not their side effects. A new authenticated session epoch invalidates old commands without wiping character state.",
+        "Rebuild current UI and hint from persisted stage; do not replay on-entry item grants or rewind to a previous instructor.",
+        "Do not auto-finish queued gathering/combat/teleport work on reconnect. Restore acknowledged results, cancel/revalidate unfinished work with real source guards.",
+        "The same invariant applies to process restart, bank transfer, partial quest delivery, death topics, mill counts, quest reward and departure reconciliation."
+      ],
+      "basis": {
+        "classification": "engineering_contract",
+        "source_refs": [
+          "source.project.prompt"
+        ]
+      }
+    }
+  ],
+  "formulas": [
+    {
+      "id": "formula.skilling.success",
+      "inputs": [
+        "level",
+        "low",
+        "high"
+      ],
+      "output": "integer success count of 256 equally likely rolls",
+      "expression": "clamp(1 + floor((low*(99-level) + high*(level-1) + 49)/98), 0, 256)",
+      "domain": "level 1..99, no invisible boosts; success if integer rng in [0,255] is below output",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skilling_success_rate"
+        ]
+      }
+    },
+    {
+      "id": "formula.xp.level_threshold",
+      "inputs": [
+        "level"
+      ],
+      "output": "xp_tenths",
+      "expression": "10 * floor(sum(floor(n + 300*2**(n/7)) for n in 1..level-1)/4)",
+      "domain": "source base levels 1..99",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.experience"
+        ]
+      }
+    },
+    {
+      "id": "formula.run.drain",
+      "inputs": [
+        "agility",
+        "weight_kg"
+      ],
+      "output": "run energy units per two-step tick",
+      "expression": "floor(floor(60 + 67*clamp(weight_kg,0,64)/64) * (300-agility)/300)",
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.energy"
+        ],
+        "assumption_refs": [
+          "assumption.run_rounding"
+        ]
+      }
+    },
+    {
+      "id": "formula.run.recovery",
+      "inputs": [
+        "agility"
+      ],
+      "output": "run energy units per eligible tick",
+      "expression": "floor(agility/10)+15",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.energy"
+        ]
+      }
+    },
+    {
+      "id": "formula.combat.effective_level",
+      "inputs": [
+        "current_level",
+        "prayer_multiplier",
+        "style_bonus"
+      ],
+      "expression": "floor(current_level*prayer_multiplier)+style_bonus+8",
+      "domain": "M1 player without void/boosting gear; NPCs use source level+9. Style bonus=3 for corresponding accurate/aggressive/defensive, 1 controlled, 0 otherwise; ranged accurate=3.",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.melee_dps",
+          "source.wiki.ranged_dps",
+          "source.wiki.maximum_ranged_hit"
+        ]
+      }
+    },
+    {
+      "id": "formula.combat.maximum_hit",
+      "inputs": [
+        "effective_strength",
+        "equipment_strength"
+      ],
+      "expression": "floor((effective_strength*(equipment_strength+64)+320)/640)",
+      "domain": "Player melee/ranged without extra gear modifiers; use melee or ranged strength as appropriate.",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.melee_dps",
+          "source.wiki.maximum_ranged_hit"
+        ]
+      }
+    },
+    {
+      "id": "formula.combat.accuracy",
+      "inputs": [
+        "attack_roll_max",
+        "defence_roll_max"
+      ],
+      "expression": "1-(D+2)/(2*(A+1)) if A>D else A/(2*(D+1))",
+      "domain": "A,D>=0; exact probability as a rational. Inclusive random integer attack in[0,A] beats defence in[0,D]. Equal rolls miss.",
+      "negative_input_policy_ref": "assumption.negative_combat_roll",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.melee_dps",
+          "source.wiki.ranged_dps",
+          "source.wiki.magic"
+        ]
+      }
+    },
+    {
+      "id": "formula.combat.damage",
+      "inputs": [
+        "accuracy_succeeded",
+        "raw_uniform_damage",
+        "target_hp"
+      ],
+      "expression": "0 if not accuracy_succeeded else min(target_hp,max(1,raw_uniform_damage))",
+      "domain": "Player attack with positive max hit, ordinary M1 NPC; raw_uniform_damage in [0,max_hit]. NPC outgoing rolls are not established by this player-DPS formula.",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.melee_dps",
+          "source.wiki.ranged_dps",
+          "source.wiki.magic_dps"
+        ]
+      }
+    },
+    {
+      "id": "formula.combat.hp_xp",
+      "inputs": [
+        "credited_damage",
+        "on_tutorial"
+      ],
+      "expression": "0 if on_tutorial else floor(40*credited_damage/3)",
+      "output": "xp_tenths",
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.combat_options",
+          "source.wiki.experience"
+        ],
+        "assumption_refs": [
+          "assumption.combat_xp_thirds"
+        ]
+      }
+    },
+    {
+      "id": "formula.combat.magic_attack",
+      "inputs": [
+        "magic",
+        "prayer_multiplier",
+        "equipment_magic_attack"
+      ],
+      "expression": "(floor(magic*prayer_multiplier)+8)*(equipment_magic_attack+64)",
+      "domain": "Manual Wind Strike, no void/special damage equipment",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.magic",
+          "source.wiki.magic_dps"
+        ]
+      }
+    },
+    {
+      "id": "formula.combat.magic_defence_npc",
+      "inputs": [
+        "magic",
+        "equipment_magic_defence"
+      ],
+      "expression": "(magic+9)*(equipment_magic_defence+64)",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.magic"
+        ]
+      }
+    },
+    {
+      "id": "formula.shop.buy",
+      "inputs": [
+        "base_value",
+        "base_stock",
+        "current_stock"
+      ],
+      "expression": "max(1,floor(base_value*clamp(1300+30*(base_stock-current_stock),300,6300)/1000))",
+      "domain": "Lumbridge General Store, per item before reducing stock; overstock branch is provisional linear article interpretation.",
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.shop",
+          "source.wiki.lumbridge_general_store",
+          "source.wiki.shop_module"
+        ],
+        "assumption_refs": [
+          "assumption.shop_overstock"
+        ]
+      }
+    },
+    {
+      "id": "formula.shop.sell",
+      "inputs": [
+        "base_value",
+        "base_stock",
+        "current_stock"
+      ],
+      "expression": "floor(base_value*clamp(400+30*(base_stock-current_stock),100,1400)/1000)",
+      "domain": "Lumbridge General Store, per item before increasing stock; standard unstocked items have base_stock=0.",
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.shop",
+          "source.wiki.lumbridge_general_store",
+          "source.wiki.shop_module"
+        ]
+      }
+    },
+    {
+      "id": "formula.death.grave_fee",
+      "inputs": [
+        "reclaimed_effective_item_values"
+      ],
+      "expression": "min(500000,sum(0 if v<100000 else 1000 if v<1000000 else 10000 if v<10000000 else 100000 for v in values))",
+      "domain": "Normal account no discount. Values exactly at a threshold enter the higher band.",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.death_fees"
+        ]
+      }
+    },
+    {
+      "id": "formula.death.office_fee",
+      "inputs": [
+        "reclaimed_effective_item_values"
+      ],
+      "expression": "sum(0 if v<100000 else floor(v*5/100) for v in values)",
+      "domain": "Normal account no discount; rounding for non-multiple-of-20 values follows integer-currency inference.",
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.death_fees"
+        ]
+      }
+    }
+  ],
+  "global_rule_refs": [
+    "rule.time.tick",
+    "rule.inventory.capacity",
+    "rule.xp.level",
+    "rule.tutorial.xp_cap",
+    "rule.tutorial.restrictions",
+    "rule.persistence.acknowledged_state"
+  ],
+  "statistical_test_policy": "Fixture RNG values are deterministic test inputs at the real roll boundary. They are not a production RNG override, boosted chance, or server-execution claim.",
+  "loot_tables": [
+    {
+      "id": "loot.goblin.level_2_table_1",
+      "guaranteed": [
+        {
+          "item_ref": "item.bones",
+          "quantity": 1
+        }
+      ],
+      "primary_denominator": 128,
+      "primary": [
+        {
+          "item_ref": "item.shield.bronze_square",
+          "quantity": 1,
+          "weight": 3,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.spear.bronze",
+          "quantity": 1,
+          "weight": 4,
+          "members_only": true
+        },
+        {
+          "item_ref": "item.rune.body",
+          "quantity": 7,
+          "weight": 5,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.rune.water",
+          "quantity": 6,
+          "weight": 6,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.rune.earth",
+          "quantity": 4,
+          "weight": 3,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.bolts.bronze",
+          "quantity": 8,
+          "weight": 3,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.coins",
+          "quantity": 5,
+          "weight": 28,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.coins",
+          "quantity": 9,
+          "weight": 3,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.coins",
+          "quantity": 15,
+          "weight": 3,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.coins",
+          "quantity": 20,
+          "weight": 2,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.coins",
+          "quantity": 1,
+          "weight": 1,
+          "members_only": false
+        },
+        {
+          "item_ref": null,
+          "quantity": 0,
+          "weight": 38,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.hammer",
+          "quantity": 1,
+          "weight": 15,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.goblin_book",
+          "quantity": 1,
+          "weight": 2,
+          "members_only": true
+        },
+        {
+          "item_ref": "item.goblin_mail",
+          "quantity": 1,
+          "weight": 5,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.chefs_hat",
+          "quantity": 1,
+          "weight": 3,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.beer",
+          "quantity": 1,
+          "weight": 2,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.brass_necklace",
+          "quantity": 1,
+          "weight": 1,
+          "members_only": false
+        },
+        {
+          "item_ref": "item.talisman.air",
+          "quantity": 1,
+          "weight": 1,
+          "members_only": false
+        }
+      ],
+      "tertiary": [
+        {
+          "item_ref": "item.clue.beginner",
+          "numerator": 1,
+          "denominator": 64,
+          "requires": "source clue ownership/eligibility rules"
+        },
+        {
+          "item_ref": "item.clue.easy",
+          "numerator": 1,
+          "denominator": 128,
+          "requires": "source members/eligibility rules; not established for this F2P profile"
+        },
+        {
+          "item_ref": "item.ensouled_goblin_head",
+          "numerator": 1,
+          "denominator": 35,
+          "requires": "members"
+        },
+        {
+          "item_ref": "item.goblin_champion_scroll",
+          "numerator": 1,
+          "denominator": 5000,
+          "requires": "members/source champion-scroll eligibility"
+        }
+      ],
+      "unresolved_supplement": {
+        "item_refs": [
+          "item.energy_potion.one_dose",
+          "item.energy_potion.two_dose",
+          "item.energy_potion.four_dose"
+        ],
+        "weight": null,
+        "reason": "Source lists Common but numeric table already sums to 128; no probability or trigger is invented."
+      },
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.goblin"
+        ],
+        "assumption_refs": [
+          "assumption.goblin_loot_variant"
+        ]
+      }
+    }
+  ],
+  "death_graph": {
+    "id": "graph.death.first_office",
+    "start_ref": "stage.death.introduction",
+    "terminal_refs": [
+      "stage.death.respawned"
+    ],
+    "states": [
+      {
+        "id": "stage.death.introduction",
+        "instruction": "Death explains the first item loss.",
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.death_dialogue"
+          ]
+        }
+      },
+      {
+        "id": "stage.death.topics",
+        "instruction": "Complete fees, timer, and kept-items topics, any order.",
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.death_dialogue"
+          ]
+        }
+      },
+      {
+        "id": "stage.death.exit_ready",
+        "instruction": "All topics heard and done confirmed; use portal.",
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.death_dialogue"
+          ]
+        }
+      },
+      {
+        "id": "stage.death.respawned",
+        "instruction": "Back in Lumbridge; active grave timer starts.",
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.death_dialogue"
+          ]
+        }
+      }
+    ],
+    "transitions": [
+      {
+        "id": "transition.death.introduction",
+        "from_ref": "stage.death.introduction",
+        "to_ref": "stage.death.topics",
+        "event_ref": "event.dialogue.completed",
+        "guard": {
+          "all": [
+            {
+              "path": "event.npc_ref",
+              "op": "eq",
+              "value": "npc.death"
+            },
+            {
+              "path": "event.topic",
+              "op": "eq",
+              "value": "first_item_loss_intro"
+            }
+          ]
+        },
+        "effects": []
+      },
+      {
+        "id": "transition.death.fees",
+        "from_ref": "stage.death.topics",
+        "to_ref": "stage.death.topics",
+        "event_ref": "event.death.topic_completed",
+        "guard": {
+          "all": [
+            {
+              "path": "event.topic",
+              "op": "eq",
+              "value": "fees"
+            }
+          ]
+        },
+        "effects": [
+          {
+            "op": "set",
+            "path": "state.death.topics.fees",
+            "value": true
+          }
+        ]
+      },
+      {
+        "id": "transition.death.timer",
+        "from_ref": "stage.death.topics",
+        "to_ref": "stage.death.topics",
+        "event_ref": "event.death.topic_completed",
+        "guard": {
+          "all": [
+            {
+              "path": "event.topic",
+              "op": "eq",
+              "value": "timer"
+            }
+          ]
+        },
+        "effects": [
+          {
+            "op": "set",
+            "path": "state.death.topics.timer",
+            "value": true
+          }
+        ]
+      },
+      {
+        "id": "transition.death.kept_items",
+        "from_ref": "stage.death.topics",
+        "to_ref": "stage.death.topics",
+        "event_ref": "event.death.topic_completed",
+        "guard": {
+          "all": [
+            {
+              "path": "event.topic",
+              "op": "eq",
+              "value": "kept_items"
+            }
+          ]
+        },
+        "effects": [
+          {
+            "op": "set",
+            "path": "state.death.topics.kept_items",
+            "value": true
+          }
+        ]
+      },
+      {
+        "id": "transition.death.done",
+        "from_ref": "stage.death.topics",
+        "to_ref": "stage.death.exit_ready",
+        "event_ref": "event.death.exit_requested",
+        "guard": {
+          "all": [
+            {
+              "path": "state.death.topics.fees",
+              "op": "eq",
+              "value": true
+            },
+            {
+              "path": "state.death.topics.timer",
+              "op": "eq",
+              "value": true
+            },
+            {
+              "path": "state.death.topics.kept_items",
+              "op": "eq",
+              "value": true
+            }
+          ]
+        },
+        "effects": [
+          {
+            "op": "set",
+            "path": "state.death.tutorial_seen",
+            "value": true
+          }
+        ]
+      },
+      {
+        "id": "transition.death.portal",
+        "from_ref": "stage.death.exit_ready",
+        "to_ref": "stage.death.respawned",
+        "event_ref": "event.death.portal_crossed",
+        "guard": {
+          "all": [
+            {
+              "path": "event.authorized_portal",
+              "op": "eq",
+              "value": true
+            }
+          ]
+        },
+        "effects": [
+          {
+            "op": "set",
+            "path": "state.death.grave_ticks_remaining",
+            "value": 1500
+          }
+        ]
+      }
+    ],
+    "basis": {
+      "classification": "verified_reference",
+      "source_refs": [
+        "source.wiki.death_dialogue"
+      ]
+    }
+  },
+  "map_markers": [
+    {
+      "location_ref": "location.lumbridge.east_swamp_mine",
+      "source_tiles": [
+        [
+          3230,
+          3147
+        ],
+        [
+          3228,
+          3144
+        ],
+        [
+          3229,
+          3148
+        ],
+        [
+          3229,
+          3145
+        ],
+        [
+          3230,
+          3145
+        ]
+      ],
+      "classification": "wiki_object_location_rows_not_extracted_collision",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.copper_rocks"
+        ]
+      }
+    },
+    {
+      "location_ref": "location.lumbridge.death_entrance",
+      "source_marker": [
+        3238,
+        3194
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.deaths_office"
+        ]
+      }
+    },
+    {
+      "location_ref": "location.lumbridge.castle_arrival",
+      "normal_respawn_marker": {
+        "center": [
+          3221,
+          3219
+        ],
+        "radius": 3
+      },
+      "tutorial_arrival_exact_tile": null,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.respawn",
+          "source.wiki.tutorial_island"
+        ]
+      }
+    }
+  ],
+  "null_parameter_policy": "Null is an explicit unverified source-binding requirement, never zero/no delay/no drop. Independently verified rule parts can be implemented; exact-family fidelity cannot be claimed until bound."
+}

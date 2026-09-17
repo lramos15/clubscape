@@ -1,0 +1,17 @@
+{"synthetic_deadline_observations": [{"scenario_budget_seconds": 1, "blocking_restart_seconds": 0.0, "elapsed_before_native_termination": 1.006918037775904, "native_still_running": true}, {"scenario_budget_seconds": 1, "blocking_restart_seconds": 2.0, "elapsed_before_native_termination": 2.051297085825354, "native_still_running": true}]}
+F
+======================================================================
+FAIL: test_blocking_restart_cannot_extend_the_native_gameplay_deadline (test_saved_water_runtime.RuntimeTests.test_blocking_restart_cannot_extend_the_native_gameplay_deadline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/lramos15/clubscape/.worktrees/m1-saved-water-review/tools/journey-tests/test_saved_water_runtime.py", line 559, in test_blocking_restart_cannot_extend_the_native_gameplay_deadline
+    self.assertLess(observation["elapsed_before_native_termination"], 1.5, observation)
+AssertionError: 2.051297085825354 not less than 1.5 : {'scenario_budget_seconds': 1, 'blocking_restart_seconds': 2.0, 'elapsed_before_native_termination': 2.051297085825354, 'native_still_running': True}
+
+----------------------------------------------------------------------
+Ran 1 test in 3.095s
+
+FAILED (failures=1)
+real 3.19
+user 0.10
+sys 0.03

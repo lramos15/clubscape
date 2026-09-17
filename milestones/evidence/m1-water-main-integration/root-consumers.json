@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "code_revision": "f7f81c2a5fd5407939f77097dd3facba8991d0c4",
+  "tracked_worktree_clean_at_start": true,
+  "unrelated_untracked_feedback_archive_preserved": true,
+  "checks": [
+    {
+      "check": "native-consumers",
+      "command": [
+        "cargo",
+        "test",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "-p",
+        "clubscape-game-types",
+        "-p",
+        "clubscape-content",
+        "-p",
+        "clubscape-world-engine",
+        "-p",
+        "clubscape-client-core",
+        "-p",
+        "clubscape-protocol",
+        "--all-targets"
+      ],
+      "timeout_seconds": 300,
+      "status": "passed",
+      "exit_code": 0,
+      "elapsed_seconds": 62.131,
+      "log_sha256": "f7fa6f0c2087d448564155d516d458aae88cc88a76ab92cbf7a34d8fb79fd1e4",
+      "passed": 461,
+      "failed": 0,
+      "ignored": 0,
+      "binaries": 45
+    },
+    {
+      "check": "native-source-pairs",
+      "command": [
+        "cargo",
+        "test",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "-p",
+        "clubscape-server",
+        "--lib",
+        "water_migration",
+        "--",
+        "--nocapture"
+      ],
+      "timeout_seconds": 300,
+      "status": "passed",
+      "exit_code": 0,
+      "elapsed_seconds": 42.656,
+      "log_sha256": "e4ff1677bb5314a20864ea901d76e34873381287b84d981c4e3007e364107721",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 2,
+      "binaries": 1
+    },
+    {
+      "check": "strict-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "-p",
+        "clubscape-game-types",
+        "-p",
+        "clubscape-content",
+        "-p",
+        "clubscape-world-engine",
+        "-p",
+        "clubscape-client-core",
+        "-p",
+        "clubscape-protocol",
+        "-p",
+        "clubscape-server",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "timeout_seconds": 300,
+      "status": "passed",
+      "exit_code": 0,
+      "elapsed_seconds": 9.298,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "check": "operator-machinery",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "test_run",
+        "test_water_operator"
+      ],
+      "timeout_seconds": 120,
+      "status": "passed",
+      "exit_code": 0,
+      "elapsed_seconds": 0.115,
+      "log_sha256": "d3b6fc5affa853f908cc93c0abfedf5f40a173c8ca89c4e533a216a720d9fdaa"
+    },
+    {
+      "check": "normal-web-build",
+      "command": [
+        "pnpm",
+        "--dir",
+        "web",
+        "build"
+      ],
+      "timeout_seconds": 600,
+      "status": "passed",
+      "exit_code": 0,
+      "elapsed_seconds": 20.019,
+      "log_sha256": "6220c3c1af7b1b9a3046367d9417edeab6751d9c40b54971468533984cd0eebc"
+    },
+    {
+      "check": "web-tests",
+      "command": [
+        "pnpm",
+        "--dir",
+        "web",
+        "test"
+      ],
+      "timeout_seconds": 180,
+      "status": "passed",
+      "exit_code": 0,
+      "elapsed_seconds": 1.074,
+      "log_sha256": "f8320ec9bef1ed1bb266ea98b75ccc6ece01ad58c4b519a331d21dbba6dc439a",
+      "passed": 263
+    }
+  ],
+  "status": "passed",
+  "browser_or_gpu_test_invocations": 0,
+  "source_operator_invocations": 0,
+  "saved_checkpoint_accessed": false,
+  "milestone_accepted": false,
+  "web_output": ".local/web-builds/water-main-01"
+}

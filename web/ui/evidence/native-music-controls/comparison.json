@@ -1,0 +1,128 @@
+{
+  "scope": "Additional ORIGINAL UI component/effect fixture comparisons, not live gameplay",
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "results": [
+    {
+      "case": "native-music-filter-open",
+      "kind": "music-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "10fe9810d090db08438b76dcd39574cfb7908879c14e66b3934bcd51ab2d372f",
+      "candidate_sha256": "de127aee5c104e8a5c1f0218b69b6e4dc15ab8aa00f2cf42910549f26d7a188e",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-music-mode-0",
+      "kind": "music-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "ec1178b0d0e17399611965c5586365a7662e1bc613cc58a0367a22321fc41606",
+      "candidate_sha256": "c50900f0a59b252c08a855c9fea93ae34129dae4325e52f9b2b3c5c0df30029e",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-music-mode-1",
+      "kind": "music-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "24ec985bda5911ba4d22f64c99e0b6236d5c4f3917336ad1980a10df7b9f9c59",
+      "candidate_sha256": "ea4e38f8300967f153c7a3328e23096e58858a8dd3bbaa7eaab90b65bf356f5f",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-music-mode-2",
+      "kind": "music-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "abc7b86d09ffd37ed45e493f251c430127c133bf45232af36ecc4c1e0aed3743",
+      "candidate_sha256": "cdbe436f7d153532401fe1d88850fa1043c0f1b84b58d7663042a99aedf8c1f6",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-music-filter-open",
+      "kind": "music-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "10fe9810d090db08438b76dcd39574cfb7908879c14e66b3934bcd51ab2d372f",
+      "candidate_sha256": "de127aee5c104e8a5c1f0218b69b6e4dc15ab8aa00f2cf42910549f26d7a188e",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-music-mode-0",
+      "kind": "music-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "ec1178b0d0e17399611965c5586365a7662e1bc613cc58a0367a22321fc41606",
+      "candidate_sha256": "c50900f0a59b252c08a855c9fea93ae34129dae4325e52f9b2b3c5c0df30029e",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-music-mode-1",
+      "kind": "music-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "24ec985bda5911ba4d22f64c99e0b6236d5c4f3917336ad1980a10df7b9f9c59",
+      "candidate_sha256": "ea4e38f8300967f153c7a3328e23096e58858a8dd3bbaa7eaab90b65bf356f5f",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-music-mode-2",
+      "kind": "music-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "abc7b86d09ffd37ed45e493f251c430127c133bf45232af36ecc4c1e0aed3743",
+      "candidate_sha256": "cdbe436f7d153532401fe1d88850fa1043c0f1b84b58d7663042a99aedf8c1f6",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    }
+  ],
+  "fullPanelsExcluded": 0,
+  "finalAcceptance": false
+}

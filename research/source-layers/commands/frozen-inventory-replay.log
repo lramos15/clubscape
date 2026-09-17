@@ -1,0 +1,4 @@
+CAPTURE frames/native-inventory 1920x1080 pixels=1431805
+LAYER_CASE native-inventory scene_plane=3 selector=3
+FROZEN_NATIVE_HUD_REPLAY exact original inventory pixels; native full-HUD zoom410
+{"result":"passed","cases":1,"pairs":0,"candidate_compared":false}

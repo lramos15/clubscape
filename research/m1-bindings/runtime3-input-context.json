@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "parent_base": "6605b09",
+  "scope": "Exact pre-existing upstream publication evolution, not permission to modify source assets or audio.",
+  "audio_runtime": {
+    "path": "assets/manifests/osrs/audio-runtime.json",
+    "historical_manifest_sha256": "1e7c37af6d303eb5db9407c9318ee532cbd4f823427fed02c89612dfefaa23b5",
+    "current_manifest_sha256": "8e6d1eca465f720829599cae0e1c11b7700a9c7162e53dd5ddec36ceb89787aa",
+    "current_manifest_bytes": 845835,
+    "upstream_commit": "75bfde1",
+    "historical_rendered_asset_count": 258,
+    "current_rendered_asset_count": 264,
+    "reason": "The integrated audio worker restored native percussion initialization and added original cue selectors. Rendered audio hashes legitimately changed before this task. Validate the exact current upstream manifest and every current file; retain the earlier 258-file report as historical evidence, not an unchanged-audio claim.",
+    "rendered_audio_unchanged_claimed": false,
+    "audio_or_presentation_acceptance_claimed": false
+  }
+}

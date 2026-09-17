@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "task": "M1-SHELL-METADATA-INTEGRATION",
+  "status": "consumed_passed",
+  "execution_receipt": "milestones/evidence/m1-shell-metadata-browser-receipt.json",
+  "browser_invocations_remaining": 0,
+  "scope": "One real source-browser integration of the newly supplied preview/spatial metadata, not the full M1 journey or normal-camera acceptance.",
+  "worktree": ".worktrees/m1-shell-metadata",
+  "code_revision": "b4f63046a75f90978afb432441316c70cf96f73b",
+  "owned_imports": [
+    {"owned":"b134136ad7b6260e539fe8009ee9bb7b0a425ea7","candidate":"d5dc29fa447e2e54e0c26081c3a8c19a5f3ae158","excluded":"web/app/tests/source-browser.ts"},
+    {"owned":"57f18f1b129c3968b9cf88de5cd094cc44b18b9e","candidate":"d3e3f204cc35e5f44ba32548653d73e963bcb762"}
+  ],
+  "build_directory": ".local/web-builds/shell-metadata-01",
+  "build_artifact_sha256": "5ea9e28efac39ebcf3237a9cf2d11ea1c2e7c778572bc3a1a4396fe4f4bfab1d",
+  "source_directory": ".local/metadata-source-bundle",
+  "world_id": "ffd86a81-8dd1-4a19-bc2a-442e91025559",
+  "source_raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+  "source_descriptor_sha256": "465fbd00d6881ca96eb724ee77d2bd1c05de1808f23e42212f21cd908b08d9b8",
+  "content_manifest_sha256": "996434524e3b711b70590cbef04f4670f23d5d20f32dd9a98a42d11622ff252a",
+  "limits": {
+    "browser_invocations": 1,
+    "existing_browser_timeout_seconds": 240,
+    "existing_server_build_timeout_seconds": 300,
+    "existing_database_ready_timeout_seconds": 60,
+    "existing_server_ready_timeout_seconds": 35,
+    "automatic_retry": false,
+    "journal": ".worktrees/m1-shell-metadata/.local/metadata-integration/browser-authority-v1.json"
+  },
+  "required_before_execution": [
+    "Renderer worker confirms the GPU/timing window is free.",
+    "Exact code/build/source pins remain unchanged.",
+    "Reserve the fixed journal exclusively before invoking the runner; changing directories does not renew the allowance."
+  ],
+  "required_outcomes": [
+    "Actual sourceSceneSupplied is true; existing source UI/preference/minimap/restart/device-loss assertions stay intact.",
+    "Uncreated preview actor remains explicitly unavailable rather than a fake loadout or world update.",
+    "Existing18 source control cues and20.045351473922903ms timing tolerance remain unchanged.",
+    "Retain every failure, actual playback/loading result and all cleanup evidence."
+  ],
+  "camera_qualification": "The already recorded tutorial-starting-house diagnostic camera is explicit. It does not prove normal source-based camera initialization or replace M1-CAMERA-INTEGRATION.",
+  "isolated_fresh_source_account_only": true,
+  "protected_saved_account_access_restore_or_migration": false,
+  "old_audio_or_runelite_allowance_reused": false,
+  "source_or_golden_changed": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

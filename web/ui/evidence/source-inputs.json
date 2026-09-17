@@ -1,0 +1,108 @@
+{
+  "scope": "ORIGINAL pinned runtime, same fixture state; only world contentType1337 detached. Not candidate-generated references.",
+  "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "ui_only": [
+    {
+      "name": "native-inventory",
+      "sha256": "8cb19798cc1bf61870b04323cba55871ff3af2ae258d16d27a998db2e7d17a6f",
+      "original_full_frame": "hud/native-inventory.png",
+      "original_full_frame_sha256": "918baf230ea15f22fea92c38b0a01928778a1ddb4ca0dd895ef2903a0b8d3a17"
+    },
+    {
+      "name": "native-equipment",
+      "sha256": "5d5af55ec7257aa8eac4eaae868a79623eb01df37326ea8c45298ca055fb6d7f",
+      "original_full_frame": "hud/native-equipment.png",
+      "original_full_frame_sha256": "3fb654f950d93c1fc827b400021026e10c295085fc407f0de169f17d889a5fb0"
+    },
+    {
+      "name": "native-skills",
+      "sha256": "223dc45ad6367ddc53f75e5032d76a8d8973cdd629fd99c46eb3fb795fce7fcc",
+      "original_full_frame": "hud/native-skills.png",
+      "original_full_frame_sha256": "25edc3a84b65325621d92900a564ffac740167eb48e46dfd3720ee1ddc7e11f4"
+    },
+    {
+      "name": "native-combat",
+      "sha256": "010d54dbbfc3c067d367114dd8c7e9ee159fd121c400b21f85902c69db9777c8",
+      "original_full_frame": "hud/native-combat.png",
+      "original_full_frame_sha256": "e6cdfd7508dc0ddde49a92ed7b1ff422fad7d8fd9228bafa3347a900e0f73b26"
+    },
+    {
+      "name": "native-prayer",
+      "sha256": "33ad1e2663b4ac21bf869522d92f2606c1fe706db42e8c256ac8295bbee3bee9",
+      "original_full_frame": "hud/native-prayer.png",
+      "original_full_frame_sha256": "42a1a1fd39faec2dc9f8daed4084f5af7653fad10fa8a2155fd21c29663cdce9"
+    },
+    {
+      "name": "native-magic",
+      "sha256": "868d608b432878de9c2551ba66972e48d60922cd1f5e6ad56f4f188b731a40ed",
+      "original_full_frame": "hud/native-magic.png",
+      "original_full_frame_sha256": "05a35f41dc4ba7595e7b3d84f71c8dcc7e0c116a42ab5e83170366b6f053d014"
+    },
+    {
+      "name": "native-quest-list",
+      "sha256": "cd53dbceee3c4cf1a9dd58edc89ebc63cbbe63262e96390b412e044c04ecd345",
+      "original_full_frame": "hud/native-quest-list.png",
+      "original_full_frame_sha256": "38a3e415c609096e8b72af0d904c3d4c815d50ef051d8d638d4cf922f4db6ba1"
+    },
+    {
+      "name": "native-bank",
+      "sha256": "e90a7ee018a5f294d0eef4933d2d1d193b5003477474c442d99408bf7274e64e",
+      "original_full_frame": "hud/native-bank.png",
+      "original_full_frame_sha256": "7dc38520f1d22c85d5f569e9c60d77663676ad14d33997da31f07466f418409e"
+    },
+    {
+      "name": "native-shop",
+      "sha256": "6c57e7c1af368c5dca76192682ebaef5f1b434ee18ea54942307cab0ce93cea5",
+      "original_full_frame": "hud/native-shop.png",
+      "original_full_frame_sha256": "bfd186984d11802219e9a7a1f0da641c250318435b73baf0df2f9e58d6bb5b36"
+    },
+    {
+      "name": "native-guide-dialogue",
+      "sha256": "8877c660d19a09e65109542b805f253966827d130038bd21fe544abe4a66d3e6",
+      "original_full_frame": "hud/native-guide-dialogue.png",
+      "original_full_frame_sha256": "ebd84624a078f2ba86c46079c5933a489595b383fb41a2f06847fefd2d45e91a"
+    },
+    {
+      "name": "family-guide",
+      "sha256": "61a8acbb3fd76df03e822ac8c51a187a9fff27c4681b16b2ef772de98deecf39",
+      "original_full_frame": "hud/family-guide.png",
+      "original_full_frame_sha256": "a633d734343653c3be92949f78d818395c4a152478fc3a09cb4e210db02a79bd"
+    },
+    {
+      "name": "family-survival",
+      "sha256": "c3e8bfc81f3faa908a26201831885aa076ae9c1d6e701d63c99b55a7b4b96e31",
+      "original_full_frame": "hud/family-survival.png",
+      "original_full_frame_sha256": "4e870114ff429acef535e3565ea98237ace8ee683c1869512d46de2642748b5f"
+    },
+    {
+      "name": "family-quest-guide",
+      "sha256": "f18d1f4d1c54fd3d767660a44c45750c1731c89385ead6d06023b1f5baf77356",
+      "original_full_frame": "hud/family-quest-guide.png",
+      "original_full_frame_sha256": "ff2d573f6d887259852f5d2b1eca5dfba62bba69f245d96a095c696e6a22e074"
+    },
+    {
+      "name": "family-combat",
+      "sha256": "df1388ec9ab3021f0bd96ee06ef86296402b42735db871793f26050817af0077",
+      "original_full_frame": "hud/family-combat.png",
+      "original_full_frame_sha256": "f89c76d519528f89c33e3e4cbdc708d72ea27aea8812a0a698090d10a6bd40d7"
+    },
+    {
+      "name": "family-prayer",
+      "sha256": "8f6185a810bf60ad50f656624faa32ebf535dfcbec1b21e8d344e2cb66b60862",
+      "original_full_frame": "hud/family-prayer.png",
+      "original_full_frame_sha256": "09db812db28766e4cf3bcd95ad4a0d743bfdc6fbe1c4436ae6c51d7d43990180"
+    },
+    {
+      "name": "family-magic",
+      "sha256": "efb4e653be195c870f5cb97a2734c7ed4b7949ee0ca4902b637a5b0f7c3c4ca3",
+      "original_full_frame": "hud/family-magic.png",
+      "original_full_frame_sha256": "0e5350561d2224eac2f1f49f903b70284342239aa6a16106ec7a53921dd5b783"
+    }
+  ],
+  "tool_sources": {
+    "tools/source-capture/HudCapture.java": "1acce05b4e2437677cbf447f292740a647e12fde14d75d6337bdf019b08c55a7",
+    "tools/ui-assets/UiAssetExport.java": "25e441231cc8e41a8572655a87ab8f874d368946aae0625f70b6f91c22041659",
+    "tools/ui-assets/prepare.py": "3fd984fb8dd223c8f95b147f2e96e21c952f45ca5ec20cbdc57163b2c38a337d"
+  },
+  "final_acceptance": false
+}

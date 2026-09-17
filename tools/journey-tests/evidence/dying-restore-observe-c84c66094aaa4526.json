@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "task": "M1-DYING-RESTORE-OBSERVE",
+  "status": "completed_observation_only",
+  "authority_commit": "bd33c742bad7be4ab244e1402cc840d89d3e427b",
+  "authority_file": "milestones/evidence/m1-dying-observation-authorization.json",
+  "adapter_commit_before_execution": "c3e7c52610eabffb8ffc78e5e08e6d699d03850c",
+  "workspace_clean_at_execution": true,
+  "actual_restore_invocations": 1,
+  "command": "python3 tools/journey-tests/resume.py --observe-dying --checkpoint .local/journey-checkpoints/7fa370e14c9b421e --expected-archive-sha256 d2e586a51f78ed36ab30443f0297b1273e984957ae5b8f78c73b86be53ca16e1 --report .local/evidence/m1-dying-restore-observe-bd33c742.json",
+  "run_id": "c84c66094aaa4526",
+  "bounded_result": {
+    "exit_code": 0,
+    "status": "observed",
+    "seconds_after_server_readiness": 3.989285876043141,
+    "maximum_seconds_after_readiness": 180,
+    "elapsed_time_is_a_scope_bound_not_a_performance_claim": true,
+    "new_world_inputs": 0,
+    "duplicate_gameplay_intent_replays": 0,
+    "signup_character_creation_dialogue_walking_chat_reclaim_or_cook_actions": 0,
+    "new_source_gameplay_steps_claimed": false
+  },
+  "same_original_identity": {
+    "account_id": "f43da325-ffcc-4753-a823-7a345dfce33b",
+    "actor_id": "actor.05a9c9bae95142fabe29d3ec35e8cf9e",
+    "world_id": "95acc818-e1d6-4ad3-805f-d323623d2933",
+    "last_acknowledged_sequence": 301,
+    "next_sequence": 302,
+    "historical_input_count": 398,
+    "historical_source_checks": 321,
+    "historical_tutorial_edges": 70,
+    "new_observation_checks": 3
+  },
+  "source_and_build": {
+    "source_revision": "m1.source-backed.v4.3ff4292b311453cc",
+    "raw_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "content_artifact_version": 4,
+    "state_runtime_ui_versions": 1,
+    "server_sha256": "9e7229a79f40e40455eb4255d08246e98fde1078c5e3240655f728ffc8223557",
+    "simulator_sha256": "28a8a650ba66d961e60df152e00418c46e2b2eb64eef53dde931c6e3642c172d",
+    "death_repair_local_commit": "88972119054feb5eac053eba2a4a866e8786bb41",
+    "main_merged_or_source_repinned": false,
+    "tracked_cargo_lock_changed": false,
+    "build_lock_scope": "Private source/manifest mirror under .local/dying-observation-build; the tracked root lock remains exact."
+  },
+  "original_control_validation": {
+    "retained_control_operation_id": "8dde7aa3-6f0c-4c19-9c04-a9a239f379c9",
+    "generated_protobuf_decoded_command": "join_world",
+    "actual_recorded_http_status": 200,
+    "actual_recorded_error": null,
+    "failed_control_exception_used": false,
+    "historical_failed_poll_request": "6ec49ce1-3987-43d4-9bc9-37afc6c6f2a3",
+    "historical_failed_poll_error": "688aab5a-a58b-4a57-bb48-ec9dcdd1391a",
+    "historical_failed_poll_status": 409,
+    "qualification": "The old capsule retained the acknowledged JoinWorld control, not the failed poll's wire bytes. The original public failure is retained unchanged; no replacement failed control was invented. The only failed-control exception requires decoding the exact demonstrated read-only PollWorld409; unknown/mutating failures remain refused."
+  },
+  "exact_before_startup_preservation": {
+    "original_archive_sha256": "d2e586a51f78ed36ab30443f0297b1273e984957ae5b8f78c73b86be53ca16e1",
+    "original_private_inventory_sha256": "7a4253a1f067f84320f8d513c6757f269a02fd29861d75b7f53e0acececcf6c6",
+    "actual_restored_private_identity_sha256": "d45c01e532b93cac678f1de6e5302c8ae2f1191d294c0c4e964d96ba00e455c6",
+    "world_actor_rng_account_receipts_game_root_identical": true,
+    "comparison_preceded_server_startup_and_reconciliation": true,
+    "old_public_observation": {"tick": 1613, "hitpoints": 1},
+    "actual_private_saved_state": {
+      "tick": 1616,
+      "hitpoints": 0,
+      "life_phase": "dying",
+      "combat_style": "style.sword.bronze.stab.accurate"
+    },
+    "old_capsules_reports_traces_or_state_rewritten": false
+  },
+  "actual_public_rpcs": [
+    {"command": "hello", "request_id": "c8d65373-ec83-49b9-899c-b7b329b5b17d", "http_status": 200},
+    {"command": "login", "request_id": "fcd8b170-4336-426c-b285-c2046acf647f", "http_status": 200},
+    {"command": "current_account", "request_id": "e39c1796-c51a-47ac-bf1a-e4579c7352fb", "http_status": 200},
+    {"command": "join_world", "request_id": "c304956e-3d9c-4f11-9f8c-972355273ec7", "http_status": 200},
+    {"command": "poll_world", "request_id": "e48b0dd0-c197-49c6-be61-61d2221a38f5", "http_status": 200}
+  ],
+  "public_join": {
+    "tick": 1621,
+    "world_revision": 1934,
+    "character_revision": 1932,
+    "next_sequence": 302,
+    "hitpoints": 10,
+    "region": "region.osrs.12633",
+    "tile": {"x": 3174, "y": 5726, "plane": 0},
+    "instance": "instance.engine.1615.0",
+    "active_death": "death.engine.1615.0",
+    "combat_style": "style.unarmed.punch",
+    "activity": "idle",
+    "actor_action": null,
+    "ui_version": 1,
+    "active_interface": "interface.magic",
+    "production_present": false,
+    "document_present": false
+  },
+  "public_poll": {
+    "tick": 1622,
+    "world_revision": 1935,
+    "character_revision": 1933,
+    "next_sequence": 302,
+    "hitpoints": 10,
+    "region": "region.osrs.12633",
+    "tile": {"x": 3174, "y": 5726, "plane": 0},
+    "instance": "instance.engine.1615.0",
+    "active_death": "death.engine.1615.0",
+    "combat_style": "style.unarmed.punch",
+    "activity": "idle",
+    "actor_action": null,
+    "ui_version": 1,
+    "active_interface": "interface.magic",
+    "production_present": false,
+    "document_present": false
+  },
+  "phase_qualification": {
+    "public_dying_frame_observed": false,
+    "public_respawning_frame_observed": false,
+    "standalone_life_phase_enum_exposed_by_protocol": false,
+    "actual_public_facts": "The first public join and poll already showed HP10 at the source Office region/tile with a private instance and active death ID.",
+    "separate_private_after_observation": {
+      "tick": 1622,
+      "hitpoints": 10,
+      "life_phase": "first_death_office",
+      "combat_style": "style.unarmed.punch"
+    },
+    "natural_source_phases_allowed_to_progress": true,
+    "hp_life_tick_or_arrival_setter_used": false,
+    "missing_dying_or_respawning_events_fabricated": false
+  },
+  "after_startup_preservation": {
+    "owned_items_equipment_bank_xp_quests_unchanged": true,
+    "death_retention_grave_office_claim_items_unchanged": true,
+    "gameplay_receipt_journal_identical": true,
+    "last_sequence_301_next_302_unchanged": true,
+    "private_rng_key_preserved_not_reseeded": true,
+    "whole_world_state_after_startup_identical": false,
+    "qualification": "Normal trusted lifecycle/derived-style repair and source ticks/NPC/RNG/death progression after startup are not claimed unchanged. No gameplay inputs were emitted."
+  },
+  "historical_trace": {
+    "original_prefix_copied_byte_identically": true,
+    "source_checks_still_321_and_edges_still_70": true,
+    "new_suffix": {
+      "observation_rpc_request": 5,
+      "observation_rpc_response": 5,
+      "observation_check": 3,
+      "authoritative_snapshot": 2,
+      "dying_public_join_observation": 1,
+      "dying_public_poll_observation": 1
+    },
+    "new_input_sequence_probe_source_action_plan_or_production_records": 0,
+    "new_request_ids_matched_against_actual_server_rpc_log": true
+  },
+  "fresh_protected_checkpoint": {
+    "directory": ".local/journey-checkpoints/c84c66094aaa4526",
+    "archive_bytes": 152400,
+    "archive_sha256": "a7cd1774144525c29efc694b5550f71a0e04052324bb59c3ab4fbccbe2d8b4af",
+    "private_inventory_sha256": "996a199f2d47d83add36ee9de22802774cb9aaecd06e9fd0c0ea2d1a0e394f6f",
+    "files_mode": "0600",
+    "directory_mode": "0700",
+    "captured_before_owned_postgresql_cleanup": true,
+    "complete_archive_reading_and_before_after_identity_checks_passed": true,
+    "original_7fa_checkpoint_and_all_inventory_files_unchanged": true,
+    "private_payloads_published_or_committed": false
+  },
+  "validation_before_real_invocation": {
+    "rust_client_protocol_tests": 59,
+    "python_machinery_tests": 38,
+    "format_and_strict_clippy": "passed",
+    "native_original_command_preflight": "passed, with zero network/gameplay operations",
+    "code_committed_before_actual_restore": true,
+    "tracked_root_lock_unchanged": true
+  },
+  "cleanup": {
+    "server_exit_clean": true,
+    "owned_server_and_postgresql_removed": true,
+    "transient_run_credentials_and_game_root_removed": true,
+    "fresh_private_checkpoint_retained": true,
+    "cleanup_passed": true
+  },
+  "public_evidence_hashes": [
+    {"path": ".local/evidence/m1-dying-restore-observe-bd33c742.json", "bytes": 79127, "sha256": "35fdf59ca8d32ae1fcfc00bc4807ec178c2758b54d69084b15fef85f0b97be82"},
+    {"path": ".local/evidence/journey-c84c66094aaa4526/m1-fresh-account.json", "bytes": 66830, "sha256": "1abe8e9f463fb2d3a277f2fe854b2d4cdb1a09a87c19f6547845d36ac5c85ae6"},
+    {"path": ".local/evidence/journey-c84c66094aaa4526/m1-fresh-account.trace.jsonl", "bytes": 21646623, "sha256": "fa305af3d0183c0755a7a288850910c9af73d95671713f1ea3c2424227aa0679"},
+    {"path": ".local/evidence/journey-c84c66094aaa4526/product-server-0.jsonl", "bytes": 3123, "sha256": "f2f44fed1579e741b7701f9d7fb9ed9e334cdb496240080d135abdf54efa669e"},
+    {"path": ".local/evidence/journey-c84c66094aaa4526/simulator.log", "bytes": 203, "sha256": "d6a0f1c8e361e8103f4e5ae0c9b2be55580d5fef127167c0db94a2429cf2e00b"}
+  ],
+  "further_gameplay_authorized": false,
+  "full_m1_journey_verified": false,
+  "milestone_accepted": false,
+  "ui_fidelity_audio_performance_or_runelite_acceptance": false
+}

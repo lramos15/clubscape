@@ -1,0 +1,278 @@
+{
+  "scope": "Additional ORIGINAL UI component/effect fixture comparisons, not live gameplay",
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "results": [
+    {
+      "case": "native-audio-area-0",
+      "kind": "audio-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "30da2499c9359092324c8dd67ee06463f2327bb864c4d67f8d0807b99e925b47",
+      "candidate_sha256": "54fc4ee67ef7e92db30c7bb2c86da77d15282afccd3265e6b99fd17995c0322f",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-channel-boundaries",
+      "kind": "audio-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "c9e29b9eccf152ec318ba302260e449232eb19bb7bf5947fdbded9c22d26180e",
+      "candidate_sha256": "ecabfa5d8d8e240c9709b181b8ba86bb499f92505dd74b412d148905dc9204a1",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-default",
+      "kind": "audio-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "e398fd9fba281a300a1314d745c29d13c06d108b119013c9f1180c23d0844bfa",
+      "candidate_sha256": "cc46c39b96340c0583dbc3511398e18c908607575348aa6618a6eeca14ff20ab",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-effects-0",
+      "kind": "audio-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "1f3fe1b7378b8e4d562cec8271d7e1e460a20fdf2b6e8dc5f2a2e2279146ae05",
+      "candidate_sha256": "fcfe0a7ba00b79f3f4d00e5681a0ad96b7fde3cbb1e3aebd1b360d83bc8fd125",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-master-0",
+      "kind": "audio-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "80d7a3b7f7fa0426f7a173b727df913e6fce6bc5a2a912ce0b29ed6246714785",
+      "candidate_sha256": "b7e5a8db904fe1a4ed32822dedef1bcf5809ef6b3432cafd282b60121a4bf830",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-master-50",
+      "kind": "audio-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "ecf591fafb0913bca3a0fb8f40f9e407d741cd8a88b2f37bedaa50f298256b6b",
+      "candidate_sha256": "92c1434c394e0d246ae3fc59c8246045d9a32109de0c1bc5edb2b013e8459122",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-mixed",
+      "kind": "audio-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "90be67a22e262d6faf3328d6bbab73574334809fbfe02a3c2a46e01f2393e23d",
+      "candidate_sha256": "b598c1711ca36cba6f117b5ed82c9bcd6a0345b0122d61e3f6d9b8a07ee6c4cb",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-music-0",
+      "kind": "audio-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "8db4b51ed35cdedd124a31483d4adad7ca47451ddd192740631f37fa32371884",
+      "candidate_sha256": "dc579b46c25fb4951144a98a7cd894064587de177ed8493f89c1bd32507cfa86",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-music-50",
+      "kind": "audio-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "f13d124d317afa868b891e52f631045f36b2d03f19529a4ff02762e9cd180a59",
+      "candidate_sha256": "4b08a8b955afaf0983f8f4fcbf4ebf55df612116e147ef8a1853bf77e8572dd5",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-area-0",
+      "kind": "audio-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "30da2499c9359092324c8dd67ee06463f2327bb864c4d67f8d0807b99e925b47",
+      "candidate_sha256": "54fc4ee67ef7e92db30c7bb2c86da77d15282afccd3265e6b99fd17995c0322f",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-channel-boundaries",
+      "kind": "audio-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "c9e29b9eccf152ec318ba302260e449232eb19bb7bf5947fdbded9c22d26180e",
+      "candidate_sha256": "ecabfa5d8d8e240c9709b181b8ba86bb499f92505dd74b412d148905dc9204a1",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-default",
+      "kind": "audio-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "e398fd9fba281a300a1314d745c29d13c06d108b119013c9f1180c23d0844bfa",
+      "candidate_sha256": "cc46c39b96340c0583dbc3511398e18c908607575348aa6618a6eeca14ff20ab",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-effects-0",
+      "kind": "audio-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "1f3fe1b7378b8e4d562cec8271d7e1e460a20fdf2b6e8dc5f2a2e2279146ae05",
+      "candidate_sha256": "fcfe0a7ba00b79f3f4d00e5681a0ad96b7fde3cbb1e3aebd1b360d83bc8fd125",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-master-0",
+      "kind": "audio-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "80d7a3b7f7fa0426f7a173b727df913e6fce6bc5a2a912ce0b29ed6246714785",
+      "candidate_sha256": "b7e5a8db904fe1a4ed32822dedef1bcf5809ef6b3432cafd282b60121a4bf830",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-master-50",
+      "kind": "audio-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "ecf591fafb0913bca3a0fb8f40f9e407d741cd8a88b2f37bedaa50f298256b6b",
+      "candidate_sha256": "92c1434c394e0d246ae3fc59c8246045d9a32109de0c1bc5edb2b013e8459122",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-mixed",
+      "kind": "audio-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "90be67a22e262d6faf3328d6bbab73574334809fbfe02a3c2a46e01f2393e23d",
+      "candidate_sha256": "b598c1711ca36cba6f117b5ed82c9bcd6a0345b0122d61e3f6d9b8a07ee6c4cb",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-music-0",
+      "kind": "audio-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "8db4b51ed35cdedd124a31483d4adad7ca47451ddd192740631f37fa32371884",
+      "candidate_sha256": "dc579b46c25fb4951144a98a7cd894064587de177ed8493f89c1bd32507cfa86",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-audio-music-50",
+      "kind": "audio-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "f13d124d317afa868b891e52f631045f36b2d03f19529a4ff02762e9cd180a59",
+      "candidate_sha256": "4b08a8b955afaf0983f8f4fcbf4ebf55df612116e147ef8a1853bf77e8572dd5",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    }
+  ],
+  "fullPanelsExcluded": 0,
+  "finalAcceptance": false
+}

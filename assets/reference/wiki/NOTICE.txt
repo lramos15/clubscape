@@ -1,0 +1,39 @@
+Public Old School RuneScape source-reference media
+
+Original game artwork, screenshots, recordings and audio:
+Copyright Jagex Ltd. All rights reserved.
+Jagex, RuneScape and Old School RuneScape are Jagex trademarks.
+
+Each original file's exact MediaWiki imageinfo, original SHA-1, downloaded
+SHA-256, upload timestamp, description-page revision, history URL, and complete
+file-description wikitext are preserved under research/reference-pack/v1/.
+The compressed source snapshots retain the original "RuneScape image" /
+"Update license" or other file-specific notices. Source-specific notices take
+precedence over a generic summary. Wiki prose/history attribution:
+https://oldschool.runescape.wiki/w/RuneScape:Copyrights
+
+Official update media is attributed to Jagex, through the cited official
+newspost and its revision-preserved wiki archive. Other wiki uploads retain
+their source description/history links; upload dates are NOT capture dates.
+
+These files are owner-authorized reference inputs, not an open-source asset
+grant, an endorsement, acceptance of account terms, or permission inferred
+from RuneLite's code license. No additional rights approval is asserted or
+requested by this pack.
+
+Original MediaWiki files have not been cropped, rescaled, re-encoded or
+watermarked. The recording-frames/ directory contains explicitly identified
+full-frame browser decodes of the pinned public recording, not original PNG
+uploads, original runtime fixtures, or ClubScape screenshots.
+
+The audio-source/ directory contains two byte-identical original native
+comparison WAVs (2693 and710), copied from retained source-audio evidence
+without synthesis, conversion or normalization. They are not wiki uploads
+or new runtime FLACs. Their native input/PCM hashes, current cache identity
+and matching public-recording template hashes are in audio-templates.json
+and audio-reference.json under research/reference-pack/v1/.
+
+The separate review gallery and web-only compositions are unapproved
+reference tooling. They are not the ClubScape client or evidence that a game
+renderer, authoritative journey, browser playback pipeline or Mac target
+has passed acceptance.

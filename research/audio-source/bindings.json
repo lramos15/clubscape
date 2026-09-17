@@ -1,0 +1,232 @@
+{
+  "blanket_account_requirement": false,
+  "cue_bindings": [
+    {
+      "action": "eating",
+      "alternate_relationship": "Identical original motion/timing, but829 has no frame sound",
+      "alternate_sequence": 829,
+      "frame": 1,
+      "frame_start_cycle_sum": 4,
+      "range": 5,
+      "repeat_count": 1,
+      "residual": "Ordinary food's server choice of829 plus a game-triggered cue versus sound-enabled12526 is not encoded in client action metadata. Do not dispatch2393 twice.",
+      "retain": 0,
+      "sequence_id": 12526,
+      "source_sound_ids": [
+        2393
+      ],
+      "status": "verified_current_sequence_cue",
+      "weight": 100
+    },
+    {
+      "action": "ordinary_unarmed_goblin",
+      "event_roles": [
+        "attack",
+        "hit",
+        "death"
+      ],
+      "frame_events": [],
+      "public_matches": {
+        "attack_peak": 0.7873672946663144,
+        "death_peak": 0.9845552823159313,
+        "hit_peak": 0.9777869588842321
+      },
+      "residual": "No current cache frame sound selects these cues; exact current game-trigger delay and armed goblin variants remain server-dependent, not inferred from historical recordings.",
+      "source_sequences": [
+        6184,
+        6183,
+        6182
+      ],
+      "source_sound_ids": [
+        469,
+        472,
+        471
+      ],
+      "status": "identified_original_signals_with_historical_public_action_evidence"
+    },
+    {
+      "action": "tutorial_rat",
+      "attack_candidate": 710,
+      "frame_events": [],
+      "public_matches": {
+        "attack_peak": 0.9880185670344562,
+        "death_peak": 0.8224174870665013,
+        "hit_peak": 0.9421424429479718
+      },
+      "residual": "Game-triggered attack/hit/death cues, not embedded493x frame events; dated source observation qualification retained.",
+      "source_npc_ids": [
+        3313,
+        3314,
+        3315
+      ],
+      "source_sequences": {
+        "attack": 4933,
+        "death": 4935,
+        "hit": 4934
+      },
+      "source_sound_ids": {
+        "attack": 710,
+        "death": 711,
+        "hit": 713
+      },
+      "status": "source_attack_hit_death_signals_and_public_events_identified"
+    },
+    {
+      "action": "ordinary_shortbow",
+      "correlation": 0.994381682692452,
+      "event_boundary": "ordinary shortbow projectile release",
+      "frame_events": [],
+      "independently_named_candidates": {
+        "arrow_launch": 2692,
+        "arrowlaunch2": 2693,
+        "shortbow": 2702
+      },
+      "recording_date": "20240521",
+      "residual": "No animation426 frame cue; retain source game-trigger/received queue delay. Recording date is not relabeled as build240.",
+      "source_sequence": 426,
+      "source_sound_ids": [
+        2693
+      ],
+      "status": "source_signal_and_public_event_identified"
+    },
+    {
+      "action": "bronze_smelting",
+      "candidate_sound": 2725,
+      "event_boundary": "accepted copper/tin furnace operation starts",
+      "other_source_sequence": 3243,
+      "public_candidate_peak": 0.2568288958395292,
+      "recording_date": "20240521",
+      "relationship": "Same frame lengths/other sequence settings, different actual frame IDs, no embedded sound in either",
+      "residual": "Bound by sample-coherent recording and actual smelt-start state, not by treating3243 as899. Current server-build capture is not claimed.",
+      "source_sequence": 899,
+      "source_sound_ids": [
+        2725
+      ],
+      "status": "source_signal_and_public_smelt_start_identified"
+    }
+  ],
+  "latest_selector_observations": {
+    "path": "research/audio-source/selector-observations.json",
+    "sha256": "b50d7f68fa34efbb3ba86caad0eb684f0177bedad2caf21b9954d194d694c340",
+    "size_bytes": 6907
+  },
+  "m1_accepted": false,
+  "native_evidence": {
+    "path": "research/audio-source/binding-native-evidence.json.gz",
+    "sha256": "b6f57fffb3684299e4d077d8efa89c10fe8ebeaeb409addd7646328297c9d5a3",
+    "size_bytes": 405190
+  },
+  "native_queue_rules": {
+    "arguments": [
+      "sound_id",
+      "repeat_count",
+      "client_cycle_delay"
+    ],
+    "capacity": 50,
+    "countdown": "Each source client cycle decrements delay; dispatch when negative, set delay=-100, remove next cycle. Submitted delay2 dispatches on the third processing call.",
+    "full_queue": "New entry dropped, existing FIFO entries retained; no kind-based priority",
+    "jingle_acceptance": "Music volume nonzero and group != -1",
+    "jingle_arguments": [
+      "source_index11_group",
+      "unused_auxiliary_integer"
+    ],
+    "jingle_opcode": 3202,
+    "jingle_priority": "Last accepted request replaces pending work and clears active music streams, retaining the remembered background playlist. No quest-vs-skill ranking; auxiliary values0/1/255/60000 do not change this.",
+    "jingle_sentinel": "Group -1 does not start or erase an earlier accepted request",
+    "native_loop": false,
+    "nonpositional_volume_zero_or_repeat_zero": "No enqueue",
+    "offsets": "Published SFX already include source instrument offsets. Source runtime trims whole20ms leading delay and adds it to the queue; using the untrimmed asset must not add that trim again.",
+    "request_delay_fade_arguments": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "script_sfx_opcode": 3200,
+    "source_clock_units_not_hardware_latency": true,
+    "source_silence": "Preserve2411 and its74/100 branch probability, not a missing-file fallback."
+  },
+  "necessary_source_correction": {
+    "action": "Correct/re-render musical inputs only; preserve all existing SFX hashes and silent weighted entries",
+    "native_factory": "dg.ay -> new nu(player) -> nu.ap(9,128,-27396)",
+    "not_a_source_selection_change": true,
+    "previous_offline_renderer": "Omitted the source startup percussion bank"
+  },
+  "original_source_cache_modified": false,
+  "owner_reference_pack_approved": false,
+  "pack_gate_status": {
+    "input.quest_jingle_binding": "not_fully_closed",
+    "input.required_effect_bindings": "not_fully_closed"
+  },
+  "public_evidence": {
+    "path": "research/audio-source/binding-public-evidence.json.gz",
+    "sha256": "aa4f4f866f02858003fec6f8c877085ff5827c6f777142a6b00503e8035fde21",
+    "size_bytes": 13648
+  },
+  "quest_jingles": {
+    "candidate_groups": [
+      152,
+      153,
+      154
+    ],
+    "cooks_assistant_source_observation": {
+      "excluded_counterexample": "fu46Z8ECdVg has a Quest Speedrunning results interface and audible34; it is not promoted to the normal-account quest ordering.",
+      "five_second_correlation": 0.9810391310274564,
+      "later_actual_cooking_levelup": {
+        "correlation": 0.9207284175007333,
+        "cue_start_seconds": 715.7616326530613,
+        "jingle": 34,
+        "level": 5,
+        "not_a_simultaneous_quest_reward": true
+      },
+      "levelup_after_scroll_dismissal": {
+        "correlation": 0.9822065977733833,
+        "cue_start_seconds": 690.1516553287981,
+        "dialog_visible_at_seconds": [
+          690.2,
+          691.5
+        ],
+        "jingle": 33,
+        "level": 4
+      },
+      "native_queue_rule_unchanged": "No quest/skill rank or auxiliary priority parameter. Last accepted native jingle request wins; the observed ordering comes from when the game submits requests.",
+      "normal_account_video": "ppHJckQj7Vk",
+      "not_154_by_novice_guess": true,
+      "ordering_rule_observed": "Quest completion/152 precedes the reward-caused level-up dialog/33; the level-up is shown and sounded after the quest scroll is dismissed.",
+      "quest": "quest.cooks_assistant",
+      "quest_cue_start_seconds": 681.5116553287982,
+      "quest_jingle": 152,
+      "quest_scroll_visible_at_seconds": [
+        681.566,
+        683.0,
+        688.0
+      ],
+      "recording_date": "20170301"
+    },
+    "current_script_corpus": "9801 valid native-decoded scripts; zero opcode3202 occurrences; source script0 payload0009 is rejected by native parser and not in required closure",
+    "exact_residual": "Learning-the-Ropes actual current quest-jingle/no-request selector and its emission order against simultaneous level-ups. Cook's Assistant152 followed by modal-deferred level-up33 is now source-observed, with the2017 recording qualification retained.",
+    "packet_selector_boundary": "Original client.ia's jingle branch reads numeric group and auxiliary value, maps65535 to-1, then calls bl.bp. No quest ID or skill class is passed.",
+    "possible_no_request_outcome_retained": true,
+    "priority_closed": "Generic last-accepted-request-wins, no class priority and no use of the auxiliary integer",
+    "public_recording_result": "Recent named quest/tutorial guides plus a recent no-commentary tutorial were retrieved without login. Their candidate ending intervals did not produce a decisive match against any152/153/154 template, so neither154 nor silence is asserted.",
+    "quest_widget_callback": "153:0 -> script118 ->6816/6817; these format quest-point fields, not audio selection",
+    "quests": [
+      "Learning the Ropes",
+      "Cook's Assistant"
+    ],
+    "status": "unresolved_per_quest_server_selector"
+  },
+  "reference_pack_gap_ids": [
+    "input.required_effect_bindings",
+    "input.quest_jingle_binding"
+  ],
+  "remaining_selector_rules": [
+    "quest.learning_the_ropes",
+    "rule.food.healing"
+  ],
+  "runtime_browser_audio_accepted": false,
+  "schema_version": 1,
+  "source_selection": "osrs-live-240-cache2695-injected1.12.38-20260913",
+  "superseded_candidate_notes": "The dated, source-state-verified observations identify2693 for ordinary shortbow release, 710 for tutorial-rat attack,2725 for copper/tin smelt start, and152 for a normal Cook's Assistant completion. Use the attached observations rather than the earlier weak-match notes. Their recording dates remain explicit; Learning-the-Ropes and literal315/2309 selectors remain unresolved.",
+  "task": "m1-audio-bindings"
+}

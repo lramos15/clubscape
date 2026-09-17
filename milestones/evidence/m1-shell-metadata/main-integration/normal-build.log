@@ -1,0 +1,21 @@
+$ pnpm wasm && pnpm renderer && pnpm typecheck && vite build && node ../tools/web-build/deliver.ts
+$ node ../tools/web-build/wasm.ts
+Built the real client-core/Protobuf WASM bridge (wasm-bindgen 0.2.128).
+$ node ../tools/web-build/renderer.ts
+{"kind":"actual-renderer-build","bindgen":"0.2.128","wasmSha256":"d06005a0d9c41ee3673257154193e0c4315375b7b36f80570f3d4609d140abf9","javascriptSha256":"e63a0c4ae2b9d061671b21f0d5379cacd275c3f96027a6a3d5417e61f2597f0f","manifestSha256":"78fed3ca6b1549b329d6a48a47b35b68e912303b7d4698bb4cc0a8bdd2c34455","presentationAccepted":false}
+$ tsc --noEmit
+[36mvite v8.3.0 [32mbuilding client environment for production...[36m[39m
+transforming...
+✓ 85 modules transformed.
+rendering chunks...
+computing gzip size...
+../.local/web-builds/shell-metadata-main-01/index.html                                      0.83 kB │ gzip:   0.45 kB
+../.local/web-builds/shell-metadata-main-01/client/clubscape_renderer_bg-Doy2OR98.wasm    979.42 kB │ gzip: 387.48 kB
+../.local/web-builds/shell-metadata-main-01/client/clubscape_wasm_bg-Boh4Ckaf.wasm      2,240.89 kB │ gzip: 473.55 kB
+../.local/web-builds/shell-metadata-main-01/client/app-CP57QCf0.css                         0.48 kB │ gzip:   0.27 kB
+../.local/web-builds/shell-metadata-main-01/client/bridge.js                                1.05 kB │ gzip:   0.55 kB
+../.local/web-builds/shell-metadata-main-01/client/bridge-D-xAB1tl.js                     221.97 kB │ gzip:  60.17 kB
+../.local/web-builds/shell-metadata-main-01/client/app-B9cTX3zg.js                        332.06 kB │ gzip: 104.34 kB
+
+[32m✓ built in 126ms[39m
+{"kind":"browser-build-delivery","publicFiles":11,"buildArtifactSha256":"e67fabcefbd6d80193ecd5c0b1ad1330a07df14fc49874b28bd079a482e1cdd7","components":{"renderer":true,"ui":true,"audio":true},"contentConfigured":false,"gameplayAccepted":false,"presentationAccepted":false}

@@ -1,0 +1,213 @@
+{
+  "authority_sha256": "b34be1f99002fcf03c0182a7045a90cbbc7eb9a15f9504479a6779e6efd33b0a",
+  "cleanup_errors": [],
+  "database_image": "postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685",
+  "database_ready_on_owned_loopback": true,
+  "execution": {
+    "binary": {
+      "path": "target/debug/clubscape-server",
+      "sha256": "83de4326673720f30143c175c3721071ddceb21100e7380b42a072cdca5d0b0a"
+    },
+    "candidate_head": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
+    "final_database_report_sha256": "a7ca773b185defd417cc800ef439f75da86f50b58a4a95857bced70076933347",
+    "final_native_report_sha256": "b03347ee1674d77a063ccaceb13e2724a42286247e09cf6e79da02adc0ae3a20",
+    "machinery_tests_passed": 32,
+    "ordinary_shutdown": "Production SIGTERM handler, zero process exit, clean shutdown_complete event and released native world lease.",
+    "pending_review_refusal_actually_exercised": true,
+    "profile_order": [
+      "legacy5e",
+      "current5b"
+    ],
+    "review_record_sha256": "1b4c238979a07902a52ff147b8503bd732e7a62a454af52fd90a89188b09d40d",
+    "runner_commit": "4340530c7184f4c2e03ec9982bbbfbfd82f57999",
+    "runner_sha256": "9ce5e3ebdc97d9463dbdf6c4184978ec6438a52e5a68003d4f0477814fe6bf30",
+    "scope": "Only four source-server starts and ten migrate-ui invocations against the two prepared fresh character-free worlds. No account/gameplay command or saved-world access.",
+    "source_process_allowance_already_used": false,
+    "status": "admitted"
+  },
+  "milestone_accepted": false,
+  "operator_invocations": [
+    {
+      "case": "active-owner",
+      "elapsed_seconds": 3.9383799228817225,
+      "exit_code": 1,
+      "expected_error": "exclusive_world_ownership",
+      "from_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+      "log": "legacy5e-active-owner.log",
+      "log_sha256": "c247394bc4855cf7679c6bbd01ef34c3240cc3938a6ed700a3b76745004e85d5",
+      "profile": "legacy5e",
+      "status": "passed"
+    },
+    {
+      "case": "wrong-pin",
+      "elapsed_seconds": 3.9895931188948452,
+      "exit_code": 1,
+      "expected_error": "state_migration",
+      "from_artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "log": "legacy5e-wrong-pin.log",
+      "log_sha256": "3dbc9f414c59bcb2c1b963c105652cd5fc0fcabde1bc5465ec501bc4becbe27a",
+      "profile": "legacy5e",
+      "status": "passed"
+    },
+    {
+      "case": "migrate",
+      "elapsed_seconds": 3.991458630654961,
+      "exit_code": 0,
+      "expected_error": null,
+      "from_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+      "log": "legacy5e-migrate.log",
+      "log_sha256": "53a36ddcc2abd61c122312eb09b334b1073ea5b564166f7565a32ad2085537ef",
+      "profile": "legacy5e",
+      "status": "passed"
+    },
+    {
+      "case": "idempotent-retry",
+      "elapsed_seconds": 3.931202413048595,
+      "exit_code": 0,
+      "expected_error": null,
+      "from_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+      "log": "legacy5e-idempotent-retry.log",
+      "log_sha256": "c5fba1696982d96b2be0110d0a34a79a89a90362802727c72a9cfe6ad90a19f6",
+      "profile": "legacy5e",
+      "status": "passed"
+    },
+    {
+      "case": "wrong-origin-retry",
+      "elapsed_seconds": 3.9406425557099283,
+      "exit_code": 1,
+      "expected_error": "state_migration",
+      "from_artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "log": "legacy5e-wrong-origin-retry.log",
+      "log_sha256": "62522d985b7c813454fc5642a3093706a5e675c13d9455558e0b060bb48f9222",
+      "profile": "legacy5e",
+      "status": "passed"
+    },
+    {
+      "case": "active-owner",
+      "elapsed_seconds": 3.99652865761891,
+      "exit_code": 1,
+      "expected_error": "exclusive_world_ownership",
+      "from_artifact_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+      "log": "current5b-active-owner.log",
+      "log_sha256": "bd96278209cfa1b4f3d27797736427fb7db6797e8ec17853df9aeb0202c3c765",
+      "profile": "current5b",
+      "status": "passed"
+    },
+    {
+      "case": "wrong-pin",
+      "elapsed_seconds": 3.9905546652153134,
+      "exit_code": 1,
+      "expected_error": "state_migration",
+      "from_artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "log": "current5b-wrong-pin.log",
+      "log_sha256": "74bcbea324fa0b2ab3a7fcbfaad5cadfeeb7c73e7e9593d854a6194c23ff5e4b",
+      "profile": "current5b",
+      "status": "passed"
+    },
+    {
+      "case": "migrate",
+      "elapsed_seconds": 3.9799254620447755,
+      "exit_code": 0,
+      "expected_error": null,
+      "from_artifact_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+      "log": "current5b-migrate.log",
+      "log_sha256": "5fffcc154019ac2c0b193e3014643c847f05539a0900449d930f671216c1fcab",
+      "profile": "current5b",
+      "status": "passed"
+    },
+    {
+      "case": "idempotent-retry",
+      "elapsed_seconds": 3.8876095758751035,
+      "exit_code": 0,
+      "expected_error": null,
+      "from_artifact_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+      "log": "current5b-idempotent-retry.log",
+      "log_sha256": "41d037a7fbf17b0e9f39f849b775fbc0701c77d438f085bd1e90f64277ee5c91",
+      "profile": "current5b",
+      "status": "passed"
+    },
+    {
+      "case": "wrong-origin-retry",
+      "elapsed_seconds": 4.032950864173472,
+      "exit_code": 1,
+      "expected_error": "state_migration",
+      "from_artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "log": "current5b-wrong-origin-retry.log",
+      "log_sha256": "5863bdf5c2ab8e809929e5927275bf96b45be006235c7ca1a207f1801b36c488",
+      "profile": "current5b",
+      "status": "passed"
+    }
+  ],
+  "owned_container_id": "6bae78322b7d058072aaea6d841a50c0c37546b3a0c650f3a1b0555562e3198f",
+  "owned_container_name": "clubscape-water-operator-3b9e9e22c4e64e45",
+  "owned_database_removed": true,
+  "phase": "complete",
+  "preparation_sha256": "51caa7d2a14631bb56253b05b84e480898e318f4fdfdd9d17f63ae4c2c4fa39d",
+  "profiles": [
+    {
+      "accounts_and_command_journals_empty": true,
+      "from_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+      "migration_audits": 1,
+      "profile": "legacy5e",
+      "runtime_key_unchanged": true,
+      "state_conserved_except_exact_content_transition": true,
+      "status": "passed",
+      "target_normal_startup_ready": true,
+      "to_artifact_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+      "world_id": "029e1354-cdf4-43c3-b442-7f68433aec12"
+    },
+    {
+      "accounts_and_command_journals_empty": true,
+      "from_artifact_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+      "migration_audits": 1,
+      "profile": "current5b",
+      "runtime_key_unchanged": true,
+      "state_conserved_except_exact_content_transition": true,
+      "status": "passed",
+      "target_normal_startup_ready": true,
+      "to_artifact_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+      "world_id": "16ceca3e-9b0c-43cd-9e9f-0382e5a190ad"
+    }
+  ],
+  "runtime_key_values_recorded": false,
+  "saved_checkpoint_accessed": false,
+  "saved_world_migrated": false,
+  "schema_version": 1,
+  "server_starts": [
+    {
+      "direction": "from",
+      "exit_code": 0,
+      "log": "legacy5e-from-server.log",
+      "origin": "http://127.0.0.1:46433",
+      "profile": "legacy5e",
+      "status": "stopped_cleanly"
+    },
+    {
+      "direction": "to",
+      "exit_code": 0,
+      "log": "legacy5e-to-server.log",
+      "origin": "http://127.0.0.1:34461",
+      "profile": "legacy5e",
+      "status": "stopped_cleanly"
+    },
+    {
+      "direction": "from",
+      "exit_code": 0,
+      "log": "current5b-from-server.log",
+      "origin": "http://127.0.0.1:43615",
+      "profile": "current5b",
+      "status": "stopped_cleanly"
+    },
+    {
+      "direction": "to",
+      "exit_code": 0,
+      "log": "current5b-to-server.log",
+      "origin": "http://127.0.0.1:33829",
+      "profile": "current5b",
+      "status": "stopped_cleanly"
+    }
+  ],
+  "source_accounts_or_gameplay_commands": 0,
+  "status": "passed",
+  "temporary_credentials_removed": true
+}

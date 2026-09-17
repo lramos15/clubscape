@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "game_root": ".local/saved-water-delivery-01/game-root",
+  "files": [
+    {
+      "path": "assets/0.bin",
+      "bytes": 5482,
+      "sha256": "eb8a9cd329d40a79bf92a6e37645c1ca1fc2ab2868abcc851419a4eda2393301"
+    },
+    {
+      "path": "assets/1.bin",
+      "bytes": 3715,
+      "sha256": "e82cd4af6e9c626473ca19f494b78356dc5e3ebf38353a603b07b3168481bff8"
+    },
+    {
+      "path": "assets/10.bin",
+      "bytes": 35033,
+      "sha256": "af819d564f5369ea37e26ae74735c0cb4a6476d070d09d036c076cad33e40091"
+    },
+    {
+      "path": "assets/11.bin",
+      "bytes": 36236,
+      "sha256": "017c2fdd1a02e1375eade431c840e686096e34f17a026da5c59b55185202e1d1"
+    },
+    {
+      "path": "assets/12.bin",
+      "bytes": 16759,
+      "sha256": "d3073dd02664af96619c89822843f2f85d06b19e55f9c348fab40ee89ea99725"
+    },
+    {
+      "path": "assets/13.bin",
+      "bytes": 12622,
+      "sha256": "935eafe01f6fea4e31557ead15cecbd0a7687c674cc4def715f9c0389b889ec3"
+    },
+    {
+      "path": "assets/14.bin",
+      "bytes": 27137,
+      "sha256": "e6211df67971cf896482a1efe022a54a679a4abd8f36c164be4f2f8327394a6d"
+    },
+    {
+      "path": "assets/15.bin",
+      "bytes": 31026,
+      "sha256": "b1214bfe8b87e7357b0c01c3e84b5303ea893769a5fd9bdaf9338ab39fb432d6"
+    },
+    {
+      "path": "assets/16.bin",
+      "bytes": 31899,
+      "sha256": "caf0135ddc519e03f6ed278850edd14d83a080ef35569c05bd9e36e60e62ff44"
+    },
+    {
+      "path": "assets/17.bin",
+      "bytes": 31425,
+      "sha256": "6f72913d2457e91cf1cae7fe5f7bbddea5520e7a3765dcad7fa53217e11c2c40"
+    },
+    {
+      "path": "assets/18.bin",
+      "bytes": 2624,
+      "sha256": "380585d7ed17110943be67e593e5adf952584547b46bc7b6667d029b327aafdb"
+    },
+    {
+      "path": "assets/19.bin",
+      "bytes": 18089,
+      "sha256": "85b00c5f196e0f20f729401554194c8e4327f07d9e3101b6a59e017ebcc3c9d2"
+    },
+    {
+      "path": "assets/1a.bin",
+      "bytes": 26004,
+      "sha256": "05674b54c1cff148f71b21f9aea5e7c65500cae90f2e4bbf7ecb11b68bb20897"
+    },
+    {
+      "path": "assets/1b.bin",
+      "bytes": 36664,
+      "sha256": "b1e8c8e44273ffa23766131fcc31e645da5bb1f7d47fa1a893fcd7624c8f05e5"
+    },
+    {
+      "path": "assets/1c.bin",
+      "bytes": 29081,
+      "sha256": "2a2c5c1c1c59763b4d75e22e0925035aa7debfa44897d59bb36b20ea8fe29b3f"
+    },
+    {
+      "path": "assets/1d.bin",
+      "bytes": 36063,
+      "sha256": "023679333427e56a0cfe02d3b7423ea2f1e0b06e2797fea42a2fc6f7615a615d"
+    },
+    {
+      "path": "assets/1e.bin",
+      "bytes": 40828,
+      "sha256": "21d5648de7826a211796579de6e7205df9afd32b9aa1fa37d13f1c25a5a4f68a"
+    },
+    {
+      "path": "assets/1f.bin",
+      "bytes": 21958,
+      "sha256": "79a5bba6c4b949f11ff0ad2ba3a523580942c935d627b0e22fbd8254954da7fd"
+    },
+    {
+      "path": "assets/2.bin",
+      "bytes": 765,
+      "sha256": "282c8c9ff409defde4194df1126e3012363418fdb7c4c731461e9942a5d4c06c"
+    },
+    {
+      "path": "assets/20.bin",
+      "bytes": 28237,
+      "sha256": "fa3b7533dd262fbd85a9c4bb2933bd173ac52835ffc84423fa44446c44baeda3"
+    },
+    {
+      "path": "assets/21.bin",
+      "bytes": 25186,
+      "sha256": "bc363e367f5d156ab24e0d3b101a5535a691abac55aaef1bfa8bdaf67771c6c7"
+    },
+    {
+      "path": "assets/22.bin",
+      "bytes": 21417,
+      "sha256": "6d09bb327880ae52bed377ac1235e594819a3d063d5dafd2500fc4e7dc6ea3d4"
+    },
+    {
+      "path": "assets/23.bin",
+      "bytes": 37504,
+      "sha256": "82944ea27c49bfab6ad49e67b9667ebcc5e8116a66cb4be7f112b513cd6f8f40"
+    },
+    {
+      "path": "assets/3.bin",
+      "bytes": 682,
+      "sha256": "b4ff6b1a39d5d7f80f881b0ccfd413908762f68fa86cc2a6d8a2af0d00d3879c"
+    },
+    {
+      "path": "assets/4.bin",
+      "bytes": 2729,
+      "sha256": "afabe3081a27bd69dc87f759d152b89cb8fb8ceee103ae63216580ed4d112ba9"
+    },
+    {
+      "path": "assets/5.bin",
+      "bytes": 1142,
+      "sha256": "11dd89de8187509f5409c47eef3b48fbd012c80b17bd3da600f9a5b179af8ca7"
+    },
+    {
+      "path": "assets/6.bin",
+      "bytes": 138361,
+      "sha256": "d8b0212b1fa5fe34dff300f731de356f51562b58f08d7512c74fe560c4fff021"
+    },
+    {
+      "path": "assets/7.bin",
+      "bytes": 5842,
+      "sha256": "09950fa89679d88838d7ed6e126480dc3f5e2544862a46fd8a08162c93e48001"
+    },
+    {
+      "path": "assets/8.bin",
+      "bytes": 9734,
+      "sha256": "46a29e55a35737ff9b21fd02d1acf17cef819d0b6ef333865299d544f9df5510"
+    },
+    {
+      "path": "assets/9.bin",
+      "bytes": 16274,
+      "sha256": "f0e8b3cbb0e21c0f2414b2c765bb13ff18df50e684163cb81cf7d812706dc6ef"
+    },
+    {
+      "path": "assets/a.bin",
+      "bytes": 21052,
+      "sha256": "8f9feb686fe9de47a558a56969c6964766a5e96522d98eeafb025de00e2b28ff"
+    },
+    {
+      "path": "assets/b.bin",
+      "bytes": 20081,
+      "sha256": "fd7b3eb90ef6397aea808c4979ebac37329cc0fec10c12c41efab8ab44f4e3ea"
+    },
+    {
+      "path": "assets/c.bin",
+      "bytes": 39088,
+      "sha256": "9fd3f8f64aad06e3056920d698635c12ffb80bbc750e931bd7676d029a4e9dbb"
+    },
+    {
+      "path": "assets/d.bin",
+      "bytes": 13831,
+      "sha256": "3df58a0b839cb8c167a1e29438ef0185a3afecbcb2e4cc2d63f8febf390fae2d"
+    },
+    {
+      "path": "assets/e.bin",
+      "bytes": 27058,
+      "sha256": "57f432f60282bd2ece58cba5ab1d2ce837d4afb1cece14d40cd67e5c927b8e26"
+    },
+    {
+      "path": "assets/f.bin",
+      "bytes": 32692,
+      "sha256": "9e618383b62c2138b2344b6b6d5062567142e9e275143434b12f4090a698d8a2"
+    },
+    {
+      "path": "clubscape-game-assets.json",
+      "bytes": 7571,
+      "sha256": "95d7afc9d2740299c6e5091b547dbcfbc1b7b2c6f5614eca0b2251adc60abf08"
+    },
+    {
+      "path": "clubscape-game.json",
+      "bytes": 272691,
+      "sha256": "24fec6e152cf5e5a899248bfe302fc12f6f080b71d43f9c0052264f1d9fcbc6e"
+    },
+    {
+      "path": "content/manifest.json",
+      "bytes": 6455,
+      "sha256": "718d50eb2134f76b9bb2d34ba2b99f162cb2ec6666b392aba52ce2a03477cdf4"
+    },
+    {
+      "path": "world.csc",
+      "bytes": 13125018,
+      "sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650"
+    }
+  ],
+  "total_bytes": 14296055,
+  "protected_saved_state_included": false
+}

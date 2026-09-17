@@ -1,0 +1,605 @@
+[
+  {
+    "id": "proposal.registration",
+    "path": "research/reference-pack/v1/proposals/registration.png",
+    "sha256": "1ba0bb8b3adf7708eff821c18c748a6072d4b3155296e1aa046adb44022c5e81",
+    "size_bytes": 525343,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "source_role": "composition_proposal",
+    "label": "OWNER-REVIEW PROPOSAL - NOT AN OSRS SOURCE CAPTURE OR GAME FRONTEND",
+    "approved": false,
+    "source_capture": false,
+    "game_client": false,
+    "base_input": {
+      "path": "assets/reference/osrs240/title/state-10-login-index-0.png",
+      "sha256": "398ce3e99427544f1b76c70a4ac7348a662257a83ee1c3c71424f6e12178a90b",
+      "size_bytes": 658278
+    },
+    "component_inputs": [
+      {
+        "path": "assets/source/osrs/cache2695/sprites/499.png",
+        "sha256": "6f82b7e3c20d1a141da5bcb74dd419ffe9d8c2aa72659bc33d63f7e4456775e6",
+        "size_bytes": 33113
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/500.png",
+        "sha256": "052d92a2884039f4e250fcceb054823dca24672102881362b8863d40cb7f13d8",
+        "size_bytes": 2196
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/495.png",
+        "sha256": "30fbc285651a890aa2e50d45675c1acd1ed4419cd8bb90306969d3dd287bb386",
+        "size_bytes": 5431
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/496.png",
+        "sha256": "0d0aa702975511a494aff9ffb3f0c70f07fe0cf4b5f04184db2982e6b8ea9c6d",
+        "size_bytes": 5756
+      }
+    ],
+    "titlebox_rectangle": [
+      779,
+      171,
+      360,
+      200
+    ],
+    "unchanged_region": "Every pixel outside the titlebox; inside it the reused source frame/font/button constraints still apply, not a whole-panel mask.",
+    "controls": [
+      {
+        "label": "Create account",
+        "rectangle": [
+          806,
+          303,
+          147,
+          41
+        ]
+      },
+      {
+        "label": "Cancel",
+        "rectangle": [
+          966,
+          303,
+          147,
+          41
+        ]
+      }
+    ],
+    "content": {
+      "heading": "Create a ClubScape account",
+      "lines": [
+        "Login name: reference_user",
+        "Password: ************",
+        "Confirm:  ************"
+      ],
+      "buttons": [
+        "Create account",
+        "Cancel"
+      ],
+      "note": "Login-name/password/confirmation composition only. Real account fields, validation and persistence must use the existing account contract; this image makes no request."
+    },
+    "target_canvas": [
+      1920,
+      1080
+    ],
+    "source_sprite_scale": 1,
+    "position_classification": "Explicit proposal coordinates within the native 765-wide title composition",
+    "glyphs": "Actual CP1252 source glyph masks/advances at scale 1; no system font substitution."
+  },
+  {
+    "id": "proposal.registration-rejected",
+    "path": "research/reference-pack/v1/proposals/registration-rejected.png",
+    "sha256": "b6a36192f7b59ef6c0ad2c4b4394254551b9a54692f6b0036a27d487326af9b1",
+    "size_bytes": 525408,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "source_role": "composition_proposal",
+    "label": "OWNER-REVIEW PROPOSAL - NOT AN OSRS SOURCE CAPTURE OR GAME FRONTEND",
+    "approved": false,
+    "source_capture": false,
+    "game_client": false,
+    "base_input": {
+      "path": "assets/reference/osrs240/title/state-10-login-index-0.png",
+      "sha256": "398ce3e99427544f1b76c70a4ac7348a662257a83ee1c3c71424f6e12178a90b",
+      "size_bytes": 658278
+    },
+    "component_inputs": [
+      {
+        "path": "assets/source/osrs/cache2695/sprites/499.png",
+        "sha256": "6f82b7e3c20d1a141da5bcb74dd419ffe9d8c2aa72659bc33d63f7e4456775e6",
+        "size_bytes": 33113
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/500.png",
+        "sha256": "052d92a2884039f4e250fcceb054823dca24672102881362b8863d40cb7f13d8",
+        "size_bytes": 2196
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/495.png",
+        "sha256": "30fbc285651a890aa2e50d45675c1acd1ed4419cd8bb90306969d3dd287bb386",
+        "size_bytes": 5431
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/496.png",
+        "sha256": "0d0aa702975511a494aff9ffb3f0c70f07fe0cf4b5f04184db2982e6b8ea9c6d",
+        "size_bytes": 5756
+      }
+    ],
+    "titlebox_rectangle": [
+      779,
+      171,
+      360,
+      200
+    ],
+    "unchanged_region": "Every pixel outside the titlebox; inside it the reused source frame/font/button constraints still apply, not a whole-panel mask.",
+    "controls": [
+      {
+        "label": "Try again",
+        "rectangle": [
+          806,
+          303,
+          147,
+          41
+        ]
+      },
+      {
+        "label": "Cancel",
+        "rectangle": [
+          966,
+          303,
+          147,
+          41
+        ]
+      }
+    ],
+    "content": {
+      "heading": "Account not created",
+      "lines": [
+        "That login name is unavailable.",
+        "Your entered name is preserved.",
+        "Choose another name and try again."
+      ],
+      "buttons": [
+        "Try again",
+        "Cancel"
+      ],
+      "note": "Explicit rejected outcome; do not report success or discard unrelated entered fields."
+    },
+    "target_canvas": [
+      1920,
+      1080
+    ],
+    "source_sprite_scale": 1,
+    "position_classification": "Explicit proposal coordinates within the native 765-wide title composition",
+    "glyphs": "Actual CP1252 source glyph masks/advances at scale 1; no system font substitution."
+  },
+  {
+    "id": "proposal.connecting",
+    "path": "research/reference-pack/v1/proposals/connecting.png",
+    "sha256": "8b0c7035462a4f049cde0fbb16c84a0b248b0ec156baa282213938860dd27a69",
+    "size_bytes": 528024,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "source_role": "composition_proposal",
+    "label": "OWNER-REVIEW PROPOSAL - NOT AN OSRS SOURCE CAPTURE OR GAME FRONTEND",
+    "approved": false,
+    "source_capture": false,
+    "game_client": false,
+    "base_input": {
+      "path": "assets/reference/osrs240/title/state-10-login-index-0.png",
+      "sha256": "398ce3e99427544f1b76c70a4ac7348a662257a83ee1c3c71424f6e12178a90b",
+      "size_bytes": 658278
+    },
+    "component_inputs": [
+      {
+        "path": "assets/source/osrs/cache2695/sprites/499.png",
+        "sha256": "6f82b7e3c20d1a141da5bcb74dd419ffe9d8c2aa72659bc33d63f7e4456775e6",
+        "size_bytes": 33113
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/500.png",
+        "sha256": "052d92a2884039f4e250fcceb054823dca24672102881362b8863d40cb7f13d8",
+        "size_bytes": 2196
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/495.png",
+        "sha256": "30fbc285651a890aa2e50d45675c1acd1ed4419cd8bb90306969d3dd287bb386",
+        "size_bytes": 5431
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/496.png",
+        "sha256": "0d0aa702975511a494aff9ffb3f0c70f07fe0cf4b5f04184db2982e6b8ea9c6d",
+        "size_bytes": 5756
+      }
+    ],
+    "titlebox_rectangle": [
+      779,
+      171,
+      360,
+      200
+    ],
+    "unchanged_region": "Every pixel outside the titlebox; inside it the reused source frame/font/button constraints still apply, not a whole-panel mask.",
+    "controls": [
+      {
+        "label": "Cancel",
+        "rectangle": [
+          886,
+          303,
+          147,
+          41
+        ]
+      }
+    ],
+    "content": {
+      "heading": "Connecting to ClubScape",
+      "lines": [
+        "Connecting to the game server...",
+        "Preparing required source assets.",
+        "Progress must reflect actual completed work."
+      ],
+      "buttons": [
+        "Cancel"
+      ],
+      "note": "Browser-only composition, not a captured original game-state-20 painter."
+    },
+    "target_canvas": [
+      1920,
+      1080
+    ],
+    "source_sprite_scale": 1,
+    "position_classification": "Explicit proposal coordinates within the native 765-wide title composition",
+    "glyphs": "Actual CP1252 source glyph masks/advances at scale 1; no system font substitution."
+  },
+  {
+    "id": "proposal.capability",
+    "path": "research/reference-pack/v1/proposals/capability.png",
+    "sha256": "b5c78fa475e76549048efb4089932c1d2aa5914a82870d55c345f5af21ec2cea",
+    "size_bytes": 525567,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "source_role": "composition_proposal",
+    "label": "OWNER-REVIEW PROPOSAL - NOT AN OSRS SOURCE CAPTURE OR GAME FRONTEND",
+    "approved": false,
+    "source_capture": false,
+    "game_client": false,
+    "base_input": {
+      "path": "assets/reference/osrs240/title/state-10-login-index-0.png",
+      "sha256": "398ce3e99427544f1b76c70a4ac7348a662257a83ee1c3c71424f6e12178a90b",
+      "size_bytes": 658278
+    },
+    "component_inputs": [
+      {
+        "path": "assets/source/osrs/cache2695/sprites/499.png",
+        "sha256": "6f82b7e3c20d1a141da5bcb74dd419ffe9d8c2aa72659bc33d63f7e4456775e6",
+        "size_bytes": 33113
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/500.png",
+        "sha256": "052d92a2884039f4e250fcceb054823dca24672102881362b8863d40cb7f13d8",
+        "size_bytes": 2196
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/495.png",
+        "sha256": "30fbc285651a890aa2e50d45675c1acd1ed4419cd8bb90306969d3dd287bb386",
+        "size_bytes": 5431
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/496.png",
+        "sha256": "0d0aa702975511a494aff9ffb3f0c70f07fe0cf4b5f04184db2982e6b8ea9c6d",
+        "size_bytes": 5756
+      }
+    ],
+    "titlebox_rectangle": [
+      779,
+      171,
+      360,
+      200
+    ],
+    "unchanged_region": "Every pixel outside the titlebox; inside it the reused source frame/font/button constraints still apply, not a whole-panel mask.",
+    "controls": [
+      {
+        "label": "Try again",
+        "rectangle": [
+          806,
+          303,
+          147,
+          41
+        ]
+      },
+      {
+        "label": "Back",
+        "rectangle": [
+          966,
+          303,
+          147,
+          41
+        ]
+      }
+    ],
+    "content": {
+      "heading": "Unable to start",
+      "lines": [
+        "WebGPU is required for ClubScape.",
+        "Use desktop Chrome or Edge.",
+        "No alternate renderer has been started."
+      ],
+      "buttons": [
+        "Try again",
+        "Back"
+      ],
+      "note": "No WebGL fallback, fake running world, new dashboard or sandbox-disabling instruction."
+    },
+    "target_canvas": [
+      1920,
+      1080
+    ],
+    "source_sprite_scale": 1,
+    "position_classification": "Explicit proposal coordinates within the native 765-wide title composition",
+    "glyphs": "Actual CP1252 source glyph masks/advances at scale 1; no system font substitution."
+  },
+  {
+    "id": "proposal.runtime-error",
+    "path": "research/reference-pack/v1/proposals/runtime-error.png",
+    "sha256": "91ecc9f2e57711df9c48920a907f8c072f9e39b3f07d8db281857ba33a7d0a0d",
+    "size_bytes": 525499,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "source_role": "composition_proposal",
+    "label": "OWNER-REVIEW PROPOSAL - NOT AN OSRS SOURCE CAPTURE OR GAME FRONTEND",
+    "approved": false,
+    "source_capture": false,
+    "game_client": false,
+    "base_input": {
+      "path": "assets/reference/osrs240/title/state-10-login-index-0.png",
+      "sha256": "398ce3e99427544f1b76c70a4ac7348a662257a83ee1c3c71424f6e12178a90b",
+      "size_bytes": 658278
+    },
+    "component_inputs": [
+      {
+        "path": "assets/source/osrs/cache2695/sprites/499.png",
+        "sha256": "6f82b7e3c20d1a141da5bcb74dd419ffe9d8c2aa72659bc33d63f7e4456775e6",
+        "size_bytes": 33113
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/500.png",
+        "sha256": "052d92a2884039f4e250fcceb054823dca24672102881362b8863d40cb7f13d8",
+        "size_bytes": 2196
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/495.png",
+        "sha256": "30fbc285651a890aa2e50d45675c1acd1ed4419cd8bb90306969d3dd287bb386",
+        "size_bytes": 5431
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/496.png",
+        "sha256": "0d0aa702975511a494aff9ffb3f0c70f07fe0cf4b5f04184db2982e6b8ea9c6d",
+        "size_bytes": 5756
+      }
+    ],
+    "titlebox_rectangle": [
+      779,
+      171,
+      360,
+      200
+    ],
+    "unchanged_region": "Every pixel outside the titlebox; inside it the reused source frame/font/button constraints still apply, not a whole-panel mask.",
+    "controls": [
+      {
+        "label": "Retry",
+        "rectangle": [
+          806,
+          303,
+          147,
+          41
+        ]
+      },
+      {
+        "label": "Back",
+        "rectangle": [
+          966,
+          303,
+          147,
+          41
+        ]
+      }
+    ],
+    "content": {
+      "heading": "Unable to continue",
+      "lines": [
+        "A required game resource could not load.",
+        "Saved progress is checked after login.",
+        "Retry, or return to the login screen."
+      ],
+      "buttons": [
+        "Retry",
+        "Back"
+      ],
+      "note": "Message is an owner-review wording proposal. Show actual error category; never claim progress was saved unless authoritative acknowledgement proves it."
+    },
+    "target_canvas": [
+      1920,
+      1080
+    ],
+    "source_sprite_scale": 1,
+    "position_classification": "Explicit proposal coordinates within the native 765-wide title composition",
+    "glyphs": "Actual CP1252 source glyph masks/advances at scale 1; no system font substitution."
+  },
+  {
+    "id": "proposal.unavailable",
+    "path": "research/reference-pack/v1/proposals/unavailable.png",
+    "sha256": "8791f139cfb6bedb5feb00f2e8519f168a6aecb827aaa23c71d8e7ae56c2c02f",
+    "size_bytes": 528062,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "source_role": "composition_proposal",
+    "label": "OWNER-REVIEW PROPOSAL - NOT AN OSRS SOURCE CAPTURE OR GAME FRONTEND",
+    "approved": false,
+    "source_capture": false,
+    "game_client": false,
+    "base_input": {
+      "path": "assets/reference/osrs240/title/state-10-login-index-0.png",
+      "sha256": "398ce3e99427544f1b76c70a4ac7348a662257a83ee1c3c71424f6e12178a90b",
+      "size_bytes": 658278
+    },
+    "component_inputs": [
+      {
+        "path": "assets/source/osrs/cache2695/sprites/499.png",
+        "sha256": "6f82b7e3c20d1a141da5bcb74dd419ffe9d8c2aa72659bc33d63f7e4456775e6",
+        "size_bytes": 33113
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/500.png",
+        "sha256": "052d92a2884039f4e250fcceb054823dca24672102881362b8863d40cb7f13d8",
+        "size_bytes": 2196
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/495.png",
+        "sha256": "30fbc285651a890aa2e50d45675c1acd1ed4419cd8bb90306969d3dd287bb386",
+        "size_bytes": 5431
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/496.png",
+        "sha256": "0d0aa702975511a494aff9ffb3f0c70f07fe0cf4b5f04184db2982e6b8ea9c6d",
+        "size_bytes": 5756
+      }
+    ],
+    "titlebox_rectangle": [
+      779,
+      171,
+      360,
+      200
+    ],
+    "unchanged_region": "Every pixel outside the titlebox; inside it the reused source frame/font/button constraints still apply, not a whole-panel mask.",
+    "controls": [
+      {
+        "label": "Back",
+        "rectangle": [
+          886,
+          303,
+          147,
+          41
+        ]
+      }
+    ],
+    "content": {
+      "heading": "Not available in this slice",
+      "lines": [
+        "This control is outside the current journey.",
+        "Its source position is preserved.",
+        "Required tutorial features remain available."
+      ],
+      "buttons": [
+        "Back"
+      ],
+      "note": "Proposal for scope feedback. In-world equivalent uses the same source chat/continue visual language; no claim of an implemented overlay or permission to hide required controls."
+    },
+    "target_canvas": [
+      1920,
+      1080
+    ],
+    "source_sprite_scale": 1,
+    "position_classification": "Explicit proposal coordinates within the native 765-wide title composition",
+    "glyphs": "Actual CP1252 source glyph masks/advances at scale 1; no system font substitution."
+  },
+  {
+    "id": "proposal.branding",
+    "path": "research/reference-pack/v1/proposals/branding.png",
+    "sha256": "8770cd5253d69841175fe54a1d495637356c92e2f530ace67d1bf88413fdd9e6",
+    "size_bytes": 525866,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "source_role": "composition_proposal",
+    "label": "OWNER-REVIEW PROPOSAL - NOT AN OSRS SOURCE CAPTURE OR GAME FRONTEND",
+    "approved": false,
+    "source_capture": false,
+    "game_client": false,
+    "base_input": {
+      "path": "assets/reference/osrs240/title/state-10-login-index-0.png",
+      "sha256": "398ce3e99427544f1b76c70a4ac7348a662257a83ee1c3c71424f6e12178a90b",
+      "size_bytes": 658278
+    },
+    "component_inputs": [
+      {
+        "path": "assets/source/osrs/cache2695/sprites/499.png",
+        "sha256": "6f82b7e3c20d1a141da5bcb74dd419ffe9d8c2aa72659bc33d63f7e4456775e6",
+        "size_bytes": 33113
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/500.png",
+        "sha256": "052d92a2884039f4e250fcceb054823dca24672102881362b8863d40cb7f13d8",
+        "size_bytes": 2196
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/495.png",
+        "sha256": "30fbc285651a890aa2e50d45675c1acd1ed4419cd8bb90306969d3dd287bb386",
+        "size_bytes": 5431
+      },
+      {
+        "path": "assets/source/osrs/cache2695/sprites/496.png",
+        "sha256": "0d0aa702975511a494aff9ffb3f0c70f07fe0cf4b5f04184db2982e6b8ea9c6d",
+        "size_bytes": 5756
+      }
+    ],
+    "titlebox_rectangle": [
+      779,
+      171,
+      360,
+      200
+    ],
+    "unchanged_region": "Every pixel outside the titlebox; inside it the reused source frame/font/button constraints still apply, not a whole-panel mask.",
+    "controls": [
+      {
+        "label": "New account",
+        "rectangle": [
+          806,
+          303,
+          147,
+          41
+        ]
+      },
+      {
+        "label": "Existing user",
+        "rectangle": [
+          966,
+          303,
+          147,
+          41
+        ]
+      }
+    ],
+    "content": {
+      "heading": "Welcome to ClubScape",
+      "lines": [
+        "Source title composition retained.",
+        "Brand text uses the native source font.",
+        "The original source artwork remains credited."
+      ],
+      "buttons": [
+        "New account",
+        "Existing user"
+      ],
+      "note": "Minimal name-string proposal inside the source titlebox. The OSRS logo is deliberately retained as source evidence; final ClubScape logo artwork is not fabricated or approved."
+    },
+    "target_canvas": [
+      1920,
+      1080
+    ],
+    "source_sprite_scale": 1,
+    "position_classification": "Explicit proposal coordinates within the native 765-wide title composition",
+    "glyphs": "Actual CP1252 source glyph masks/advances at scale 1; no system font substitution."
+  }
+]

@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "authoritative_controls_audio_history_and_animation_candidate_verified",
+  "code_revision": "49bf011b3f5dff77877310d61f56ac6320ea7a90",
+  "source": {
+    "content_artifact_versions": [4, 4],
+    "state_runtime_ui_versions": [1, 1, 1],
+    "revision": "m1.source-backed.v4.bdbf8a3788b842be",
+    "raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "compressed_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+    "live_5e_6f_worlds_repin_attempted": false,
+    "source_binding_counts_preserved": [104, 7],
+    "tutorial_graph_preserved": [71, 73],
+    "cooks_graph_preserved": [10, 22],
+    "active_unresolved_bindings": 0,
+    "proof_scoped_inactive_bindings": 6
+  },
+  "owned_sequence": ["c7f3578", "005204a", "2fef76d", "79c11c6", "4f6801c", "8d3b400", "5b4006f", "8bcdf8e", "8eddc42", "4b7f3d4", "838c767", "c662869", "3609a51"],
+  "main_sequence": ["78fde28", "38bb27f", "0862ad8", "f4b3e20", "a0440c0", "e554636", "43c9a3d", "616b649", "791f36f", "9cb1bb6", "89d11fd", "5c82bac", "49bf011"],
+  "director_travel_menu_and_shop_repairs_preserved": true,
+  "implemented": [
+    "Semantic quantity/All production and persistent bank preferences without numeric sentinels.",
+    "Identity-bound partial recovery, unit/full-entry/combined fees, executable capacities and source permissions.",
+    "Original233 chat/660 notification level-up associations without extra rewards.",
+    "Actual opaque current-instance and template identity for validated source chunk lookup.",
+    "Append-only source music unlock/history authority, tracked creation ticks and explicit legacy unknown history.",
+    "Partial native491 authority: value0 knownBits20, not an invented complete word.",
+    "Qualified/source-bound legal style, spell, Home Teleport phase, consumption, death and milking animation rules."
+  ],
+  "contracts": {
+    "capabilities": ["game.ui.v1", "game.ui.amounts.v1", "game.ui.recovery.v1", "game.observer.v1", "game.audio.authority.v1"],
+    "scene": "WorldView.scene {region,instance,instanceTemplate}",
+    "amount": "{kind:quantity,quantity} or {kind:all}",
+    "audio_authority_field": "WorldSnapshot.audio_authority22 / WorldView.audioAuthority",
+    "unknown_audio_history_is_not_locked_or_unlocked": true,
+    "client_preferences_cannot_grant_unlocks": true,
+    "bank_revision_after_duplicate_lookup": true,
+    "bank_layout_version": 2,
+    "world_upgrade": "Explicit exact-pin fenced migration; preserve old receipts, RNG, possessions, XP, claims and history."
+  },
+  "parent_validation": {
+    "native_tests_passed": 588,
+    "native_failures": 0,
+    "postgres_not_counted_in_native_result": 46,
+    "native_all_target_and_wasm_library_clippy": "passed",
+    "postgres_command": "python3 tools/dev.py integration --report .local/evidence/authority-controls-parent.json",
+    "postgres_http_migration_replay_tests_passed": 46,
+    "independent_account_checks": 11,
+    "postgres_report_sha256": "ec337c2799dff0cba94b87a1e63b5e0aa2f3009cf72fb7dd04b82249f1c0a026",
+    "owned_services_and_data_cleaned": true,
+    "source_command": "python3 tools/m1-content/validate.py --repeat",
+    "source_tests": 94,
+    "full_pipeline_outputs_compared": 95,
+    "all_outputs_repeat_identically": true,
+    "source_validation_sha256": "5ff6bac6d14a8489dec6c032023729b4954144d3b1a15ff4d23f5b84858dba2b",
+    "repeatability_sha256": "a0e0e2b0b850bfeec84281df21e2650e540325b8d9073df32bead06a16a0ccde",
+    "initial_test_run_qualification": "An initial parallel test build embedded a transient manifest while source generation was rewriting it. The committed manifest schema was correct; rerunning after generation completed passed588 tests without changing rules or assertions."
+  },
+  "still_unverified": [
+    "Normal-grave Bank-All server permission; Office669 has no such source action.",
+    "Inventory dough and Empty source motion or verified deliberate absence.",
+    "Original renderer clips/hand overrides/fit closure for395,400,401,428,429,440,2305,4847,4850,4853,4855,4857.",
+    "Actual composed UI/WASM/audio/renderer consumers of the complete new contracts.",
+    "Source-safe continuation of the preserved actual5e dying-state checkpoint after its PollWorld409 is localized and repaired.",
+    "Cook's Assistant and post-quest recovery, complete fitting/terrain/performance, Mac Chrome/Edge and final owner acceptance."
+  ],
+  "full_browser_typecheck_passed": false,
+  "full_m1_journey_verified": false,
+  "presentation_accepted": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

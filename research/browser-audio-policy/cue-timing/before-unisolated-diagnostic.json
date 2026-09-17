@@ -1,0 +1,3710 @@
+{
+  "schemaVersion": 1,
+  "phase": "unisolated_diagnostic_before",
+  "configurationQualification": "This initial diagnostic omitted the original server COOP/COEP headers. Its pass is not a composed reproduction or an audio timing repair.",
+  "shellCommit": "35e12584681fd45fa1671805f26adc64feae511a",
+  "browser": "Google Chrome for Testing 153.0.8010.12",
+  "startedAt": "2026-09-15T22:00:21.118Z",
+  "originalShellBuild": "clubscape-35e12584681fd45fa1671805f26adc64feae511a-bd4a693e2ab10a72",
+  "inputs": [
+    {
+      "path": "web/app/assets.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "f85645740d77f3a6b28d7d91ef9147dd87986cfd661fd26082f97bb4d4e97cca",
+      "bytes": 7820
+    },
+    {
+      "path": "web/app/audio.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "b8ba00abafa980b7111b39c170be5549310372b17c9d06a366603b13696c41c8",
+      "bytes": 10483
+    },
+    {
+      "path": "web/app/benchmark.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "a53e54a47a873582d95781c82664175f97c43df15f8108c175b3717b3e4eb34a",
+      "bytes": 9949
+    },
+    {
+      "path": "web/app/bridge.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "1637ae3dcd4a139465586cf612f9431f51dc077ca08026aad1c6bad77a6c835b",
+      "bytes": 2505
+    },
+    {
+      "path": "web/app/build.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "a264a3254233e9f59eb8baef8ada8f8a0b54235ad36d1de6517068c570d14657",
+      "bytes": 2941
+    },
+    {
+      "path": "web/app/capability.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "18162900dd88fa5e4b2d12bf4feec30d7ac9b402929178a339e8411449c33dbe",
+      "bytes": 3271
+    },
+    {
+      "path": "web/app/client.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "c89df4b813e24d29a5d621c2707c442b99ed665cf976327705b2001a2f562a5c",
+      "bytes": 25358
+    },
+    {
+      "path": "web/app/components.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "fb020252bc762991e53586558c9b236b874e4f6066264321598ebb47f17b6835",
+      "bytes": 824
+    },
+    {
+      "path": "web/app/composition.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "d950fac544d88e00216b68d5ced47a8ddce4ed175b5445af24cf3f7caa986627",
+      "bytes": 23646
+    },
+    {
+      "path": "web/app/errors.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "4a1e96f105f0eb28b7ddaafbf700692b2d879ecb245cb3d77294722cea52a5a5",
+      "bytes": 2162
+    },
+    {
+      "path": "web/app/gameplay-ui.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "35d0b600e15dd584aa68f83ce4716566aa94645da8133db97cbbeec1e8df769d",
+      "bytes": 8770
+    },
+    {
+      "path": "web/app/gpu-clock.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "ff7de6e2ee4cb91d4ad1d16eb9b0bd3c8665546d488873c3af18f1e11f4d8f26",
+      "bytes": 3767
+    },
+    {
+      "path": "web/app/identity.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "770a6b406f04bf7228f581aa59de6eb8034c482daa4692acddeada88878c4a8d",
+      "bytes": 1502
+    },
+    {
+      "path": "web/app/input.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "7508db0477a370b2d9b12b66243eaf5fa7f7b3ba7fc7ec37631ce19901242b13",
+      "bytes": 9046
+    },
+    {
+      "path": "web/app/main.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "8921fc8049baa5dfcd8b988cc207926dd0dbfd7d8a130ca47dd4ced82b7982aa",
+      "bytes": 4230
+    },
+    {
+      "path": "web/app/manifest.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "1f4279d6c3a568c45c897d3147d4b24fb699e8520bbeaaad62b21224d1a3ffd3",
+      "bytes": 11944
+    },
+    {
+      "path": "web/app/minimap.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "8e479e59b2f6136d74cdf861f67a4bf94d02ae3579d3cbc2ac4e6cff6740a742",
+      "bytes": 2687
+    },
+    {
+      "path": "web/app/picking.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "819e303131497cce7261933c56fbe7afcf5b8791d036f768aec6240a3ab20f81",
+      "bytes": 656
+    },
+    {
+      "path": "web/app/player-audio-composition.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "11f24326d7e74ca48dd6a0e069e7e926ee002a2f4468e32e4d414d6348bc570b",
+      "bytes": 9067
+    },
+    {
+      "path": "web/app/player-audio-store.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "9d02d492fab9c4ebf564f97749472d86a04d8d89b4b455acc78d1dceb26af980",
+      "bytes": 6400
+    },
+    {
+      "path": "web/app/player-audio.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "cc03c01514e81b26cad690c5211f9fd33521f39e83b113b15eae5eae367dcb09",
+      "bytes": 14782
+    },
+    {
+      "path": "web/app/presentation.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "1f42b718d27ba6ceffc98608beb87613c9f78fa81b2eab1652ba87be7e457670",
+      "bytes": 850
+    },
+    {
+      "path": "web/app/preview.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "0cee1a37536c41c6591da83b3bfc02f001685bc23e38a677d66adc2c74209ac3",
+      "bytes": 4925
+    },
+    {
+      "path": "web/app/public-state.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "b8fe929755eedbfe79d8a1b2f854084cfe77ac106ceb27d9536020c9331e221a",
+      "bytes": 2822
+    },
+    {
+      "path": "web/app/render-identity.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "9fb762aecc96db41f9334a535c5dd61fec5e176d65488c06c2dc973b8043937c",
+      "bytes": 106
+    },
+    {
+      "path": "web/app/render-state.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "a3b70e669e0f37b19ca5f1544d0f2bc17c0dc805b1d94922dabf1142ecf41bae",
+      "bytes": 1899
+    },
+    {
+      "path": "web/app/renderer.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "b0ab85e8a26820b1e11aa8c0b8e3b6ade92a8c02eb4a605fe89d6f0a939f10a9",
+      "bytes": 6680
+    },
+    {
+      "path": "web/app/settings.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "e41d79a50f00ba2af2baaa3c12c9fbfebb826e3683849a089139b6d01088648f",
+      "bytes": 3676
+    },
+    {
+      "path": "web/app/source-fetch.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "46bc2cff8a24804c32e5e515496f223ec07a0e5f346c08d7a364a6a5717cfd10",
+      "bytes": 1155
+    },
+    {
+      "path": "web/app/tests/player-audio-fixture.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "3da2b9019772834f0db6eefcd55ce075904051a26f559be195806e7c2718c531",
+      "bytes": 5492
+    },
+    {
+      "path": "web/app/tests/real-player-audio.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "6d542410b0c39c8ca09f42442b2a7057cf98fc6f21a5c349cd8add505084f2dc",
+      "bytes": 19277
+    },
+    {
+      "path": "web/app/transport.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "cc1f11d94d06e214a5188ebaaef24ffb4ab3f544494c1366fe46ec83171a4087",
+      "bytes": 3525
+    },
+    {
+      "path": "web/app/ui-adapter.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "57dbb1dc8672c8cfab026dfc2442cc2d24d6ac3c20131c32567afe72fb097bba",
+      "bytes": 989
+    },
+    {
+      "path": "web/app/ui-preview-request.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "796c3c4da81675b0bc6097cb4bd2f4bdd67a1b525508c5a6419dd8c5dee0b1e9",
+      "bytes": 2888
+    },
+    {
+      "path": "web/audio/buffers.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "90992badd533b2f301c81e774353aedac377272f3a799124e639d4248829f6ec",
+      "bytes": 6156
+    },
+    {
+      "path": "web/audio/errors.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "99d956ccee69b27a17d3e47b1d9af18aa6b0e64365c9768c76193f6bc32629f1",
+      "bytes": 1232
+    },
+    {
+      "path": "web/audio/events.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "f1d337a085eddba8a4e87a469e4fb8adfdd840235fd0bc79fe4977e57e07436e",
+      "bytes": 4298
+    },
+    {
+      "path": "web/audio/index.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "12f6bcc74d1e5af25a95ced416cfb6c22641f0460ce74fc549d46278c22fe2d3",
+      "bytes": 119416
+    },
+    {
+      "path": "web/audio/native-data.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "b7a1e322d98c5f0aebba2e3e35bf6372d6ad06de45d8bb9cfa7a13caa67283d5",
+      "bytes": 51364
+    },
+    {
+      "path": "web/audio/native-policy.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "1a0564343d649c11435ac2f11b88bfb192da4d64ceeccc1272101a251b3fa5e8",
+      "bytes": 10635
+    },
+    {
+      "path": "web/audio/native-scene.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "c6980e5efd162de08abc4390dc57f994d206d88e107d8182eaceb486ffb434dd",
+      "bytes": 8720
+    },
+    {
+      "path": "web/audio/preferences.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "1cb445e484b7f9e600a2879554ec62299f0bb8d7de891000bfe24fec993d8447",
+      "bytes": 15964
+    },
+    {
+      "path": "web/audio/queue.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "c9ee41978eaacbccc799d39e382e62be15e3cd9daf1c312aaaff2f1b2a08fa41",
+      "bytes": 2390
+    },
+    {
+      "path": "web/audio/reward-levels.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "ff41337cefe8a29a8b8da80e07d674ea25dbe479e675097439b9a9f21b3a2a99",
+      "bytes": 3643
+    },
+    {
+      "path": "web/audio/source.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "a8e1cc35306e413307e35624a641b36a4dc25d10ed3f601c48063a6e7a770fd1",
+      "bytes": 15621
+    },
+    {
+      "path": "web/shared/contracts.ts",
+      "origin": "35e12584681fd45fa1671805f26adc64feae511a",
+      "sha256": "a80c61793c3965d8dc1b84797450cf6dac00299dfdbdeb3c768a6e3861a611db",
+      "bytes": 14876
+    }
+  ],
+  "requests": [
+    {
+      "url": "/client/bridge.js",
+      "bytes": 941,
+      "sha256": "1922d84496d278c448e15485957ffc5808de7834bfadad750af505d131827e2b"
+    },
+    {
+      "url": "/client/bridge-CNangtn6.js",
+      "bytes": 204387,
+      "sha256": "6ccb2513a2ed7d127f3ba62f3a13fdea1a634314a9e5a4491e747ebdd08943f5"
+    },
+    {
+      "url": "/client/build.json",
+      "bytes": 968,
+      "sha256": "24f0b34b17a0605bfd892b9721aafa8801f8c29341b4e066296b7ddbc9092b5d"
+    },
+    {
+      "url": "/client/build-artifact.json",
+      "bytes": 1555693,
+      "sha256": "bd4a693e2ab10a724c2f30c1f2473632f90845d2dee1cdc109bd770db6464582"
+    },
+    {
+      "url": "/content/manifest.json",
+      "bytes": 2553396,
+      "sha256": "8051180dcdc2ec2728626d60d4a7d4ab476376f86e847d46fbbe822efbb97404"
+    },
+    {
+      "url": "/content/audio/reference.json",
+      "bytes": 24348,
+      "sha256": "e4d54300411c6fdffd09b2d5d1c2051d381f9d8a3931fce16e83cbee07f16764"
+    },
+    {
+      "url": "/content/audio/map.json",
+      "bytes": 122699,
+      "sha256": "1d79acd86552ee6d50801161f172e05a343861eeaae7eee768a5bf420c9eb271"
+    },
+    {
+      "url": "/content/audio/manifest.json",
+      "bytes": 845835,
+      "sha256": "8e6d1eca465f720829599cae0e1c11b7700a9c7162e53dd5ddec36ceb89787aa"
+    },
+    {
+      "url": "/content/audio/supplement.json",
+      "bytes": 25856,
+      "sha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91"
+    },
+    {
+      "url": "/assets/audio/music-62.flac",
+      "bytes": 10651065,
+      "sha256": "3174b656ec1de79c36e0943ed16f99acf36a2dd91fbda0db7d936518b5280572"
+    },
+    {
+      "url": "/assets/audio/sfx-2266.flac",
+      "bytes": 1258,
+      "sha256": "cd3323c5c52a3e03490fd2b19df7eef1b53ef6429df49ee47b5f994887c17a51"
+    },
+    {
+      "url": "/assets/audio/music-76.flac",
+      "bytes": 9730634,
+      "sha256": "c7de3cf6a6809130aec142ed9d467871bb89b895e359ce24a25a1ea481f88a2d"
+    },
+    {
+      "url": "/assets/audio/music-0.flac",
+      "bytes": 10024886,
+      "sha256": "2e28c0282533552af752d4cd4e6d1eae338bba3937d2354b2f06fefb7cc02864"
+    }
+  ],
+  "fixture": {
+    "kind": "native-player-audio-storage-composition-contract-fixture",
+    "result": "contract_passed",
+    "checks": [
+      "genuine browser storage completes before the real native world/apply/projection boundary",
+      "trusted handler starts real WebAudio resume and verified original source62 playback",
+      "actual native fallback/remembered mute, nonlinear mixers and exact saved-slot holes persist without authority",
+      "Single Skip uses the actual typed disabled_mode command, never a mode flip",
+      "genuine title clears native binding; same-actor re-entry reloads storage and fences prior controls",
+      "delayed real browser writes are serialized/coalesced per actor; the older save cannot overwrite33"
+    ],
+    "actualNativeAudio": true,
+    "actualBrowserStorage": true,
+    "trustedGesture": true,
+    "syntheticWorld": true,
+    "fixtureUnlockedGroups": [
+      62,
+      76
+    ],
+    "fixtureUiPort": true,
+    "actualGameUiPreferenceRouting": false,
+    "actualSourceSceneSupplied": false,
+    "gameAuthorityModified": false,
+    "committedGameEventsFabricated": false,
+    "record": {
+      "version": 1,
+      "volumes": {
+        "current": {
+          "master": 37,
+          "music": 33,
+          "effects": 66,
+          "area": 83
+        },
+        "remembered": {
+          "master": 37,
+          "music": 21,
+          "effects": 66,
+          "area": 83
+        }
+      },
+      "music": {
+        "mode": "single",
+        "areaMode": "modern",
+        "selectedGroup": 62,
+        "currentPlaylist": 2,
+        "repeatInAreaShuffle": false,
+        "rememberModeOnLogin": true,
+        "keepPlayingOnPlaylistChange": true,
+        "savedPlaylist1": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "savedPlaylist2": [
+          62,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          76
+        ],
+        "savedPlaylist3": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    "controls": {
+      "semantics": "native-source-slider-v1",
+      "masterPercent": 37,
+      "channels": {
+        "music": {
+          "normalizedPosition": 0.33,
+          "percent": 33,
+          "nativeMixer": 5,
+          "lookupMixer": 5,
+          "referenceGains": {
+            "native128": 0.0390625,
+            "native255": 0.0196078431372549
+          }
+        },
+        "effects": {
+          "normalizedPosition": 0.66,
+          "percent": 66,
+          "nativeMixer": 7,
+          "lookupMixer": 7,
+          "referenceGains": {
+            "native128": 0.0546875,
+            "native255": 0.027450980392156862
+          }
+        },
+        "area": {
+          "normalizedPosition": 0.83,
+          "percent": 83,
+          "nativeMixer": 10,
+          "lookupMixer": 10,
+          "referenceGains": {
+            "native128": 0.078125,
+            "native255": 0.0392156862745098
+          }
+        }
+      },
+      "defaults": {
+        "sliders": {
+          "master": 100,
+          "music": 100,
+          "effects": 100,
+          "area": 100
+        },
+        "rawNewPreferences": {
+          "music": 127,
+          "effects": 127,
+          "area": 127
+        },
+        "mixer": {
+          "music": 255,
+          "effects": 127,
+          "area": 127
+        },
+        "assetGain": {
+          "music": 1.9921875,
+          "effects": 0.9921875,
+          "area": 0.9921875
+        }
+      },
+      "playback": {
+        "groups": [
+          62
+        ],
+        "cursor": 0,
+        "mode": "single",
+        "exhausted": false,
+        "failed": false
+      },
+      "voices": [
+        {
+          "id": 13,
+          "sourceId": 62,
+          "kind": "music",
+          "channel": "music",
+          "assetId": "asset.source.osrs.cache2695.audio-runtime.music.62",
+          "renderedNativeLevel": 128,
+          "appliedNativeLevel": 5,
+          "gain": 0.0390625
+        },
+        {
+          "id": 23,
+          "sourceId": 2266,
+          "kind": "sfx",
+          "channel": "effects",
+          "assetId": "asset.source.osrs.cache2695.audio-runtime.sfx.2266",
+          "renderedNativeLevel": null,
+          "appliedNativeLevel": 7,
+          "gain": 0.0546875
+        },
+        {
+          "id": 24,
+          "sourceId": 2266,
+          "kind": "sfx",
+          "channel": "effects",
+          "assetId": "asset.source.osrs.cache2695.audio-runtime.sfx.2266",
+          "renderedNativeLevel": null,
+          "appliedNativeLevel": 7,
+          "gain": 0.0546875
+        },
+        {
+          "id": 25,
+          "sourceId": 2266,
+          "kind": "sfx",
+          "channel": "effects",
+          "assetId": "asset.source.osrs.cache2695.audio-runtime.sfx.2266",
+          "renderedNativeLevel": null,
+          "appliedNativeLevel": 7,
+          "gain": 0.0546875
+        }
+      ],
+      "sourceSceneSupplied": false,
+      "sourceMusicStateSupplied": false,
+      "providedMusicState": null,
+      "musicContinuation": "native-bound",
+      "preferences": {
+        "playerId": "actor.audio_contract_9b7b19a3-ef96-4cc5-9b9e-f722d0a815b7",
+        "preferences": {
+          "version": 1,
+          "volumes": {
+            "current": {
+              "master": 37,
+              "music": 33,
+              "effects": 66,
+              "area": 83
+            },
+            "remembered": {
+              "master": 37,
+              "music": 21,
+              "effects": 66,
+              "area": 83
+            }
+          },
+          "music": {
+            "mode": "single",
+            "areaMode": "modern",
+            "selectedGroup": 62,
+            "currentPlaylist": 2,
+            "repeatInAreaShuffle": false,
+            "rememberModeOnLogin": true,
+            "keepPlayingOnPlaylistChange": true,
+            "savedPlaylist1": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "savedPlaylist2": [
+              62,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              76
+            ],
+            "savedPlaylist3": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        "unlockedGroups": [
+          62,
+          76
+        ],
+        "musicState": {
+          "mode": "single",
+          "areaMode": "modern",
+          "unlockedGroups": [
+            62,
+            76
+          ],
+          "selectedGroup": 62,
+          "playlistGroups": [
+            62,
+            76
+          ],
+          "loopEnabled": true
+        }
+      }
+    },
+    "loaded": [
+      {
+        "id": "asset.source.osrs.cache2695.audio-runtime.music.62",
+        "sha256": "3174b656ec1de79c36e0943ed16f99acf36a2dd91fbda0db7d936518b5280572",
+        "fetched": true,
+        "decoded": true,
+        "bytes": 10651065,
+        "fetchMs": null,
+        "decodeMs": null
+      },
+      {
+        "id": "asset.source.osrs.cache2695.audio-runtime.sfx.2266",
+        "sha256": "cd3323c5c52a3e03490fd2b19df7eef1b53ef6429df49ee47b5f994887c17a51",
+        "fetched": true,
+        "decoded": true,
+        "bytes": 1258,
+        "fetchMs": null,
+        "decodeMs": null
+      }
+    ],
+    "feedback": [
+      {
+        "kind": "AUDIO_GESTURE_REQUIRED",
+        "message": "[AUDIO_GESTURE_REQUIRED] Sound is waiting for a real mouse or keyboard gesture. AudioContext has not been unlocked."
+      },
+      {
+        "kind": "AUDIO_SOURCE_SCENE_REQUIRED",
+        "message": "[AUDIO_SOURCE_SCENE_REQUIRED] Native audio scene input is unavailable: provide the real 128-unit listener, plane/instance/owner, placed emitters and bound original varps. No tile-centre, empty-scene or gain/distance substitute was made."
+      },
+      {
+        "kind": "AUDIO_SOURCE_SCENE_REQUIRED",
+        "message": "[AUDIO_SOURCE_SCENE_REQUIRED] Native audio scene input is unavailable: provide the real 128-unit listener, plane/instance/owner, placed emitters and bound original varps. No tile-centre, empty-scene or gain/distance substitute was made."
+      }
+    ],
+    "nativeCueTiming": {
+      "passed": true,
+      "failures": [],
+      "dispatchToleranceMs": 20.045351473922903,
+      "dispatchOverruns": 0,
+      "dispatches": [
+        {
+          "eventId": "source-control/4",
+          "sourceId": 2266,
+          "dueAt": 0.4850793650793652,
+          "when": 0.4850793650793652,
+          "sourceOnset": 0.48512471655328815,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/7",
+          "sourceId": 2266,
+          "dueAt": 0.635328798185941,
+          "when": 0.635328798185941,
+          "sourceOnset": 0.6353741496598639,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/8",
+          "sourceId": 2266,
+          "dueAt": 0.6650793650793654,
+          "when": 0.6650793650793654,
+          "sourceOnset": 0.6651247165532883,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/11",
+          "sourceId": 2266,
+          "dueAt": 0.8250793650793655,
+          "when": 0.8250793650793655,
+          "sourceOnset": 0.8251247165532885,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/12",
+          "sourceId": 2266,
+          "dueAt": 0.8650793650793656,
+          "when": 0.8650793650793656,
+          "sourceOnset": 0.8651247165532885,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/13",
+          "sourceId": 2266,
+          "dueAt": 0.9197732426303855,
+          "when": 0.9197732426303855,
+          "sourceOnset": 0.9198185941043084,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/14",
+          "sourceId": 2266,
+          "dueAt": 0.9836281179138322,
+          "when": 0.9836281179138322,
+          "sourceOnset": 0.9836734693877551,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/15",
+          "sourceId": 2266,
+          "dueAt": 1.0300680272108844,
+          "when": 1.0300680272108844,
+          "sourceOnset": 1.0301133786848073,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/16",
+          "sourceId": 2266,
+          "dueAt": 1.059092970521542,
+          "when": 1.059092970521542,
+          "sourceOnset": 1.0591383219954649,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/17",
+          "sourceId": 2266,
+          "dueAt": 1.1055328798185942,
+          "when": 1.1055328798185942,
+          "sourceOnset": 1.105578231292517,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/18",
+          "sourceId": 2266,
+          "dueAt": 1.1461678004535147,
+          "when": 1.1461678004535147,
+          "sourceOnset": 1.1462131519274377,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/19",
+          "sourceId": 2266,
+          "dueAt": 1.1778231292517007,
+          "when": 1.1784126984126984,
+          "sourceOnset": 1.1784580498866213,
+          "lateMs": 0.5895691609976161,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/20",
+          "sourceId": 2266,
+          "dueAt": 1.2178231292517008,
+          "when": 1.2178231292517008,
+          "sourceOnset": 1.2178684807256237,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/21",
+          "sourceId": 2266,
+          "dueAt": 1.2738775510204081,
+          "when": 1.2738775510204081,
+          "sourceOnset": 1.273922902494331,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/22",
+          "sourceId": 2266,
+          "dueAt": 1.3203174603174603,
+          "when": 1.3203174603174603,
+          "sourceOnset": 1.3203628117913833,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/23",
+          "sourceId": 2266,
+          "dueAt": 1.357823129251701,
+          "when": 1.357823129251701,
+          "sourceOnset": 1.3578684807256238,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/24",
+          "sourceId": 2266,
+          "dueAt": 1.397823129251701,
+          "when": 1.397823129251701,
+          "sourceOnset": 1.3978684807256239,
+          "lateMs": 0,
+          "processingCalls": 1
+        },
+        {
+          "eventId": "source-control/25",
+          "sourceId": 2266,
+          "dueAt": 1.437823129251701,
+          "when": 1.437823129251701,
+          "sourceOnset": 1.437868480725624,
+          "lateMs": 0,
+          "processingCalls": 1
+        }
+      ],
+      "comparison": [
+        {
+          "path": "coordinated",
+          "apiDurationsMs": [
+            0.6999998092651367,
+            0.6999998092651367,
+            0.7999997138977051,
+            0.6999998092651367,
+            0.6999998092651367,
+            0.7999997138977051
+          ],
+          "dispatches": [
+            {
+              "eventId": "source-control/14",
+              "sourceId": 2266,
+              "dueAt": 0.9836281179138322,
+              "when": 0.9836281179138322,
+              "sourceOnset": 0.9836734693877551,
+              "lateMs": 0,
+              "processingCalls": 1
+            },
+            {
+              "eventId": "source-control/15",
+              "sourceId": 2266,
+              "dueAt": 1.0300680272108844,
+              "when": 1.0300680272108844,
+              "sourceOnset": 1.0301133786848073,
+              "lateMs": 0,
+              "processingCalls": 1
+            },
+            {
+              "eventId": "source-control/16",
+              "sourceId": 2266,
+              "dueAt": 1.059092970521542,
+              "when": 1.059092970521542,
+              "sourceOnset": 1.0591383219954649,
+              "lateMs": 0,
+              "processingCalls": 1
+            },
+            {
+              "eventId": "source-control/17",
+              "sourceId": 2266,
+              "dueAt": 1.1055328798185942,
+              "when": 1.1055328798185942,
+              "sourceOnset": 1.105578231292517,
+              "lateMs": 0,
+              "processingCalls": 1
+            },
+            {
+              "eventId": "source-control/18",
+              "sourceId": 2266,
+              "dueAt": 1.1461678004535147,
+              "when": 1.1461678004535147,
+              "sourceOnset": 1.1462131519274377,
+              "lateMs": 0,
+              "processingCalls": 1
+            },
+            {
+              "eventId": "source-control/19",
+              "sourceId": 2266,
+              "dueAt": 1.1778231292517007,
+              "when": 1.1784126984126984,
+              "sourceOnset": 1.1784580498866213,
+              "lateMs": 0.5895691609976161,
+              "processingCalls": 1
+            }
+          ]
+        },
+        {
+          "path": "native-api-without-preference-coordinator",
+          "apiDurationsMs": [
+            0.40000009536743164,
+            0.39999961853027344,
+            0.5999999046325684,
+            0.5,
+            0.20000028610229492,
+            0.20000028610229492
+          ],
+          "dispatches": [
+            {
+              "eventId": "source-control/20",
+              "sourceId": 2266,
+              "dueAt": 1.2178231292517008,
+              "when": 1.2178231292517008,
+              "sourceOnset": 1.2178684807256237,
+              "lateMs": 0,
+              "processingCalls": 1
+            },
+            {
+              "eventId": "source-control/21",
+              "sourceId": 2266,
+              "dueAt": 1.2738775510204081,
+              "when": 1.2738775510204081,
+              "sourceOnset": 1.273922902494331,
+              "lateMs": 0,
+              "processingCalls": 1
+            },
+            {
+              "eventId": "source-control/22",
+              "sourceId": 2266,
+              "dueAt": 1.3203174603174603,
+              "when": 1.3203174603174603,
+              "sourceOnset": 1.3203628117913833,
+              "lateMs": 0,
+              "processingCalls": 1
+            },
+            {
+              "eventId": "source-control/23",
+              "sourceId": 2266,
+              "dueAt": 1.357823129251701,
+              "when": 1.357823129251701,
+              "sourceOnset": 1.3578684807256238,
+              "lateMs": 0,
+              "processingCalls": 1
+            },
+            {
+              "eventId": "source-control/24",
+              "sourceId": 2266,
+              "dueAt": 1.397823129251701,
+              "when": 1.397823129251701,
+              "sourceOnset": 1.3978684807256239,
+              "lateMs": 0,
+              "processingCalls": 1
+            },
+            {
+              "eventId": "source-control/25",
+              "sourceId": 2266,
+              "dueAt": 1.437823129251701,
+              "when": 1.437823129251701,
+              "sourceOnset": 1.437868480725624,
+              "lateMs": 0,
+              "processingCalls": 1
+            }
+          ]
+        }
+      ]
+    },
+    "fixtureCadence": "Serial controls separated by actual source queue drain; not a bulk synthetic-input burst.",
+    "gameJourney": false,
+    "presentationAccepted": false,
+    "physicalSpeakersAccepted": false
+  },
+  "instrumentation": {
+    "contexts": [
+      {
+        "options": {
+          "sampleRate": 22050,
+          "latencyHint": "interactive"
+        },
+        "sampleRate": 22050,
+        "state": "closed",
+        "currentTime": 1.4802721088435373,
+        "baseLatency": 0.01070294784580499,
+        "outputLatency": 0.024
+      }
+    ],
+    "starts": [
+      {
+        "id": 1,
+        "frames": 4930540,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.3250793650793651,
+        "wallTime": 618.6999998092651,
+        "when": 1.513469387755102,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 2,
+        "frames": 4930540,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.4295691609977324,
+        "wallTime": 731.0999999046326,
+        "when": 1.6295691609977323,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 3,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.47600907029478456,
+        "wallTime": 781.5999999046326,
+        "when": 0.4850793650793652,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 4,
+        "frames": 4930540,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.5688888888888889,
+        "wallTime": 876.1999998092651,
+        "when": 1.7688888888888887,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 5,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.615328798185941,
+        "wallTime": 921.3000001907349,
+        "when": 0.635328798185941,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 6,
+        "frames": 4930540,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.6559637188208617,
+        "wallTime": 959.4000000953674,
+        "when": 1.8559637188208615,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 7,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.6559637188208617,
+        "wallTime": 961.4000000953674,
+        "when": 0.6650793650793654,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 8,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.8185034013605442,
+        "wallTime": 1121.4000000953674,
+        "when": 0.8250793650793655,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 9,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.8591383219954648,
+        "wallTime": 1166.4000000953674,
+        "when": 0.8650793650793656,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 10,
+        "frames": 4930540,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.8997732426303855,
+        "wallTime": 1209.6999998092651,
+        "when": 2.0997732426303855,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 11,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.8997732426303855,
+        "wallTime": 1210.5999999046326,
+        "when": 0.9197732426303855,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 12,
+        "frames": 4930540,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.9229931972789116,
+        "wallTime": 1235.5,
+        "when": 2.1229931972789116,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 13,
+        "frames": 4930540,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.9578231292517007,
+        "wallTime": 1260.5,
+        "when": 2.1578231292517005,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 14,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 0.9752380952380952,
+        "wallTime": 1284.4000000953674,
+        "when": 0.9836281179138322,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 15,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 1.0100680272108844,
+        "wallTime": 1314.3000001907349,
+        "when": 1.0300680272108844,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 16,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 1.050702947845805,
+        "wallTime": 1354.3000001907349,
+        "when": 1.059092970521542,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 17,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 1.0971428571428572,
+        "wallTime": 1399.4000000953674,
+        "when": 1.1055328798185942,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 18,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 1.1377777777777778,
+        "wallTime": 1439.4000000953674,
+        "when": 1.1461678004535147,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 19,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 1.1784126984126984,
+        "wallTime": 1484.3000001907349,
+        "when": 1.1784126984126984,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 20,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 1.2132426303854875,
+        "wallTime": 1514.4000000953674,
+        "when": 1.2178231292517008,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 21,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 1.253877551020408,
+        "wallTime": 1559.4000000953674,
+        "when": 1.2738775510204081,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 22,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 1.3177324263038548,
+        "wallTime": 1624.5,
+        "when": 1.3203174603174603,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 23,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 1.352562358276644,
+        "wallTime": 1654.3000001907349,
+        "when": 1.357823129251701,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 24,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 1.3931972789115645,
+        "wallTime": 1699.3000001907349,
+        "when": 1.397823129251701,
+        "offset": 0,
+        "duration": null
+      },
+      {
+        "id": 25,
+        "frames": 2756,
+        "sampleRate": 22050,
+        "state": "running",
+        "audioTime": 1.4280272108843537,
+        "wallTime": 1729.3000001907349,
+        "when": 1.437823129251701,
+        "offset": 0,
+        "duration": null
+      }
+    ],
+    "ends": [
+      {
+        "id": 1,
+        "audioTime": 0.33668934240362813,
+        "wallTime": 628.8000001907349
+      },
+      {
+        "id": 2,
+        "audioTime": 0.5398639455782313,
+        "wallTime": 842
+      },
+      {
+        "id": 3,
+        "audioTime": 0.615328798185941,
+        "wallTime": 916.6999998092651
+      },
+      {
+        "id": 4,
+        "audioTime": 0.6211337868480725,
+        "wallTime": 927.3000001907349
+      },
+      {
+        "id": 5,
+        "audioTime": 0.7604535147392291,
+        "wallTime": 1065.6999998092651
+      },
+      {
+        "id": 7,
+        "audioTime": 0.7952834467120181,
+        "wallTime": 1098
+      },
+      {
+        "id": 6,
+        "audioTime": 0.9113832199546485,
+        "wallTime": 1215.3000001907349
+      },
+      {
+        "id": 10,
+        "audioTime": 0.9346031746031747,
+        "wallTime": 1237.3000001907349
+      },
+      {
+        "id": 8,
+        "audioTime": 0.9578231292517007,
+        "wallTime": 1264.1999998092651
+      },
+      {
+        "id": 9,
+        "audioTime": 0.9636281179138322,
+        "wallTime": 1268.5
+      },
+      {
+        "id": 12,
+        "audioTime": 0.9636281179138322,
+        "wallTime": 1268.5999999046326
+      },
+      {
+        "id": 11,
+        "audioTime": 0.9636281179138322,
+        "wallTime": 1268.5999999046326
+      },
+      {
+        "id": 14,
+        "audioTime": 1.1145578231292517,
+        "wallTime": 1418
+      },
+      {
+        "id": 15,
+        "audioTime": 1.1609977324263039,
+        "wallTime": 1460.5
+      },
+      {
+        "id": 16,
+        "audioTime": 1.1900226757369614,
+        "wallTime": 1492.5999999046326
+      },
+      {
+        "id": 17,
+        "audioTime": 1.2364625850340136,
+        "wallTime": 1535.1999998092651
+      },
+      {
+        "id": 18,
+        "audioTime": 1.2770975056689342,
+        "wallTime": 1577.6999998092651
+      },
+      {
+        "id": 19,
+        "audioTime": 1.3061224489795917,
+        "wallTime": 1609.8000001907349
+      },
+      {
+        "id": 20,
+        "audioTime": 1.352562358276644,
+        "wallTime": 1652.6999998092651
+      },
+      {
+        "id": 21,
+        "audioTime": 1.4048072562358276,
+        "wallTime": 1706.0999999046326
+      },
+      {
+        "id": 22,
+        "audioTime": 1.4454421768707484,
+        "wallTime": 1748.5999999046326
+      }
+    ],
+    "ticks": [
+      {
+        "audioTime": 0.034829931972789115,
+        "wallTime": 336.30000019073486,
+        "state": "running",
+        "afterTime": 0.034829931972789115,
+        "afterWall": 336.59999990463257
+      },
+      {
+        "audioTime": 0.046439909297052155,
+        "wallTime": 341.19999980926514,
+        "state": "running",
+        "afterTime": 0.046439909297052155,
+        "afterWall": 341.59999990463257
+      },
+      {
+        "audioTime": 0.046439909297052155,
+        "wallTime": 346.40000009536743,
+        "state": "running",
+        "afterTime": 0.046439909297052155,
+        "afterWall": 346.40000009536743
+      },
+      {
+        "audioTime": 0.058049886621315196,
+        "wallTime": 352,
+        "state": "running",
+        "afterTime": 0.058049886621315196,
+        "afterWall": 352
+      },
+      {
+        "audioTime": 0.058049886621315196,
+        "wallTime": 357.30000019073486,
+        "state": "running",
+        "afterTime": 0.058049886621315196,
+        "afterWall": 357.30000019073486
+      },
+      {
+        "audioTime": 0.07546485260770976,
+        "wallTime": 378.40000009536743,
+        "state": "running",
+        "afterTime": 0.07546485260770976,
+        "afterWall": 378.5
+      },
+      {
+        "audioTime": 0.07546485260770976,
+        "wallTime": 381.19999980926514,
+        "state": "running",
+        "afterTime": 0.07546485260770976,
+        "afterWall": 381.30000019073486
+      },
+      {
+        "audioTime": 0.08707482993197278,
+        "wallTime": 386.30000019073486,
+        "state": "running",
+        "afterTime": 0.08707482993197278,
+        "afterWall": 386.30000019073486
+      },
+      {
+        "audioTime": 0.08707482993197278,
+        "wallTime": 391.19999980926514,
+        "state": "running",
+        "afterTime": 0.08707482993197278,
+        "afterWall": 391.19999980926514
+      },
+      {
+        "audioTime": 0.09868480725623582,
+        "wallTime": 396.30000019073486,
+        "state": "running",
+        "afterTime": 0.09868480725623582,
+        "afterWall": 396.30000019073486
+      },
+      {
+        "audioTime": 0.09868480725623582,
+        "wallTime": 401.30000019073486,
+        "state": "running",
+        "afterTime": 0.09868480725623582,
+        "afterWall": 401.30000019073486
+      },
+      {
+        "audioTime": 0.11029478458049886,
+        "wallTime": 406.30000019073486,
+        "state": "running",
+        "afterTime": 0.11029478458049886,
+        "afterWall": 406.30000019073486
+      },
+      {
+        "audioTime": 0.11029478458049886,
+        "wallTime": 411.19999980926514,
+        "state": "running",
+        "afterTime": 0.11029478458049886,
+        "afterWall": 411.19999980926514
+      },
+      {
+        "audioTime": 0.1219047619047619,
+        "wallTime": 416.19999980926514,
+        "state": "running",
+        "afterTime": 0.1219047619047619,
+        "afterWall": 416.19999980926514
+      },
+      {
+        "audioTime": 0.1219047619047619,
+        "wallTime": 421.30000019073486,
+        "state": "running",
+        "afterTime": 0.1219047619047619,
+        "afterWall": 421.40000009536743
+      },
+      {
+        "audioTime": 0.13351473922902493,
+        "wallTime": 426.19999980926514,
+        "state": "running",
+        "afterTime": 0.13351473922902493,
+        "afterWall": 426.19999980926514
+      },
+      {
+        "audioTime": 0.13351473922902493,
+        "wallTime": 431.30000019073486,
+        "state": "running",
+        "afterTime": 0.13351473922902493,
+        "afterWall": 431.30000019073486
+      },
+      {
+        "audioTime": 0.13351473922902493,
+        "wallTime": 436.30000019073486,
+        "state": "running",
+        "afterTime": 0.13351473922902493,
+        "afterWall": 436.30000019073486
+      },
+      {
+        "audioTime": 0.13931972789115646,
+        "wallTime": 441.30000019073486,
+        "state": "running",
+        "afterTime": 0.13931972789115646,
+        "afterWall": 441.30000019073486
+      },
+      {
+        "audioTime": 0.13931972789115646,
+        "wallTime": 446.30000019073486,
+        "state": "running",
+        "afterTime": 0.13931972789115646,
+        "afterWall": 446.30000019073486
+      },
+      {
+        "audioTime": 0.1509297052154195,
+        "wallTime": 451.30000019073486,
+        "state": "running",
+        "afterTime": 0.1509297052154195,
+        "afterWall": 451.30000019073486
+      },
+      {
+        "audioTime": 0.1509297052154195,
+        "wallTime": 456.30000019073486,
+        "state": "running",
+        "afterTime": 0.1509297052154195,
+        "afterWall": 456.30000019073486
+      },
+      {
+        "audioTime": 0.3250793650793651,
+        "wallTime": 619.3000001907349,
+        "state": "running",
+        "afterTime": 0.3250793650793651,
+        "afterWall": 619.3000001907349
+      },
+      {
+        "audioTime": 0.3250793650793651,
+        "wallTime": 622.5999999046326,
+        "state": "running",
+        "afterTime": 0.3250793650793651,
+        "afterWall": 622.5999999046326
+      },
+      {
+        "audioTime": 0.3250793650793651,
+        "wallTime": 626.4000000953674,
+        "state": "running",
+        "afterTime": 0.3250793650793651,
+        "afterWall": 626.4000000953674
+      },
+      {
+        "audioTime": 0.33668934240362813,
+        "wallTime": 631.3000001907349,
+        "state": "running",
+        "afterTime": 0.33668934240362813,
+        "afterWall": 631.3000001907349
+      },
+      {
+        "audioTime": 0.33668934240362813,
+        "wallTime": 636.1999998092651,
+        "state": "running",
+        "afterTime": 0.33668934240362813,
+        "afterWall": 636.1999998092651
+      },
+      {
+        "audioTime": 0.34249433106575966,
+        "wallTime": 641.3000001907349,
+        "state": "running",
+        "afterTime": 0.34249433106575966,
+        "afterWall": 641.3000001907349
+      },
+      {
+        "audioTime": 0.34249433106575966,
+        "wallTime": 646.1999998092651,
+        "state": "running",
+        "afterTime": 0.34249433106575966,
+        "afterWall": 646.1999998092651
+      },
+      {
+        "audioTime": 0.35410430839002266,
+        "wallTime": 651.1999998092651,
+        "state": "running",
+        "afterTime": 0.35410430839002266,
+        "afterWall": 651.1999998092651
+      },
+      {
+        "audioTime": 0.35410430839002266,
+        "wallTime": 656.1999998092651,
+        "state": "running",
+        "afterTime": 0.35410430839002266,
+        "afterWall": 656.1999998092651
+      },
+      {
+        "audioTime": 0.3657142857142857,
+        "wallTime": 661.1999998092651,
+        "state": "running",
+        "afterTime": 0.3657142857142857,
+        "afterWall": 661.1999998092651
+      },
+      {
+        "audioTime": 0.3657142857142857,
+        "wallTime": 666.1999998092651,
+        "state": "running",
+        "afterTime": 0.3657142857142857,
+        "afterWall": 666.1999998092651
+      },
+      {
+        "audioTime": 0.3657142857142857,
+        "wallTime": 671.1999998092651,
+        "state": "running",
+        "afterTime": 0.37151927437641724,
+        "afterWall": 671.1999998092651
+      },
+      {
+        "audioTime": 0.37732426303854877,
+        "wallTime": 676.4000000953674,
+        "state": "running",
+        "afterTime": 0.37732426303854877,
+        "afterWall": 676.5
+      },
+      {
+        "audioTime": 0.37732426303854877,
+        "wallTime": 681.3000001907349,
+        "state": "running",
+        "afterTime": 0.37732426303854877,
+        "afterWall": 681.3000001907349
+      },
+      {
+        "audioTime": 0.38893424036281177,
+        "wallTime": 686.3000001907349,
+        "state": "running",
+        "afterTime": 0.38893424036281177,
+        "afterWall": 686.3000001907349
+      },
+      {
+        "audioTime": 0.38893424036281177,
+        "wallTime": 691.1999998092651,
+        "state": "running",
+        "afterTime": 0.38893424036281177,
+        "afterWall": 691.1999998092651
+      },
+      {
+        "audioTime": 0.4005442176870748,
+        "wallTime": 696.3000001907349,
+        "state": "running",
+        "afterTime": 0.4005442176870748,
+        "afterWall": 696.4000000953674
+      },
+      {
+        "audioTime": 0.4005442176870748,
+        "wallTime": 701.3000001907349,
+        "state": "running",
+        "afterTime": 0.4005442176870748,
+        "afterWall": 701.3000001907349
+      },
+      {
+        "audioTime": 0.4121541950113379,
+        "wallTime": 706.3000001907349,
+        "state": "running",
+        "afterTime": 0.4121541950113379,
+        "afterWall": 706.3000001907349
+      },
+      {
+        "audioTime": 0.4121541950113379,
+        "wallTime": 711.1999998092651,
+        "state": "running",
+        "afterTime": 0.4121541950113379,
+        "afterWall": 711.1999998092651
+      },
+      {
+        "audioTime": 0.4179591836734694,
+        "wallTime": 716.3000001907349,
+        "state": "running",
+        "afterTime": 0.4179591836734694,
+        "afterWall": 716.3000001907349
+      },
+      {
+        "audioTime": 0.4179591836734694,
+        "wallTime": 721.1999998092651,
+        "state": "running",
+        "afterTime": 0.4179591836734694,
+        "afterWall": 721.1999998092651
+      },
+      {
+        "audioTime": 0.4295691609977324,
+        "wallTime": 726.3000001907349,
+        "state": "running",
+        "afterTime": 0.4295691609977324,
+        "afterWall": 726.3000001907349
+      },
+      {
+        "audioTime": 0.4295691609977324,
+        "wallTime": 731.5,
+        "state": "running",
+        "afterTime": 0.4295691609977324,
+        "afterWall": 731.5
+      },
+      {
+        "audioTime": 0.44117913832199546,
+        "wallTime": 736.3000001907349,
+        "state": "running",
+        "afterTime": 0.44117913832199546,
+        "afterWall": 736.3000001907349
+      },
+      {
+        "audioTime": 0.44117913832199546,
+        "wallTime": 741.3000001907349,
+        "state": "running",
+        "afterTime": 0.44117913832199546,
+        "afterWall": 741.3000001907349
+      },
+      {
+        "audioTime": 0.44117913832199546,
+        "wallTime": 746.3000001907349,
+        "state": "running",
+        "afterTime": 0.44117913832199546,
+        "afterWall": 746.3000001907349
+      },
+      {
+        "audioTime": 0.44117913832199546,
+        "wallTime": 752.1999998092651,
+        "state": "running",
+        "afterTime": 0.44117913832199546,
+        "afterWall": 752.1999998092651
+      },
+      {
+        "audioTime": 0.44117913832199546,
+        "wallTime": 756.1999998092651,
+        "state": "running",
+        "afterTime": 0.44117913832199546,
+        "afterWall": 756.1999998092651
+      },
+      {
+        "audioTime": 0.4527891156462585,
+        "wallTime": 761.3000001907349,
+        "state": "running",
+        "afterTime": 0.4527891156462585,
+        "afterWall": 761.3000001907349
+      },
+      {
+        "audioTime": 0.4527891156462585,
+        "wallTime": 766.3000001907349,
+        "state": "running",
+        "afterTime": 0.4527891156462585,
+        "afterWall": 766.3000001907349
+      },
+      {
+        "audioTime": 0.46439909297052157,
+        "wallTime": 771.1999998092651,
+        "state": "running",
+        "afterTime": 0.46439909297052157,
+        "afterWall": 771.1999998092651
+      },
+      {
+        "audioTime": 0.46439909297052157,
+        "wallTime": 776.3000001907349,
+        "state": "running",
+        "afterTime": 0.46439909297052157,
+        "afterWall": 776.3000001907349
+      },
+      {
+        "audioTime": 0.47600907029478456,
+        "wallTime": 781.1999998092651,
+        "state": "running",
+        "afterTime": 0.47600907029478456,
+        "afterWall": 781.8000001907349
+      },
+      {
+        "audioTime": 0.47600907029478456,
+        "wallTime": 786.3000001907349,
+        "state": "running",
+        "afterTime": 0.47600907029478456,
+        "afterWall": 786.3000001907349
+      },
+      {
+        "audioTime": 0.4818140589569161,
+        "wallTime": 791.3000001907349,
+        "state": "running",
+        "afterTime": 0.4818140589569161,
+        "afterWall": 791.3000001907349
+      },
+      {
+        "audioTime": 0.4818140589569161,
+        "wallTime": 796.1999998092651,
+        "state": "running",
+        "afterTime": 0.4818140589569161,
+        "afterWall": 796.1999998092651
+      },
+      {
+        "audioTime": 0.49342403628117915,
+        "wallTime": 801.3000001907349,
+        "state": "running",
+        "afterTime": 0.49342403628117915,
+        "afterWall": 801.3000001907349
+      },
+      {
+        "audioTime": 0.49342403628117915,
+        "wallTime": 806.3000001907349,
+        "state": "running",
+        "afterTime": 0.49342403628117915,
+        "afterWall": 806.3000001907349
+      },
+      {
+        "audioTime": 0.5050340136054422,
+        "wallTime": 811.3000001907349,
+        "state": "running",
+        "afterTime": 0.5050340136054422,
+        "afterWall": 811.3000001907349
+      },
+      {
+        "audioTime": 0.5050340136054422,
+        "wallTime": 816.3000001907349,
+        "state": "running",
+        "afterTime": 0.5050340136054422,
+        "afterWall": 816.3000001907349
+      },
+      {
+        "audioTime": 0.5166439909297053,
+        "wallTime": 821.1999998092651,
+        "state": "running",
+        "afterTime": 0.5166439909297053,
+        "afterWall": 821.1999998092651
+      },
+      {
+        "audioTime": 0.5166439909297053,
+        "wallTime": 826.3000001907349,
+        "state": "running",
+        "afterTime": 0.5166439909297053,
+        "afterWall": 826.3000001907349
+      },
+      {
+        "audioTime": 0.5282539682539683,
+        "wallTime": 831.4000000953674,
+        "state": "running",
+        "afterTime": 0.5282539682539683,
+        "afterWall": 831.5
+      },
+      {
+        "audioTime": 0.5282539682539683,
+        "wallTime": 836.3000001907349,
+        "state": "running",
+        "afterTime": 0.5282539682539683,
+        "afterWall": 836.3000001907349
+      },
+      {
+        "audioTime": 0.5282539682539683,
+        "wallTime": 841.1999998092651,
+        "state": "running",
+        "afterTime": 0.5282539682539683,
+        "afterWall": 841.3000001907349
+      },
+      {
+        "audioTime": 0.5398639455782313,
+        "wallTime": 846.3000001907349,
+        "state": "running",
+        "afterTime": 0.5398639455782313,
+        "afterWall": 846.4000000953674
+      },
+      {
+        "audioTime": 0.5398639455782313,
+        "wallTime": 851.3000001907349,
+        "state": "running",
+        "afterTime": 0.5398639455782313,
+        "afterWall": 851.3000001907349
+      },
+      {
+        "audioTime": 0.5514739229024943,
+        "wallTime": 856.3000001907349,
+        "state": "running",
+        "afterTime": 0.5514739229024943,
+        "afterWall": 856.3000001907349
+      },
+      {
+        "audioTime": 0.5514739229024943,
+        "wallTime": 861.1999998092651,
+        "state": "running",
+        "afterTime": 0.5514739229024943,
+        "afterWall": 861.3000001907349
+      },
+      {
+        "audioTime": 0.5572789115646258,
+        "wallTime": 866.3000001907349,
+        "state": "running",
+        "afterTime": 0.5572789115646258,
+        "afterWall": 866.3000001907349
+      },
+      {
+        "audioTime": 0.5572789115646258,
+        "wallTime": 871.3000001907349,
+        "state": "running",
+        "afterTime": 0.5572789115646258,
+        "afterWall": 871.3000001907349
+      },
+      {
+        "audioTime": 0.5688888888888889,
+        "wallTime": 876.5999999046326,
+        "state": "running",
+        "afterTime": 0.5688888888888889,
+        "afterWall": 876.5999999046326
+      },
+      {
+        "audioTime": 0.5688888888888889,
+        "wallTime": 881.1999998092651,
+        "state": "running",
+        "afterTime": 0.5688888888888889,
+        "afterWall": 881.3000001907349
+      },
+      {
+        "audioTime": 0.5804988662131519,
+        "wallTime": 886.3000001907349,
+        "state": "running",
+        "afterTime": 0.5804988662131519,
+        "afterWall": 886.3000001907349
+      },
+      {
+        "audioTime": 0.5804988662131519,
+        "wallTime": 891.1999998092651,
+        "state": "running",
+        "afterTime": 0.5804988662131519,
+        "afterWall": 891.1999998092651
+      },
+      {
+        "audioTime": 0.592108843537415,
+        "wallTime": 897.1999998092651,
+        "state": "running",
+        "afterTime": 0.592108843537415,
+        "afterWall": 897.1999998092651
+      },
+      {
+        "audioTime": 0.592108843537415,
+        "wallTime": 901.1999998092651,
+        "state": "running",
+        "afterTime": 0.592108843537415,
+        "afterWall": 901.1999998092651
+      },
+      {
+        "audioTime": 0.603718820861678,
+        "wallTime": 906.3000001907349,
+        "state": "running",
+        "afterTime": 0.603718820861678,
+        "afterWall": 906.3000001907349
+      },
+      {
+        "audioTime": 0.603718820861678,
+        "wallTime": 911.1999998092651,
+        "state": "running",
+        "afterTime": 0.603718820861678,
+        "afterWall": 911.1999998092651
+      },
+      {
+        "audioTime": 0.603718820861678,
+        "wallTime": 916.1999998092651,
+        "state": "running",
+        "afterTime": 0.603718820861678,
+        "afterWall": 916.1999998092651
+      },
+      {
+        "audioTime": 0.615328798185941,
+        "wallTime": 921.3000001907349,
+        "state": "running",
+        "afterTime": 0.615328798185941,
+        "afterWall": 921.5
+      },
+      {
+        "audioTime": 0.615328798185941,
+        "wallTime": 926.3000001907349,
+        "state": "running",
+        "afterTime": 0.615328798185941,
+        "afterWall": 926.3000001907349
+      },
+      {
+        "audioTime": 0.6211337868480725,
+        "wallTime": 931.3000001907349,
+        "state": "running",
+        "afterTime": 0.6211337868480725,
+        "afterWall": 931.3000001907349
+      },
+      {
+        "audioTime": 0.6211337868480725,
+        "wallTime": 936.3000001907349,
+        "state": "running",
+        "afterTime": 0.6211337868480725,
+        "afterWall": 936.3000001907349
+      },
+      {
+        "audioTime": 0.6327437641723356,
+        "wallTime": 941.3000001907349,
+        "state": "running",
+        "afterTime": 0.6327437641723356,
+        "afterWall": 941.3000001907349
+      },
+      {
+        "audioTime": 0.6327437641723356,
+        "wallTime": 946.3000001907349,
+        "state": "running",
+        "afterTime": 0.6327437641723356,
+        "afterWall": 946.3000001907349
+      },
+      {
+        "audioTime": 0.6443537414965986,
+        "wallTime": 951.1999998092651,
+        "state": "running",
+        "afterTime": 0.6443537414965986,
+        "afterWall": 951.1999998092651
+      },
+      {
+        "audioTime": 0.6443537414965986,
+        "wallTime": 956.3000001907349,
+        "state": "running",
+        "afterTime": 0.6443537414965986,
+        "afterWall": 956.3000001907349
+      },
+      {
+        "audioTime": 0.6559637188208617,
+        "wallTime": 961.3000001907349,
+        "state": "running",
+        "afterTime": 0.6559637188208617,
+        "afterWall": 961.5
+      },
+      {
+        "audioTime": 0.6559637188208617,
+        "wallTime": 966.3000001907349,
+        "state": "running",
+        "afterTime": 0.6559637188208617,
+        "afterWall": 966.3000001907349
+      },
+      {
+        "audioTime": 0.6675736961451247,
+        "wallTime": 971.3000001907349,
+        "state": "running",
+        "afterTime": 0.6675736961451247,
+        "afterWall": 971.3000001907349
+      },
+      {
+        "audioTime": 0.6675736961451247,
+        "wallTime": 976.3000001907349,
+        "state": "running",
+        "afterTime": 0.6675736961451247,
+        "afterWall": 976.3000001907349
+      },
+      {
+        "audioTime": 0.6791836734693878,
+        "wallTime": 981.4000000953674,
+        "state": "running",
+        "afterTime": 0.6791836734693878,
+        "afterWall": 981.4000000953674
+      },
+      {
+        "audioTime": 0.6791836734693878,
+        "wallTime": 986.3000001907349,
+        "state": "running",
+        "afterTime": 0.6791836734693878,
+        "afterWall": 986.3000001907349
+      },
+      {
+        "audioTime": 0.6849886621315193,
+        "wallTime": 991.3000001907349,
+        "state": "running",
+        "afterTime": 0.6849886621315193,
+        "afterWall": 991.3000001907349
+      },
+      {
+        "audioTime": 0.6849886621315193,
+        "wallTime": 996.3000001907349,
+        "state": "running",
+        "afterTime": 0.6849886621315193,
+        "afterWall": 996.3000001907349
+      },
+      {
+        "audioTime": 0.6849886621315193,
+        "wallTime": 1001.3000001907349,
+        "state": "running",
+        "afterTime": 0.6849886621315193,
+        "afterWall": 1001.3000001907349
+      },
+      {
+        "audioTime": 0.6965986394557823,
+        "wallTime": 1006.3000001907349,
+        "state": "running",
+        "afterTime": 0.6965986394557823,
+        "afterWall": 1006.3000001907349
+      },
+      {
+        "audioTime": 0.6965986394557823,
+        "wallTime": 1011.3000001907349,
+        "state": "running",
+        "afterTime": 0.6965986394557823,
+        "afterWall": 1011.3000001907349
+      },
+      {
+        "audioTime": 0.7082086167800453,
+        "wallTime": 1016.1999998092651,
+        "state": "running",
+        "afterTime": 0.7082086167800453,
+        "afterWall": 1016.3000001907349
+      },
+      {
+        "audioTime": 0.7082086167800453,
+        "wallTime": 1021.5999999046326,
+        "state": "running",
+        "afterTime": 0.7082086167800453,
+        "afterWall": 1021.5999999046326
+      },
+      {
+        "audioTime": 0.7198185941043084,
+        "wallTime": 1026.3000001907349,
+        "state": "running",
+        "afterTime": 0.7198185941043084,
+        "afterWall": 1026.4000000953674
+      },
+      {
+        "audioTime": 0.7198185941043084,
+        "wallTime": 1031.3000001907349,
+        "state": "running",
+        "afterTime": 0.7198185941043084,
+        "afterWall": 1031.3000001907349
+      },
+      {
+        "audioTime": 0.7314285714285714,
+        "wallTime": 1036.1999998092651,
+        "state": "running",
+        "afterTime": 0.7314285714285714,
+        "afterWall": 1036.1999998092651
+      },
+      {
+        "audioTime": 0.7314285714285714,
+        "wallTime": 1041.3000001907349,
+        "state": "running",
+        "afterTime": 0.7314285714285714,
+        "afterWall": 1041.3000001907349
+      },
+      {
+        "audioTime": 0.7430385487528345,
+        "wallTime": 1046.3000001907349,
+        "state": "running",
+        "afterTime": 0.7430385487528345,
+        "afterWall": 1046.3000001907349
+      },
+      {
+        "audioTime": 0.7430385487528345,
+        "wallTime": 1051.3000001907349,
+        "state": "running",
+        "afterTime": 0.7430385487528345,
+        "afterWall": 1051.3000001907349
+      },
+      {
+        "audioTime": 0.7546485260770975,
+        "wallTime": 1056.1999998092651,
+        "state": "running",
+        "afterTime": 0.7546485260770975,
+        "afterWall": 1056.1999998092651
+      },
+      {
+        "audioTime": 0.7546485260770975,
+        "wallTime": 1061.3000001907349,
+        "state": "running",
+        "afterTime": 0.7546485260770975,
+        "afterWall": 1061.3000001907349
+      },
+      {
+        "audioTime": 0.7604535147392291,
+        "wallTime": 1066.3000001907349,
+        "state": "running",
+        "afterTime": 0.7604535147392291,
+        "afterWall": 1066.3000001907349
+      },
+      {
+        "audioTime": 0.7604535147392291,
+        "wallTime": 1071.1999998092651,
+        "state": "running",
+        "afterTime": 0.7604535147392291,
+        "afterWall": 1071.1999998092651
+      },
+      {
+        "audioTime": 0.7604535147392291,
+        "wallTime": 1076.1999998092651,
+        "state": "running",
+        "afterTime": 0.7604535147392291,
+        "afterWall": 1076.1999998092651
+      },
+      {
+        "audioTime": 0.7720634920634921,
+        "wallTime": 1081.3000001907349,
+        "state": "running",
+        "afterTime": 0.7720634920634921,
+        "afterWall": 1081.3000001907349
+      },
+      {
+        "audioTime": 0.7720634920634921,
+        "wallTime": 1086.3000001907349,
+        "state": "running",
+        "afterTime": 0.7720634920634921,
+        "afterWall": 1086.3000001907349
+      },
+      {
+        "audioTime": 0.7836734693877551,
+        "wallTime": 1091.3000001907349,
+        "state": "running",
+        "afterTime": 0.7836734693877551,
+        "afterWall": 1091.3000001907349
+      },
+      {
+        "audioTime": 0.7836734693877551,
+        "wallTime": 1096.3000001907349,
+        "state": "running",
+        "afterTime": 0.7836734693877551,
+        "afterWall": 1096.3000001907349
+      },
+      {
+        "audioTime": 0.7952834467120181,
+        "wallTime": 1101.3000001907349,
+        "state": "running",
+        "afterTime": 0.7952834467120181,
+        "afterWall": 1101.3000001907349
+      },
+      {
+        "audioTime": 0.7952834467120181,
+        "wallTime": 1106.1999998092651,
+        "state": "running",
+        "afterTime": 0.7952834467120181,
+        "afterWall": 1106.1999998092651
+      },
+      {
+        "audioTime": 0.8068934240362812,
+        "wallTime": 1111.3000001907349,
+        "state": "running",
+        "afterTime": 0.8068934240362812,
+        "afterWall": 1111.3000001907349
+      },
+      {
+        "audioTime": 0.8068934240362812,
+        "wallTime": 1116.3000001907349,
+        "state": "running",
+        "afterTime": 0.8068934240362812,
+        "afterWall": 1116.3000001907349
+      },
+      {
+        "audioTime": 0.8185034013605442,
+        "wallTime": 1121.3000001907349,
+        "state": "running",
+        "afterTime": 0.8185034013605442,
+        "afterWall": 1121.5
+      },
+      {
+        "audioTime": 0.8185034013605442,
+        "wallTime": 1126.1999998092651,
+        "state": "running",
+        "afterTime": 0.8185034013605442,
+        "afterWall": 1126.1999998092651
+      },
+      {
+        "audioTime": 0.8243083900226758,
+        "wallTime": 1131.3000001907349,
+        "state": "running",
+        "afterTime": 0.8243083900226758,
+        "afterWall": 1131.3000001907349
+      },
+      {
+        "audioTime": 0.8243083900226758,
+        "wallTime": 1136.1999998092651,
+        "state": "running",
+        "afterTime": 0.8243083900226758,
+        "afterWall": 1136.1999998092651
+      },
+      {
+        "audioTime": 0.8359183673469388,
+        "wallTime": 1141.3000001907349,
+        "state": "running",
+        "afterTime": 0.8359183673469388,
+        "afterWall": 1141.3000001907349
+      },
+      {
+        "audioTime": 0.8359183673469388,
+        "wallTime": 1146.3000001907349,
+        "state": "running",
+        "afterTime": 0.8359183673469388,
+        "afterWall": 1146.3000001907349
+      },
+      {
+        "audioTime": 0.8475283446712019,
+        "wallTime": 1151.3000001907349,
+        "state": "running",
+        "afterTime": 0.8475283446712019,
+        "afterWall": 1151.3000001907349
+      },
+      {
+        "audioTime": 0.8475283446712019,
+        "wallTime": 1156.3000001907349,
+        "state": "running",
+        "afterTime": 0.8475283446712019,
+        "afterWall": 1156.3000001907349
+      },
+      {
+        "audioTime": 0.8475283446712019,
+        "wallTime": 1161.3000001907349,
+        "state": "running",
+        "afterTime": 0.8475283446712019,
+        "afterWall": 1161.3000001907349
+      },
+      {
+        "audioTime": 0.8591383219954648,
+        "wallTime": 1166.3000001907349,
+        "state": "running",
+        "afterTime": 0.8591383219954648,
+        "afterWall": 1166.5
+      },
+      {
+        "audioTime": 0.8591383219954648,
+        "wallTime": 1171.1999998092651,
+        "state": "running",
+        "afterTime": 0.8591383219954648,
+        "afterWall": 1171.1999998092651
+      },
+      {
+        "audioTime": 0.8707482993197279,
+        "wallTime": 1176.1999998092651,
+        "state": "running",
+        "afterTime": 0.8707482993197279,
+        "afterWall": 1176.1999998092651
+      },
+      {
+        "audioTime": 0.8707482993197279,
+        "wallTime": 1181.3000001907349,
+        "state": "running",
+        "afterTime": 0.8707482993197279,
+        "afterWall": 1181.3000001907349
+      },
+      {
+        "audioTime": 0.8823582766439909,
+        "wallTime": 1186.3000001907349,
+        "state": "running",
+        "afterTime": 0.8823582766439909,
+        "afterWall": 1186.3000001907349
+      },
+      {
+        "audioTime": 0.8823582766439909,
+        "wallTime": 1191.3000001907349,
+        "state": "running",
+        "afterTime": 0.8823582766439909,
+        "afterWall": 1191.3000001907349
+      },
+      {
+        "audioTime": 0.893968253968254,
+        "wallTime": 1196.1999998092651,
+        "state": "running",
+        "afterTime": 0.893968253968254,
+        "afterWall": 1196.1999998092651
+      },
+      {
+        "audioTime": 0.893968253968254,
+        "wallTime": 1201.3000001907349,
+        "state": "running",
+        "afterTime": 0.893968253968254,
+        "afterWall": 1201.3000001907349
+      },
+      {
+        "audioTime": 0.8997732426303855,
+        "wallTime": 1210.5,
+        "state": "running",
+        "afterTime": 0.8997732426303855,
+        "afterWall": 1210.8000001907349
+      },
+      {
+        "audioTime": 0.8997732426303855,
+        "wallTime": 1211.1999998092651,
+        "state": "running",
+        "afterTime": 0.8997732426303855,
+        "afterWall": 1211.1999998092651
+      },
+      {
+        "audioTime": 0.9113832199546485,
+        "wallTime": 1216.3000001907349,
+        "state": "running",
+        "afterTime": 0.9113832199546485,
+        "afterWall": 1216.3000001907349
+      },
+      {
+        "audioTime": 0.9113832199546485,
+        "wallTime": 1221.3000001907349,
+        "state": "running",
+        "afterTime": 0.9113832199546485,
+        "afterWall": 1221.3000001907349
+      },
+      {
+        "audioTime": 0.9229931972789116,
+        "wallTime": 1227.9000000953674,
+        "state": "running",
+        "afterTime": 0.9229931972789116,
+        "afterWall": 1227.9000000953674
+      },
+      {
+        "audioTime": 0.9346031746031747,
+        "wallTime": 1237.0999999046326,
+        "state": "running",
+        "afterTime": 0.9346031746031747,
+        "afterWall": 1237.0999999046326
+      },
+      {
+        "audioTime": 0.9346031746031747,
+        "wallTime": 1241.4000000953674,
+        "state": "running",
+        "afterTime": 0.9346031746031747,
+        "afterWall": 1241.4000000953674
+      },
+      {
+        "audioTime": 0.9346031746031747,
+        "wallTime": 1246.3000001907349,
+        "state": "running",
+        "afterTime": 0.9346031746031747,
+        "afterWall": 1246.3000001907349
+      },
+      {
+        "audioTime": 0.9462131519274376,
+        "wallTime": 1251.3000001907349,
+        "state": "running",
+        "afterTime": 0.9462131519274376,
+        "afterWall": 1251.3000001907349
+      },
+      {
+        "audioTime": 0.9578231292517007,
+        "wallTime": 1264.1999998092651,
+        "state": "running",
+        "afterTime": 0.9578231292517007,
+        "afterWall": 1264.1999998092651
+      },
+      {
+        "audioTime": 0.9636281179138322,
+        "wallTime": 1269.6999998092651,
+        "state": "running",
+        "afterTime": 0.9636281179138322,
+        "afterWall": 1269.6999998092651
+      },
+      {
+        "audioTime": 0.9636281179138322,
+        "wallTime": 1274.3000001907349,
+        "state": "running",
+        "afterTime": 0.9636281179138322,
+        "afterWall": 1274.3000001907349
+      },
+      {
+        "audioTime": 0.9636281179138322,
+        "wallTime": 1279.3000001907349,
+        "state": "running",
+        "afterTime": 0.9636281179138322,
+        "afterWall": 1279.3000001907349
+      },
+      {
+        "audioTime": 0.9752380952380952,
+        "wallTime": 1284.3000001907349,
+        "state": "running",
+        "afterTime": 0.9752380952380952,
+        "afterWall": 1284.5999999046326
+      },
+      {
+        "audioTime": 0.9752380952380952,
+        "wallTime": 1289.4000000953674,
+        "state": "running",
+        "afterTime": 0.9752380952380952,
+        "afterWall": 1289.4000000953674
+      },
+      {
+        "audioTime": 0.9868480725623583,
+        "wallTime": 1294.1999998092651,
+        "state": "running",
+        "afterTime": 0.9868480725623583,
+        "afterWall": 1294.1999998092651
+      },
+      {
+        "audioTime": 0.9868480725623583,
+        "wallTime": 1299.3000001907349,
+        "state": "running",
+        "afterTime": 0.9868480725623583,
+        "afterWall": 1299.3000001907349
+      },
+      {
+        "audioTime": 0.9984580498866213,
+        "wallTime": 1304.3000001907349,
+        "state": "running",
+        "afterTime": 0.9984580498866213,
+        "afterWall": 1304.3000001907349
+      },
+      {
+        "audioTime": 0.9984580498866213,
+        "wallTime": 1309.3000001907349,
+        "state": "running",
+        "afterTime": 0.9984580498866213,
+        "afterWall": 1309.3000001907349
+      },
+      {
+        "audioTime": 1.0100680272108844,
+        "wallTime": 1314.1999998092651,
+        "state": "running",
+        "afterTime": 1.0100680272108844,
+        "afterWall": 1314.5
+      },
+      {
+        "audioTime": 1.0100680272108844,
+        "wallTime": 1319.3000001907349,
+        "state": "running",
+        "afterTime": 1.0100680272108844,
+        "afterWall": 1319.3000001907349
+      },
+      {
+        "audioTime": 1.0216780045351475,
+        "wallTime": 1324.3000001907349,
+        "state": "running",
+        "afterTime": 1.0216780045351475,
+        "afterWall": 1324.3000001907349
+      },
+      {
+        "audioTime": 1.0216780045351475,
+        "wallTime": 1329.4000000953674,
+        "state": "running",
+        "afterTime": 1.0216780045351475,
+        "afterWall": 1329.4000000953674
+      },
+      {
+        "audioTime": 1.0274829931972789,
+        "wallTime": 1334.3000001907349,
+        "state": "running",
+        "afterTime": 1.0274829931972789,
+        "afterWall": 1334.3000001907349
+      },
+      {
+        "audioTime": 1.0274829931972789,
+        "wallTime": 1339.1999998092651,
+        "state": "running",
+        "afterTime": 1.0274829931972789,
+        "afterWall": 1339.3000001907349
+      },
+      {
+        "audioTime": 1.039092970521542,
+        "wallTime": 1344.4000000953674,
+        "state": "running",
+        "afterTime": 1.039092970521542,
+        "afterWall": 1344.4000000953674
+      },
+      {
+        "audioTime": 1.039092970521542,
+        "wallTime": 1349.1999998092651,
+        "state": "running",
+        "afterTime": 1.039092970521542,
+        "afterWall": 1349.1999998092651
+      },
+      {
+        "audioTime": 1.050702947845805,
+        "wallTime": 1354.3000001907349,
+        "state": "running",
+        "afterTime": 1.050702947845805,
+        "afterWall": 1354.4000000953674
+      },
+      {
+        "audioTime": 1.050702947845805,
+        "wallTime": 1359.3000001907349,
+        "state": "running",
+        "afterTime": 1.050702947845805,
+        "afterWall": 1359.3000001907349
+      },
+      {
+        "audioTime": 1.050702947845805,
+        "wallTime": 1364.3000001907349,
+        "state": "running",
+        "afterTime": 1.050702947845805,
+        "afterWall": 1364.3000001907349
+      },
+      {
+        "audioTime": 1.062312925170068,
+        "wallTime": 1369.4000000953674,
+        "state": "running",
+        "afterTime": 1.062312925170068,
+        "afterWall": 1369.4000000953674
+      },
+      {
+        "audioTime": 1.062312925170068,
+        "wallTime": 1374.1999998092651,
+        "state": "running",
+        "afterTime": 1.062312925170068,
+        "afterWall": 1374.1999998092651
+      },
+      {
+        "audioTime": 1.073922902494331,
+        "wallTime": 1379.1999998092651,
+        "state": "running",
+        "afterTime": 1.073922902494331,
+        "afterWall": 1379.1999998092651
+      },
+      {
+        "audioTime": 1.073922902494331,
+        "wallTime": 1384.3000001907349,
+        "state": "running",
+        "afterTime": 1.073922902494331,
+        "afterWall": 1384.3000001907349
+      },
+      {
+        "audioTime": 1.0855328798185941,
+        "wallTime": 1389.3000001907349,
+        "state": "running",
+        "afterTime": 1.0855328798185941,
+        "afterWall": 1389.3000001907349
+      },
+      {
+        "audioTime": 1.0855328798185941,
+        "wallTime": 1395.3000001907349,
+        "state": "running",
+        "afterTime": 1.0855328798185941,
+        "afterWall": 1395.3000001907349
+      },
+      {
+        "audioTime": 1.0971428571428572,
+        "wallTime": 1399.1999998092651,
+        "state": "running",
+        "afterTime": 1.0971428571428572,
+        "afterWall": 1399.4000000953674
+      },
+      {
+        "audioTime": 1.0971428571428572,
+        "wallTime": 1404.3000001907349,
+        "state": "running",
+        "afterTime": 1.0971428571428572,
+        "afterWall": 1404.3000001907349
+      },
+      {
+        "audioTime": 1.1029478458049886,
+        "wallTime": 1409.1999998092651,
+        "state": "running",
+        "afterTime": 1.1029478458049886,
+        "afterWall": 1409.1999998092651
+      },
+      {
+        "audioTime": 1.1029478458049886,
+        "wallTime": 1414.1999998092651,
+        "state": "running",
+        "afterTime": 1.1029478458049886,
+        "afterWall": 1414.1999998092651
+      },
+      {
+        "audioTime": 1.1145578231292517,
+        "wallTime": 1419.1999998092651,
+        "state": "running",
+        "afterTime": 1.1145578231292517,
+        "afterWall": 1419.1999998092651
+      },
+      {
+        "audioTime": 1.1145578231292517,
+        "wallTime": 1424.3000001907349,
+        "state": "running",
+        "afterTime": 1.1145578231292517,
+        "afterWall": 1424.3000001907349
+      },
+      {
+        "audioTime": 1.1261678004535147,
+        "wallTime": 1429.3000001907349,
+        "state": "running",
+        "afterTime": 1.1261678004535147,
+        "afterWall": 1429.3000001907349
+      },
+      {
+        "audioTime": 1.1261678004535147,
+        "wallTime": 1434.3000001907349,
+        "state": "running",
+        "afterTime": 1.1261678004535147,
+        "afterWall": 1434.3000001907349
+      },
+      {
+        "audioTime": 1.1377777777777778,
+        "wallTime": 1439.1999998092651,
+        "state": "running",
+        "afterTime": 1.1377777777777778,
+        "afterWall": 1439.5
+      },
+      {
+        "audioTime": 1.1377777777777778,
+        "wallTime": 1444.3000001907349,
+        "state": "running",
+        "afterTime": 1.1377777777777778,
+        "afterWall": 1444.3000001907349
+      },
+      {
+        "audioTime": 1.1377777777777778,
+        "wallTime": 1449.3000001907349,
+        "state": "running",
+        "afterTime": 1.1377777777777778,
+        "afterWall": 1449.3000001907349
+      },
+      {
+        "audioTime": 1.1493877551020408,
+        "wallTime": 1454.5,
+        "state": "running",
+        "afterTime": 1.1493877551020408,
+        "afterWall": 1454.5
+      },
+      {
+        "audioTime": 1.1493877551020408,
+        "wallTime": 1459.3000001907349,
+        "state": "running",
+        "afterTime": 1.1493877551020408,
+        "afterWall": 1459.3000001907349
+      },
+      {
+        "audioTime": 1.1609977324263039,
+        "wallTime": 1464.3000001907349,
+        "state": "running",
+        "afterTime": 1.1609977324263039,
+        "afterWall": 1464.3000001907349
+      },
+      {
+        "audioTime": 1.1609977324263039,
+        "wallTime": 1469.3000001907349,
+        "state": "running",
+        "afterTime": 1.1609977324263039,
+        "afterWall": 1469.3000001907349
+      },
+      {
+        "audioTime": 1.1668027210884353,
+        "wallTime": 1474.3000001907349,
+        "state": "running",
+        "afterTime": 1.1668027210884353,
+        "afterWall": 1474.3000001907349
+      },
+      {
+        "audioTime": 1.1668027210884353,
+        "wallTime": 1479.3000001907349,
+        "state": "running",
+        "afterTime": 1.1668027210884353,
+        "afterWall": 1479.3000001907349
+      },
+      {
+        "audioTime": 1.1784126984126984,
+        "wallTime": 1484.1999998092651,
+        "state": "running",
+        "afterTime": 1.1784126984126984,
+        "afterWall": 1484.5
+      },
+      {
+        "audioTime": 1.1784126984126984,
+        "wallTime": 1489.1999998092651,
+        "state": "running",
+        "afterTime": 1.1784126984126984,
+        "afterWall": 1489.1999998092651
+      },
+      {
+        "audioTime": 1.1900226757369614,
+        "wallTime": 1494.3000001907349,
+        "state": "running",
+        "afterTime": 1.1900226757369614,
+        "afterWall": 1494.3000001907349
+      },
+      {
+        "audioTime": 1.1900226757369614,
+        "wallTime": 1499.1999998092651,
+        "state": "running",
+        "afterTime": 1.1900226757369614,
+        "afterWall": 1499.1999998092651
+      },
+      {
+        "audioTime": 1.2016326530612245,
+        "wallTime": 1504.3000001907349,
+        "state": "running",
+        "afterTime": 1.2016326530612245,
+        "afterWall": 1504.3000001907349
+      },
+      {
+        "audioTime": 1.2016326530612245,
+        "wallTime": 1509.1999998092651,
+        "state": "running",
+        "afterTime": 1.2016326530612245,
+        "afterWall": 1509.1999998092651
+      },
+      {
+        "audioTime": 1.2132426303854875,
+        "wallTime": 1514.1999998092651,
+        "state": "running",
+        "afterTime": 1.2132426303854875,
+        "afterWall": 1514.5
+      },
+      {
+        "audioTime": 1.2132426303854875,
+        "wallTime": 1519.3000001907349,
+        "state": "running",
+        "afterTime": 1.2132426303854875,
+        "afterWall": 1519.3000001907349
+      },
+      {
+        "audioTime": 1.2132426303854875,
+        "wallTime": 1524.1999998092651,
+        "state": "running",
+        "afterTime": 1.2132426303854875,
+        "afterWall": 1524.3000001907349
+      },
+      {
+        "audioTime": 1.2248526077097506,
+        "wallTime": 1529.3000001907349,
+        "state": "running",
+        "afterTime": 1.2248526077097506,
+        "afterWall": 1529.3000001907349
+      },
+      {
+        "audioTime": 1.2248526077097506,
+        "wallTime": 1534.3000001907349,
+        "state": "running",
+        "afterTime": 1.2248526077097506,
+        "afterWall": 1534.3000001907349
+      },
+      {
+        "audioTime": 1.2364625850340136,
+        "wallTime": 1539.3000001907349,
+        "state": "running",
+        "afterTime": 1.2364625850340136,
+        "afterWall": 1539.3000001907349
+      },
+      {
+        "audioTime": 1.2364625850340136,
+        "wallTime": 1544.3000001907349,
+        "state": "running",
+        "afterTime": 1.2364625850340136,
+        "afterWall": 1544.3000001907349
+      },
+      {
+        "audioTime": 1.242267573696145,
+        "wallTime": 1549.1999998092651,
+        "state": "running",
+        "afterTime": 1.242267573696145,
+        "afterWall": 1549.1999998092651
+      },
+      {
+        "audioTime": 1.242267573696145,
+        "wallTime": 1554.3000001907349,
+        "state": "running",
+        "afterTime": 1.242267573696145,
+        "afterWall": 1554.3000001907349
+      },
+      {
+        "audioTime": 1.253877551020408,
+        "wallTime": 1559.3000001907349,
+        "state": "running",
+        "afterTime": 1.253877551020408,
+        "afterWall": 1559.5999999046326
+      },
+      {
+        "audioTime": 1.253877551020408,
+        "wallTime": 1564.5,
+        "state": "running",
+        "afterTime": 1.253877551020408,
+        "afterWall": 1564.5
+      },
+      {
+        "audioTime": 1.2654875283446712,
+        "wallTime": 1569.3000001907349,
+        "state": "running",
+        "afterTime": 1.2654875283446712,
+        "afterWall": 1569.3000001907349
+      },
+      {
+        "audioTime": 1.2654875283446712,
+        "wallTime": 1574.3000001907349,
+        "state": "running",
+        "afterTime": 1.2654875283446712,
+        "afterWall": 1574.3000001907349
+      },
+      {
+        "audioTime": 1.2770975056689342,
+        "wallTime": 1579.4000000953674,
+        "state": "running",
+        "afterTime": 1.2770975056689342,
+        "afterWall": 1579.4000000953674
+      },
+      {
+        "audioTime": 1.2770975056689342,
+        "wallTime": 1584.3000001907349,
+        "state": "running",
+        "afterTime": 1.2770975056689342,
+        "afterWall": 1584.3000001907349
+      },
+      {
+        "audioTime": 1.2887074829931973,
+        "wallTime": 1589.1999998092651,
+        "state": "running",
+        "afterTime": 1.2887074829931973,
+        "afterWall": 1589.3000001907349
+      },
+      {
+        "audioTime": 1.2887074829931973,
+        "wallTime": 1594.1999998092651,
+        "state": "running",
+        "afterTime": 1.2887074829931973,
+        "afterWall": 1594.1999998092651
+      },
+      {
+        "audioTime": 1.3003174603174603,
+        "wallTime": 1599.3000001907349,
+        "state": "running",
+        "afterTime": 1.3003174603174603,
+        "afterWall": 1599.3000001907349
+      },
+      {
+        "audioTime": 1.3003174603174603,
+        "wallTime": 1604.1999998092651,
+        "state": "running",
+        "afterTime": 1.3003174603174603,
+        "afterWall": 1604.1999998092651
+      },
+      {
+        "audioTime": 1.3003174603174603,
+        "wallTime": 1609.1999998092651,
+        "state": "running",
+        "afterTime": 1.3003174603174603,
+        "afterWall": 1609.1999998092651
+      },
+      {
+        "audioTime": 1.3061224489795917,
+        "wallTime": 1614.3000001907349,
+        "state": "running",
+        "afterTime": 1.3061224489795917,
+        "afterWall": 1614.3000001907349
+      },
+      {
+        "audioTime": 1.3061224489795917,
+        "wallTime": 1619.3000001907349,
+        "state": "running",
+        "afterTime": 1.3061224489795917,
+        "afterWall": 1619.3000001907349
+      },
+      {
+        "audioTime": 1.3177324263038548,
+        "wallTime": 1624.3000001907349,
+        "state": "running",
+        "afterTime": 1.3177324263038548,
+        "afterWall": 1624.5999999046326
+      },
+      {
+        "audioTime": 1.3177324263038548,
+        "wallTime": 1629.3000001907349,
+        "state": "running",
+        "afterTime": 1.3177324263038548,
+        "afterWall": 1629.3000001907349
+      },
+      {
+        "audioTime": 1.3293424036281178,
+        "wallTime": 1634.3000001907349,
+        "state": "running",
+        "afterTime": 1.3293424036281178,
+        "afterWall": 1634.3000001907349
+      },
+      {
+        "audioTime": 1.3293424036281178,
+        "wallTime": 1639.1999998092651,
+        "state": "running",
+        "afterTime": 1.3293424036281178,
+        "afterWall": 1639.1999998092651
+      },
+      {
+        "audioTime": 1.340952380952381,
+        "wallTime": 1644.1999998092651,
+        "state": "running",
+        "afterTime": 1.340952380952381,
+        "afterWall": 1644.1999998092651
+      },
+      {
+        "audioTime": 1.340952380952381,
+        "wallTime": 1649.3000001907349,
+        "state": "running",
+        "afterTime": 1.340952380952381,
+        "afterWall": 1649.3000001907349
+      },
+      {
+        "audioTime": 1.352562358276644,
+        "wallTime": 1654.3000001907349,
+        "state": "running",
+        "afterTime": 1.352562358276644,
+        "afterWall": 1654.5
+      },
+      {
+        "audioTime": 1.352562358276644,
+        "wallTime": 1659.3000001907349,
+        "state": "running",
+        "afterTime": 1.352562358276644,
+        "afterWall": 1659.3000001907349
+      },
+      {
+        "audioTime": 1.364172335600907,
+        "wallTime": 1664.3000001907349,
+        "state": "running",
+        "afterTime": 1.364172335600907,
+        "afterWall": 1664.3000001907349
+      },
+      {
+        "audioTime": 1.364172335600907,
+        "wallTime": 1669.1999998092651,
+        "state": "running",
+        "afterTime": 1.364172335600907,
+        "afterWall": 1669.1999998092651
+      },
+      {
+        "audioTime": 1.3699773242630386,
+        "wallTime": 1674.3000001907349,
+        "state": "running",
+        "afterTime": 1.3699773242630386,
+        "afterWall": 1674.3000001907349
+      },
+      {
+        "audioTime": 1.3699773242630386,
+        "wallTime": 1679.1999998092651,
+        "state": "running",
+        "afterTime": 1.3699773242630386,
+        "afterWall": 1679.1999998092651
+      },
+      {
+        "audioTime": 1.3699773242630386,
+        "wallTime": 1684.3000001907349,
+        "state": "running",
+        "afterTime": 1.3699773242630386,
+        "afterWall": 1684.3000001907349
+      },
+      {
+        "audioTime": 1.3815873015873017,
+        "wallTime": 1689.3000001907349,
+        "state": "running",
+        "afterTime": 1.3815873015873017,
+        "afterWall": 1689.3000001907349
+      },
+      {
+        "audioTime": 1.3815873015873017,
+        "wallTime": 1694.1999998092651,
+        "state": "running",
+        "afterTime": 1.3815873015873017,
+        "afterWall": 1694.1999998092651
+      },
+      {
+        "audioTime": 1.3931972789115645,
+        "wallTime": 1699.3000001907349,
+        "state": "running",
+        "afterTime": 1.3931972789115645,
+        "afterWall": 1699.3000001907349
+      },
+      {
+        "audioTime": 1.3931972789115645,
+        "wallTime": 1704.3000001907349,
+        "state": "running",
+        "afterTime": 1.3931972789115645,
+        "afterWall": 1704.3000001907349
+      },
+      {
+        "audioTime": 1.4048072562358276,
+        "wallTime": 1709.3000001907349,
+        "state": "running",
+        "afterTime": 1.4048072562358276,
+        "afterWall": 1709.3000001907349
+      },
+      {
+        "audioTime": 1.4048072562358276,
+        "wallTime": 1714.3000001907349,
+        "state": "running",
+        "afterTime": 1.4048072562358276,
+        "afterWall": 1714.3000001907349
+      },
+      {
+        "audioTime": 1.4164172335600906,
+        "wallTime": 1719.1999998092651,
+        "state": "running",
+        "afterTime": 1.4164172335600906,
+        "afterWall": 1719.3000001907349
+      },
+      {
+        "audioTime": 1.4164172335600906,
+        "wallTime": 1724.1999998092651,
+        "state": "running",
+        "afterTime": 1.4164172335600906,
+        "afterWall": 1724.1999998092651
+      },
+      {
+        "audioTime": 1.4280272108843537,
+        "wallTime": 1729.3000001907349,
+        "state": "running",
+        "afterTime": 1.4280272108843537,
+        "afterWall": 1729.4000000953674
+      },
+      {
+        "audioTime": 1.4280272108843537,
+        "wallTime": 1734.1999998092651,
+        "state": "running",
+        "afterTime": 1.4280272108843537,
+        "afterWall": 1734.1999998092651
+      },
+      {
+        "audioTime": 1.4396371882086167,
+        "wallTime": 1739.4000000953674,
+        "state": "running",
+        "afterTime": 1.4396371882086167,
+        "afterWall": 1739.4000000953674
+      },
+      {
+        "audioTime": 1.4396371882086167,
+        "wallTime": 1744.3000001907349,
+        "state": "running",
+        "afterTime": 1.4396371882086167,
+        "afterWall": 1744.3000001907349
+      },
+      {
+        "audioTime": 1.4454421768707484,
+        "wallTime": 1749.3000001907349,
+        "state": "running",
+        "afterTime": 1.4454421768707484,
+        "afterWall": 1749.3000001907349
+      },
+      {
+        "audioTime": 1.4454421768707484,
+        "wallTime": 1754.1999998092651,
+        "state": "running",
+        "afterTime": 1.4454421768707484,
+        "afterWall": 1754.1999998092651
+      },
+      {
+        "audioTime": 1.4454421768707484,
+        "wallTime": 1759.3000001907349,
+        "state": "running",
+        "afterTime": 1.4454421768707484,
+        "afterWall": 1759.3000001907349
+      },
+      {
+        "audioTime": 1.4570521541950114,
+        "wallTime": 1764.3000001907349,
+        "state": "running",
+        "afterTime": 1.4570521541950114,
+        "afterWall": 1764.3000001907349
+      },
+      {
+        "audioTime": 1.4570521541950114,
+        "wallTime": 1769.3000001907349,
+        "state": "running",
+        "afterTime": 1.4570521541950114,
+        "afterWall": 1769.3000001907349
+      },
+      {
+        "audioTime": 1.4686621315192743,
+        "wallTime": 1774.3000001907349,
+        "state": "running",
+        "afterTime": 1.4686621315192743,
+        "afterWall": 1774.3000001907349
+      },
+      {
+        "audioTime": 1.4686621315192743,
+        "wallTime": 1779.1999998092651,
+        "state": "running",
+        "afterTime": 1.4686621315192743,
+        "afterWall": 1779.1999998092651
+      },
+      {
+        "audioTime": 1.4802721088435373,
+        "wallTime": 1784.4000000953674,
+        "state": "running",
+        "afterTime": 1.4802721088435373,
+        "afterWall": 1784.4000000953674
+      }
+    ],
+    "productionDestinationConnections": 1,
+    "addedLiveMonitoringNodes": 0
+  },
+  "passed": true,
+  "failure": null,
+  "historicalEvidenceModified": false,
+  "gameJourney": false,
+  "browserOutputMuted": true,
+  "hostSpeakersOrMacOrM1Accepted": false,
+  "finishedAt": "2026-09-15T22:00:23.947Z"
+}

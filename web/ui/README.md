@@ -1,0 +1,824 @@
+# Source UI overlay — implementation in progress
+
+This is an actual Canvas2D/DOM interface implementation, **not a complete M1
+client or an accepted presentation**. The owner-approved pack is
+`b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d`.
+`evidence/` records component-only results and remaining implementation gaps.
+Final source/composed acceptance remains **incomplete**.
+
+## Current integration boundary
+
+The current adapter validates all25 UI intents, explicit quantity/All selections,
+independent bank/recovery revisions, full recovery permissions/capacities and
+lossless fees. Production All, persistent bank All and partial recovery now
+dispatch their actual typed requests; no numeric sentinel, local price formula
+or optimistic ownership change is used. The current production TypeScript
+check passes; that is not a live-journey or final presentation pass.
+
+The optional version1 `ui.recovery.management.context` supplies the complete
+native container, including an open empty Office when `world.recovery` is null.
+Its contiguous slots preserve each death/entry and physical storage identity.
+The native title uses `counts.entries` and the supplied capacity, not distinct
+item types or sums of executable capacities. `selectedTypeCaption` is separate
+from both a selected entry's full-stack fee and the combined Take-All plan:
+the original 80-slot Office selects seven arrows but displays 35 arrows and
+1,470 at 42 each. An unavailable source caption stays explicitly unavailable.
+
+Whole-context Take-All sends one `recovery_take_all` with an unchanged copy of
+`takeAll.selection`; the UI never builds a transaction plan or loops over death
+records. Held selections are rejected after any context, order, quantity or
+physical-storage change. Partial 1/5/X/All retains the selected record and uses
+the context's storage kind, which can be Office even for a still-grave item.
+Inventory retrieval adds no bank revision; Bank-All keeps its separate exact
+revision. Semantic context changes cancel local selection, menus and quantity
+entry, while equivalent copied identities do not reset them. Missing extensions
+retain the explicitly supported legacy path; malformed current contexts cannot
+fall through to a legacy recovery panel.
+
+`tests/recovery-context.test.ts` and `tests/recovery-browser.mjs` cover this
+consumer boundary. The browser fixture uses controlled services, not a saved
+account, and reprojects original short/80-slot Office images without replacing
+goldens. Native/server atomicity, actual player journeys and presentation
+acceptance remain separate evidence.
+
+`bindUiAudioPreferences(ui, controls)` consumes the shell's real
+`PlayerAudioControls`. All native mode, numbered playlist, mute, volume, Skip and
+save-retry operations use that bound manager. The UI does not own another
+persistence queue, initialize unlock history or call an independent preference
+loader. The stopped worker's uncommitted queue remains preserved in its original
+worktree and the integration handoff, not in production. Component preference
+checks now exercise the same shell manager/store with explicit test storage.
+
+`setUiMinimap`, `setUiMapIconSprites` and `bindUiMinimapProjection` consume copied
+renderer surfaces/sprites and exact placement payloads. Live map icons use the
+supplied `drawX`/`drawY` and source mask mode, without repeating sprite offsets
+or reconstructing icon rotation/placement. Source-empty sprites remain empty.
+Missing inputs, stale scope and malformed data remain explicit failures.
+
+During reconnect the UI retains only a copied, previously validated native icon
+projection for the exact surface, player position, camera angle and widget size.
+It does not call the unavailable live renderer, invent empty icons or fall back
+to a static source image. Scope, surface, sprite and projection-binding changes
+invalidate that retained projection. Actual minimap validation failures clear
+the failed surface and report the precise UI error instead of escaping from an
+animation frame.
+
+The preceding integration checks include58 UI units,17 versioned-control browser cases,
+9 actual native-preference cases and11 UI4/surface cases. The36 bounded and8
+document source comparisons are rerun at zero tolerance. Historical totals below
+retain their original evidence/revisions; no component result certifies source
+initial cameras, the complete server journey, speakers, Mac/Edge or M1 acceptance.
+
+The authorized parent integrity repair `9bf6969` is preserved in branch ancestry.
+Strict verification passes all 1,307 frozen input hashes and the 85 reference-pack
+tests. Historical status text in the hash-locked art/interface documents is not
+treated as a revocation of the external approval. Asset preparation now runs the
+unchanged strict pack validator before generating assets.
+
+The authorized contract publication `d1532d6` is integrated as `5d56c93`.
+The independent nullable-production correction `351847f3` is integrated as
+`ccbfbb0`: `production.target: null` is legitimate inventory-only production,
+not a missing capability or an invitation to invent a facility. Omitted or
+malformed target fields still fail the complete version1 projection check.
+The bounded correction's unit/browser/native-modal evidence is recorded in
+`evidence/production-correction/`; preceding complete-source reports retain
+their original commit basis rather than claiming unrelated tests were rerun.
+The authorized UI4 implementation through `78fcec4` is now integrated. Its
+shared/protobuf files and exact canonical artifact hashes match the handoff.
+This does not establish that the separate parent shell has completed its live
+composition. Actual versioned projection data is
+required; absent/unknown/malformed `WorldView.ui` is explicit unsupported/error
+feedback rather than a fabricated empty success.
+
+Current component validation: TypeScript and 54 UI unit tests pass; all 20 legacy,
+16 versioned, 7 real-audio-observer, 6 music-state, 6 All Settings and 8 UI4
+browser cases pass. The 29 integrated audio
+policy/reward tests also pass. All **87/87** native-panel/full-overlay/owner-composition
+comparisons pass at the original zero tolerances. This resolves the earlier
+shop and guide-family raster differences, but does not complete the missing
+controls, live-data projections or real-server acceptance gates below.
+
+The bounded source-mode continuation additionally validates native filter
+panels and data-only grid projections, populated recovery/fee/selection and
+80-slot scroll projections, and the procedural title effect/current reconnect
+banner: **106/106**, zero tolerance. The published-contract continuation adds
+**45/45** exact native production, smithing, populated death-preview and reward
+frame/projection comparisons. These use controlled source-only inputs and a
+deterministic component double, not a real server or final M1 acceptance.
+See `evidence/mode-comparison.json` and
+`evidence/native-presentations/comparison.json`.
+Nine native audio preference states add **18/18** full-overlay source/reprojection
+checks at zero tolerance, recorded in `evidence/native-audio-controls/`. Those
+browser controls use the real WebAudio adapter, with browser output muted for
+shared-host privacy; they do not claim audible world playback.
+Native music mode/list-menu artwork adds **8/8** exact comparisons in
+`evidence/native-music-controls/`. Its 853 row/group/widget bindings come from
+the original table44 display-name column, not inferred labels or fixture unlocks.
+The independent UI continuation uses **exactly 18 additional original states**:
+ten settings, three bank, three HUD and two level-up states. Source replays and
+data projections pass **36/36** zero-tolerance checks without changing the
+71-state/29-family/11-signature denominator. See `evidence/bounded-independent/`.
+UI4 adds four original book/map states and **8/8** full source/reprojection
+checks, for **308/308** total exact comparisons. These document fixtures have a
+genuinely hidden native player marker; they do not certify visible-marker
+animation or placement. See `evidence/ui4-documents/`.
+
+## Shell integration
+
+```ts
+import {
+  createUi, forwardWorldPointer, setUiCamera, onUiCameraRequest,
+  getUiPreviewBounds, getUiPreviewRequest, setUiPreview,
+} from "./ui/index.ts";
+
+const ui = await createUi(overlayCanvas, services, assets);
+ui.resize(innerWidth, innerHeight);
+
+// The same camera supplied to the actual renderer:
+setUiCamera(ui, camera);
+const stopCameraCommands = onUiCameraRequest(ui, yaw => {
+  onSourceCameraYawRequest(yaw);
+});
+
+// On the shell's world-input path; do not dispatch the same action twice.
+if (!ui.capturesPointer(x, y)) {
+  forwardWorldPointer(ui, {
+    kind: rightClick ? "context" : "primary",
+    x, y, pick: renderer.pick(x, y), control: controlKey,
+  });
+}
+
+// Optional actual model-only renderer preview, never a reference panel/capture.
+const request = getUiPreviewRequest(ui);
+const bounds = getUiPreviewBounds(ui);
+// Render an RGBA model-only surface at bounds.width × bounds.height, then:
+setUiPreview(ui, modelPreviewSurface);
+```
+
+`onSourceCameraYawRequest` above is the caller's source-camera command sink, not
+a supplied implementation. The original stateful orbit/follow/input contract is
+in `research/camera-source/contract.json`; changing yaw in place or treating
+scroll as a linear projection-zoom increment is not a source-camera controller.
+
+`createUi(canvas, AppServices, ClientAssets): Promise<UiHandle>` implements the
+unchanged shared contract. The canvas must already have a parent. Keep world and
+overlay canvases separate; do not clear the world canvas from UI code. The UI
+subscribes to `services.subscribe()` itself. Explicit `ui.update()` is supported,
+but is not required in addition to that subscription. `dispose()` unsubscribes,
+removes its DOM controls/listeners, clears credential references and releases UI
+resources. Call `stopCameraCommands()` when removing the shell adapter.
+
+Coordinates are viewport-local logical pixels, source UI scale 1. Tested sizes:
+1024×768, 1920×1080 and 2560×1440, DPR 1. Do not pass device-scaled dimensions as
+logical dimensions or stretch the canvas independently of its input layer.
+The input layer tracks the canvas's screen rectangle. The renderer must do its
+own picking; the overlay never fabricates a picked entity or world coordinate.
+
+The preview hooks are presentation adapters, not new gameplay contracts.
+`getUiPreviewBounds()` is available after the character/equipment interface's render.
+`setUiPreview()` accepts an actual renderer canvas/bitmap at those exact native
+dimensions; no resizing or human-preview substitution is performed. A missing
+preview remains a missing renderer integration, not a finished penguin.
+`getUiPreviewRequest(ui): Readonly<UiPreviewRequest> | null` returns a detached
+descriptor: `purpose` (`appearance`/`equipment`), surface `bounds`, native
+`modelBounds`, `sourceWidget`, `modelZoom`, `modelRotation`, approved local
+appearance selection, and actual equipment/base metadata. Null equipment/base
+means unavailable, not an invented empty loadout. Model parameters are native
+widget parameters, not the world-camera ABI. Equipment-preview compositing
+occurs at the source model widget's draw position and parent clip.
+
+### UI4 and revisioned minimap composition
+
+The source runtime prerequisite picks are `cd12063` (`9ae74e89`), `e4c9669`
+(`50f21226`), `3103033` (`d392f62`), `19c85d5` (`e0e42d7`),
+`30a8183` (`2f6a724`), `087cfca` (`4e92c9e`) and `85843a1` (`78fcec4`).
+The already-consumed nullable correction remains `ccbfbb0`; the named main
+consumables and dialogue prerequisites are retained as `9973948` (`82e0a41`)
+and `70e4294` (`2f775f7`). Only authorized patches touched their owned paths;
+the UI did not edit `Cargo.lock`.
+
+The final `game-content.csc.gz` has raw SHA-256
+`6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3`
+and compressed SHA-256
+`f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6`.
+Content/artifact are version4; persisted state, runtime and UI state remain1.
+Use a fresh normal candidate or the backend's explicit fenced migration;
+never silently repin an old world.
+
+```ts
+import { setUiMinimap, getUiMinimapStatus } from "./ui/index.ts";
+
+// Called after the real renderer has updated/assembled this same world:
+function publishMinimap() {
+  const surface = renderer.minimapSurface();
+  if (surface.revision !== getUiMinimapStatus(ui)?.revision) {
+    setUiMinimap(ui, surface);
+  }
+}
+function onRendererReplaced() {
+  setUiMinimap(ui, null);
+}
+```
+
+`setUiMinimap(UiHandle, UiMinimapSurface | null): void` structurally consumes
+the renderer's published `MinimapSurface` from `d5320e1`; it does not alter
+`RendererHandle`. Supply 512x512 opaque RGBA8 `ImageData`, scale4,
+marginX/Y48, baseX/Y, plane, revision, the source mask, complete/notes/stats and
+exact map-element icon IDs. Pixels/mask/metadata are copied per revision;
+stale, reused-with-different-data, malformed and wrong-plane inputs fail with
+an actual `UiMinimapError.errorId`. Player/instance/plane changes clear stale
+data. A missing surface disables map input with explicit feedback.
+
+`getUiMinimapStatus(UiHandle): UiMinimapStatus | null` returns detached
+metadata plus source-mask coverage and missing-asset diagnostics. Original
+index2/group35 area definitions resolve the renderer's map-element IDs to
+original primary sprites; no numeric ID is parsed from a canonical string.
+The runtime never falls back to a static minimap PNG. Static rasters remain
+only in explicitly world-less source comparison fixtures. Component input
+tests supply explicit blank/patterned pixels with incomplete/test-only notes,
+not a replacement production renderer.
+
+The renderer's remaining edge-five-tile and instance qualifications stay
+visible in `complete`, `notes` and `stats`; these are not fidelity acceptance.
+Full-HUD zoom410 at1080 is not viewport-only662. The renderer owns the proper
+camera/resize adapter; the UI does not substitute either for its native
+settings slider. Observer `running`, `movementTick`, action identity and exact
+decimal clocks, including null versus absent values, and validated
+`dynamicObjects` pass through the immutable world unchanged. The run checkbox
+is an input preference, not an executed-movement observer.
+
+UI4 `activeTab` is authoritative and separate from modal `activeInterface`;
+an acknowledgement without a new view does not select a tab. Explicit null
+means no selected side content, not a fabricated inventory selection.
+All eleven UI-bank operations, including `bank_placeholder`, capture
+`ui.bank.revision` at control/menu/drag creation. Held requests are never
+rebound to a later revision; passive world ticks do not invalidate an unchanged
+bank revision. Ordinary deposits still preserve `WorldView.bank.banker`.
+
+BOOK392 uses its original model-only paper, font497 and thirty line slots;
+source markup/colours survive wrapping, and long supplied pages remain
+reachable through local overflow navigation. `ui_document_page` and document
+dismissal retain the opaque ID and wait for authoritative updates. AIDE_MAP615
+uses the original map models, source tutor-toggle geometry and source2043
+marker arithmetic. A supplied native-map `mapAsset` must match the original
+model-only image dimensions; it is never stretched into a full panel.
+Source book text is rendered as the authoritative item document, not rewritten
+into ClubScape legal terms or Jagex account-creation controls.
+
+### Independent display helpers
+
+* `setUiAbilityVisuals(ui, revision, facts)` accepts a read-only map keyed by
+  native widget ID. `AbilityVisualTruth` contains optional `level`, `resources`,
+  `requirements`, `lowerTier`, and `supersededByMultiSkill` booleans/null.
+  It applies only to that exact world revision. Unknown requirements stay
+  visible: the UI does not manufacture legal availability. Current skill/rune
+  display facts use the immutable snapshot and original information-item
+  parameters; execution remains server-authoritative.
+* `projectAbilityGrid(widgets, catalogue, kind, mask, facts)` and
+  `projectFilterPanel(widgets, kind, mask)` implement the source Classic layout
+  and checkbox states. Prayer uses source bits6574–6578; Magic uses
+  6605/6609/6606/6607/6608/12137/6548. These are **local display preferences**,
+  not game commands or permissions. Escape closes the filter panel; the
+  tier-dependent prayer option retains its native disabled state.
+* `recoveryTemplate(catalogue, display)`, `projectRecovery(widgets, display)`
+  and `recoveryControls(widgets, width, height, display, dispatch)` consume
+  explicit `RecoveryDisplay` fields: storage, rows `{id, slot, item, allowed,
+  reason}`, selected ID, coffer as decimal text, unit fee, capacity, bank/discard availability,
+  and scroll position. Null monetary/capacity fields remain unknown.
+  `RecoveryUiCommand` is `select`, `retrieve` (1/5/X/All), `take_all`,
+  `bank_all`, `discard_all`, `examine`, or `close`. The adapter must map these
+  to the published authoritative APIs; it must not make a partial-quantity
+  request into a full-stack reclaim.
+
+Current public `RecoveryView` is rendered at the calibrated native grid
+positions. `ui.recovery.cofferBalance` and discard/coffer-offer permissions are
+now consumed. Unit fee, capacity and per-row permissions remain unprojected;
+`allowed: null` records unknown permission rather than inventing `true`. Existing
+whole-item reclaim remains usable; unsupported partial quantities are clearly
+identified rather than faked. The separate backend/UI-contract closure owns
+the remaining quote, permission and quantity wiring.
+
+### Versioned controller behavior
+
+`gameplay-ui.ts` validates the complete declared projection shape, decimal
+strings, stable identities and permissions without implementing gameplay
+rules. Frozen immutable projections reuse their validation result. All new
+requests go through `AppServices.send()`; no duplicate protocol or
+`SourceUi` state is manufactured. U64 money/XP/revisions and signed gram weights
+remain strings, with `BigInt` formatting.
+
+Inventory actions retain the declared opaque action ID, canonical item and
+instance. Production retains menu/recipe IDs and separate single/make-X
+permission. Bank menus and drag/drop retain entry IDs, reject changed
+identities, and wait for authoritative tab/quantity/notes updates. Placeholders
+remain `value: null`, never a zero-quantity spendable `ItemView`.
+
+The relayed final-wire constraints are `WorldSnapshot.ui` tag20 and
+`WorldInput.ui` tag41, with complete `ui.version === 1` negotiation. The
+`expected_bank_revision` field21 must echo the decimal **`ui.bank.revision`**
+captured for that request, not the passive-tick-changing world/character
+revision. Retries retain the original complete request. This overlay sends
+the current published `GameIntent` through `AppServices`; it does not invent
+unpublished transport fields or marshal protobuf itself.
+
+The authorized final v4 prerequisites are integrated, including the source312
+anvil menu opening before selection. The UI still does not bypass progression;
+component production fixtures are not a live anvil/journey proof.
+
+Quest rewards project their supplied narrative and structured item/XP/point
+fields into the real source text slots9–15; continuation sends the supplied
+request without granting anything. Confirmations retain their opaque ID and
+exact credit; acceptance/cancellation never clears them optimistically.
+The current canonical `interface.level_up` binds the original233 popup with
+the supplied title/text and continuation. Other level-up interfaces without a canonical source binding have explicit
+`ui.source.reward.layout` feedback and real continuation, **not** a quest-scroll
+substitute or completed level-up presentation.
+
+Public chat checks the declared channel/permission and UTF-8 byte limit.
+A rejected draft is retained. An acknowledged draft is neither echoed locally
+nor cleared until the authoritative own-message update arrives; duplicate
+submission while awaiting that update is stopped. Menus, quantity prompts,
+drag state, Escape, blur, outside-pointer release and reconnect retain their
+identity/error semantics. The world cannot receive clicks through a native
+modal's blank interior.
+
+### Stock All Settings window
+
+The source window is native group134, attached at161:16. Its actual category
+pages, search box, More/Less info, Hide/Show locked controls, native scrolling
+and bounded choice menus are implemented. The window opens locally as a client
+interface, not as a fake server acknowledgement. Category/source row identities
+come from enums422/423 and original structs; the compiled catalogue retains the
+source keyword aliases, descriptions, widget geometry and actual locked styles.
+Search also includes a matched section's children, following source3841.
+Unknown required controls are not hidden by the locked filter.
+The Settings tab161:47 retains its original Controls/Audio/Display shortcut
+order and opens the corresponding source category3/1/4 without a gameplay request.
+
+Available live bindings include master/music/effects/area sliders and native
+reset values, actual source music mode/Modern–Classic selection, authoritative
+death supply-pile/auto-equip settings, the UI's existing single-button mouse,
+shift-click and Escape behavior, and the actual approved Resizable-Classic
+layout. Audio uses the existing typed helpers; gameplay settings remain
+`AppServices` requests and do not change before their authoritative update.
+The input toggles start from the behavior already implemented by this UI; no
+source preference database or saved preference value is manufactured.
+Single-button mode covers both interface controls and actual renderer world
+picks; a permitted shift action still takes precedence, and denied actions
+never dispatch.
+
+Required display/camera settings without actual bindings remain visible with
+unknown values and explicit feedback. Unprovided numeric thresholds and colour
+preferences also stay explicitly unknown rather than displaying source-fixture
+zero values or saved swatches. In particular, source setting2734
+(`Camera zoom distance`, operation14) is **not** a direct assignment to
+`RenderCamera.zoom`: source42 applies `VIEWPORT_SETFOV` and camera-follow height.
+It uses source varcs73/74 with bounds1338–1341 and viewport interpolation.
+The controlled native comparison uses explicitly recorded300/200/600 inputs,
+never production defaults. Screen Brightness2736/operation15 and view
+distance3656/operation168 likewise need the renderer's actual source preference
+projection. No new renderer/audio callback or guessed preference is introduced.
+
+### Native bank/HUD/level-up projection
+
+Live bank projection now preserves main-tab-first sections, original tab
+background/icon offsets, section spacing/dividers and source drop areas.
+It uses stable entry IDs and actual tab assignments, not the source fixture
+quantities. Insert mode changes the original swap/insert icon2821/2820 rather
+than incorrectly selecting a red button background. Original linked placeholder
+items use opacity120, including their quantity glyphs.
+
+HUD visibility uses the actual interface projection. Highlights are the
+original two border primitives on native161:98, anchored to the relevant tab,
+not a substituted selected-tab skin. Source snapshots cover genuine hidden
+tabs, missing-rune locked styling and the original highlight frame.
+
+`level-up.ts` exposes original layout helpers without inventing canonical
+interface IDs. UI4 now supplies the base popup association. The source GameVal name `levelup_display` is group233 attached
+at162:567; title233:1, detail233:2 and continuation233:3 use native font497.
+Native system chat uses group162. `projectLevelUpPopup` and `projectLevelUpChat`
+take supplied text only, never infer XP/levels. The backend still owns remaining
+chat-only/style associations and real event/text sequencing. Newcomer-map
+model3062 is an isolated original frame0 glyph; animation646 and visible-marker
+source comparison remain unverified, not silently accepted.
+
+These source states also exposed implementation clipping/compositing bugs:
+manual rectangle alpha writes now respect the active clip, and native item
+opacity applies to the whole item sprite including quantity text. The original
+integer blend arithmetic, source files, comparison algorithms and zero tolerances
+remain unchanged; all earlier proof lanes are retained.
+
+### Source audio controls
+
+The exact native-audio and Cook reward corrections are integrated as `b7cc380`
+and `d2082e8` (upstream `888f9384`, then `f74652a5`). Their stable patches match
+the authorized originals; the shared `AudioHandle` ABI and frozen source pack
+were not changed.
+The additive input/native-policy closure `f9e466d3` is integrated as `7475596`.
+The four Modern tracks and five native255 jingle representations are published
+and consumed, not remaining source-input blockers.
+
+```ts
+import { bindUiAudio, setUiMusicState, onUiMusicStateChange } from "./ui/index.ts";
+
+// AppServices routes each normalized SOURCE position once:
+// audioVolume(channel, position) { audio.volume(channel, position); }
+// unlockAudio() { return audio.unlock(); }
+const stopAudioUi = await bindUiAudio(ui, audio);
+// Update the real audio world first; then apply the actual source music state.
+audio.update(world, committedAudioEvents);
+setUiMusicState(ui, world.player.id, sourceMusicState);
+const stopMusicPreferences = onUiMusicStateChange(ui, (playerId, preferences) => {
+  // Persist only client preferences; unlockedGroups still come from authority.
+  return saveMusicPreferences(playerId, preferences);
+});
+// Optional on teardown; ui.dispose() also detaches the observer.
+stopMusicPreferences();
+stopAudioUi();
+```
+
+`bindUiAudio(UiHandle, AudioHandle): Promise<() => void>` consumes the audio
+owner's `observeAudioState`. It observes actual source integer percentages and
+raw mixers, and draws current slider/playback/permission state; it never installs guessed
+defaults into the graph. `sourceAudioDefaults`, `sourceSliderToMixer` and
+`sourceMixerToAssetGain` preserve the effective **255/127/127** defaults and
+native nonlinear semantics. A music slider at50% is sent as **0.5**, not44/255,
+44/128 or a provisional half-amplitude gain. Master50 is applied before the
+lookup: with channel100, native levels are44/22/22. Diagnostic gain values are
+not substituted for percentages in the visible source controls.
+Musical diagnostics now use each observed voice's **actual rendered native
+level** (128 or255) and separately retain configured/applied levels. There is
+no single assumed music-channel `volume/128` gain; a native255 voice at255 has
+calibration gain1. Existing safe native128 representations remain distinct.
+
+The native Audio settings subpage uses original sprites, geometry, mute
+overlays and source tooltip strings. Track clicks/drag use the source integer
+position formula; arrows/Home/End/PageUp/PageDown provide keyboard access.
+Fast keyboard input reads the latest actual observation, not a stale painted
+thumb value. Escape stops the drag without pretending to roll back changes
+already applied to the graph. Source master-zero grey thumbs retain source
+behavior rather than a guessed game-permission rule.
+
+Channel Mute/Unmute remembers the actual in-session percentage. If a persisted
+zero setting's remembered value was never supplied, explicit
+`ui.audio.remembered_mute` feedback requests that value; no saved preference is
+invented. Native source first-use fallback values are distinct from effective
+constructor defaults. The title toggle uses real activation/global `mute()`
+and **does not reset the three channel positions**. UI disposal detaches only
+its observer; audio lifetime remains owned by the shell. Actual audio error
+messages/codes are surfaced. Without a binding, thumbs remain unprojected and
+controls explicitly unavailable rather than falsely showing100%.
+
+Music modes retain native **area0 / shuffle1 / single2** control identities.
+`setUiMusicState(ui, playerId, SourceMusicState)` sends the exact published
+state to `setSourceMusicState` and retains that successfully applied input for
+UI projection. It is required because the audio observer's playback plan is
+not a saved-preference/unlock projection. Foreign-player updates reject and
+character changes clear the UI binding. `getUiMusicState(ui)` returns a detached
+read-only view; identical supplied states do not restart the audio engine.
+`onUiMusicStateChange` reports applied client preferences and awaits optional
+persistence feedback, while audio unlock starts inside the real gesture.
+
+Source mode buttons, canonical track selection, unlock hints, current-playlist
+add/remove/play and loop preferences are wired. All music rows retain their
+native positions, fonts, exact unlocked colors and current supplied counter;
+there are no copied fixture17 unlocks. The original scrollbar supports drag,
+four-pixel arrow steps and keyboard navigation. Held menus recheck the actual
+current unlock set before dispatch. The UI never fabricates `unlocked:true`,
+a gameplay music event, a next song, or the rejected `native_midi_end` directive.
+The engine owns native-duration continuation and no-repeat selection.
+
+The fourth tab button is source **Skip Track**, not a loop toggle. It remains
+disabled in native Area/Single modes; Shuffle-mode manual skip needs a public
+request into the engine's internal next-track policy. The native three numbered
+playlist slots also need their saved-slot model; the published `SourceMusicState`
+contains only the current playlist. Those original controls retain explicit
+required feedback rather than arbitrary slot assignment or next-song guesses.
+
+The shell/renderer, not this UI, must call `setSourceAudioScene` with the actual
+128-unit listener, plane/instance/owner, placed scenery emitters/orientations
+and original varps, and provide actual `SourceMusicState` input.
+Native helpers own distance, retention, visibility and fades; do not reintroduce
+caller-computed gain/distance. `setSourceMusicSelector` is now an optional
+stronger override, **not a required caller-guessed next-song callback**.
+Do not turn a reconnect into `audio.update(null,
+[])`. Likewise, clicking reward Continue sends only the gameplay request:
+Cook level audio requires coherent committed before/after skill batches,
+`skillId` and completion attribution, followed by the **actual** matching
+Widget153 close. No base-level gain means no level cue. The UI never generates
+that delta or close event from an optimistic click.
+
+The fourth metadata route is
+`assets/manifests/osrs/audio-m1-supplement.json`, SHA-256
+`840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91`.
+The nine exact IDs use prefix `asset.source.osrs.cache2695.audio-supplement.`
+with `music.{64,327,163,145}.native255` or
+`jingle.{40,54,58,64,65}.native255`. Route them to the corresponding
+`assets/source/osrs/audio-supplement/<kind>/<id>-native255.flac`; music64 and
+jingle64 are distinct. UI component hosting resolves all four `AUDIO_INPUTS`
+metadata routes and all nine original asset IDs. The parent shell must expose
+the same routes in its own `ClientAssets` implementation. No base ID, file,
+hash, limiter or waveform normalization is changed.
+
+## Asset contract
+
+`ClientAssets.json("ui/manifest.json")` must resolve to
+`assets/compiled/ui/manifest.json`. Image IDs in that catalogue start with `ui/`
+and resolve under `assets/compiled/`. `ClientAssets.image()` must return decoded
+same-origin images and the shell asset loader should verify the pinned hashes in
+`ui/provenance.json`. The UI rejects the wrong pack/cache identity or missing
+native font metrics. Do not map these asset IDs to full reference screenshots.
+`native-widget-pool-v1` losslessly interns repeated source widgets in the wire
+catalogue. `UiAssets.load()` decodes it automatically; direct catalogue consumers
+should call `decodeUiCatalogue(raw)`. This keeps the many source-mode cases from
+duplicating the complete HUD in a large startup download.
+
+The catalogue contains original:
+
+* sprite frames, offsets, canvas dimensions and palettes;
+* CP1252 fonts 494/495/496/497, 256 masks/advances each and native ascent;
+* native widget readbacks and static definitions;
+* quantity-dependent item icons painted by `Client.createItemSprite`, without
+  baked quantities; runtime quantities come from `ItemView`;
+* model-only NPC portraits with parent-clip offsets (a model can exceed its
+  nominal 32×32 widget);
+* native scene minimap rasters and original map-dot/compass sprites.
+* source title palettes/rune masks and current information-item parameters for
+  the normal prayer/spellbook UI, without substituting unused alternate books;
+* original placeholder definitions/icons, not alpha-tinted normal items;
+* isolated original static production/reward model artwork, including the
+  actual parchment models, never a finished panel screenshot.
+
+The raster follows the native 16.16 trimmed-sprite draw extents, including a
+possible final row beyond the nominal scaled rectangle; parent clipping still
+applies. Overflowing centered labels use Java's truncating integer division.
+Decorative item shadow values are read from the actual pinned `gp.ae → lj.ab`
+argument (`lw.dm * 880555563`); unshadowed icons are generated by the original
+item painter, not repaired by editing candidate pixels.
+
+The original multi-skill script2046 is initialized with explicit source-only
+choice/amount inputs for one through eighteen choices; source430 supplies the
+bronze smithing table, and source972 the populated death preview. Item models
+are isolated by the native renderer, not cut out of a finished panel. Their
+keys retain source widget context as well as model/item/zoom/rotation:
+the native first-column clip is not interchangeable with later columns.
+Identical model-only images are content-addressed and reused. Additional
+original item definitions and their raw hashes are recorded in provenance.
+
+Inventory, bank, shop and worn-item ownership/quantities are projected from the
+current immutable `WorldView`. The native template inventories and synthetic
+fixture dialogue are **not** used as live player data. Live dialogue and journal
+text come from the public views; the two unrecorded source transcript entries
+remain explicitly unknown. `xpTenths` is formatted using `BigInt`.
+
+`runEnergy` is consumed in the server/content centipercent representation
+(normal full energy is 10000), displayed divided by 100. The shell must not
+normalize it a second time. `ItemView.iconAsset`, when supplied, must be a
+native-size item icon, not a panel. Item actions, authoritative quantities,
+server rejection messages and error IDs must survive the shell's adaptation.
+
+Static minimap terrain is not evidence of dynamic-door/instance fidelity.
+An authoritative/rendered dynamic minimap surface and exact tutorial minimap
+visibility are still integration gaps.
+
+## Implemented control paths
+
+Real accessible DOM username/password/confirmation and quantity/search inputs
+sit over original bitmap lettering. Other transparent DOM controls expose
+labels, focus and disabled states without replacing the source artwork.
+Credentials are memory-only; UI code does not use local storage or log them.
+
+Requests go through `AppServices`, including registration/login/logout,
+appearance confirmation, interface opening/closing, walking, world interaction,
+equipment changes, eating/dropping, item-on-item/world, inventory swaps, bank
+deposit/withdraw, notes and quantities, shop prices/buy/sell, dialogue choices,
+combat styles/auto-retaliate, run, prayers, spells, experience selection and
+reclaim requests. There are no client grants, inventory mutations or quest/XP
+advancements.
+
+Context menus preserve cancellation and disabled feedback. Pointer drag uses the
+source 5-cycle/5-pixel threshold. Slot identities are checked before dispatch.
+Shift actions use the original item's shift-action metadata. Failed requests
+show their actual message/error ID and retain authoritative state; the amount
+entry is retained on rejection. A fulfilled service promise does not fabricate a
+new account, world or inventory update.
+Lazy image failures do not cause an automatic retry loop. The in-client error
+Retry action retries failed UI assets explicitly before asking the shell to
+continue; disposal clears loaded-image, pending-request and raster caches.
+
+The title effect is a port of the original procedural `cs.fl/je/as/bu` path:
+source rune masks, palettes, noise/blur, integer compositing, wave offsets and
+20ms source cycles. Native seeded effect captures are compared separately from
+startup composition images. No finished title capture or prerecorded flame
+movie is used in the client. Loading bars continue to use only actual app
+counters. The current-source reconnect banner follows `lu.bz` and font494.
+
+Startup and error presentation remains inside the seven approved source-framed
+compositions. Long actual errors/IDs paginate at native glyph boundaries without
+overlap, and inputs retain their values on rejection. No ClubScape legal terms,
+business policies, Jagex account creation, Jagex Launcher flow or external
+authentication have been invented. Historical Jagex terms/auth captures remain
+reference-only, not ClubScape policy.
+
+Only the approved penguin base and `body_type` A/B are selectable. The original
+human kit/colour/pronoun control locations remain, with explicit necessary
+unavailability; they are not requests to introduce new penguin cosmetics.
+
+### Shop identity and stale views
+
+The exact authorized shop repairs are integrated in order as `44e6de1`
+(`3310032`) and `480d434` (`af75e17`). Their existing server quote/lifecycle
+prerequisites were absent from the initial `f64f52b` UI base. The UI commits were
+therefore replayed on the repairs' recorded parent `b3e8e12`; this preserves
+`faa8002` (private ground items/owner-online clocks/source contact) and `9bf6969`
+without reconstructing or editing unrelated backend changes. Both shop patch
+IDs match their authorized originals exactly.
+
+Every new UI `shop_buy`, including fixed-source rows and Buy-1/5/10/50/X,
+sends `expected_item` equal to the **displayed row's canonical `item.id`**.
+Numeric `sourceId`, a later occupant of the same index, and client prices are
+never substituted. Held context menus and amount prompts retain that identity.
+When a newer view has a different item at the index, the action is stopped and
+the user must select the current item again.
+
+This UI does not issue a separate quote RPC: Value uses the authoritative
+`ShopView` price only if the displayed identity still matches. Shell/simulator
+quote adapters must populate the same `expected_item` field on the existing
+protobuf `ShopBuy`; no quote tag, default, legacy bytes or v1 intent-hash
+behavior is changed here.
+
+Server `StaleCommand` and uncertain transport failures retain their actual
+message/error ID. The UI never automatically reconstructs or retries a buy
+against a replacement row. The shell publishes the refreshed authoritative
+view through the existing subscription and must retain the **original full
+intent** for any uncertain transport replay. Selecting a newly displayed item
+is a new user action, not a retargeted retry. Component tests cover row reuse
+while a menu/amount/Value action is held, all quantity modes, and both rejection
+classes; these tests do not duplicate backend trading rules.
+
+## Outstanding scope — not hidden or accepted
+
+See [`contract-gaps.json`](contract-gaps.json) for the published/wired subset and
+exact residual requests. It is **not a fork of `web/shared/contracts.ts`**.
+
+Additional UI implementation/fidelity work remains:
+
+* complete validated source projection of all enabled/disabled/highlight
+  signatures (the 71 states, 29 families and 11 signatures are retained);
+* native source comparison of live data projections, not only source-widget
+  replay, including all modal/choice/scroll/selected/disabled variants;
+* real shell/server composition of the integrated final v4 candidate;
+  the nullable correction, bank preconditions and all current UI requests are consumed;
+* additional canonical level-up chat/style variants beyond the now-wired
+  source233 popup, plus authoritative event sequencing;
+* published production Make-All and bank default-All quantity semantics;
+* authoritative recovery fee-unit/capacity/per-row/bank-all data and partial
+  retrieval/bank-all requests; coffer/discard/coffer-offer wiring is complete;
+* actual renderer preview/minimap app feeding and the renderer's unfinished
+  edge/instance fidelity; UI-side surface consumption is implemented;
+* newcomer-map cursor animation646 and visible-marker source comparison;
+* real source-scene/varp/music-state/event app wiring; the additive audio
+  publications and UI-side route/control integration are complete;
+* direct native Skip Track request and three numbered playlist-slot management;
+* the audio owner's typed saved-preference/Skip/numbered-playlist helpers;
+* actual renderer camera/FOV/brightness/view-distance preferences and remaining
+  unbound source controls inside the now-working All Settings window.
+
+Controls whose service capability is absent do not silently succeed or invent
+values. Out-of-scope controls retain their source placement and explicit
+feedback. Required-but-incomplete controls are identified as required gaps,
+not relabeled out of scope. This implementation is not ready to satisfy the
+task's entire control/fidelity matrix.
+
+## Validation
+
+Read the machine guide before browser/native work. No global packages,
+permissions, sandbox, drivers or security configuration were changed.
+The existing frozen web dependencies are used.
+
+```bash
+cd web
+pnpm exec tsc --noEmit
+node --test ui/tests/unit.test.ts ui/tests/gameplay-ui.test.ts ui/tests/audio-controls.test.ts ui/tests/music-controls.test.ts ui/tests/independent.test.ts ui/tests/ui4.test.ts
+node --test audio/audio.test.ts audio/native-policy.test.ts audio/reward-levels.test.ts audio/supplement.test.ts
+cd ..
+python3 tools/ui-assets/glyph_proof.py --native-exports
+
+mkdir -p web/ui/.cache/xvfb
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/component-browser.mjs
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/gameplay-ui-browser.mjs
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/source-browser.mjs
+python3 tools/ui-assets/compare.py
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/modes-browser.mjs
+python3 tools/ui-assets/compare_modes.py
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/presentations-browser.mjs
+python3 tools/ui-assets/compare_modes.py --presentations
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/audio-browser.mjs
+python3 tools/ui-assets/compare_modes.py --audio-ui
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/music-browser.mjs
+python3 tools/ui-assets/compare_modes.py --music-ui
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/settings-browser.mjs
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/bounded-browser.mjs
+python3 tools/ui-assets/compare_modes.py --bounded-ui
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/ui4-browser.mjs
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/documents-browser.mjs
+python3 tools/ui-assets/compare_modes.py --documents
+```
+
+The browser tests use sandboxed **headful** Chrome under Xvfb. Set
+`CLUBSCAPE_CHROME` for a different approved executable. Browser work files use
+the short owned `.s/` path because Chromium Unix socket names have a
+length limit. Test servers bind random loopback ports and close on completion.
+Set `CLUBSCAPE_UI_TEST_RESULTS` to a fresh worktree-relative directory to preserve
+each run. `compare_modes.py --results <directory>` compares those captures against
+the same unchanged original inputs.
+
+The component double is deliberately not a server simulator: requests are
+recorded, rejected or acknowledged. Its explicit tab-reply mode publishes only
+tab presentation responses and can be disabled for pending/rejection tests;
+it never applies game rewards, progression or ownership rules.
+Component screenshots use a transparent/black world surface and cannot prove
+gameplay, world fidelity or performance.
+
+The source comparison uses the **same original runtime and declared source
+fixture values**, with only the world-content handler detached for a transparent
+component surface. The original 16 full-frame source PNG hashes are verified
+unchanged by instrumentation. Every UI panel pixel and the entire UI-only
+canvas are compared at zero tolerance. Nested panel diagnostics must not be
+summed as disjoint partitions. No whole UI panels are masked. Model-only
+portraits, sprites, fonts and geometry are painted individually.
+
+The seven composition comparisons replay the exact approved composition text
+and first-title-paint state (the source has not yet drawn the world switcher).
+They validate shared raster primitives and anchors, **not** all production
+startup data projections. Source-widget replay, interaction tests, actual-server
+journeys, final visual/audio approval, Mac/Edge performance and RuneLite
+compatibility remain separate gates.
+
+## Rebuilding original assets
+
+```bash
+python3 tools/ui-assets/prepare.py --native
+```
+
+This reuses the pinned cache and tooling from the existing source workers,
+verified before reuse and the cache verified afterward. Override `--source`
+and `--tooling` for other approved locations. It compiles unchanged source-host
+classes plus owned instrumentation in `tools/ui-assets/.cache/`; the original
+JAR and source paths are not modified. A later `prepare.py` without `--native`
+repackages those readbacks. It never downloads tools or contacts an account.
+
+The additional player-preview interfaces deliberately suppress the original
+**human** preview; their source frame/control readbacks do not constitute an
+accepted penguin preview. This boundary is recorded in the compiled provenance.
+Original RuneScape artwork/logos remain source material; no replacement logo or
+new stylistic approval is claimed.
+
+Additional mode preparation is owned by `UiModeCapture`: it invokes the actual
+native filter click scripts, supplies explicitly recorded UI preference bits,
+and initializes source containers525/636 plus context-specific variables261–263
+for the recovery fixtures. The silent original SFX queue is initialized so
+native click scripts do not abort; any native `Client error` rejects preparation.
+These test balances/fees are never copied into production state.
+
+`UiScriptDump` is a bounded read-only source-contract inspection helper.
+The optional MIT CFR artifact in `tools/ui-assets/dependencies.json` was used
+locally to inspect only the original title-effect arithmetic. It is not a
+runtime dependency, does not upload source code, and changes no global tool or
+security configuration. Native preparation itself uses the existing pinned
+Java/cache dependencies.
+
+`UiPresentationCapture` initializes original scripts2046/430/972 and the native
+reward widget's explicit text fields. Source-only production/recovery quantities
+are recorded in `evidence/native-presentations/source-inputs.json`. The
+read-only `inspect_scripts.py` helper accepts a script ID, `enum:ID`, or a
+bounded `widget:GROUP` search against that same verified local cache.
+
+After recording `test-results/typecheck.log`, unit TAP, component captures and
+all seven passing comparison reports, `python3 tools/ui-assets/archive_evidence.py`
+archives the evidence and source/candidate/diff images. It refuses failed or
+incomplete reports, preserves the existing zero tolerances, and keeps M1
+acceptance false. Archived native references allow comparison after owned
+scratch outputs have been cleaned.

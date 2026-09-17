@@ -1,0 +1,12 @@
+[package]
+name = "m1-runtime-bindings-typecheck"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+clubscape-content = { path = "../../../crates/content" }
+clubscape-game-types = { path = "../../../crates/game-types" }
+serde_json = "1"

@@ -1,0 +1,58 @@
+{
+  "scope": "Original music mode/dropdown and row identity calibration only; source fixture unlocks are not live-gameplay state",
+  "references": [
+    {
+      "kind": "ui",
+      "name": "native-music-mode-0.png",
+      "sha256": "ec1178b0d0e17399611965c5586365a7662e1bc613cc58a0367a22321fc41606",
+      "bytes": 109109
+    },
+    {
+      "kind": "ui",
+      "name": "native-music-mode-1.png",
+      "sha256": "24ec985bda5911ba4d22f64c99e0b6236d5c4f3917336ad1980a10df7b9f9c59",
+      "bytes": 109119
+    },
+    {
+      "kind": "ui",
+      "name": "native-music-mode-2.png",
+      "sha256": "abc7b86d09ffd37ed45e493f251c430127c133bf45232af36ecc4c1e0aed3743",
+      "bytes": 109093
+    },
+    {
+      "kind": "ui",
+      "name": "native-music-filter-open.png",
+      "sha256": "10fe9810d090db08438b76dcd39574cfb7908879c14e66b3934bcd51ab2d372f",
+      "bytes": 111017
+    }
+  ],
+  "inputs": [
+    {
+      "case": "native-music-mode-0",
+      "mode": 0,
+      "varp": 18,
+      "scope": "Original mode/skip-button artwork at explicit source-only settings, not gameplay unlock state."
+    },
+    {
+      "case": "native-music-mode-1",
+      "mode": 1,
+      "varp": 18,
+      "scope": "Original mode/skip-button artwork at explicit source-only settings, not gameplay unlock state."
+    },
+    {
+      "case": "native-music-mode-2",
+      "mode": 2,
+      "varp": 18,
+      "scope": "Original mode/skip-button artwork at explicit source-only settings, not gameplay unlock state."
+    },
+    {
+      "case": "native-music-filter-open",
+      "mode": 0,
+      "dropdown": true,
+      "scope": "Actual original expanded list filter, not a declaration of unlocked music."
+    }
+  ],
+  "native_track_rows": 853,
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "finalAcceptance": false
+}

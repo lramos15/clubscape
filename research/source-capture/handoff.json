@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "status": "Source rendering proceeds through public/wiki/online references and controlled native fixtures; do not restate a blanket live-account prerequisite.",
+  "owner_direction": {
+    "recorded_for": "m1-native-hud-reference",
+    "public_reference_route": "Owner explicitly directs wiki/online references rather than requiring a live source account.",
+    "terms_acceptance_permitted": true,
+    "credentials_supplied": false,
+    "login_or_account_creation_authorized_by_this_task": false
+  },
+  "source_runtime": "Pinned injected runtime1.12.38, configured revision240, cache2695; original JAR unchanged.",
+  "completed_without_a_live_account": [
+    "Original model/animation/icon/font/title and five native source scenery viewport families",
+    "Complete native 1920x1080 Resizable-Classic root161 frame with original scene, minimap, chatbox and fourteen side-tab controls",
+    "Original inventory, equipment, skills, combat, prayer, magic, quest-list, bank, shop and NPC-dialogue rendering",
+    "Six explicitly controlled progressive interface attachment/lock families with native instructor portraits",
+    "Native per-panel pixel, coordinate, container/content and no-network checks"
+  ],
+  "artifacts": {
+    "original_fixtures": "assets/reference/osrs240/captures.json",
+    "native_hud": "assets/reference/osrs240/native-hud/captures.json",
+    "native_hud_contract": "tools/source-capture/NATIVE_HUD.md",
+    "source_scope": "research/source-capture/coverage.json"
+  },
+  "remaining_narrow_limits": [
+    "Fixtures are native rendering with declared offline state, not authenticated progression or verified arrival-account cameras.",
+    "Instructor body text is synthetic layout-test content, not an asserted source transcript.",
+    "The six availability families demonstrate actual native attachment/visibility behavior; exact 71-state server unlock bindings remain in the separate gameplay/reference reconciliation.",
+    "Source shop main script1074 is used with a controlled stock container; the original shop-side widget uses shared native inventory script6007. Sale actions, stock/prices and repricing behavior are not certified by the image.",
+    "Quest-list rows are source DB data; footer maxima187/347 are a documented source-derived fixture, not independently observed server totals.",
+    "Native UI requests may be constructed and queued locally with a fixture cipher, but no transport is connected, no packet writer is flushed, and no login handler runs.",
+    "Source live timing, exact dynamic state and additional specialized modal states need public/source reconciliation, not an automatic account blocker."
+  ],
+  "experience_branch_requirement": {
+    "source": "research/journey-rules/initial-state.json and decisions.json",
+    "brand_new_or_returning_normal": "Source-listed arrival near Adventurer Jon.",
+    "experienced_normal": "Source-listed arrival near the castle/guide.",
+    "constraint": "Do not present a common controlled camera or fixture inventory as an observed arrival branch."
+  },
+  "privacy_and_side_effects": {
+    "personal_runelite_state_read": false,
+    "account_created_or_logged_in": false,
+    "terms_actually_accepted": false,
+    "browser_sandbox_or_global_security_changed": false,
+    "persisted_settings": "Native settings/schema logic runs; reads and identified asynchronous save operations are isolated at the fixture boundary.",
+    "network_transport": "Absent and checked for every frame."
+  },
+  "unchanged_acceptance_gates": [
+    "Owner reference-pack approval",
+    "Source-faithful candidate comparison against approved tolerances",
+    "Complete authoritative M1 journey, persistence, audio and performance evidence",
+    "Separate final presentation acceptance"
+  ],
+  "reference_pack_approved": false,
+  "m1_accepted": false
+}

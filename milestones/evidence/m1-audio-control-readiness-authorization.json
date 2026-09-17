@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "task": "M1-AUDIO-CONTROL-READINESS",
+  "authority": "Director repair within the approved M1 source-audio contract",
+  "status": "active_source2266_input_readiness_repair_authorized",
+  "worker": "cdfad64d-9162-439f-a525-58e1114dd7f4",
+  "worktree": ".worktrees/m1-audio-composed",
+  "required_base": "66c6d873603b423f856549363ca6acc4f282c564",
+  "prior_gate": "milestones/evidence/m1-audio-composed-review.json",
+  "prior_three_invocation_budget_consumed": true,
+  "new_validation_bounds": {
+    "additional_measured_chrome_invocations": 2,
+    "required_kind": "Existing whole production source-browser path, including actual native UI/source/restart checks and the cold native preference fixture.",
+    "additional_pre_repair_browser_invocations": 0,
+    "fresh_browser_profile_and_native_context_per_invocation": true,
+    "retry_until_lucky": false,
+    "native_unit_and_type_checks_allowed": true
+  },
+  "allowed_work": [
+    "Resolve first-use readiness of only the actual source-bound2266 native control input at the real audio creation/binding/unlock lifecycle.",
+    "Use existing source catalog/cache/decoder helpers and measure fetch/hash/decode/completion timing where available; do not assert an unmeasured cause.",
+    "Make pending or failed required input readiness explicit before admitting a control deadline; preserve trusted-gesture AudioContext resume ordering.",
+    "Verify cancellation, failed/corrupt input, actor re-entry and native source-queue behavior with deterministic units.",
+    "Commit the complete code before a fresh normal production build, then run the two bounded whole-client validations and preserve both outcomes."
+  ],
+  "constraints": [
+    "No blanket audio/music preload, unrelated asset generation, source manifest/reference changes, codec substitutions or silent fallback.",
+    "Do not delay an already accepted control/cue, move dueAt, suppress loading/timing errors, change20.045351473922903ms tolerance, or widen/advance native source cycles.",
+    "No special game-UI teardown, test sleeps, muted/skipped2266 requests, removed cases or standalone fixture-only pass presented as composed acceptance.",
+    "Keep all18 actual2266 dispatches, original queue capacity/countdown/loading grace and the existing source3D/region/music authority boundaries.",
+    "The first cue must be decoded before its actual enqueue/deadline admission, and both fresh cold runs must report zero loading/timing/clock/expiry failures and zero actual start overruns.",
+    "Use a normal pnpm build with full typecheck, original renderer/protocol components and a fresh output; identify exact code/source/build hashes.",
+    "Use worktree-local Cargo targets and coordinate the measured Chrome window; no Root/source5e checkpoint or gameplay continuation.",
+    "Stop at the second measured invocation or a concrete irreducible blocker, retaining failures; no fourth run under the old budget or automatic new allowance.",
+    "No speaker/Mac/Edge/full-journey/M1 acceptance or later-milestone work."
+  ],
+  "gameplay_or_source_policy_adaptation": false,
+  "new_budget_used": 0,
+  "milestone_accepted": false
+}

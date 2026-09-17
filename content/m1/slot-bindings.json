@@ -1,0 +1,61 @@
+{
+  "equipment_fitting": "Not approved; ring/ammunition remain functional without an invented visible mesh.",
+  "slots": [
+    {
+      "id": "slot.head",
+      "normal_functional_slot": true,
+      "source_wear_position": 0
+    },
+    {
+      "id": "slot.cape",
+      "normal_functional_slot": true,
+      "source_wear_position": 1
+    },
+    {
+      "id": "slot.neck",
+      "normal_functional_slot": true,
+      "source_wear_position": 2
+    },
+    {
+      "id": "slot.weapon",
+      "normal_functional_slot": true,
+      "source_wear_position": 3
+    },
+    {
+      "id": "slot.body",
+      "normal_functional_slot": true,
+      "source_wear_position": 4
+    },
+    {
+      "id": "slot.shield",
+      "normal_functional_slot": true,
+      "source_wear_position": 5
+    },
+    {
+      "id": "slot.legs",
+      "normal_functional_slot": true,
+      "source_wear_position": 7
+    },
+    {
+      "id": "slot.hands",
+      "normal_functional_slot": true,
+      "source_wear_position": 9
+    },
+    {
+      "id": "slot.feet",
+      "normal_functional_slot": true,
+      "source_wear_position": 10
+    },
+    {
+      "id": "slot.ring",
+      "normal_functional_slot": true,
+      "source_wear_position": 12
+    },
+    {
+      "id": "slot.ammo",
+      "normal_functional_slot": true,
+      "source_wear_position": 13
+    }
+  ],
+  "source": "Original item wearPos1/2/3 and research/journey-rules/vocabulary.json#slots"
+}

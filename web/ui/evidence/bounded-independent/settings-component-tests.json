@@ -1,0 +1,31 @@
+{
+  "scope": "All Settings component controls only; deterministic services/real audio observer, no live server or renderer setting invention",
+  "cases": [
+    {
+      "name": "All Settings opens the original window with real category pages and no fake server acknowledgement",
+      "passed": true
+    },
+    {
+      "name": "native audio sliders use the actual observer and source normalized positions",
+      "passed": true
+    },
+    {
+      "name": "source search, no-results, information and locked filters remain navigable",
+      "passed": true
+    },
+    {
+      "name": "existing authoritative death settings dispatch requests and never change before a view update",
+      "passed": true
+    },
+    {
+      "name": "existing client input settings change real shift/default/menu behavior",
+      "passed": true
+    },
+    {
+      "name": "display layout and choice paging preserve the approved Classic layout and clear unavailable feedback",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "finalAcceptance": false
+}

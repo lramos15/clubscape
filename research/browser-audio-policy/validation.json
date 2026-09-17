@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "result": "passed_for_executed_bounded_component",
+  "native_probes": [
+    {
+      "mode": "preferences",
+      "case_families": 5,
+      "sha256": "ba67e2bf468ff67cd77ec73b666b60e682637ba200e3c419d9cf1b79121f690f"
+    },
+    {
+      "mode": "position",
+      "case_families": 6,
+      "sha256": "a060c6d99c71fc48600f97f6285df19ce48728ea593b1d58813b5826437636f4"
+    },
+    {
+      "mode": "music",
+      "case_families": 3,
+      "sha256": "db758a888c2b05c705b370e30d852d9e41bc271f44705f4cd3c95a7b52f1b316"
+    },
+    {
+      "mode": "objects",
+      "case_families": 2,
+      "sha256": "d5690dd20f5bbb0cd70fd59fde0d91394fee421676f654f35c8e94546e42098c"
+    },
+    {
+      "mode": "catalog",
+      "case_families": 4,
+      "sha256": "d83b32c6bde8d781b560d76c762fc2fee4470ecd25c1809239fc82c394cb02ee"
+    },
+    {
+      "mode": "scripts",
+      "case_families": 1,
+      "sha256": "4a7507e1d464cefa7dd6ce213e9f6d4850e9cff3ee8f24b44335a1aab7a65988"
+    },
+    {
+      "mode": "pcm",
+      "case_families": 2,
+      "sha256": "667989b9ae4181a5ee316c36629719b5ec261d371f897e183e65f3028cbdad9a"
+    }
+  ],
+  "typescript_check": "passed",
+  "unit_checks": 29,
+  "real_browser_checks": 32,
+  "browser": "Google Chrome for Testing 153.0.8010.12",
+  "browser_evidence_sha256": "ca775f026fd2497cd47da08af234155b89f1d2d20312539752bfdc2f9393bacc",
+  "original_playable_files_unchanged": 266,
+  "original_cache_files_rechecked_unchanged": 25,
+  "native_source_starts": 122,
+  "native_source_end_callbacks": 121,
+  "exact_remaining_inputs": null,
+  "no_m1_gameplay_mac_edge_speaker_acceptance": true,
+  "cook_reward_conformance": {
+    "source_boundary_sha256": "c0ac07c608c6f7c84beeee31612c6bc36966233fd1c4cf1ef7ed457b644a1575",
+    "native_transport_cases": 4,
+    "source_level_boundaries": [
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        21,
+        21
+      ]
+    ],
+    "new_per_quest_selectors": false,
+    "gameplay_xp_changed": false
+  },
+  "additive_publication": "research/browser-audio-policy/supplement-validation.json",
+  "remaining_integration": "Authoritative scene/music state, real composed app journey and owner-platform acceptance; no missing native publications."
+}

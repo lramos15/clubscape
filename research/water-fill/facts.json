@@ -1,0 +1,80 @@
+{
+  "actor_motion": {
+    "classification": "unresolved_source",
+    "no_animation_verified": false,
+    "reason": "Scenery animationID=-1 is not actor dispatch evidence. No filling sequence or deliberate absence was verified; do not use a similarly named vial, fountain or construction sequence.",
+    "sequence": null
+  },
+  "byproducts": [],
+  "cadence_qualification": "The source explicitly declares1 tick per action/output. Single uses that value directly; first/repeat reuse the same per-conversion duration as a source-supported interpretation. This does not establish automatic batching, Make-X availability or a separately captured startup/animation phase.",
+  "dispatch": "item_on_world",
+  "excluded_nonmatching_sources": [
+    {
+      "page": "Sink",
+      "reason": "This article describes building POH sinks13563/13564 for300 Construction XP/5ticks, not using source sink14868."
+    },
+    {
+      "page": "Money making guide/Filling buckets with water",
+      "reason": "This guide describes Lunar Humidify, not the normal source item-on-sink action. Its Magic XP, runes, cast timing and throughput do not apply."
+    }
+  ],
+  "input": {
+    "item": "item.bucket",
+    "quantity": 1,
+    "source_id": 1925
+  },
+  "migration_or_gameplay_admitted": false,
+  "output": {
+    "item": "item.water.bucket",
+    "quantity": 1,
+    "source_id": 1929
+  },
+  "quantity_and_xp_basis": "The original Recipe module defaults each declared material/output to quantity1. Only an explicitly declared skill creates a requirement/XP row; omitted skill parameters are an empty skill list, not the '?' placeholder for unknown XP on a declared skill.",
+  "recipe_parameter_semantics": {
+    "bytes_utf8_wikitext": 28361,
+    "kind": "wiki_revision",
+    "page": "Module:Recipe",
+    "revision": 15224963,
+    "revision_timestamp": "2026-06-03T17:08:51Z",
+    "sha256_utf8_wikitext": "cacae1ffc292f4d5eb8929124520352889671ba886160260ea3ea5f207119003",
+    "url": "https://oldschool.runescape.wiki/w/Module:Recipe?oldid=15224963"
+  },
+  "schema_version": 1,
+  "seconds_per_conversion": "0.6",
+  "sink": {
+    "collection": "assets/source/osrs/cache2695/collections/object.json.gz",
+    "collection_sha256": "d8b0212b1fa5fe34dff300f731de356f51562b58f08d7512c74fe560c4fff021",
+    "definition_sha256": "fa59af623c861aa60bc66894444233849b5bdc2987a192e055c3772ce7da78e2",
+    "footprint": [
+      1,
+      2
+    ],
+    "source_asset": "asset.source.osrs.cache2695.object.14868",
+    "source_id": 14868,
+    "source_model_ids": [
+      8245
+    ],
+    "source_scenery_animation": -1
+  },
+  "skill_requirements": [],
+  "source_object_menu_operations": [],
+  "source_observation_claimed": false,
+  "source_recipe": {
+    "bytes_utf8_wikitext": 5969,
+    "kind": "wiki_revision",
+    "page": "Bucket of water",
+    "revision": 15183449,
+    "revision_timestamp": "2026-04-22T02:54:18Z",
+    "sha256_utf8_wikitext": "64b046c1f1fa7fc1399df8ee27c2977a8fa59882aa4331e2f5521f31e0d18b46",
+    "url": "https://oldschool.runescape.wiki/w/Bucket_of_water?oldid=15183449"
+  },
+  "source_recipe_parameters": {
+    "facilities": "Water",
+    "mat1": "Bucket",
+    "members": "No",
+    "output1": "Bucket of water",
+    "ticks": "1"
+  },
+  "ticks_per_conversion": 1,
+  "xp_rewards": []
+}

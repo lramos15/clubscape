@@ -1,0 +1,38 @@
+[
+  {
+    "profile": "current-water",
+    "raw_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+    "compressed_sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+    "byte_exact": true,
+    "target": ".local/water-dispatch/persisted-repair/profiles/current-water/target",
+    "source_positive_passed": 4,
+    "negative_passed": 15,
+    "native_passed": true,
+    "executable_sha256": "a2582c7c54efc8e5501c482cfe1ff91d03d07d3663890cfcc24dc57be6369a89"
+  },
+  {
+    "profile": "legacy-water",
+    "raw_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+    "compressed_sha256": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+    "byte_exact": true,
+    "target": ".local/water-dispatch/persisted-repair/profiles/legacy-water/target",
+    "source_positive_passed": 4,
+    "negative_passed": 15,
+    "native_passed": true,
+    "executable_sha256": "a2582c7c54efc8e5501c482cfe1ff91d03d07d3663890cfcc24dc57be6369a89"
+  },
+  {
+    "profile": "old5b",
+    "raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "compressed_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+    "byte_exact": true,
+    "target": ".local/water-dispatch/persisted-repair/profiles/old5b/target"
+  },
+  {
+    "profile": "old5e",
+    "raw_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "compressed_sha256": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f",
+    "byte_exact": true,
+    "target": ".local/water-dispatch/persisted-repair/profiles/old5e/target"
+  }
+]

@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "task": "M1-RUNELITE-FEASIBILITY",
+  "authority_record": "milestones/m1-runelite-live-renewal.json",
+  "authority_sha256": "f2563301e272cf3f95608be247b30d71326c337e45c5c51f12b5727d34e3f13b",
+  "authority_commit": "eec354c00d67d88686794085de2c8ecb31ef91df",
+  "original_evidence": [
+    {
+      "path": "research/runelite-feasibility/experiment.json",
+      "sha256": "026c99b9ebac16b9af97a8e901775a97ea097b0c29f78c9608855ace84ac11cd"
+    },
+    {
+      "path": "research/runelite-feasibility/assessment.json",
+      "sha256": "f2c7d81353381aeaba711a7f90bb00d0d33f742d19a2cc25c38599d0867595ae"
+    }
+  ],
+  "original_invocations_consumed": 3,
+  "bounds": {
+    "additional_live_invocations": 2,
+    "global_invocation_numbers": [
+      4,
+      5
+    ],
+    "total_live_invocations_maximum": 5,
+    "total_materially_distinct_architectures_maximum": 2,
+    "live_attempt_timeout_seconds": 600,
+    "jvm_heap_mib": 3072,
+    "jvm_active_processors": 2,
+    "rust_build_jobs": 2,
+    "database_cpus": 2,
+    "database_memory_mib": 512,
+    "nested_agents": 0
+  },
+  "artifact_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+  "invocations": [
+    {
+      "number": 4,
+      "architecture": "A",
+      "name": "live-renewal-4",
+      "hypothesis": "With repaired real standalone source startup, architecture A can create/join an unseeded normal ClubScape actor, establish the genuine XP Tracker baseline from actual ticks, perform the legitimate first-fishing-XP route, and show correlated native scene/penguin/state/plugin gain in the actual RuneLite window.",
+      "diagnostics": [
+        "strict server readiness/exit",
+        "actual protobuf receipts",
+        "native scene/player",
+        "real plugin output"
+      ],
+      "status": "failed",
+      "report": "research/runelite-feasibility/live-renewal-4.json",
+      "phase": "real_runtime_scene_state_plugin",
+      "exit_code": 1
+    },
+    {
+      "number": 5,
+      "architecture": "A",
+      "name": "live-renewal-5",
+      "hypothesis": "Moving read-only plugin inspection outside the signed upstream package removes invocation4s diagnosed boundary failure without modifying RuneLite. Actual normal source creation, genuine tracker baseline, source-tick-paced dialogue/unlocks/walking/gathering, native penguin movement, committed XP and visible genuine XP Tracker gain can now satisfy the complete live tuple.",
+      "diagnostics": [
+        "strict server readiness/exit",
+        "actual protobuf receipts",
+        "native scene/player",
+        "real plugin output"
+      ],
+      "status": "failed",
+      "report": "research/runelite-feasibility/live-renewal-5.json",
+      "phase": "real_runtime_scene_state_plugin",
+      "exit_code": 1
+    }
+  ],
+  "compatibility_verified": false,
+  "tier": null,
+  "state": "exhausted_and_stopped",
+  "assessment": "research/runelite-feasibility/live-renewal-assessment.json",
+  "review": "research/runelite-feasibility/live-renewal-review.md",
+  "assessment_complete": true
+}

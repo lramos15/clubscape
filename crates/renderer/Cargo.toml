@@ -1,0 +1,50 @@
+[package]
+name = "clubscape-renderer"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+description = "Source-faithful ClubScape scene/model renderer: exact original raster math on CPU, WebGPU compute fill, WASM adapter"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = []
+# Native/browser GPU execution through wgpu (compute rasterizer + canvas present).
+gpu = ["dep:wgpu", "dep:bytemuck"]
+# Browser bindings (wasm-bindgen exports consumed by the web/renderer adapter).
+web = ["gpu", "dep:wasm-bindgen", "dep:wasm-bindgen-futures", "dep:js-sys", "dep:web-sys", "wgpu/webgpu"]
+# Native asset tools (`pose-fit-table`), never part of the wasm build.
+tools = ["dep:sha2"]
+
+[[bin]]
+name = "pose-fit-table"
+path = "src/bin/pose_fit_table.rs"
+required-features = ["tools"]
+
+[dependencies]
+clubscape-camera = { path = "../camera" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha2 = { workspace = true, optional = true }
+wgpu = { version = "30.0.1", optional = true, default-features = false, features = ["wgsl"] }
+bytemuck = { version = "1.25", optional = true, features = ["derive"] }
+wasm-bindgen = { version = "=0.2.128", optional = true }
+wasm-bindgen-futures = { version = "0.4.78", optional = true }
+js-sys = { version = "0.3.105", optional = true }
+web-sys = { version = "0.3.105", optional = true, features = ["HtmlCanvasElement", "Window", "Performance", "console"] }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+wgpu = { version = "30.0.1", optional = true, default-features = false, features = ["wgsl", "vulkan", "metal"] }
+
+[dev-dependencies]
+png = "0.18"
+pollster = "1.0"
+# Already in the workspace lock through `png`; inflates the published scene gzip twins in tests.
+flate2 = "1.1"
+# Workspace-pinned digest for manifest-pinned test inputs.
+sha2 = { workspace = true }
+
+[lints]
+workspace = true

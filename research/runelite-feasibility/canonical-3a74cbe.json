@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "task": "M1-RUNELITE-FEASIBILITY",
+  "authorization_received": "2026-09-15T00:50:50.849-04:00",
+  "authorized_commits_in_order": [
+    {
+      "upstream": "62a003c6a8d87c42cd46643509ff3757ae541355",
+      "integrated": "fe879894fc87ceb54e1563bc006a90df16539832"
+    },
+    {
+      "upstream": "e1076a87c25e8aafaa5478cc64d7a10c54ce7e46",
+      "integrated": "5150ead5c6b0ed394ab3f077c82d003855c06d9e"
+    },
+    {
+      "upstream": "3a74cbe5911e699fd30e51cdedf944e4616f86b5",
+      "integrated": "32167ca3bcd0372e39f092e3c9443e508b8e1d17"
+    }
+  ],
+  "complete_actor_pair_applied_before_validation": true,
+  "partial_alone_or_c58f_selected": false,
+  "source_refresh_conflict_resolution": "Authorized milestone metadata only: retained this branch RuneLite reservation and narrower existing ownership; accepted upstream complete-review closure/evidence. No milestone acceptance change or worker expansion.",
+  "current_source": {
+    "raw_artifact_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+    "revision": "m1.source-backed.v3.0e506f3dab24bbe0",
+    "previous_revision": "m1.source-backed.v3.327d3a78f3bdad7c",
+    "only_structural_json_change": [
+      "/revision"
+    ],
+    "revision_excluded_json_sha256": "4a0cb19c885f2b53c24454440be4c690979827fe1b9d8077c447c1da09319e8a",
+    "active_bindings": 0,
+    "inactive_bindings": 6,
+    "geometry_assets_and_proto_unchanged": true,
+    "obsolete_engine_review_interlocks": false
+  },
+  "candidate_pack": {
+    "game_root": "runelite/compatibility/artifacts/game-3a74cbe",
+    "catalog": "runelite/compatibility/artifacts/game-3a74cbe/adapter-catalog.json",
+    "descriptor_sha256": "7de30a533cd883659ff2e196631e265734b6104bf95218702288c9c7952b7feb",
+    "descriptor_bytes": 283075,
+    "distinct_world_identity_from_preserved_a200": true,
+    "account_created": false
+  },
+  "preservation": {
+    "previous_research_files_byte_identical": 56,
+    "historical_world_artifact_unchanged": "a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62",
+    "historical_descriptor_sha256": "7e0ca06b1667a2b6dd509e17ca6032baf8be102b9ee28c1c1897947e6bfadb88",
+    "historical_catalog_sha256": "e63fe388c6fe95154f1c92b0248fbeaef61119e15b50bd5662ecfa41c3df31a6",
+    "historical_invocation_ledger_sha256": "026c99b9ebac16b9af97a8e901775a97ea097b0c29f78c9608855ace84ac11cd",
+    "prior_live_invocations": 3,
+    "new_live_invocations": 0,
+    "existing_world_repointed": false,
+    "acknowledged_progress_reseeded": false,
+    "restart_reconnect_requirement": "Keep exact artifact throughout each admitted run"
+  },
+  "validation": {
+    "strict_compiler": {
+      "artifact_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+      "base_server_descriptor_limit": 262144,
+      "compatibility_verified": false,
+      "fits_even_before_descriptor_metadata": false,
+      "minimum_assets_map_bytes": 267049,
+      "referenced_assets_from_actual_compiler": 5010,
+      "strict_compiler_load": true
+    },
+    "active_actor_regressions": 15,
+    "active_shop_regressions": 18,
+    "ignored_actor_or_shop_tests": 0,
+    "existing_java_projection_checks": 9,
+    "java_shop_identity_checks": 35,
+    "python_checks": 5,
+    "shared_wire_json_hash_goldens": 5,
+    "clippy_exit": 0,
+    "rustfmt_exit": 0,
+    "reports": [
+      "research/runelite-feasibility/native-reviews-3a74cbe.json",
+      "research/runelite-feasibility/service-probe-build-3a74cbe.json",
+      "research/runelite-feasibility/validation-3a74cbe.json"
+    ]
+  },
+  "remaining_independent_blockers": [
+    {
+      "surface": "crates/server/src/config.rs",
+      "sha256": "ea9c8764da422f6f59c334fcb1d72c2da718d9944950fb4ec451f7c055049926",
+      "reason": "Game-root environment parsing remains nested under optional web-root parsing"
+    },
+    {
+      "surface": "crates/server/src/game_service/content.rs",
+      "sha256": "9c914d88b9d97a8dba841ff78625cd6c4c49faa48862f7f504c07b9e8b3c09c9",
+      "reason": "Current full-source descriptor exceeds unchanged262144-byte guard",
+      "minimum_assets_map_bytes": 267049,
+      "actual_descriptor_bytes": 283075
+    }
+  ],
+  "work_status": "blocked_real_integration_after_complete_authorized_refresh",
+  "compatibility_verified": false,
+  "tier": null,
+  "desktop_deferral_approved": false,
+  "whole_m1_or_presentation_claimed": false,
+  "new_services_started": 0,
+  "next_action": "Director startup fixes with strict/full-source tests and renewed explicit live bounds, then actual fresh normal account/world integration on the df3e candidate; never repoint an in-flight pinned world.",
+  "review": "research/runelite-feasibility/canonical-3a74cbe.md",
+  "parked": true
+}

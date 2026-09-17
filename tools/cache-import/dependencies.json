@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "java_release": 17,
+  "decoder": {
+    "repository": "https://github.com/runelite/runelite",
+    "revision": "ac79ed8bd8926bec7bf172aa291574b4d944b0e7",
+    "name": "cache-1.12.39-SNAPSHOT.jar",
+    "built_artifact": "cache/build/libs/cache-1.12.39-SNAPSHOT.jar",
+    "size_bytes": 444766,
+    "sha256": "8056039bee74da629e596896048645085f7753159a064da51c24e9bd99f13e8e",
+    "build": "./gradlew --project-dir cache --no-daemon jar",
+    "note": "Reuse the checksum-verified installed build read-only, or build this exact source inside the worktree's ignored .local directory. The cache library is not a game renderer."
+  },
+  "libraries": [
+    {
+      "name": "gson-2.8.5.jar",
+      "maven": "com.google.code.gson:gson:2.8.5",
+      "url": "https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.5/gson-2.8.5.jar",
+      "size_bytes": 241622,
+      "sha256": "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81"
+    },
+    {
+      "name": "guava-23.2-jre.jar",
+      "maven": "com.google.guava:guava:23.2-jre",
+      "url": "https://repo.maven.apache.org/maven2/com/google/guava/guava/23.2-jre/guava-23.2-jre.jar",
+      "size_bytes": 2649860,
+      "sha256": "5be9a7d05ba0ccd74708bc8018ae412255f85843c0b92302e9b9befa6ed52564"
+    },
+    {
+      "name": "slf4j-api-1.7.25.jar",
+      "maven": "org.slf4j:slf4j-api:1.7.25",
+      "url": "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar",
+      "size_bytes": 41203,
+      "sha256": "18c4a0095d5c1da6b817592e767bb23d29dd2f560ad74df75ff3961dbde25b79"
+    },
+    {
+      "name": "slf4j-simple-1.7.25.jar",
+      "maven": "org.slf4j:slf4j-simple:1.7.25",
+      "url": "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-simple/1.7.25/slf4j-simple-1.7.25.jar",
+      "size_bytes": 15257,
+      "sha256": "0966e86fffa5be52d3d9e7b89dd674d98a03eed0a454fbaf7c1bd9493bd9d874"
+    },
+    {
+      "name": "commons-compress-1.10.jar",
+      "maven": "org.apache.commons:commons-compress:1.10",
+      "url": "https://repo.maven.apache.org/maven2/org/apache/commons/commons-compress/1.10/commons-compress-1.10.jar",
+      "size_bytes": 409475,
+      "sha256": "807c95293e41e8159477442077da6d0962a7f486d4b980be61f60a8db9cb290f"
+    },
+    {
+      "name": "jna-5.9.0.jar",
+      "maven": "net.java.dev.jna:jna:5.9.0",
+      "url": "https://repo.maven.apache.org/maven2/net/java/dev/jna/jna/5.9.0/jna-5.9.0.jar",
+      "size_bytes": 1729586,
+      "sha256": "eafcc780b445434d3c5ae7fa2fb6665de1a7560d537d2c408a8e80cd14d27161"
+    },
+    {
+      "name": "json-20090211.jar",
+      "maven": "org.json:json:20090211",
+      "url": "https://repo.runelite.net/org/json/json/20090211/json-20090211.jar",
+      "size_bytes": 45944,
+      "sha256": "055be110a570f9cda3eba8d70a006ff46c77a048bc67868524879211c48b330a",
+      "role": "Required by the original injected runtime; selected from its current official bootstrap."
+    }
+  ]
+}

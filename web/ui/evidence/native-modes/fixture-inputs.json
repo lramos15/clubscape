@@ -1,0 +1,1821 @@
+[
+  {
+    "kind": "sound_boundary",
+    "source": "ee.bt opcode3200 -> bi.kv/sm.tp",
+    "volume": 0,
+    "scope": "Original queue with a silent UI-only preference provider; no audio playback assertion."
+  },
+  {
+    "kind": "filter_open",
+    "group": 541,
+    "widget": 35454982,
+    "sourceClick": [
+      3155,
+      35454982,
+      0,
+      35454984,
+      35454982,
+      35454979,
+      35454978,
+      35454980,
+      35455018,
+      35455015,
+      "Info",
+      "Filters"
+    ],
+    "scope": "source UI only; no authority or gameplay assertions"
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 541,
+    "mask": 0,
+    "varbits": [
+      6574,
+      6575,
+      6576,
+      6577,
+      6578
+    ],
+    "closed": "native-prayer-mask-0",
+    "open": "native-prayer-mask-0-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 541,
+    "mask": 1,
+    "varbits": [
+      6574,
+      6575,
+      6576,
+      6577,
+      6578
+    ],
+    "closed": "native-prayer-mask-1",
+    "open": "native-prayer-mask-1-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 541,
+    "mask": 2,
+    "varbits": [
+      6574,
+      6575,
+      6576,
+      6577,
+      6578
+    ],
+    "closed": "native-prayer-mask-2",
+    "open": "native-prayer-mask-2-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 541,
+    "mask": 4,
+    "varbits": [
+      6574,
+      6575,
+      6576,
+      6577,
+      6578
+    ],
+    "closed": "native-prayer-mask-4",
+    "open": "native-prayer-mask-4-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 541,
+    "mask": 8,
+    "varbits": [
+      6574,
+      6575,
+      6576,
+      6577,
+      6578
+    ],
+    "closed": "native-prayer-mask-8",
+    "open": "native-prayer-mask-8-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 541,
+    "mask": 16,
+    "varbits": [
+      6574,
+      6575,
+      6576,
+      6577,
+      6578
+    ],
+    "closed": "native-prayer-mask-16",
+    "open": "native-prayer-mask-16-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 541,
+    "mask": 31,
+    "varbits": [
+      6574,
+      6575,
+      6576,
+      6577,
+      6578
+    ],
+    "closed": "native-prayer-mask-31",
+    "open": "native-prayer-mask-31-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_open",
+    "group": 218,
+    "widget": 14287057,
+    "sourceClick": [
+      2602,
+      14287057,
+      0,
+      14287056,
+      14287057,
+      14286851,
+      14287049,
+      14286850,
+      14287051,
+      14287054,
+      14287058,
+      "Info",
+      "Filters"
+    ],
+    "scope": "source UI only; no authority or gameplay assertions"
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 218,
+    "mask": 0,
+    "varbits": [
+      6605,
+      6609,
+      6606,
+      6607,
+      6608,
+      12137,
+      6548
+    ],
+    "closed": "native-magic-mask-0",
+    "open": "native-magic-mask-0-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 218,
+    "mask": 1,
+    "varbits": [
+      6605,
+      6609,
+      6606,
+      6607,
+      6608,
+      12137,
+      6548
+    ],
+    "closed": "native-magic-mask-1",
+    "open": "native-magic-mask-1-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 218,
+    "mask": 2,
+    "varbits": [
+      6605,
+      6609,
+      6606,
+      6607,
+      6608,
+      12137,
+      6548
+    ],
+    "closed": "native-magic-mask-2",
+    "open": "native-magic-mask-2-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 218,
+    "mask": 4,
+    "varbits": [
+      6605,
+      6609,
+      6606,
+      6607,
+      6608,
+      12137,
+      6548
+    ],
+    "closed": "native-magic-mask-4",
+    "open": "native-magic-mask-4-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 218,
+    "mask": 8,
+    "varbits": [
+      6605,
+      6609,
+      6606,
+      6607,
+      6608,
+      12137,
+      6548
+    ],
+    "closed": "native-magic-mask-8",
+    "open": "native-magic-mask-8-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 218,
+    "mask": 16,
+    "varbits": [
+      6605,
+      6609,
+      6606,
+      6607,
+      6608,
+      12137,
+      6548
+    ],
+    "closed": "native-magic-mask-16",
+    "open": "native-magic-mask-16-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 218,
+    "mask": 32,
+    "varbits": [
+      6605,
+      6609,
+      6606,
+      6607,
+      6608,
+      12137,
+      6548
+    ],
+    "closed": "native-magic-mask-32",
+    "open": "native-magic-mask-32-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 218,
+    "mask": 64,
+    "varbits": [
+      6605,
+      6609,
+      6606,
+      6607,
+      6608,
+      12137,
+      6548
+    ],
+    "closed": "native-magic-mask-64",
+    "open": "native-magic-mask-64-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 218,
+    "mask": 127,
+    "varbits": [
+      6605,
+      6609,
+      6606,
+      6607,
+      6608,
+      12137,
+      6548
+    ],
+    "closed": "native-magic-mask-127",
+    "open": "native-magic-mask-127-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 218,
+    "mask": 72,
+    "varbits": [
+      6605,
+      6609,
+      6606,
+      6607,
+      6608,
+      12137,
+      6548
+    ],
+    "closed": "native-magic-mask-72",
+    "open": "native-magic-mask-72-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "filter_preferences",
+    "group": 218,
+    "mask": 88,
+    "varbits": [
+      6605,
+      6609,
+      6606,
+      6607,
+      6608,
+      12137,
+      6548
+    ],
+    "closed": "native-magic-mask-88",
+    "open": "native-magic-mask-88-filters",
+    "scope": "Explicit original UI preference inputs; not gameplay grants or observed journey state."
+  },
+  {
+    "kind": "retrieval_fields",
+    "group": 602,
+    "case": "native-retrieval-602-34-0-0",
+    "inventory": 525,
+    "sourceItems": [
+      1265,
+      995,
+      315,
+      556,
+      558,
+      1277,
+      1171,
+      882,
+      1351,
+      303,
+      590,
+      1511,
+      1925,
+      1931,
+      436,
+      438
+    ],
+    "varp261": 34,
+    "varp262": 0,
+    "varp263": 0,
+    "scope": "Explicit native component-only inventory/coffer/selection/fee inputs; never production balances.",
+    "visible_source_rows": [
+      {
+        "slot": 0,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 1,
+        "sourceItem": 995,
+        "quantity": 1500
+      },
+      {
+        "slot": 2,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 3,
+        "sourceItem": 556,
+        "quantity": 25
+      },
+      {
+        "slot": 4,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 5,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 6,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 7,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 8,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 9,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 10,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 11,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 12,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 13,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 14,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 15,
+        "sourceItem": 438,
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "kind": "retrieval_fields",
+    "group": 602,
+    "case": "native-retrieval-602-35-0-1",
+    "inventory": 525,
+    "sourceItems": [
+      1265,
+      995,
+      315,
+      556,
+      558,
+      1277,
+      1171,
+      882,
+      1351,
+      303,
+      590,
+      1511,
+      1925,
+      1931,
+      436,
+      438
+    ],
+    "varp261": 35,
+    "varp262": 0,
+    "varp263": 1,
+    "scope": "Explicit native component-only inventory/coffer/selection/fee inputs; never production balances.",
+    "visible_source_rows": [
+      {
+        "slot": 0,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 1,
+        "sourceItem": 995,
+        "quantity": 1500
+      },
+      {
+        "slot": 2,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 3,
+        "sourceItem": 556,
+        "quantity": 25
+      },
+      {
+        "slot": 4,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 5,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 6,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 7,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 8,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 9,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 10,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 11,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 12,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 13,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 14,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 15,
+        "sourceItem": 438,
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "kind": "retrieval_fields",
+    "group": 669,
+    "case": "native-retrieval-669-12345--1-0",
+    "inventory": 636,
+    "sourceItems": [
+      1265,
+      995,
+      315,
+      556,
+      558,
+      1277,
+      1171,
+      882,
+      1351,
+      303,
+      590,
+      1511,
+      1925,
+      1931,
+      436,
+      438
+    ],
+    "varp261": 12345,
+    "varp262": -1,
+    "varp263": 0,
+    "scope": "Explicit native component-only inventory/coffer/selection/fee inputs; never production balances.",
+    "visible_source_rows": [
+      {
+        "slot": 0,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 1,
+        "sourceItem": 995,
+        "quantity": 1500
+      },
+      {
+        "slot": 2,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 3,
+        "sourceItem": 556,
+        "quantity": 25
+      },
+      {
+        "slot": 4,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 5,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 6,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 7,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 8,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 9,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 10,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 11,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 12,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 13,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 14,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 15,
+        "sourceItem": 438,
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "kind": "retrieval_fields",
+    "group": 669,
+    "case": "native-retrieval-669-12345-0-42",
+    "inventory": 636,
+    "sourceItems": [
+      1265,
+      995,
+      315,
+      556,
+      558,
+      1277,
+      1171,
+      882,
+      1351,
+      303,
+      590,
+      1511,
+      1925,
+      1931,
+      436,
+      438
+    ],
+    "varp261": 12345,
+    "varp262": 0,
+    "varp263": 42,
+    "scope": "Explicit native component-only inventory/coffer/selection/fee inputs; never production balances.",
+    "visible_source_rows": [
+      {
+        "slot": 0,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 1,
+        "sourceItem": 995,
+        "quantity": 1500
+      },
+      {
+        "slot": 2,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 3,
+        "sourceItem": 556,
+        "quantity": 25
+      },
+      {
+        "slot": 4,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 5,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 6,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 7,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 8,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 9,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 10,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 11,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 12,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 13,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 14,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 15,
+        "sourceItem": 438,
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "kind": "retrieval_fields",
+    "group": 669,
+    "case": "native-retrieval-669-12345-7-42",
+    "inventory": 636,
+    "sourceItems": [
+      1265,
+      995,
+      315,
+      556,
+      558,
+      1277,
+      1171,
+      882,
+      1351,
+      303,
+      590,
+      1511,
+      1925,
+      1931,
+      436,
+      438
+    ],
+    "varp261": 12345,
+    "varp262": 7,
+    "varp263": 42,
+    "scope": "Explicit native component-only inventory/coffer/selection/fee inputs; never production balances.",
+    "visible_source_rows": [
+      {
+        "slot": 0,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 1,
+        "sourceItem": 995,
+        "quantity": 1500
+      },
+      {
+        "slot": 2,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 3,
+        "sourceItem": 556,
+        "quantity": 25
+      },
+      {
+        "slot": 4,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 5,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 6,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 7,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 8,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 9,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 10,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 11,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 12,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 13,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 14,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 15,
+        "sourceItem": 438,
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "kind": "retrieval_fields",
+    "group": 669,
+    "case": "native-retrieval-669-0-7-1",
+    "inventory": 636,
+    "sourceItems": [
+      1265,
+      995,
+      315,
+      556,
+      558,
+      1277,
+      1171,
+      882,
+      1351,
+      303,
+      590,
+      1511,
+      1925,
+      1931,
+      436,
+      438
+    ],
+    "varp261": 0,
+    "varp262": 7,
+    "varp263": 1,
+    "scope": "Explicit native component-only inventory/coffer/selection/fee inputs; never production balances.",
+    "visible_source_rows": [
+      {
+        "slot": 0,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 1,
+        "sourceItem": 995,
+        "quantity": 1500
+      },
+      {
+        "slot": 2,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 3,
+        "sourceItem": 556,
+        "quantity": 25
+      },
+      {
+        "slot": 4,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 5,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 6,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 7,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 8,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 9,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 10,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 11,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 12,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 13,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 14,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 15,
+        "sourceItem": 438,
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "kind": "retrieval_scroll",
+    "group": 602,
+    "count": 80,
+    "scrollY": 60,
+    "case": "native-retrieval-scroll-602",
+    "scope": "Explicit original component-only scrolling inventory, not production balances or progression.",
+    "visible_source_rows": [
+      {
+        "slot": 0,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 1,
+        "sourceItem": 995,
+        "quantity": 1
+      },
+      {
+        "slot": 2,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 3,
+        "sourceItem": 556,
+        "quantity": 1
+      },
+      {
+        "slot": 4,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 5,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 6,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 7,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 8,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 9,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 10,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 11,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 12,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 13,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 14,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 15,
+        "sourceItem": 438,
+        "quantity": 1
+      },
+      {
+        "slot": 16,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 17,
+        "sourceItem": 995,
+        "quantity": 1
+      },
+      {
+        "slot": 18,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 19,
+        "sourceItem": 556,
+        "quantity": 1
+      },
+      {
+        "slot": 20,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 21,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 22,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 23,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 24,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 25,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 26,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 27,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 28,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 29,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 30,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 31,
+        "sourceItem": 438,
+        "quantity": 1
+      },
+      {
+        "slot": 32,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 33,
+        "sourceItem": 995,
+        "quantity": 1
+      },
+      {
+        "slot": 34,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 35,
+        "sourceItem": 556,
+        "quantity": 1
+      },
+      {
+        "slot": 36,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 37,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 38,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 39,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 40,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 41,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 42,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 43,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 44,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 45,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 46,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 47,
+        "sourceItem": 438,
+        "quantity": 1
+      },
+      {
+        "slot": 48,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 49,
+        "sourceItem": 995,
+        "quantity": 1
+      },
+      {
+        "slot": 50,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 51,
+        "sourceItem": 556,
+        "quantity": 1
+      },
+      {
+        "slot": 52,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 53,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 54,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 55,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 56,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 57,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 58,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 59,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 60,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 61,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 62,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 63,
+        "sourceItem": 438,
+        "quantity": 1
+      },
+      {
+        "slot": 64,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 65,
+        "sourceItem": 995,
+        "quantity": 1
+      },
+      {
+        "slot": 66,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 67,
+        "sourceItem": 556,
+        "quantity": 1
+      },
+      {
+        "slot": 68,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 69,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 70,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 71,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 72,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 73,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 74,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 75,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 76,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 77,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 78,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 79,
+        "sourceItem": 438,
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "kind": "retrieval_scroll",
+    "group": 669,
+    "count": 80,
+    "scrollY": 60,
+    "case": "native-retrieval-scroll-669",
+    "scope": "Explicit original component-only scrolling inventory, not production balances or progression.",
+    "visible_source_rows": [
+      {
+        "slot": 0,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 1,
+        "sourceItem": 995,
+        "quantity": 1
+      },
+      {
+        "slot": 2,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 3,
+        "sourceItem": 556,
+        "quantity": 1
+      },
+      {
+        "slot": 4,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 5,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 6,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 7,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 8,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 9,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 10,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 11,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 12,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 13,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 14,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 15,
+        "sourceItem": 438,
+        "quantity": 1
+      },
+      {
+        "slot": 16,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 17,
+        "sourceItem": 995,
+        "quantity": 1
+      },
+      {
+        "slot": 18,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 19,
+        "sourceItem": 556,
+        "quantity": 1
+      },
+      {
+        "slot": 20,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 21,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 22,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 23,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 24,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 25,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 26,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 27,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 28,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 29,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 30,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 31,
+        "sourceItem": 438,
+        "quantity": 1
+      },
+      {
+        "slot": 32,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 33,
+        "sourceItem": 995,
+        "quantity": 1
+      },
+      {
+        "slot": 34,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 35,
+        "sourceItem": 556,
+        "quantity": 1
+      },
+      {
+        "slot": 36,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 37,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 38,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 39,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 40,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 41,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 42,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 43,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 44,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 45,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 46,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 47,
+        "sourceItem": 438,
+        "quantity": 1
+      },
+      {
+        "slot": 48,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 49,
+        "sourceItem": 995,
+        "quantity": 1
+      },
+      {
+        "slot": 50,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 51,
+        "sourceItem": 556,
+        "quantity": 1
+      },
+      {
+        "slot": 52,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 53,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 54,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 55,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 56,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 57,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 58,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 59,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 60,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 61,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 62,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 63,
+        "sourceItem": 438,
+        "quantity": 1
+      },
+      {
+        "slot": 64,
+        "sourceItem": 1265,
+        "quantity": 1
+      },
+      {
+        "slot": 65,
+        "sourceItem": 995,
+        "quantity": 1
+      },
+      {
+        "slot": 66,
+        "sourceItem": 315,
+        "quantity": 1
+      },
+      {
+        "slot": 67,
+        "sourceItem": 556,
+        "quantity": 1
+      },
+      {
+        "slot": 68,
+        "sourceItem": 558,
+        "quantity": 1
+      },
+      {
+        "slot": 69,
+        "sourceItem": 1277,
+        "quantity": 1
+      },
+      {
+        "slot": 70,
+        "sourceItem": 1171,
+        "quantity": 1
+      },
+      {
+        "slot": 71,
+        "sourceItem": 882,
+        "quantity": 7
+      },
+      {
+        "slot": 72,
+        "sourceItem": 1351,
+        "quantity": 1
+      },
+      {
+        "slot": 73,
+        "sourceItem": 303,
+        "quantity": 1
+      },
+      {
+        "slot": 74,
+        "sourceItem": 590,
+        "quantity": 1
+      },
+      {
+        "slot": 75,
+        "sourceItem": 1511,
+        "quantity": 1
+      },
+      {
+        "slot": 76,
+        "sourceItem": 1925,
+        "quantity": 1
+      },
+      {
+        "slot": 77,
+        "sourceItem": 1931,
+        "quantity": 1
+      },
+      {
+        "slot": 78,
+        "sourceItem": 436,
+        "quantity": 1
+      },
+      {
+        "slot": 79,
+        "sourceItem": 438,
+        "quantity": 1
+      }
+    ]
+  }
+]

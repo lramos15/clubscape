@@ -1,0 +1,78 @@
+[
+  {
+    "id": "reference.audio.sfx.2693",
+    "path": "assets/reference/wiki/audio-source/sfx-2693.wav",
+    "sha256": "bdd068b885a00957af3dfa75242f2a97b28cdacaaeac08f194cf03bfd3b5a074",
+    "size_bytes": 44144,
+    "source_role": "current_original_audio_template",
+    "source_index": 4,
+    "source_group": 2693,
+    "source_file": 0,
+    "source_cache_id": 2695,
+    "kind": "sfx_reference_template",
+    "name": "Original source cue 2693",
+    "source_provenance": {
+      "path": "research/reference-pack/v1/sources/native-cue-2693.json",
+      "sha256": "5d961c3c3e53faec9b9aa9cc36bb37808cae10308d6b6003d1d0c90fe81c2274",
+      "size_bytes": 492
+    },
+    "source_comparison_evidence": {
+      "path": "research/audio-source/binding-public-evidence.json.gz",
+      "sha256": "aa4f4f866f02858003fec6f8c877085ff5827c6f777142a6b00503e8035fde21",
+      "size_bytes": 13648
+    },
+    "signal": {
+      "sample_rate": 22050,
+      "channels": 1,
+      "frames": 22050,
+      "duration_seconds": 1.0,
+      "pcm_s16le_sha256": "c60e324d55b3ebc2535c089b0bfb5e56089e25d7b674cc0def324db8ff9761fd",
+      "peak": 0.49383544921875,
+      "export_gain_numerator": 1,
+      "export_gain_denominator": 1,
+      "scope": "Exact original native comparison PCM, not a newly converted runtime FLAC or calibrated live mixer level."
+    },
+    "copied_without_conversion": true,
+    "retained_source_path": "/home/lramos15/clubscape/.worktrees/m1-audio-bindings/.local/audio-bindings/candidate-pcm/sfx-2693.wav",
+    "copy_verified_at": "2026-09-14T23:35:04.181039+00:00",
+    "notice": "assets/reference/wiki/NOTICE.txt"
+  },
+  {
+    "id": "reference.audio.sfx.710",
+    "path": "assets/reference/wiki/audio-source/sfx-710.wav",
+    "sha256": "2fa8cd356b1088333dc83457f9c04d4e6556c08d005f8278675e7b26ba6b0e61",
+    "size_bytes": 24298,
+    "source_role": "current_original_audio_template",
+    "source_index": 4,
+    "source_group": 710,
+    "source_file": 0,
+    "source_cache_id": 2695,
+    "kind": "sfx_reference_template",
+    "name": "Original source cue 710",
+    "source_provenance": {
+      "path": "research/reference-pack/v1/sources/native-cue-710.json",
+      "sha256": "e6d68af10c570b6e919749110d120981290fe99ef1f492212bbba66f07aefab8",
+      "size_bytes": 489
+    },
+    "source_comparison_evidence": {
+      "path": "research/audio-source/binding-public-evidence.json.gz",
+      "sha256": "aa4f4f866f02858003fec6f8c877085ff5827c6f777142a6b00503e8035fde21",
+      "size_bytes": 13648
+    },
+    "signal": {
+      "sample_rate": 22050,
+      "channels": 1,
+      "frames": 12127,
+      "duration_seconds": 0.5499773242630386,
+      "pcm_s16le_sha256": "cf4a584993b58928bc14e22388929db95c3e5f0998e3759990e0989008d73e19",
+      "peak": 0.60198974609375,
+      "export_gain_numerator": 1,
+      "export_gain_denominator": 1,
+      "scope": "Exact original native comparison PCM, not a newly converted runtime FLAC or calibrated live mixer level."
+    },
+    "copied_without_conversion": true,
+    "retained_source_path": "/home/lramos15/clubscape/.worktrees/m1-audio-bindings/.local/audio-bindings/candidate-pcm/sfx-710.wav",
+    "copy_verified_at": "2026-09-14T23:35:04.181646+00:00",
+    "notice": "assets/reference/wiki/NOTICE.txt"
+  }
+]

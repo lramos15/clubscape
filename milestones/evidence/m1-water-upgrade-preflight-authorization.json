@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "task": "M1-WATER-UPGRADE-PREFLIGHT",
+  "authority": "Director engineering validation within the owner-approved bounded water dependency",
+  "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
+  "status": "completed_isolated_synthetic_validation_only",
+  "executor": "director",
+  "worktree": ".worktrees/m1-water-integration",
+  "branch": "integration/m1-water-main",
+  "candidate_imports": [
+    "eaa527a8f3d9d408d6bf1a4b8fdc47269abe0137",
+    "5c6c581136310b48e8043e7920199d7236f9b88c",
+    "04a40ee84d0a95866264a3c087071e0f63904377"
+  ],
+  "independent_contract_review": "milestones/evidence/m1-water-item-on-review.json",
+  "exact_source_pairs": [
+    {
+      "profile": "legacy5e",
+      "from_raw_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+      "to_raw_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+      "to_revision": "m1.source-backed.v4.3ff4292b311453cc.water.e337c77cc5ccd980",
+      "permitted_content_delta": ["/recipes/recipe.water.bucket", "/revision"]
+    },
+    {
+      "profile": "current5b",
+      "from_raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+      "to_raw_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+      "to_revision": "m1.source-backed.v4.71c86749d02088ee",
+      "permitted_content_delta": ["/recipes/recipe.water.bucket", "/revision", "/ui/actor_animations/recipes/recipe.water.bucket"]
+    }
+  ],
+  "boundary_to_verify": {
+    "operator": "migrate-ui --from <exact old raw hash>",
+    "entry": "migrate_game_ui",
+    "transaction": "GameStore::migrate_ui_content",
+    "callback": "target_engine.migrate_ui_state followed by target Readiness::validate_world",
+    "observed_existing_guards": [
+      "Exact old/new hashes, exclusive local world ownership and a current lease fence.",
+      "Full previous state comparison excluding only admitted revision/UI initialization; existing UI/audio history cannot change.",
+      "Atomic content pin, one world/character revision increment and an idempotent exact from/to audit.",
+      "No changes to private runtime key, acknowledged command journal or lifecycle receipts."
+    ],
+    "qualification": "The operator name is not proof of recipe compatibility. Verify the exact additive target, runtime validity and conservation with both real source profiles before proposing any saved-world execution."
+  },
+  "allowed_changes": [
+    "New focused server tests and their module registration.",
+    "Directly related migration documentation and bounded test tooling.",
+    "Optional explicit manifest/world selectors on the existing source-only publish_product_root helper, with unchanged canonical defaults and strict worktree containment.",
+    "Exact owned candidate imports and durable integration evidence."
+  ],
+  "required_checks": [
+    "Load or deterministically compile the exact public old and new artifacts; assert exact hashes and semantic delta.",
+    "Validate source readiness and preserve complete existing UI/audio/gameplay state during the target callback.",
+    "Real disposable PostgreSQL: reject active/foreign/stale ownership, wrong old pin, changed gameplay and callback failure without partial state/audit updates.",
+    "Prove one revision/audit transition, idempotent duplicate migration, unchanged private key/receipts/sequences and a real replacement fence after restart.",
+    "Execute one native source water conversion through the journal on controlled test-owned inputs, resolve once, and replay known receipts without callback or RNG reuse.",
+    "Keep controlled source fixtures distinct from legitimate journey evidence; no saved account inputs or private archives are needed."
+  ],
+  "workload": {
+    "source_profiles": 2,
+    "maximum_concurrent_databases": 1,
+    "database": "clubscape_m1_test",
+    "database_bind": "random literal loopback only",
+    "database_image": "existing pinned postgres:16-alpine digest from tools/dev.py",
+    "database_cpus": 2,
+    "database_memory_mib": 512,
+    "database_ready_seconds": 60,
+    "focused_database_test_seconds": 180,
+    "build_seconds": 300,
+    "source_only_disposable_worlds": 2,
+    "source_server_starts": 4,
+    "source_operator_invocations": 10,
+    "source_operator_timeout_seconds": 35,
+    "source_operator_accounts_or_gameplay_commands": 0,
+    "source_only_asset_limit_mib_per_bundle": 512,
+    "source_operator_journal": ".worktrees/m1-water-integration/.local/water-upgrade-preflight/operator-authority-v1.json",
+    "automatic_retry": false,
+    "cleanup": "Stop and verify removal of the exact owned disposable container and temporary credentials."
+  },
+  "forbidden": [
+    "Reading or restoring any protected saved checkpoint/account/private identity.",
+    "Migration of the saved52 world or any existing player world.",
+    "Network player journey, browser/GPU/RuneLite, original-source capture or source/frozen presentation changes.",
+    "Weakening validation, changing ordinary startup, resetting histories, importing82 unrelated metadata changes into the legacy target or treating unverified motion as absence.",
+    "Main adoption before the independent contract review and relevant validation pass."
+  ],
+  "component_progress": {
+    "candidate_code": "de7b66f5ead59b53012e7d7a9752cdb6a58ad03c",
+    "candidate_evidence": "b66a0c7f326a5bf11421ff6a332acb1aa8d890c5:milestones/evidence/m1-water-upgrade-preflight.json",
+    "exact_source_pair_native_case_passed": true,
+    "guarded_database_cases_passed": 2,
+    "strict_server_clippy_passed": true,
+    "retained_failures": "Initial test-only error-code compilation mistake and Produced-versus-ProductionResolved assertion are retained with exact logs.",
+    "remaining_operator_scope": "Use the four already prepared and unchanged genuine source deliveries. Exercise the pinned real migrate-ui processes against the two named newly created character-free worlds in the owned disposable database; never a saved player world.",
+    "independent_native_review_fix_still_required": false,
+    "reviewed_native_repair": {
+      "owned": "04a40ee84d0a95866264a3c087071e0f63904377",
+      "candidate": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
+      "all_six_imported_paths_byte_identical": true,
+      "independent_fix_delta_assessment": "passed_static_review",
+      "final_native_tests_passed": 420,
+      "final_source_pair_case_passed": true,
+      "final_native_and_wasm_strict_clippy_passed": true,
+      "final_guarded_postgresql_rerun": "passed",
+      "final_guarded_postgresql_cases_passed": 2,
+      "final_native_evidence": ".worktrees/m1-water-integration/.local/water-upgrade-preflight/final-native-01/report.json",
+      "final_native_evidence_sha256": "b03347ee1674d77a063ccaceb13e2724a42286247e09cf6e79da02adc0ae3a20",
+      "final_database_evidence": ".worktrees/m1-water-integration/.local/water-upgrade-preflight/postgres-03/report.json",
+      "final_database_evidence_sha256": "a7ca773b185defd417cc800ef439f75da86f50b58a4a95857bced70076933347",
+      "final_database_and_credentials_removed": true
+    }
+  },
+  "prepared_source_operator": {
+    "status": "operator_preflight_passed_allowance_consumed",
+    "candidate": "2cc6c45813a51bcd4a7ff5164975936a2caf36fc",
+    "directory": ".worktrees/m1-water-integration/.local/water-source-operator-01",
+    "preparation_sha256": "51caa7d2a14631bb56253b05b84e480898e318f4fdfdd9d17f63ae4c2c4fa39d",
+    "source_packager_commit": "037067d1cefc56a51562cf4235f71842ba400654",
+    "source_packager_sha256": "ba7a9952d6ff5ee2d9c41a21e3e957250d702fef19534a70e0b85a86df3506af",
+    "worlds": [
+      {"profile": "legacy5e", "world_id": "029e1354-cdf4-43c3-b442-7f68433aec12"},
+      {"profile": "current5b", "world_id": "16ceca3e-9b0c-43cd-9e9f-0382e5a190ad"}
+    ],
+    "genuine_source_only_deliveries": 4,
+    "verified_asset_mappings_per_delivery": 5015,
+    "accounts_or_services_started_by_preparation": 0,
+    "operator_invocations_used": 10,
+    "source_server_starts_used": 4,
+    "execution": {
+      "status": "consumed_passed",
+      "execution_authority_commit": "1190a8acc8c94b1af016ab81a85e1cb76a703f0c",
+      "execution_authority_sha256": "b34be1f99002fcf03c0182a7045a90cbbc7eb9a15f9504479a6779e6efd33b0a",
+      "candidate_head": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
+      "binary": {
+        "path": "target/debug/clubscape-server",
+        "sha256": "83de4326673720f30143c175c3721071ddceb21100e7380b42a072cdca5d0b0a"
+      },
+      "runner_commit": "4340530c7184f4c2e03ec9982bbbfbfd82f57999",
+      "runner_sha256": "9ce5e3ebdc97d9463dbdf6c4184978ec6438a52e5a68003d4f0477814fe6bf30",
+      "review_record_sha256": "1b4c238979a07902a52ff147b8503bd732e7a62a454af52fd90a89188b09d40d",
+      "final_native_report_sha256": "b03347ee1674d77a063ccaceb13e2724a42286247e09cf6e79da02adc0ae3a20",
+      "final_database_report_sha256": "a7ca773b185defd417cc800ef439f75da86f50b58a4a95857bced70076933347",
+      "machinery_tests_passed": 32,
+      "pending_review_refusal_actually_exercised": true,
+      "source_process_allowance_already_used": true,
+      "source_operator_report_sha256": "312d9ae5c10a17cb07aa801afd81dbb9ab759d96abc4b0176a585654224ad07c",
+      "all_ten_operator_cases_passed": true,
+      "all_four_source_servers_ready_and_cleanly_stopped": true,
+      "owned_database_and_credentials_removed": true,
+      "remaining_invocations": 0,
+      "evidence_commit": "a162eb7818639c2babcf4ad09ec21dd68c15f2ea",
+      "profile_order": ["legacy5e", "current5b"],
+      "ordinary_shutdown": "Production SIGTERM handler, zero process exit, clean shutdown_complete event and released native world lease.",
+      "scope": "Only four source-server starts and ten migrate-ui invocations against the two prepared fresh character-free worlds. No account/gameplay command or saved-world access."
+    },
+    "required_before_execution": [
+      "Assess the independently found persisted-production repair04a40ee and validate the imported final native candidate.",
+      "Rebuild/verify the exact final native executable and preserve these exact source-delivery pins.",
+      "Reserve the fixed operator journal exclusively before the first invocation; directories do not renew the ten-call allowance."
+    ]
+  },
+  "saved_world_migration_or_continuation_admitted": false,
+  "milestone_accepted": false
+}

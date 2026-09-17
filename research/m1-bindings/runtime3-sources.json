@@ -1,0 +1,231 @@
+{
+  "classification": "source_supported_inference",
+  "schema_version": 1,
+  "scope": "Existing immutable public reconstruction and wiki evidence. Not server-code access, owner approval, a new account or a live source gameplay capture.",
+  "source_observation_claimed": false,
+  "sources": [
+    {
+      "bytes": 404,
+      "id": "combat_commons",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "95456975c37a1dc594e74bcbcb45a956028425471e9cf9e9ecea5e05de3d4b73",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/combat/combat-scripts/src/main/kotlin/org/rsmod/api/combat/CombatCommons.kt"
+    },
+    {
+      "bytes": 12824,
+      "id": "player_npc_combat",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "427627b926be178f50cce6a115d5f960f382ba081921f24e3a886c242cd30c03",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/combat/combat-scripts/src/main/kotlin/org/rsmod/api/combat/PvNCombat.kt"
+    },
+    {
+      "bytes": 3163,
+      "id": "npc_player_combat",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "18a096f76b06fd92d9faf28222f3e83dd6916969deea7e03e30608f488b0405d",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/combat/combat-scripts/src/main/kotlin/org/rsmod/api/combat/NvPCombat.kt"
+    },
+    {
+      "bytes": 2195,
+      "id": "npc_combat_script",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "54ba19be8b6949443815a262c5c61c632c147ce1331c9498522434f1d259cb28",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/combat/combat-scripts/src/main/kotlin/org/rsmod/api/combat/scripts/NvPCombatScript.kt"
+    },
+    {
+      "bytes": 5846,
+      "id": "logout_process",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "479af069432f5cc5f7c3a7d63f3e32c0e2fb8978f99a7cd21fe5301327cdc7f8",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/game-process/src/main/kotlin/org/rsmod/api/game/process/player/PlayerLogoutProcess.kt"
+    },
+    {
+      "bytes": 918,
+      "id": "logout_script",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "700c89239249346f5b6a80510203f1a15302a0a5ad0661ab4c08a4a0cffaef6c",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/content/interfaces/logout-tab/src/main/kotlin/org/rsmod/content/interfaces/logout/tab/LogoutTabScript.kt"
+    },
+    {
+      "bytes": 493,
+      "id": "player_death",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "a941292d8c5cbce40448f06372ff0ee3c5a775dc197c80d433aed89c0959bc1d",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/death-plugin/src/main/kotlin/org/rsmod/api/death/plugin/PlayerDeathScript.kt"
+    },
+    {
+      "bytes": 2461,
+      "id": "death_operations",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "1ea4d9d3915891e691b71ef201996401042fccd30fb1c40455ea322770078b74",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/death/src/main/kotlin/org/rsmod/api/death/PlayerDeath.kt"
+    },
+    {
+      "bytes": 4388,
+      "id": "combat_constants",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "caaacc55f13e10455d3702f1b0e9fac339dcb873ec735341056d8e5261cc7282",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/config/src/main/kotlin/org/rsmod/api/config/Constants.kt"
+    },
+    {
+      "bytes": 1383,
+      "id": "npc_follow",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "0749c0c4b7731f0859e96bab33ec77dcae63c6a59a6d55658a838cd789fff7cf",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/game-process/src/main/kotlin/org/rsmod/api/game/process/npc/mode/NpcPlayerFollowModeProcessor.kt"
+    },
+    {
+      "bytes": 5990,
+      "id": "npc_modes",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "b29265ef9b18cf61466fd9d33642f8ef74dff15b283718ed0e2ef86abb59f274",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/game-process/src/main/kotlin/org/rsmod/api/game/process/npc/mode/NpcModeProcessor.kt"
+    },
+    {
+      "bytes": 1323,
+      "id": "npc_interactions",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "53648abe0cc8c1b706b04fd356866a91acf0b6d125f01d647a24136cc250e291",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/game-process/src/main/kotlin/org/rsmod/api/game/process/npc/mode/AiPlayerModeProcessor.kt"
+    },
+    {
+      "bytes": 534,
+      "id": "npc_combat_properties",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "2c68ae1b9a39cf4c271f6e8c6b45413dbca0cc8daa3bc81e3faee34f112bb8cf",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/combat/combat-scripts/src/main/kotlin/org/rsmod/api/combat/npc/NpcProperties.kt"
+    },
+    {
+      "bytes": 2099,
+      "id": "player_combat_properties",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "d0d64a5fa38cd2292d283ee9e1993e042203ac4543f2aa4d98ac1443e6dbecf7",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/combat/combat-scripts/src/main/kotlin/org/rsmod/api/combat/player/PlayerProperties.kt"
+    },
+    {
+      "bytes": 8352,
+      "id": "player_combat_common",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "5a90aa781713f497c371ff14b2b30491dadcc14d54807339d98417fa8d7ba98d",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/combat/combat-scripts/src/main/kotlin/org/rsmod/api/combat/player/PlayerCommons.kt"
+    },
+    {
+      "bytes": 79214,
+      "id": "player_attack_manager",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "345daeb13ad5f29144a746a60af203cff71cadb3f00b070f3b582b36be7d27a5",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/combat/combat-manager/src/main/kotlin/org/rsmod/api/combat/manager/PlayerAttackManager.kt"
+    },
+    {
+      "bytes": 4564,
+      "id": "npc_player_interactions",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "cd4071fd3566a600e687f6c055d2be257560a5f18b08929ad9ca32b5dda57d5b",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/npc/src/main/kotlin/org/rsmod/api/npc/interact/AiPlayerInteractions.kt"
+    },
+    {
+      "bytes": 1065,
+      "id": "npc_extensions",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "916c160b9170c89f0e8f9cadef03385fee5b366f5f689254f74e44ed8875f7c2",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/npc/src/main/kotlin/org/rsmod/api/npc/NpcExtensions.kt"
+    },
+    {
+      "bytes": 5518,
+      "id": "player_extensions",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "7a71bf01e2860f6edae0d93616d3044c0f81dd925f7ddaddb6afe58d8c72d900",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/player/src/main/kotlin/org/rsmod/api/player/PlayerExtensions.kt"
+    },
+    {
+      "bytes": 4760,
+      "id": "player_hit_processor",
+      "kind": "public_code",
+      "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+      "sha256": "d0fca058b5c72857917f29b1206c58610c7031eacbb255fae37afd16094a64b7",
+      "url": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/player/src/main/kotlin/org/rsmod/api/player/hit/processor/StandardPlayerHitProcessor.kt"
+    },
+    {
+      "bytes": 22431,
+      "id": "wiki_items",
+      "kind": "wiki_revision",
+      "page": "Items",
+      "revision": "15324338",
+      "sha256": "024e0511bb345db805d1853758e8cfb5f31afe6fcdbbf57f649522561c9448cb",
+      "url": "https://oldschool.runescape.wiki/w/Items?oldid=15324338"
+    },
+    {
+      "bytes": 12206,
+      "id": "wiki_combat",
+      "kind": "wiki_revision",
+      "page": "Combat",
+      "revision": "15270648",
+      "sha256": "f2cb72904dd24108a2587aee4cbecc3ee3f636caa7320e4eab058b3eedee9cee",
+      "url": "https://oldschool.runescape.wiki/w/Combat?oldid=15270648"
+    },
+    {
+      "bytes": 6632,
+      "id": "wiki_drop",
+      "kind": "wiki_revision",
+      "page": "Drop",
+      "revision": "15167468",
+      "sha256": "61fa84d31e029192847a8e967acd2ec8ea8c7126ce1f0cd6d54d57c072e41a5c",
+      "url": "https://oldschool.runescape.wiki/w/Drop?oldid=15167468"
+    },
+    {
+      "bytes": 7676,
+      "id": "wiki_drops",
+      "kind": "wiki_revision",
+      "page": "Drops",
+      "revision": "15302943",
+      "sha256": "0517dcb42de7f01e832c065ec36f99d3489bf7ed9bc86f823cf0fafac724cd10",
+      "url": "https://oldschool.runescape.wiki/w/Drops?oldid=15302943"
+    },
+    {
+      "bytes": 6387,
+      "id": "wiki_logout",
+      "kind": "wiki_revision",
+      "page": "Logout button",
+      "revision": "15034464",
+      "sha256": "3c3cb3e2e0525af31d88f8b5d7c73e0092405613b693556297ebd5fee8ee3752",
+      "url": "https://oldschool.runescape.wiki/w/Logout_button?oldid=15034464"
+    },
+    {
+      "bytes": 10096,
+      "id": "wiki_trading",
+      "kind": "wiki_revision",
+      "page": "Trading",
+      "revision": "15122657",
+      "sha256": "df88f9c0ddcb9b4939d64149ade7ee5f61dc39db01a19212aac03cbc2112d4de",
+      "url": "https://oldschool.runescape.wiki/w/Trading?oldid=15122657"
+    },
+    {
+      "bytes": 14167,
+      "id": "wiki_account",
+      "kind": "wiki_revision",
+      "page": "Account",
+      "revision": "15293940",
+      "sha256": "cf0356719c4958eee7c102cf8345962577dd0668b07d75434cb60cb469ff7ac0",
+      "url": "https://oldschool.runescape.wiki/w/Account?oldid=15293940"
+    }
+  ]
+}

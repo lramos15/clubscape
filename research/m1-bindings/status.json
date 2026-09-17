@@ -1,0 +1,341 @@
+{
+  "active_executor_failure_count": 0,
+  "active_executor_failures": [],
+  "actual_account_read_or_changed": false,
+  "base": "cba2016f5f403ea793f875a40ec7c5191c9521cd",
+  "bounded_source_application_complete": true,
+  "branch": "fix/m1-water-item-on",
+  "compiled_artifact": {
+    "artifact_version": 4,
+    "bytes": 528842,
+    "path": "content/m1/game-content.csc.gz",
+    "schema_version": 4,
+    "sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+    "uncompressed_bytes": 13222639,
+    "uncompressed_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc"
+  },
+  "counts": {
+    "cooks_projected_edges": 22,
+    "cooks_source_transitions": 22,
+    "cooks_states": 10,
+    "death_source_states": 4,
+    "death_source_transitions": 6,
+    "dialogues": 21,
+    "equipment_slots": 11,
+    "interfaces": 31,
+    "items": 122,
+    "mechanics": {
+      "collision_groups": 49,
+      "combat_styles": 27,
+      "counters": 134,
+      "entitlements": 13,
+      "experiences": 3,
+      "grants": 18,
+      "ground_policies": 7,
+      "instances": 1,
+      "object_transforms": 68,
+      "prayers": 1,
+      "projectiles": 2,
+      "reconciliations": 1,
+      "spells": 2,
+      "temporary_objects": 1,
+      "travels": 26,
+      "traversal": 9,
+      "value_providers": 1
+    },
+    "normal_note_pairs": 55,
+    "npcs": 26,
+    "objects": 4837,
+    "quests": 2,
+    "recipes": 14,
+    "regions": 29,
+    "runtime_blocked_cells": 16544,
+    "runtime_collision_cells": 46358,
+    "runtime_walkable_cells": 29814,
+    "shops": 1,
+    "skills": 24,
+    "source_rules": 52,
+    "source_transit_pairs": 11,
+    "spawns": 536,
+    "tutorial_blocked_edges": 0,
+    "tutorial_projected_edges": 73,
+    "tutorial_source_transitions": 73,
+    "tutorial_states": 71
+  },
+  "declared_v3_selectors_authored": true,
+  "evidence_hashes": {
+    "content/m1/asset-references.json": "943c250f1b9726392b769a3686fe59328736a25b709743d77957f5741e1b90dc",
+    "content/m1/game-content.csc.gz": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+    "content/m1/game-content.json.gz": "ce3b2448455595b0e0f65ab67c9670ff08ff7f89d02b965f083f8e24cac91255",
+    "content/m1/geometry/11822.json.gz": "42902cf1b93afce1a86ff9b78610f14f9f7cd33f83ac215bea4fa296a5dac7d5",
+    "content/m1/geometry/11823.json.gz": "68247492ecfa615686941ba38db49bb19efa8542896fabc19c8e866efc90934f",
+    "content/m1/geometry/11824.json.gz": "556bc2937fa5ca5f0aca9b4c742a81b386d00ffd2f41e506c4cb810723ea54e1",
+    "content/m1/geometry/11825.json.gz": "de1370e4631bdf70312176dafe1325747092e060eb458f53e9307f03b8b9b80f",
+    "content/m1/geometry/11826.json.gz": "fd31ceb8ad9bd97680ce37de309e9359091afb7b7376e1f0428641c6ba20047c",
+    "content/m1/geometry/12078.json.gz": "631ac83d5262b5c22ec651ef32c932eeb9286febe8983ceec16af2e618d4464b",
+    "content/m1/geometry/12079.json.gz": "0713cc84735b66c1bbbd130dfea8b37cdd570657b87fee3447d891da9879fe36",
+    "content/m1/geometry/12080.json.gz": "f3c3a613a0b2f163a1062210db8a4aa3752b6b6cee86dbda100d7671c32abb9c",
+    "content/m1/geometry/12081.json.gz": "ed7cd80271746c5cf376cfd13d9d6746ee5f31377053af8a34303aa7f02dc968",
+    "content/m1/geometry/12082.json.gz": "362d9e85e9714b647c8152bae2581a732d3e87ade71b145ff0f876650e284fde",
+    "content/m1/geometry/12179.json.gz": "dae7bac02c406fd1c96cbbddd21cdab4640f5cd82ebccfa8a012aadfdc346a90",
+    "content/m1/geometry/12180.json.gz": "08e64ecf25d3ba4a0ca02740642f051012c9d6d2a3a0687de5ac57c23138194c",
+    "content/m1/geometry/12181.json.gz": "930e05cccbcc9bdb99e40f2b8efe92832c42a72d20d06044b425a052440a3f6a",
+    "content/m1/geometry/12334.json.gz": "dd78e7e2cfb9998cdc1adf3e3b0f0faa9a834193bf5ce56439fc7e4a5319f5db",
+    "content/m1/geometry/12335.json.gz": "456cc2a12d0957889c0ff2c182ad01f4bbe683123a4766c50dca3be8ed69d51e",
+    "content/m1/geometry/12336.json.gz": "bda505f823bc1a0653fd58f3274ef30da1f9bcb8df8f28728e27982c57e058e4",
+    "content/m1/geometry/12337.json.gz": "68da6d563a562ac52a83f7b6f02f74c293e7d1427fc478be4dc4e030a4aa7c8b",
+    "content/m1/geometry/12338.json.gz": "9686af5a0d0be5abbe60cfe22ab10015bd1d5405b23dc2fd1a949a97de3ebc17",
+    "content/m1/geometry/12339.json.gz": "ff52918621762de4a72e809fc7215a939a8ae2e5b5cc41ce94b3fdd0f5165d6b",
+    "content/m1/geometry/12340.json.gz": "474c0340061c64f34019558224b64cc8948198d6ea63d1f855aa006985c1afe7",
+    "content/m1/geometry/12341.json.gz": "996381723ce886d2579f8df80289d7cbc6e46a29510e016c6771aa2a019f4fce",
+    "content/m1/geometry/12435.json.gz": "139227c1cecf15034811509e227e6fe873475c8ddf49928126728edfe4f639bb",
+    "content/m1/geometry/12436.json.gz": "4af45ba4f77752f9bfa54dd2f30ee1ab241908cf51cc0b840f000c5a000e66d5",
+    "content/m1/geometry/12437.json.gz": "e5d3c81c0ca4002d187e30811b0524460eec874dd85b68765de9c11d63c95e29",
+    "content/m1/geometry/12590.json.gz": "3f0435f8e4d55dc5e35d3eefde69f7fa6a4fa349a5d2713fee1e6b3f3d7428c7",
+    "content/m1/geometry/12591.json.gz": "4b8bea7ee8886f8a647570a84deb846079c5249e1d8f75e200e259edf5a6c152",
+    "content/m1/geometry/12592.json.gz": "ac88967c3d01a9923aa6ddbb59c78d1aed2aa226e99101579b710765f8d5e009",
+    "content/m1/geometry/12593.json.gz": "cbccd523530df25cf2dad509dbe96f5a642f1a7d8155e9f60234887584ed6383",
+    "content/m1/geometry/12594.json.gz": "a719596bf1cb1b8767528823384437dde2cee3063b934136b4fa5cb38b914440",
+    "content/m1/geometry/12595.json.gz": "49ec6df5e5bd0df3bd230169a838895dc2cf0787f8a0b3e4a2d3761a4eb7028d",
+    "content/m1/geometry/12596.json.gz": "9d784715962180436fa6135c70968681ad4ad6987df9091eec4ae0af0106c872",
+    "content/m1/geometry/12597.json.gz": "e201c360c34b97e81f6c9d18a21843ef7df06fb256f82877228a4bd20c8d63d0",
+    "content/m1/geometry/12633.json.gz": "edced2bd17362a07d0a60239eda2b76fef14b16b4902adb80afe5f78886be8d9",
+    "content/m1/geometry/12693.json.gz": "0cb535def5f258e73984df3890c5e80331e864d7541d5954bab8ac7e1780a18e",
+    "content/m1/geometry/12694.json.gz": "b4c8b057f2258ee0152cf7baa9e66ca3218935ed44bcb5a5b685d868678e1d57",
+    "content/m1/geometry/12695.json.gz": "c94645d13a7768277afb169be523b0afff3416544a7f40063e249f8538d10145",
+    "content/m1/geometry/12846.json.gz": "dd3c4efa0370764e2836c92954b9ba9a61b280eb676acd7cce17d671813f9418",
+    "content/m1/geometry/12847.json.gz": "64c7e6af403363e8128aaadbec783fa4030b2dec9501f85d0c895c67f552f84e",
+    "content/m1/geometry/12848.json.gz": "32e7d98920212fb885724ec848d3a01467036aca73dc66b6c95a7d1cf807083a",
+    "content/m1/geometry/12849.json.gz": "b9a3303152b7dfd93a190a4b5283d4842fa87dff3788cdd7b043fb4aa53dc936",
+    "content/m1/geometry/12850.json.gz": "c37239aae68f554e19403158eea22b83bba13616eff7f43f7afce5447be45fb3",
+    "content/m1/geometry/12851.json.gz": "d50f1e03015545eb412cdda67843023e1323d0af9dd904c9adf822584e2c8df3",
+    "content/m1/geometry/12852.json.gz": "718aac093aae55af8c69661c41efbb791f7ee07010d3aa23385d2bf3e8a24693",
+    "content/m1/geometry/12853.json.gz": "7200b54f079a6bbc19865b54a12a1559b8e6c0868ca6519520f7641addc60b3e",
+    "content/m1/geometry/12949.json.gz": "0c8c1e4d36e2e669b2fc8293ae6c864bf98d641c8104136a1e893845aabd66ac",
+    "content/m1/geometry/12950.json.gz": "1c68cbf194e3abb1c84075e250d19076ba431e79f3d89044261d73a01c8cfdf4",
+    "content/m1/geometry/12951.json.gz": "2b01f537eae5a3e4a0f6a7f4c73f8129c0d3b8c8150a4c8f4b445db1724344d1",
+    "content/m1/geometry/13104.json.gz": "f3e295e80cf88e01ee0f6ce7da6e6d5912abeca5007701c29700a88370066a66",
+    "content/m1/geometry/13105.json.gz": "0e5fd0ad0b7321b38eb61a548f1885b9ca5633ed0ad2366f6f6d6dcad9aa70c3",
+    "content/m1/geometry/13106.json.gz": "8e06a66a001de984fdc2cedb904cf095eeb8a29d0fa00be9f52d8370e07e7141",
+    "content/m1/geometry/13107.json.gz": "fa1b8153629a45d6903adf4917044f503fd4c5d152d3a8c1e1d8b4ea9d1aaa4f",
+    "content/m1/geometry/13108.json.gz": "da5ad027ac808531b64efc42cd0a11c0d620ff6561bdf8e4132b6e240c648f0f",
+    "content/m1/geometry/13109.json.gz": "0b6185341af92cf8e685ea2a672236be1c30f316ea7aeb6695e45c7d1d8a4c67",
+    "content/m1/geometry/13205.json.gz": "79cabe32a225e1c4466d9ae40b295ce3351c05c578c01eddd6d8de2c2f9fad09",
+    "content/m1/geometry/13206.json.gz": "d09e5ed531f1d6111001075abb024793f07ad5cd457851bba97785df68ab2e58",
+    "content/m1/geometry/13360.json.gz": "8259a52eff407a20855fc3d047d76c209ba1d31ce8bedbbda1f8879ab181ed8a",
+    "content/m1/geometry/13361.json.gz": "a551e0c605338b54a45b0947afa0dafb463e1b81d1c54a18d8675af497a06650",
+    "content/m1/geometry/13362.json.gz": "fab9c1c7ec99645096ec3a0c4aa518850c551552cd6b1cb9413d13ca67e28e47",
+    "content/m1/geometry/13363.json.gz": "1c31c77bc5209e106d7283ab743440d89ecd2448aefbbf4a644b868bc5d877f4",
+    "content/m1/geometry/13364.json.gz": "ea23a9fff3156fe6043ecb7d7e479e1dd80046ceedf5194c8f4f16b5636412a4",
+    "content/m1/geometry/13365.json.gz": "aab8341ed233c3151d1c395d1c98681c112c0c12a74cf5352e766db604da2639",
+    "content/m1/journey-checkpoints.json": "ce4c4aefc4b635a6315b9adc706d410dec233cbb40b80c8d74e9744a8b23bbc3",
+    "content/m1/legacy5e-water/game-content.csc.gz": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+    "content/m1/legacy5e-water/game-content.json.gz": "9659cd96567e34f9fdf98d131ca1028bcd7b6621f10c28aa2bec301684ccb552",
+    "content/m1/legacy5e-water/manifest.json": "718d50eb2134f76b9bb2d34ba2b99f162cb2ec6666b392aba52ce2a03477cdf4",
+    "content/m1/manifest.json": "faf9437a395a73955b8f03d498a8e90c080e0df95feeadc13d641c79befaee03",
+    "content/m1/slot-bindings.json": "06471dd9450e5fbdb7b216f362e580a34e06170876e4e9cab180c0eb7e843c5e",
+    "research/m1-bindings/actor-animation-bindings.json": "7cc9418f0434d18916791089d03c970cd7c67470d62e66a7687fa186f1cb5add",
+    "research/m1-bindings/application-result.json": "d7e65c92f9c5e5873bc9f70cc516c40ba43164f76e35f5c7df667cf75c6f5592",
+    "research/m1-bindings/application-source-validation.json": "da6a8ca550d72da157118445a6db107b3256ff9bf3a0a1628163f645952a7a08",
+    "research/m1-bindings/application-validation.json": "ab2e3c23f209906cbe44a0dc1a2d80eb06de8335173cd93ec8a43b5445924a5d",
+    "research/m1-bindings/asset-refresh-validation.json": "9625fead3ca7c91a39f16c10c1c3be3993ec3b086b3bbf9c058b893905256cba",
+    "research/m1-bindings/audio-authority-bindings.json": "36856ec5b1b1bdcf72d71c80e996c710b8ba108b8a6e9eb17d3e24c3d4582dc1",
+    "research/m1-bindings/check-result.json": "1e38818ddae80f93ad298b7a3739eaaf6abfc1d44638db9d35e3e536c4e59aaa",
+    "research/m1-bindings/compiler-validation.json": "e8e5fe90afb79876d46f84f612b2097141d2744e06b1d4759e5ad481c621cde1",
+    "research/m1-bindings/door-bindings.json": "949be7841e7a806e77ea98633e5aef8d08efa904878aed39fdac95f557321de2",
+    "research/m1-bindings/graph-bindings.json": "602e1bddb3ab14a1d13c69e83a4aad56584cc4c037d8aa0640fc56ed758db022",
+    "research/m1-bindings/input-lock.json": "efdc963b5b04077bd02d5330276c327e1e391341f97f090037a4961fa643c20c",
+    "research/m1-bindings/interface-bindings.json": "5f102dec533a053858b6fe74ab3d4742a6a1115b6b1dda89df954285b3cea1d0",
+    "research/m1-bindings/item-bindings.json": "03ef445b4ad3284f69e780532a5be32bf57449047f84fef0aef2769ba8fab53d",
+    "research/m1-bindings/location-bindings.json": "eaa32ef2b1f72bd78c2121a46877e48a9f17052d18b0b5f8c55d836bc5c5d37b",
+    "research/m1-bindings/mechanics-bindings.json.gz": "a98d8b6cbac7d7c22e1abfaeb80c64d94d0df0acee984a9c139da03692e9c0d2",
+    "research/m1-bindings/npc-bindings.json": "9d2458f542fe6394215b21da859bd36b2d2962eda8a2ada6c74d2055aab0df05",
+    "research/m1-bindings/policy-bindings.json": "96a227b69689be770c80f657888e06d6f10428ed140c327f7f8c7008f821e483",
+    "research/m1-bindings/repeatability.json": "55460e1dc7e11d9b41ac4eb9f91ad143cc44a8691e1340f8949efe3af403b56d",
+    "research/m1-bindings/route-validation.json": "bfed260d6593631b13526718fc35bc089d845435576ed4109f7e0dcf3231724d",
+    "research/m1-bindings/runtime3-selectors.json": "cac46c39ec6c04e40000dc27b10c27d12ef09d15594ea915109380953dcb5e93",
+    "research/m1-bindings/schema-validation.json": "d38f0781f8eb91b2471a2854579dee31891b9d72f54ae2aa0c92f04474565f24",
+    "research/m1-bindings/spawn-bindings.json.gz": "38a1001730b8a73f6b934bef7806c976c53c1dbd721a712c478accc55d38adb8",
+    "research/m1-bindings/state-oracle-validation.json": "a68caea6adcdc197504d855b1988a6d5bd3fc9fa1ef903acf4c89c51c8a86c7c",
+    "research/m1-bindings/structural-validation.json": "c47c86f5feb3597520b26db88c099450647f8501ba1bacb34404947a9dd4bfcc",
+    "research/m1-bindings/test-output.log": "37c103bc419c521581adb1cffc7e92c8b66a8adab53aee389bf310b55f7e8102",
+    "research/m1-bindings/travel-bindings.json": "47e89010516afd1bca4cef727cb2eebb0cdc5d542029fc66cb655dde38529f90",
+    "research/m1-bindings/ui-bindings.json": "dae39e834626c34b7fb0063790c747c653ec7511d3c7335030c982297505da29",
+    "research/m1-bindings/unresolved-bindings.json": "6c4da9ccd9f2d705be9f9f305cbf22bc3cc3e08821ff6df9e202cdb32cb70b76",
+    "research/m1-bindings/validation-run.json": "8fe09a1076dd94085f4a4b78d2d7326874d7aeeb08feda80e3fab668dcdc9e93",
+    "research/m1-bindings/water-fill-application.json": "b86864c13a53193327aa0b33adca40b8fcf9ef4d88d159e875d42f04f3ac292f",
+    "research/m1-bindings/world-bindings.json.gz": "77556ad0703b50d58289f495db911c53be4fa8b7f4c86adf55b5e86264ad9a33",
+    "research/water-fill/consumer-baseline-differences.json": "a26dc41c71f28468db4cf814d3072bebc6eca72e9ad04abf0ab7cb1cbc3d328d",
+    "research/water-fill/current5b-water-native.json": "dd0c6754f22fd576ae883ff549afdbb12ddade65b9193b52a188f5a277ef58ee",
+    "research/water-fill/handoff.json": "631c3744d9418700c8df47a4c4eeb7e841d2544f6d14caebb255d1852e9fb01f",
+    "research/water-fill/item-on-compatibility.json": "819a3edddc9e9956af63e388fcb51e3845d6ca1940533d6f792bafd086a4152e",
+    "research/water-fill/legacy5e-application.json": "718d50eb2134f76b9bb2d34ba2b99f162cb2ec6666b392aba52ce2a03477cdf4",
+    "research/water-fill/legacy5e-water-native.json": "66f5039eff034c2904f63768b179c18ba9d7ae9fcd41bed0657c299f96df3b4e",
+    "research/water-fill/validation.json": "d510502b0eb817bfdf250c0f5c0e67d52adf6afcec26e71ac9bbb1ee0ca7fb32"
+  },
+  "full_journey_executed": false,
+  "fully_done": true,
+  "input_aggregate_sha256": "71c86749d02088eee216c9b5ebb6defdd6d443ffea2506bd93730c5067d3a8c0",
+  "migration_admitted": false,
+  "milestone_accepted": false,
+  "parent_action": "Director must review the exact old/new pins and semantic deltas before a separately tested and fenced same-world upgrade. This source task admits no migration or gameplay and must not repeat the saved account's progress.",
+  "presentation_approved": false,
+  "residuals": {
+    "active_or_conditionally_active": [],
+    "active_or_conditionally_active_count": 0,
+    "inactive_full_target": [
+      {
+        "path": "items.item.ensouled_goblin_head.stackable.rule",
+        "proof": {
+          "ordinary_acquisition_absent": true,
+          "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+          "rare_items": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ]
+        },
+        "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+        "rule_group": "conditional_stack_alternatives"
+      },
+      {
+        "path": "items.item.milk.bottomless_bucket.stackable.rule",
+        "proof": {
+          "ordinary_acquisition_absent": true,
+          "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+          "rare_items": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ]
+        },
+        "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+        "rule_group": "conditional_stack_alternatives"
+      },
+      {
+        "path": "mechanics.death.office_overflow",
+        "proof": {
+          "excluded_unacquired_conditional_keys": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ],
+          "office_capacity": 120,
+          "ordinary_acquired_instance_items": 0,
+          "ordinary_item_key_upper_bound": 120,
+          "precondition": "Office must merge ordinary non-instanced item keys. Recheck on universe, acquisition or instance/merge-rule changes; never unconditionally discard overflow.",
+          "represented_item_keys": 122
+        },
+        "reason": "Deletion order above120 Office entries is not source-bound.",
+        "rule_group": "office_capacity_unreachable"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      }
+    ],
+    "inactive_full_target_count": 6,
+    "policy": "A source binding is required only when its proved branch is reachable. Inactive definitions remain in the full target; no unresolved value is replaced by a success-shaped default.",
+    "unresolved_total": 6
+  },
+  "revision": "m1.source-backed.v4.71c86749d02088ee",
+  "runtime_ready": true,
+  "schema_version": 4,
+  "source_application": {
+    "approved_loot": "adaptation.m1.goblin_energy_potion_provisional",
+    "audit": "research/m1-bindings/application-result.json",
+    "coupled_updates": 7,
+    "source_bindings_consumed": 104,
+    "source_inferences_not_approvals": 98,
+    "vital_policy": {
+      "action": "bound_declared_shared_enum",
+      "path": "mechanics.vitals.level_up",
+      "source": [
+        {
+          "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 550b17906059c3126324fd7df3bf80b6b5804b4a05bf280ecdc65af8c5a7dbe6. Documentary/code evidence, not a live observation.",
+          "reference": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/player/src/main/kotlin/org/rsmod/api/player/stat/PlayerSkillXP.kt",
+          "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+          "status": "inference"
+        },
+        {
+          "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 0eb40a2013c137a314d8e680fc9743d93217efe2a86f386f1b2d3b32ad4174d7. Documentary/code evidence, not a live observation.",
+          "reference": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/player/src/integration/kotlin/org/rsmod/api/player/stat/PlayerSkillXPTest.kt",
+          "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+          "status": "inference"
+        },
+        {
+          "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 0a4289963c26e6dd7074a80d150c220ff1ce2cb4b65fba589965f99803d5a019. Documentary/code evidence, not a live observation.",
+          "reference": "https://oldschool.runescape.wiki/w/Skills?oldid=15321845",
+          "revision": "15321845",
+          "status": "inference"
+        }
+      ],
+      "value": "raise_if_at_old_base_otherwise_preserve"
+    }
+  },
+  "status": "done",
+  "task": "M1-WATER-ITEM-ON-DISPATCH",
+  "validation": {
+    "artifact_reloaded": true,
+    "content_tests": 104,
+    "content_tests_passed": true,
+    "engine_constructed": true,
+    "failed_checks": [],
+    "real_source_appearance_request_passed": true,
+    "repeatability_checked": true,
+    "repeatability_passed": true,
+    "strict_runtime_compiled": true
+  },
+  "validation_task": "bounded-source-item-on-dispatch",
+  "water_profiles": [
+    {
+      "artifact": {
+        "artifact_version": 4,
+        "bytes": 528842,
+        "path": "content/m1/game-content.csc.gz",
+        "schema_version": 4,
+        "sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+        "uncompressed_bytes": 13222639,
+        "uncompressed_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc"
+      },
+      "passed": true,
+      "profile": "current5b-water"
+    },
+    {
+      "artifact": {
+        "artifact_version": 4,
+        "bytes": 521255,
+        "path": "content/m1/legacy5e-water/game-content.csc.gz",
+        "schema_version": 4,
+        "sha256": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+        "uncompressed_bytes": 13125018,
+        "uncompressed_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650"
+      },
+      "passed": true,
+      "profile": "legacy5e-water"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "kind": "saved_water_deadline_repair_code_only_evidence",
+  "recorded_at": "2026-09-17T04:14:59.831510+00:00",
+  "code_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
+  "regression_revision": "e5267810c0c271e513c282697e3819ead8c35ac1",
+  "files": [
+    {
+      "path": "python-initial.log",
+      "bytes": 727,
+      "sha256": "af28c0aeaab255407417d4a0657297b0f4d523957da9f0e51a71433e960bfa5f",
+      "exit_code": 0,
+      "tests_passed": 94,
+      "elapsed_seconds": 6.99,
+      "source_qualification": "Intermediate repair before the final watchdog-start-failure case; retained, not the final code receipt."
+    },
+    {
+      "path": "python-final.log",
+      "bytes": 729,
+      "sha256": "665a3ce7705a840d66d7d2f70c19e06d6417143519cab4e453abfa68f31f7edc",
+      "exit_code": 0,
+      "tests_passed": 95,
+      "elapsed_seconds": 7.26,
+      "source_qualification": "Final repair tree before its unchanged commit."
+    },
+    {
+      "path": "python-committed.log",
+      "bytes": 728,
+      "sha256": "30f9ad9573063810ef4d4843c2dd028ddfeaaa0f14f5b917b08d8c7a68a4552b",
+      "exit_code": 0,
+      "tests_passed": 95,
+      "elapsed_seconds": 6.86,
+      "source_qualification": "Tracked-clean exact4526d0d candidate."
+    }
+  ],
+  "original_failed_counterexample": "milestones/evidence/m1-saved-water-continuation-review/deadline-index.json",
+  "protected_state_accessed": false,
+  "saved_execution_admitted": false,
+  "milestone_accepted": false
+}

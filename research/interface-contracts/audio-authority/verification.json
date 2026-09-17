@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "task": "m1-gameplay-ui-contracts",
+  "scope": "Bounded M1 server-owned music unlock/history and native morph-variable authority",
+  "contract_commit": "8d3b4004cd66b720d5bd7d96f10765c3b034eb25",
+  "implementation_candidate_commit": "5b4006f3a14f85da8b017d4bf20c124f188c7d3d",
+  "integrated_director_repairs": {
+    "timed_ui_interruption_parent": "0575fe0051b649adbd19b194b8521f328a54aad2",
+    "timed_ui_interruption_local": "b888b55347f0b1668f3221a5aa734523e57dd8aa",
+    "departure_generator_parent": "e8c3c43d5b1cd9f16b0b78ab34dcc958f93d9888",
+    "departure_generator_local": "715099acc58e14122a88fc9c652532540f608da6",
+    "older_director_compiled_product_copied": false,
+    "normalization_order": "immutable104+7 -> identical-question primary choices -> recovery entries -> owned UI/audio4",
+    "decoded_changes_from_audio_candidate": [
+      "revision",
+      "dialogues.dialogue.magic_instructor.entry_nodes",
+      "dialogues.dialogue.magic_instructor.nodes"
+    ],
+    "retained_primary": "transition.tutorial.decline_departure",
+    "choice_ids_in_original_order": ["stay_on_island", "ask_ironman_tutor", "confirm_normal_mainland"],
+    "choice_guards_effects_order_and_all_other_definitions_unchanged": true,
+    "native_departure_branches_passed": 4,
+    "only_confirmation_authorizes_home_teleport": true
+  },
+  "previous_audio_artifact": {
+    "revision": "m1.source-backed.v4.b0a5ed1cb5d01668",
+    "raw_sha256": "57462592102e1491f2c5bf00ca59dc80e75d03feb0859c49e66f4063ea36ebf5",
+    "compressed_sha256": "52ca6143589182caee23a9ca967602094d787c4346bb30aec25ae67beb46d348"
+  },
+  "authority_implemented": true,
+  "source_authority_item_open": false,
+  "menu_groups": [2, 62, 64, 76, 144, 145, 163, 327],
+  "title_group_is_menu_unlock": false,
+  "input_manifest": {
+    "path": "research/interface-contracts/audio-authority/inputs.json",
+    "sha256": "4b79ac2306d0daa7efaafc46596c3f4abb7ecb1afb4908178a73930f7bf5856e",
+    "director_reference_commit": "15184423a8085ec32a6080700ad6ddadd8e808b3",
+    "native_runtime": "injected1.12.38 / game240 / cache2695",
+    "supplemental_page_cutoff": "2026-09-08T10:30:08Z",
+    "source_assets_or_frozen_pack_modified": false
+  },
+  "source_rules": {
+    "newbie_62": "Original table44 automatic_unlock1, confirmed only for an actual source character, never account registration/title playback.",
+    "scape_cave_144": "Frozen Tutorial Island cave reference plus dated ordinary-world plane0 rectangle; audited completed quest-ladder counter conserves positive prior arrival.",
+    "lumbridge_six": "Each individual dated track page explicitly states first arrival in Lumbridge, independently corroborated by that native row's unlock hint. Neither Modern membership nor client preferences are used as the grant rule.",
+    "boundary_qualification": "Existing dated public polygons evaluated on an integer half-tile lattice; this is qualified source trigger inference, not an original server polygon-program capture.",
+    "conserved_counters": [
+      "counter.tutorial.quest_ladder.completed",
+      "counter.tutorial.departed"
+    ],
+    "conserved_proof": "research/m1-bindings/audio-authority-bindings.json",
+    "rejected_counter_proxy": "first_ore.completed also has mainland rock writers, so it is not used as proof of Tutorial cave arrival."
+  },
+  "native_variables": {
+    "source_varp": 491,
+    "source_name": "ABYSSAL_WARP",
+    "varbits": [609, 611],
+    "known_bits": 20,
+    "m1_value": 0,
+    "meaning": "RC_NO_TALLY_REQUIRED_WATER/FIRE. Dated tiara/ruins references and the exact twelve-item M1 equipment scope support only these zero bits; the sole supported head item is Chef's hat1949.",
+    "other_bits_or_quest_numbers_inferred": false,
+    "expanded_equipment_requires_requalification": true,
+    "generic_actual_fact_projection_supported": true,
+    "ambiguous_cases_choose_first": false
+  },
+  "persistence": {
+    "world_marker": "WorldRuntime.audio_authority_version",
+    "character_record": "CharacterRuntime.audio_authority",
+    "version": 1,
+    "creation_tick": "Actual storage-owned last_action_tick passed into character_from_initial_at_tick, never a guessed zero tick for an established world.",
+    "history_origin": ["from_creation", "legacy_untracked"],
+    "legacy_absence": "unknown, not locked/fresh/empty/all-unlocked",
+    "queries_mutate_or_grant": false,
+    "append_only_history_enforced": true,
+    "intermediate_run_steps_recorded": true,
+    "migration": "Existing operator-only exact-pin migrate-ui / migration0005. Initialize absent histories as legacy_untracked; preserve existing UI/audio state, items, XP, claims, clocks, private RNG and old receipts.",
+    "existing_6f_worlds_or_headless_run_restarted_or_repin_attempted": false
+  },
+  "caller_contract": {
+    "capability": "game.audio.authority.v1",
+    "protobuf": "WorldSnapshot.audio_authority field22",
+    "typescript": "WorldView.audioAuthority",
+    "preferences_or_playback_api_changed": false,
+    "unlocks_or_varps_client_write_api": false,
+    "legacy_rule": "Preserve preference records and expose incomplete authority; do not reset/mute them or treat unknown tracks as locked/unlocked.",
+    "varp_rule": "Forward only bits covered by knownBits for the calibrated original varbit definitions; value0 with mask20 does not assert a complete491 word."
+  },
+  "candidate": {
+    "revision": "m1.source-backed.v4.37b793c6c8e65947",
+    "path": "content/m1/game-content.csc.gz",
+    "raw_sha256": "0dec331c94d434b4ed67f142d92f60ebbdfa0a49d764deb757b8e8dd24a9358d",
+    "compressed_sha256": "177089d214f4938b663df7a23918fe3b17c6cc1e3b3ab50dc91191011bb5c340",
+    "raw_bytes": 13172296,
+    "compressed_bytes": 523824,
+    "content_version": 4,
+    "artifact_version": 4,
+    "state_runtime_ui_versions": [1, 1, 1],
+    "audio_authority_version": 1,
+    "strict_compile_reload": true,
+    "asset_closure_passed": true,
+    "missing_asset_ids": []
+  },
+  "validation": {
+    "native_tests": 576,
+    "native_binaries": 45,
+    "postgresql_http_tests": 45,
+    "independent_account_checks": 11,
+    "native_authority_tests": 5,
+    "canonical_audio_tests": 2,
+    "new_postgresql_audio_tests": 2,
+    "source_tests": 88,
+    "new_source_authority_tests": 8,
+    "identical_generated_paths_across_two_builds": 90,
+    "native_and_wasm_clippy_warnings_denied": true,
+    "format_and_shared_typescript_checks": true,
+    "compatibility_report": ".local/evidence/m1-audio-authority-compatibility.json",
+    "exact_candidate_report": ".local/evidence/departure-audio-final.json",
+    "native_departure_report": ".local/evidence/departure-audio-native-menu.json",
+    "exact_decoded_delta_report": ".local/evidence/departure-audio-diff.json",
+    "owned_servers_containers_databases_cleaned_up": true
+  },
+  "preserved": {
+    "original_source_bindings": 104,
+    "coupled_updates": 7,
+    "tutorial_states_transitions": [71, 73],
+    "cooks_states_transitions": [10, 22],
+    "spawns": 536,
+    "collision_cells": 46358,
+    "public_asset_references": 5266,
+    "geometry_cadence_gameplay_rng_and_rewards_changed": false,
+    "client_audio_ui_renderer_or_frozen_assets_changed": false
+  },
+  "separate_remaining_scope": {
+    "normal_grave_bank_all_permission": "Still source-unverified and explicitly unavailable; not this completed audio-authority item.",
+    "whole_ui_or_m1_acceptance": false,
+    "full_fresh_journey_audio_visual_hardware_acceptance": false
+  }
+}

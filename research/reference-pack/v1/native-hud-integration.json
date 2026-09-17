@@ -1,0 +1,571 @@
+{
+  "schema_version": 1,
+  "source_commit": "db103ba838cc954ce9adbbaecff4cc70d6d0962c",
+  "manifest": {
+    "path": "assets/reference/osrs240/native-hud/captures.json",
+    "sha256": "f70232054d6e4213dcaf5d83bed667c0cd7771e6832993fbd7824dd3463b8218",
+    "size_bytes": 923425
+  },
+  "provenance": {
+    "path": "assets/reference/osrs240/native-hud/provenance.json",
+    "sha256": "46b3b31f076926efe6f5f6508c3aa62203c62fe58e0e989f63bc1134fb738e4d",
+    "size_bytes": 6663
+  },
+  "input_contract": {
+    "path": "assets/reference/osrs240/native-hud/hud-input-contract.json",
+    "sha256": "29247f8d5f4d63bc05fc49d43b3c95cf50052ef002d21dd143f9a0e2dcae54d4",
+    "size_bytes": 4825
+  },
+  "native_bindings": {
+    "path": "research/source-capture/native-hud-bindings.json",
+    "sha256": "553fe716ee82229b0c95d63a28c536e4a4930a651f1b2433b6bc53535bd0f9ef",
+    "size_bytes": 4402
+  },
+  "source_validation": {
+    "path": "research/source-capture/native-hud-validation.json",
+    "sha256": "162ace584f279bc41a453227e9d306b5347fe78ae227020ec631ce7cbb4ac5c0",
+    "size_bytes": 2952
+  },
+  "documentation": {
+    "path": "tools/source-capture/NATIVE_HUD.md",
+    "sha256": "a2cf4f147d1461ec00b37e4a9a8cd2f03c434ff7bfe350ffc91a0eade68f397f",
+    "size_bytes": 8200
+  },
+  "full_frame_input_ids": [
+    "native-hud.native-inventory",
+    "native-hud.native-equipment",
+    "native-hud.native-skills",
+    "native-hud.native-combat",
+    "native-hud.native-prayer",
+    "native-hud.native-magic",
+    "native-hud.native-quest-list",
+    "native-hud.native-bank",
+    "native-hud.native-shop",
+    "native-hud.native-guide-dialogue",
+    "native-hud.family-guide",
+    "native-hud.family-survival",
+    "native-hud.family-quest-guide",
+    "native-hud.family-combat",
+    "native-hud.family-prayer",
+    "native-hud.family-magic"
+  ],
+  "active_panel_groups": {
+    "native-inventory": 149,
+    "native-equipment": 387,
+    "native-skills": 320,
+    "native-combat": 593,
+    "native-prayer": 541,
+    "native-magic": 218,
+    "native-quest-list": 399,
+    "native-bank": 12,
+    "native-shop": 300,
+    "native-guide-dialogue": 231,
+    "family-guide": 231,
+    "family-survival": 231,
+    "family-quest-guide": 231,
+    "family-combat": 231,
+    "family-prayer": 231,
+    "family-magic": 231
+  },
+  "native_root": 161,
+  "native_scripts": {
+    "onload": 901,
+    "redraw": 907,
+    "tab_listener": 914,
+    "chat_rebuild": 216
+  },
+  "native_region_rectangles": {
+    "minimap": [
+      1709,
+      0,
+      211,
+      207
+    ],
+    "chat": [
+      0,
+      915,
+      519,
+      165
+    ],
+    "sidebar": [
+      1679,
+      745,
+      241,
+      335
+    ],
+    "active-panel": [
+      1704,
+      782,
+      190,
+      261
+    ]
+  },
+  "dialogue_anchor": {
+    "parent_widget": 10617399,
+    "interface_group": 231,
+    "native_panel_rectangle": [
+      8,
+      922,
+      506,
+      129
+    ]
+  },
+  "dialogue_font_and_layout": [
+    {
+      "widget_id": 15138820,
+      "native_canvas_rectangle": [
+        116,
+        939,
+        380,
+        17
+      ],
+      "font_id": 497,
+      "source_text_color": 8388608,
+      "font_basis": "Current source widget definition, with original native font loading/painting. visible_widgets records actual coordinates, not a separate font-ID readback.",
+      "fixture_text": "Gielinor Guide",
+      "text_role": "native_fixture_widget_value"
+    },
+    {
+      "widget_id": 15138821,
+      "native_canvas_rectangle": [
+        116,
+        1019,
+        380,
+        17
+      ],
+      "font_id": 497,
+      "source_text_color": 255,
+      "font_basis": "Current source widget definition, with original native font loading/painting. visible_widgets records actual coordinates, not a separate font-ID readback.",
+      "fixture_text": "",
+      "text_role": "native_fixture_widget_value"
+    },
+    {
+      "widget_id": 15138822,
+      "native_canvas_rectangle": [
+        116,
+        955,
+        380,
+        67
+      ],
+      "font_id": 497,
+      "source_text_color": 0,
+      "font_basis": "Current source widget definition, with original native font loading/painting. visible_widgets records actual coordinates, not a separate font-ID readback.",
+      "fixture_text": "Welcome! This controlled reference state exercises the original dialogue interface.",
+      "text_role": "synthetic_fixture_body"
+    }
+  ],
+  "dialogue_definition": {
+    "path": "assets/source/osrs/cache2695/interfaces/231.json.gz",
+    "sha256": "67bbaf173a56be02c3ce6d648519b57acda626c8f786f8da9b8d8c370223f423",
+    "size_bytes": 1025
+  },
+  "scene_preparation": {
+    "input": {
+      "path": "tools/source-capture/WorldCapture.java",
+      "sha256": "4f75d9f1a4427a07b4fe26077a390ff572473ae7e4e4a57ecd3e9ddef490b4e1",
+      "size_bytes": 10051
+    },
+    "method": "prepareForHud -> view(lumbridge-hud,...,renderCapture=false)",
+    "settings_role": "Exact source-code fixture configuration; not per-HUD native camera readbacks.",
+    "base_world_tile": [
+      3168,
+      3168
+    ],
+    "camera_world_tile_xz": [
+      3222,
+      3208
+    ],
+    "height_offset_from_source_ground": -1300,
+    "focal_world_tile": [
+      3222,
+      3218
+    ],
+    "pitch_input": 2048,
+    "yaw_input": 0,
+    "angle_units_per_turn": 16384,
+    "draw_distance": 25,
+    "far_clip_units": 32768,
+    "per_hud_camera_readbacks": null,
+    "existing_calibrated_scene_id": "original.scenes.lumbridge-castle-plaza"
+  },
+  "attachment_families": [
+    {
+      "name": "guide",
+      "input_id": "native-hud.family-guide",
+      "enabled_tab_slots": [
+        10,
+        11
+      ],
+      "native_component_links": [
+        {
+          "parent_component": 10551392,
+          "interface_group": 162
+        },
+        {
+          "parent_component": 10551329,
+          "interface_group": 160
+        },
+        {
+          "parent_component": 10551382,
+          "interface_group": 182
+        },
+        {
+          "parent_component": 10551383,
+          "interface_group": 116
+        },
+        {
+          "parent_component": 10617399,
+          "interface_group": 231
+        }
+      ],
+      "role": "controlled_attachment_family_not_exact_tutorial_progress"
+    },
+    {
+      "name": "survival",
+      "input_id": "native-hud.family-survival",
+      "enabled_tab_slots": [
+        1,
+        3,
+        10,
+        11
+      ],
+      "native_component_links": [
+        {
+          "parent_component": 10551392,
+          "interface_group": 162
+        },
+        {
+          "parent_component": 10551329,
+          "interface_group": 160
+        },
+        {
+          "parent_component": 10551373,
+          "interface_group": 320
+        },
+        {
+          "parent_component": 10551382,
+          "interface_group": 182
+        },
+        {
+          "parent_component": 10551383,
+          "interface_group": 116
+        },
+        {
+          "parent_component": 10551375,
+          "interface_group": 149
+        },
+        {
+          "parent_component": 10617399,
+          "interface_group": 231
+        }
+      ],
+      "role": "controlled_attachment_family_not_exact_tutorial_progress"
+    },
+    {
+      "name": "quest-guide",
+      "input_id": "native-hud.family-quest-guide",
+      "enabled_tab_slots": [
+        1,
+        2,
+        3,
+        10,
+        11
+      ],
+      "native_component_links": [
+        {
+          "parent_component": 10551392,
+          "interface_group": 162
+        },
+        {
+          "parent_component": 10551329,
+          "interface_group": 160
+        },
+        {
+          "parent_component": 10551373,
+          "interface_group": 320
+        },
+        {
+          "parent_component": 10551382,
+          "interface_group": 182
+        },
+        {
+          "parent_component": 10551374,
+          "interface_group": 399
+        },
+        {
+          "parent_component": 10551383,
+          "interface_group": 116
+        },
+        {
+          "parent_component": 10551375,
+          "interface_group": 149
+        },
+        {
+          "parent_component": 10617399,
+          "interface_group": 231
+        }
+      ],
+      "role": "controlled_attachment_family_not_exact_tutorial_progress"
+    },
+    {
+      "name": "combat",
+      "input_id": "native-hud.family-combat",
+      "enabled_tab_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        10,
+        11
+      ],
+      "native_component_links": [
+        {
+          "parent_component": 10551392,
+          "interface_group": 162
+        },
+        {
+          "parent_component": 10551376,
+          "interface_group": 387
+        },
+        {
+          "parent_component": 10551329,
+          "interface_group": 160
+        },
+        {
+          "parent_component": 10551372,
+          "interface_group": 593
+        },
+        {
+          "parent_component": 10551373,
+          "interface_group": 320
+        },
+        {
+          "parent_component": 10551382,
+          "interface_group": 182
+        },
+        {
+          "parent_component": 10551374,
+          "interface_group": 399
+        },
+        {
+          "parent_component": 10551383,
+          "interface_group": 116
+        },
+        {
+          "parent_component": 10551375,
+          "interface_group": 149
+        },
+        {
+          "parent_component": 10617399,
+          "interface_group": 231
+        }
+      ],
+      "role": "controlled_attachment_family_not_exact_tutorial_progress"
+    },
+    {
+      "name": "prayer",
+      "input_id": "native-hud.family-prayer",
+      "enabled_tab_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11
+      ],
+      "native_component_links": [
+        {
+          "parent_component": 10551392,
+          "interface_group": 162
+        },
+        {
+          "parent_component": 10551376,
+          "interface_group": 387
+        },
+        {
+          "parent_component": 10551329,
+          "interface_group": 160
+        },
+        {
+          "parent_component": 10551377,
+          "interface_group": 541
+        },
+        {
+          "parent_component": 10551372,
+          "interface_group": 593
+        },
+        {
+          "parent_component": 10551373,
+          "interface_group": 320
+        },
+        {
+          "parent_component": 10551382,
+          "interface_group": 182
+        },
+        {
+          "parent_component": 10551374,
+          "interface_group": 399
+        },
+        {
+          "parent_component": 10551383,
+          "interface_group": 116
+        },
+        {
+          "parent_component": 10551375,
+          "interface_group": 149
+        },
+        {
+          "parent_component": 10617399,
+          "interface_group": 231
+        }
+      ],
+      "role": "controlled_attachment_family_not_exact_tutorial_progress"
+    },
+    {
+      "name": "magic",
+      "input_id": "native-hud.family-magic",
+      "enabled_tab_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        10,
+        11
+      ],
+      "native_component_links": [
+        {
+          "parent_component": 10551392,
+          "interface_group": 162
+        },
+        {
+          "parent_component": 10551376,
+          "interface_group": 387
+        },
+        {
+          "parent_component": 10551329,
+          "interface_group": 160
+        },
+        {
+          "parent_component": 10551377,
+          "interface_group": 541
+        },
+        {
+          "parent_component": 10551378,
+          "interface_group": 218
+        },
+        {
+          "parent_component": 10551372,
+          "interface_group": 593
+        },
+        {
+          "parent_component": 10551373,
+          "interface_group": 320
+        },
+        {
+          "parent_component": 10551382,
+          "interface_group": 182
+        },
+        {
+          "parent_component": 10551374,
+          "interface_group": 399
+        },
+        {
+          "parent_component": 10551383,
+          "interface_group": 116
+        },
+        {
+          "parent_component": 10551375,
+          "interface_group": 149
+        },
+        {
+          "parent_component": 10617399,
+          "interface_group": 231
+        }
+      ],
+      "role": "controlled_attachment_family_not_exact_tutorial_progress"
+    }
+  ],
+  "source_derived_fixture_values": {
+    "sword_category": {
+      "id": 3959,
+      "tableId": 78,
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          17
+        ],
+        [
+          0,
+          "Stab",
+          "(Accurate)<br>(Stab)<br>(Attack XP)",
+          240,
+          1,
+          "Lunge",
+          "(Aggressive)<br>(Stab)<br>(Strength XP)",
+          239,
+          2,
+          "Slash",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          238,
+          3,
+          "Block",
+          "(Defensive)<br>(Stab)<br>(Defence XP)",
+          237
+        ]
+      ]
+    },
+    "quest_counters": {
+      "available": 187,
+      "maximum_points": 347,
+      "derivation": "Source table0 type0, excluding parented subquests from count but retaining their quest points; not observed server state"
+    },
+    "shop_main": {
+      "source_script": 1074,
+      "arguments": [
+        3,
+        -1,
+        0,
+        1,
+        "General Store"
+      ],
+      "argument_roles": [
+        "source stock container",
+        "no selected item",
+        "custom quantity",
+        "enable Buy50",
+        "fixture title"
+      ]
+    },
+    "shop_side": {
+      "source_script": 6007,
+      "source_widget": 19726336,
+      "scope": "Native shared inventory initializer on original shop-side widget; sale behavior/prices are not asserted"
+    }
+  },
+  "comparison_scope": "Whole original frames, scene, minimap/chat/sidebar and native panel backgrounds/geometry. For the same controlled fixture state compare synthetic body pixels as fixture pixels ONLY. For journey text/values use the independent source oracles with full-panel pixel accounting.",
+  "scope_limits": [
+    "The16 native frames do not certify authenticated progression, source71-state unlock timing or arrival state.",
+    "Six enabled-slot sets are explicitly chosen rendering scenarios, not the semantic11-signature table.",
+    "The captured survival-family NPC choice is a fixture input; it does not override the pinned tutorial instructor identity.",
+    "NPC dialogue231 is demonstrated. Player/item-message variants remain in factored source-state checks; do not claim separate217/229 screenshots or require a separate live screenshot for each variant.",
+    "The selected Lumbridge scene is controlled. HUD records do not contain per-frame camera readbacks; use their hash-bound original WorldCapture preparation code and the existing calibrated scene reference, without inventing additional measured camera fields."
+  ],
+  "owner_approved": false,
+  "authenticated_progression_verified": false
+}

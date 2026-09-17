@@ -1,0 +1,683 @@
+{
+  "scope": "Additional ORIGINAL UI component/effect fixture comparisons, not live gameplay",
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "results": [
+    {
+      "case": "native-death-preview-populated",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "8466d4987889ae3cb92e3f87378def20c7fe7c5fb37b09c07cc8217436d01b17",
+      "candidate_sha256": "a191dba1ccf64cd833237a5771de2df0edd95a39b2325d0bccee1a1e344f992d",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-amount-5",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "2bf8afec638cec180fe4d1b007bbd9922d0a5bf23b601c707bfa1f25b3f4d978",
+      "candidate_sha256": "5fd1a53efdf032adb960eab5a4ff1dc3756c8c1312557cea816fe9607fb356ca",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-1",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "489a879949e876fe517f752a13da8420e16605a5d73b532462ce14dce0ac17ab",
+      "candidate_sha256": "11c3d352d6650140f2a007e9def5db94054e00fea8a9a20227899095ed1cbdd8",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-10",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "3f198dfe3e07f21afd110943610eca42e65e53449f16ff67e702bca7060d4e4c",
+      "candidate_sha256": "5877ebe60b0763ae8c991c0c28130dbeb21d94c1b646dcddc298b66c7637a8da",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-11",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-12",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-13",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-14",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-15",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-16",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-17",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-18",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-2",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "5d947cd4993b21e8a210b831b0551974396e9e19d32cb72c71f4fdc58028972b",
+      "candidate_sha256": "402ebdf192644c5963e2f7cbd84ec88592d286c5bf0ba821b44554f777a89cbc",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-3",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "0ec4d8c663c955b546beb4a8594de3b794a6f219c5b2d200ccb139417093c648",
+      "candidate_sha256": "91551894990870f49eeb8424022750917fd66fb7bab5afce94511c6e73759c90",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-4",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "8b6393595a1eaefbd79dc4a0573ef7e81d8cc101422bc2f26a4a0876d566d09b",
+      "candidate_sha256": "d42fe0a9844f29aadffe57424d808e7db411fd3319a7e2fe5ec97104179b003c",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-5",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "e14228551c1364d8397e7717a97db89015bb73b592769d3847418a2388a657a6",
+      "candidate_sha256": "0f8546c9a90793a0d4ba80903bc1b966fcad86a6dc295af7d54fcb3f8ae52918",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-6",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "7e9a818cd15d9bb1ed9cf1a37518b3b99a6dfb32e6cb39631202c061ae738bf0",
+      "candidate_sha256": "ebf69e0c4bcdd649cb5a86f5a6ef2ed02562ab489457be22a451ad799e849837",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-7",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "5f64a73beefb4327caeb855f6a5b172e2a741332e008353180ddb17c535c369b",
+      "candidate_sha256": "2faa2dd180032ea09661a1c77a4f17cd2ebf37e7e1a615c5f8d826858f93f4d5",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-8",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "b7e380b275efc50e4e506a9c8ebc566c2f76809e99bfb7dd1b680456e63eb8c9",
+      "candidate_sha256": "4ee89be6d1318245bc8e273b657abfc1f5ef96d0c1e51cf055dc2ecbc3c645b6",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-9",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "ca6322e8661da6763e7e674c32485b05e09f57c13d6337372270817dcf4991dd",
+      "candidate_sha256": "87e8a1ca6294bd39f29cb8ebcb4083d2d95d58acdc805ec6862f1e7bff4cbefb",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-hover",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "10595be896a3c213be2449df83f829af998f7e4c4601d73fabe58673a1fe2541",
+      "candidate_sha256": "68857b3907ee225240c01cc3d968d12d797003b09db34d4d7a1cb02a1b02e96c",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-reward-fields",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "dfb2e7c22ec16bef3e5ebe08fe5bac28a0cce73d08c8b0acad9392cca7c404f9",
+      "candidate_sha256": "2d1011cf791d76ceb5815e013612c3ed35bc43d8148d339b0004c31c899c08fd",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-smithing-bronze",
+      "kind": "presentations",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "aab3268d0b459157987802e26f14f1a6ab57f8712de139510983b817cfdd30db",
+      "candidate_sha256": "f16e10329f8e667a7163ff26869ed00e1f2ffed7a2333b3c5ba9a4658beda552",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-death-preview-populated",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "8466d4987889ae3cb92e3f87378def20c7fe7c5fb37b09c07cc8217436d01b17",
+      "candidate_sha256": "a191dba1ccf64cd833237a5771de2df0edd95a39b2325d0bccee1a1e344f992d",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-amount-5",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "2bf8afec638cec180fe4d1b007bbd9922d0a5bf23b601c707bfa1f25b3f4d978",
+      "candidate_sha256": "5fd1a53efdf032adb960eab5a4ff1dc3756c8c1312557cea816fe9607fb356ca",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-1",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "489a879949e876fe517f752a13da8420e16605a5d73b532462ce14dce0ac17ab",
+      "candidate_sha256": "11c3d352d6650140f2a007e9def5db94054e00fea8a9a20227899095ed1cbdd8",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-10",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "3f198dfe3e07f21afd110943610eca42e65e53449f16ff67e702bca7060d4e4c",
+      "candidate_sha256": "5877ebe60b0763ae8c991c0c28130dbeb21d94c1b646dcddc298b66c7637a8da",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-11",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-12",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-13",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-14",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-15",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-16",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-17",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-18",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "candidate_sha256": "df228f03356f5d4a5ea7bdf2e467a43c563a4ad480866dacb38d66a3d790d807",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-2",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "5d947cd4993b21e8a210b831b0551974396e9e19d32cb72c71f4fdc58028972b",
+      "candidate_sha256": "402ebdf192644c5963e2f7cbd84ec88592d286c5bf0ba821b44554f777a89cbc",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-3",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "0ec4d8c663c955b546beb4a8594de3b794a6f219c5b2d200ccb139417093c648",
+      "candidate_sha256": "91551894990870f49eeb8424022750917fd66fb7bab5afce94511c6e73759c90",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-4",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "8b6393595a1eaefbd79dc4a0573ef7e81d8cc101422bc2f26a4a0876d566d09b",
+      "candidate_sha256": "d42fe0a9844f29aadffe57424d808e7db411fd3319a7e2fe5ec97104179b003c",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-5",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "e14228551c1364d8397e7717a97db89015bb73b592769d3847418a2388a657a6",
+      "candidate_sha256": "0f8546c9a90793a0d4ba80903bc1b966fcad86a6dc295af7d54fcb3f8ae52918",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-6",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "7e9a818cd15d9bb1ed9cf1a37518b3b99a6dfb32e6cb39631202c061ae738bf0",
+      "candidate_sha256": "ebf69e0c4bcdd649cb5a86f5a6ef2ed02562ab489457be22a451ad799e849837",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-7",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "5f64a73beefb4327caeb855f6a5b172e2a741332e008353180ddb17c535c369b",
+      "candidate_sha256": "2faa2dd180032ea09661a1c77a4f17cd2ebf37e7e1a615c5f8d826858f93f4d5",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-8",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "b7e380b275efc50e4e506a9c8ebc566c2f76809e99bfb7dd1b680456e63eb8c9",
+      "candidate_sha256": "4ee89be6d1318245bc8e273b657abfc1f5ef96d0c1e51cf055dc2ecbc3c645b6",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-choice-9",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "ca6322e8661da6763e7e674c32485b05e09f57c13d6337372270817dcf4991dd",
+      "candidate_sha256": "87e8a1ca6294bd39f29cb8ebcb4083d2d95d58acdc805ec6862f1e7bff4cbefb",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-production-hover",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "10595be896a3c213be2449df83f829af998f7e4c4601d73fabe58673a1fe2541",
+      "candidate_sha256": "68857b3907ee225240c01cc3d968d12d797003b09db34d4d7a1cb02a1b02e96c",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "native-reward-fields",
+      "kind": "presentation-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "dfb2e7c22ec16bef3e5ebe08fe5bac28a0cce73d08c8b0acad9392cca7c404f9",
+      "candidate_sha256": "2d1011cf791d76ceb5815e013612c3ed35bc43d8148d339b0004c31c899c08fd",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    }
+  ],
+  "fullPanelsExcluded": 0,
+  "finalAcceptance": false
+}

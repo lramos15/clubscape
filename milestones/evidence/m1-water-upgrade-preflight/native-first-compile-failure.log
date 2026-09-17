@@ -1,0 +1,8 @@
+error[E0599]: no variant, associated function, or constant named `InvalidState` found for enum `clubscape_game_types::GameErrorCode` in the current scope
+   --> crates/server/src/game_service/tests/water_migration.rs:362:48
+    |
+362 | ...                   GameErrorCode::InvalidState,
+    |                                      ^^^^^^^^^^^^ variant, associated function, or constant not found in `clubscape_game_types::GameErrorCode`
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `clubscape-server` (lib test) due to 1 previous error

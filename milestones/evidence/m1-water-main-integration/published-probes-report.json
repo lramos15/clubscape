@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "code_revision": "f7f81c2a5fd5407939f77097dd3facba8991d0c4",
+  "profiles": [
+    {
+      "profile": "current5b-water",
+      "raw_artifact_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+      "executable_sha256": "f061697efe8639f61a739c10875072150fe6739f2aec378003ac64e95cb46675",
+      "positive_passed": 4,
+      "negative_passed": 15,
+      "elapsed_seconds": 4.909
+    },
+    {
+      "profile": "legacy5e-water",
+      "raw_artifact_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+      "executable_sha256": "f061697efe8639f61a739c10875072150fe6739f2aec378003ac64e95cb46675",
+      "positive_passed": 4,
+      "negative_passed": 15,
+      "elapsed_seconds": 4.903
+    }
+  ],
+  "source_operator_invocations": 0,
+  "saved_checkpoint_accessed": false,
+  "milestone_accepted": false
+}

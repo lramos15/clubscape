@@ -1,0 +1,151 @@
+{
+  "shell_owned": 27,
+  "director_owned": 2,
+  "commits": [
+    {
+      "position": 1,
+      "owned": "60d2b87cac8080c76f2bb3de0da7bfea85d35eaf",
+      "integrated": "8fb714b648f6f528ede668656f804fbf6e5549d8"
+    },
+    {
+      "position": 2,
+      "owned": "18d2b5ca2c189cc0852b68b211e26f06f5cae6e2",
+      "integrated": "76da761f236142b804fa9c9d773610ce062f0c41"
+    },
+    {
+      "position": 3,
+      "owned": "8dab4dc8cd41d5eaed7bf0691705eabdf0d2d08a",
+      "integrated": "52cd034862ac678ebe3e31e6eea5e3c91ac8623f"
+    },
+    {
+      "position": 4,
+      "owned": "801db3de079e377dfde9ee9ed69e23f7acd2f784",
+      "integrated": "d2e120ca1d2fb4fd6e15b4b7c6930269b5f6c699"
+    },
+    {
+      "position": 5,
+      "owned": "ced05667193a5c3908d4ef2b455959924a316bf3",
+      "integrated": "fd84b5fa0bf673f0fc78f84d02f9d84a62e8ebae"
+    },
+    {
+      "position": 6,
+      "owned": "1a2d314baf15dae4ee529dc4d57ad9e8442f1426",
+      "integrated": "0325dc5c1da27d7541a08dc4378f96e196631165"
+    },
+    {
+      "position": 7,
+      "owned": "9c482c7f65858369e3dd717e1d2bb7137403ef74",
+      "integrated": "6d0718017db476d38ab29662f5fcf2e083f3b27b"
+    },
+    {
+      "position": 8,
+      "owned": "949d65c3c84897496fa2d1f5a6884ce2416b2a31",
+      "integrated": "21dc2597439efe98dc6de7ff4ba3b29ac7400bf6"
+    },
+    {
+      "position": 9,
+      "owned": "46de36688e4dcafadcbb4eb60790ea01fab33f35",
+      "integrated": "17dcd6efadbde0df03323f9db5fac5e8a7eb0162"
+    },
+    {
+      "position": 10,
+      "owned": "d75c3ee51c47cbb056edd75d5cec5cefaa3556da",
+      "integrated": "2c34422360e8a7af7845f678975786daa3db850a"
+    },
+    {
+      "position": 11,
+      "owned": "dc6a96f55be5304f27ad8b0fc1db3b998ca18040",
+      "integrated": "858c00faf16371f203f033f44388b049a054bd08"
+    },
+    {
+      "position": 12,
+      "owned": "ca15b1272717a6cd1fdba4f51be71c0cc3750c6c",
+      "integrated": "c62bfdc5a2ccad62c5d13535fedd74252a658c2c"
+    },
+    {
+      "position": 13,
+      "owned": "fbdcc9cf01731f2aae80059375ba5206566c3b0e",
+      "integrated": "dc483fdcbbe564f872df140401e2ab97a73e918e"
+    },
+    {
+      "position": 14,
+      "owned": "4f31ee04481485b6d785dcd8075d85088e7375fa",
+      "integrated": "90e90a4b2c607fbaadd16a5302045c1b2f2e72bf"
+    },
+    {
+      "position": 15,
+      "owned": "d48c8c2d35420892604934d895b2888d96a47955",
+      "integrated": "d30b445f42326038c8631aa7cae26f32d95c1f95"
+    },
+    {
+      "position": 16,
+      "owned": "bdfb89837f586b85b1c565a8e00ff7d46680da0d",
+      "integrated": "a24e565bba31ad584b8983b205948a08fb121f01"
+    },
+    {
+      "position": 17,
+      "owned": "165cf8d48138a694599785d8385b0c56dd5a56e7",
+      "integrated": "0cab5160a6108e2e5b3ad50cdb019b091d163c08"
+    },
+    {
+      "position": 18,
+      "owned": "35e12584681fd45fa1671805f26adc64feae511a",
+      "integrated": "86a31c5a4961f22032660d2c552157bb6e8dfcd5"
+    },
+    {
+      "position": 19,
+      "owned": "9aec735ba5976dc318afc0c06e0ac0d83f9bdf96",
+      "integrated": "91d4af68970d2fef241ccccf8f63c049bda619b0"
+    },
+    {
+      "position": 20,
+      "owned": "cfd3c56f4a09fe80cec758268c8c48cb09ed9422",
+      "integrated": "ab4f73854fc60926ddebc9dfb82433c982119aa0"
+    },
+    {
+      "position": 21,
+      "owned": "bb14976595901c828445bf5d50ebdb628e5a11bb",
+      "integrated": "0c157d3aa160135bb445f4d1744c7c1044b11746"
+    },
+    {
+      "position": 22,
+      "owned": "6a85feb6e1232c5df257920765e2357a051c56de",
+      "integrated": "24f1c3ed5fccc0f999d5097b86dd2bbe4fd91836"
+    },
+    {
+      "position": 23,
+      "owned": "503d89701b1316372edbbf3bbc0ebc230b5524fe",
+      "integrated": "55182840ff769f80bd9ca849b14fd5993bf73e57"
+    },
+    {
+      "position": 24,
+      "owned": "9efa3c8e1e15c0baf84ed8d0a360e6595da7e14e",
+      "integrated": "12250fdec6f3140dbfc201c956dc609cbda26cb7"
+    },
+    {
+      "position": 25,
+      "owned": "3b06c5dd5a336a0551684dcee3d15c7f30fa9d3c",
+      "integrated": "4546c294d9b968d0ceb68552b70c222a6aec5b45"
+    },
+    {
+      "position": 26,
+      "owned": "014e958265cca2b865b72a4d6d29e5e82a825e8f",
+      "integrated": "c6a5b842005aad37df32615daaed82d7ccba8edf"
+    },
+    {
+      "position": 27,
+      "owned": "ee5cd0a545fb41da3883c2537b38bb1602f7fb78",
+      "integrated": "f0b702c5a91849ff5524fc4a4014658426cb3c8c"
+    },
+    {
+      "position": 28,
+      "owned": "15d35a54fc1765020d11a934f01150a33b2bdc81",
+      "integrated": "559e46b2448b205342b2ee42df6419228abd23d6"
+    },
+    {
+      "position": 29,
+      "owned": "d77ee887c60f4f7f3f53b5685b395801f028cb14",
+      "integrated": "ab6ce6e8aab372b87dfb037a329789a28ad34e17"
+    }
+  ]
+}

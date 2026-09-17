@@ -1,0 +1,3715 @@
+{
+  "audio_verified": false,
+  "before_departure_skills": {
+    "skill.agility": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.attack": {
+      "base_level": 1,
+      "xp_tenths": 120
+    },
+    "skill.construction": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.cooking": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.crafting": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.defence": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.farming": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.firemaking": {
+      "base_level": 1,
+      "xp_tenths": 400
+    },
+    "skill.fishing": {
+      "base_level": 1,
+      "xp_tenths": 100
+    },
+    "skill.fletching": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.herblore": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.hitpoints": {
+      "base_level": 10,
+      "xp_tenths": 11540
+    },
+    "skill.hunter": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.magic": {
+      "base_level": 1,
+      "xp_tenths": 75
+    },
+    "skill.mining": {
+      "base_level": 1,
+      "xp_tenths": 350
+    },
+    "skill.prayer": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.ranged": {
+      "base_level": 1,
+      "xp_tenths": 120
+    },
+    "skill.runecraft": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.sailing": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.slayer": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.smithing": {
+      "base_level": 1,
+      "xp_tenths": 187
+    },
+    "skill.strength": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.thieving": {
+      "base_level": 1,
+      "xp_tenths": 0
+    },
+    "skill.woodcutting": {
+      "base_level": 1,
+      "xp_tenths": 250
+    }
+  },
+  "browser_signup_verified": false,
+  "checks_passed": 416,
+  "content_manifest_path": "/content/manifest.json",
+  "cook_continuation": false,
+  "cook_continuation_boundary": {
+    "authority": "a913bb79d79e555e9c50b710e360810d95eccf4f",
+    "completed_segments_replayed": false,
+    "decoded_original_control": {
+      "decoded_command": "join_world",
+      "failed_control_exception_used": false,
+      "observed_error": null,
+      "observed_http_status": 200,
+      "operation_id": "c43bae38-699d-456e-89eb-95d213841a99",
+      "request_replayed": false
+    },
+    "historical_source_checks": 336,
+    "latest_acknowledged_sequence": 355,
+    "next_sequence": 356,
+    "remaining": [
+      "cooks_legitimate_acquisition_partial_delivery",
+      "cooks_reward_and_range",
+      "after_quest_recovery"
+    ],
+    "separate_observation_checks": 3
+  },
+  "current_action": "hello.gameplay_readiness",
+  "dying_observation": {
+    "authority": "bd33c742bad7be4ab244e1402cc840d89d3e427b",
+    "historical_input_count": 398,
+    "join": {
+      "active_death": "death.engine.1615.0",
+      "active_interface": "interface.magic",
+      "activity": "idle",
+      "actor_action": null,
+      "actor_id": "actor.05a9c9bae95142fabe29d3ec35e8cf9e",
+      "character_revision": 1932,
+      "combat_style": "style.unarmed.punch",
+      "document_present": false,
+      "hitpoints": 10,
+      "instance": "instance.engine.1615.0",
+      "next_sequence": 302,
+      "private_phase_not_substituted_for_public_fields": true,
+      "production_present": false,
+      "public_life_enum_exists": false,
+      "region": "region.osrs.12633",
+      "revision": 1934,
+      "tick": 1621,
+      "tile": {
+        "plane": 0,
+        "x": 3174,
+        "y": 5726
+      },
+      "ui_version": 1
+    },
+    "original_boundary": {
+      "authority": "bd33c742bad7be4ab244e1402cc840d89d3e427b",
+      "historical_public_hitpoints": 1,
+      "historical_public_tick": 1613,
+      "historical_query_error": {
+        "action": "lumbridge.source_item_losing_death",
+        "reason": "Real RPC rejected: HTTP 409, code=3, error_id=688aab5a-a58b-4a57-bb48-ec9dcdd1391a, reason=The authoritative source query requirements are not satisfied.",
+        "sequence": 302,
+        "stage": "stage.tutorial.mainland",
+        "tick": 1613,
+        "unknown_or_unchecked_is_not_success": true
+      },
+      "old_observation_rewritten": false,
+      "original_recorded_control": {
+        "decoded_command": "join_world",
+        "failed_control_exception_used": false,
+        "observed_error": null,
+        "observed_http_status": 200,
+        "operation_id": "8dde7aa3-6f0c-4c19-9c04-a9a239f379c9",
+        "request_replayed": false
+      },
+      "private_saved_hitpoints": 0,
+      "private_saved_tick": 1616
+    },
+    "poll": {
+      "active_death": "death.engine.1615.0",
+      "active_interface": "interface.magic",
+      "activity": "idle",
+      "actor_action": null,
+      "actor_id": "actor.05a9c9bae95142fabe29d3ec35e8cf9e",
+      "character_revision": 1933,
+      "combat_style": "style.unarmed.punch",
+      "document_present": false,
+      "hitpoints": 10,
+      "instance": "instance.engine.1615.0",
+      "next_sequence": 302,
+      "private_phase_not_substituted_for_public_fields": true,
+      "production_present": false,
+      "public_life_enum_exists": false,
+      "region": "region.osrs.12633",
+      "revision": 1935,
+      "tick": 1622,
+      "tile": {
+        "plane": 0,
+        "x": 3174,
+        "y": 5726
+      },
+      "ui_version": 1
+    },
+    "public_poll_succeeded": true,
+    "successful_stop": true,
+    "world_inputs_emitted": 0
+  },
+  "fixture_gameplay_evidence": false,
+  "full_journey_passed": false,
+  "identity": {
+    "baseline": {
+      "compressed_artifact_sha256": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f",
+      "input": "research/water-fill/inputs/legacy5e-source.json.gz",
+      "public_supplied_copy": ".local/source5e-input/game-content.json.gz",
+      "raw_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+      "revision": "m1.source-backed.v4.3ff4292b311453cc",
+      "semantic_sha256_without_revision": "00f994caf1320993c69d96b833254a5684dbf235cf3bb71f812cff3ad72671a5",
+      "source_sha256": "294ede7e3d8e08633051338385f189c0d420000e74cd2344ce54b13bbfa28706"
+    },
+    "content_artifact": {
+      "artifact_version": 4,
+      "bytes": 521255,
+      "path": "content/m1/legacy5e-water/game-content.csc.gz",
+      "schema_version": 4,
+      "sha256": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+      "uncompressed_bytes": 13125018,
+      "uncompressed_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650"
+    },
+    "content_revision": "m1.source-backed.v4.3ff4292b311453cc.water.e337c77cc5ccd980",
+    "content_schema_version": 4,
+    "file_sha256": {
+      "content/m1/legacy5e-water/game-content.csc.gz": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+      "content/m1/legacy5e-water/game-content.json.gz": "9659cd96567e34f9fdf98d131ca1028bcd7b6621f10c28aa2bec301684ccb552",
+      "content/m1/legacy5e-water/manifest.json": "718d50eb2134f76b9bb2d34ba2b99f162cb2ec6666b392aba52ce2a03477cdf4",
+      "crates/protocol/proto/account.proto": "c777fa303f0aa0c287649de65e25cea2a40130f06d65c095b7fb79074cf21bc8",
+      "crates/protocol/proto/game.proto": "46dcc61edb5578e15bbfcf2a80f4537ef291c3542025cac674faade2279f2efa",
+      "research/journey-rules/activities.json": "a0eb67f8615642161f7ba05ecfda99bd1ba62102f5fc23f335a340df4645f6f7",
+      "research/journey-rules/cooks-assistant.json": "ccb21048828e1d1a774f09c809d01aaf6900425bc52ea2e1bc471142ff4295cf",
+      "research/journey-rules/expected-scenarios.json": "c9dc703ab7ad139d6df90791d13bcb3cbfcdd518973517e3bdabcbc93ba29a68",
+      "research/journey-rules/initial-state.json": "3f6cefa5f68f226878df5286d1689c1ebe5a2fa28b4d6c5d0fd34a7741447ad3",
+      "research/journey-rules/tutorial.json": "774789d1559f438f3db6036d831d4b341a093d77949d416ff9bc8bfe48d0087b",
+      "research/m1-bindings/application-result.json": "d7e65c92f9c5e5873bc9f70cc516c40ba43164f76e35f5c7df667cf75c6f5592",
+      "research/m1-bindings/graph-bindings.json": "602e1bddb3ab14a1d13c69e83a4aad56584cc4c037d8aa0640fc56ed758db022",
+      "research/m1-bindings/location-bindings.json": "eaa32ef2b1f72bd78c2121a46877e48a9f17052d18b0b5f8c55d836bc5c5d37b",
+      "research/m1-bindings/runtime3-policy.json": "bc8cd2fbed9ce49ea1d1aeac40034894a01439266acf85adad4f6c111f426ec7",
+      "research/m1-bindings/runtime3-selectors.json": "cac46c39ec6c04e40000dc27b10c27d12ef09d15594ea915109380953dcb5e93",
+      "research/m1-bindings/runtime3-sources.json": "2076c006b7eac60b5a17f212430fc5cb18f1b8fc44bf2ad100bae3ad92e5b395",
+      "research/m1-bindings/selection.json": "eba70c376dfb2facd5dda8c08522089d384cff93260db235c5b45e79dcad45ba",
+      "research/m1-bindings/travel-bindings.json": "47e89010516afd1bca4cef727cb2eebb0cdc5d542029fc66cb655dde38529f90",
+      "research/runtime-bindings/application-result.json": "db43912383e9b9e8fad62eb3f7a06cdaa6491a6d672001a6c8c1cbbc18ec11a6",
+      "tests/scenarios/m1_fresh_account.json": "34164cf09a1b94c8af0d90f374d4e4bfb9db330c18bd90b1db8cac7903437784"
+    },
+    "generated_descriptor_sha256": "5c78222edd4fd9dc9a0fc1de3a230e3515be3736340ed6053ff02137f5bdab7e",
+    "protocol_version": 1,
+    "source_classification_limits": "Retains source-contract assumptions/inferences; this run cannot promote them to owner approval.",
+    "source_oracle_policy": "Expected values come from independently authored source contracts/scenario literals, never engine execution or seeded state."
+  },
+  "initial_source_state": {
+    "bank_context": null,
+    "character_revision": 2,
+    "dialogue": null,
+    "dynamic_objects": [
+      {
+        "definitionId": "transform.scenery.1535.3118.3124.p0.t0.r0",
+        "doorOpen": false,
+        "id": "transform.scenery.1535.3118.3124.p0.t0.r0",
+        "objectId": "object.scenery.1535",
+        "quarterTurns": 0,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3118,
+          "y": 3124
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1535.3124.3126.p0.t0.r3",
+        "doorOpen": false,
+        "id": "transform.scenery.1535.3124.3126.p0.t0.r3",
+        "objectId": "object.scenery.1535",
+        "quarterTurns": 3,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3124,
+          "y": 3126
+        }
+      },
+      {
+        "definitionId": "transform.tutorial.account_entry.3125.3124.p0.t0.r0",
+        "doorOpen": false,
+        "id": "transform.tutorial.account_entry.3125.3124.p0.t0.r0",
+        "objectId": "object.tutorial.account_entry",
+        "quarterTurns": 0,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3125,
+          "y": 3124
+        }
+      },
+      {
+        "definitionId": "transform.tutorial.chapel_exit.3122.3102.p0.t0.r1",
+        "doorOpen": false,
+        "id": "transform.tutorial.chapel_exit.3122.3102.p0.t0.r1",
+        "objectId": "object.tutorial.chapel_exit",
+        "quarterTurns": 1,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3122,
+          "y": 3102
+        }
+      },
+      {
+        "definitionId": "transform.tutorial.chef_entry.3079.3084.p0.t0.r0",
+        "doorOpen": false,
+        "id": "transform.tutorial.chef_entry.3079.3084.p0.t0.r0",
+        "objectId": "object.tutorial.chef_entry",
+        "quarterTurns": 0,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3079,
+          "y": 3084
+        }
+      },
+      {
+        "definitionId": "transform.tutorial.chef_exit.3072.3090.p0.t0.r2",
+        "doorOpen": false,
+        "id": "transform.tutorial.chef_exit.3072.3090.p0.t0.r2",
+        "objectId": "object.tutorial.chef_exit",
+        "quarterTurns": 2,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3072,
+          "y": 3090
+        }
+      },
+      {
+        "definitionId": "transform.tutorial.quest_entry.3086.3126.p0.t0.r3",
+        "doorOpen": false,
+        "id": "transform.tutorial.quest_entry.3086.3126.p0.t0.r3",
+        "objectId": "object.tutorial.quest_entry",
+        "quarterTurns": 3,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3086,
+          "y": 3126
+        }
+      },
+      {
+        "definitionId": "transform.tutorial.start_door.3098.3107.p0.t0.r0",
+        "doorOpen": false,
+        "id": "transform.tutorial.start_door.3098.3107.p0.t0.r0",
+        "objectId": "object.tutorial.start_door",
+        "quarterTurns": 0,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3098,
+          "y": 3107
+        }
+      },
+      {
+        "definitionId": "transform.tutorial.survival_gate.3089.3091.p0.t0.r2",
+        "doorOpen": false,
+        "id": "transform.tutorial.survival_gate.3089.3091.p0.t0.r2",
+        "objectId": "object.tutorial.survival_gate",
+        "quarterTurns": 2,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3089,
+          "y": 3091
+        }
+      },
+      {
+        "definitionId": "transform.tutorial.survival_gate.second.3089.3092.p0.t0.r2",
+        "doorOpen": false,
+        "id": "transform.tutorial.survival_gate.second.3089.3092.p0.t0.r2",
+        "objectId": "object.tutorial.survival_gate.second",
+        "quarterTurns": 2,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3089,
+          "y": 3092
+        }
+      }
+    ],
+    "event_history_gap": false,
+    "next_sequence": 1,
+    "player": {
+      "action": null,
+      "active_death": null,
+      "actor_id": "actor.05a9c9bae95142fabe29d3ec35e8cf9e",
+      "appearance": {},
+      "appearance_confirmed": false,
+      "bank": null,
+      "bank_visibility": "not_observable",
+      "combat_style": "style.unarmed.punch",
+      "equipment": {},
+      "experience": null,
+      "instance": null,
+      "interfaces": [
+        "interface.appearance",
+        "interface.logout"
+      ],
+      "inventory": [],
+      "movement_tick": null,
+      "presence": {
+        "acceptsInput": true,
+        "connected": true,
+        "kind": "CONNECTED",
+        "presentInWorld": true
+      },
+      "quest_points": 0,
+      "quests": {
+        "quest.cooks_assistant": "stage.cooks.not_started",
+        "quest.learning_the_ropes": "stage.learning_the_ropes.not_started"
+      },
+      "region": "region.osrs.12336",
+      "running": false,
+      "settings": {
+        "1": false,
+        "2": true,
+        "3": true,
+        "4": true
+      },
+      "skills": {
+        "skill.agility": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.attack": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.construction": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.cooking": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.crafting": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.defence": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.farming": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.firemaking": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.fishing": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.fletching": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.herblore": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.hitpoints": {
+          "base_level": 10,
+          "xp_tenths": 11540
+        },
+        "skill.hunter": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.magic": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.mining": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.prayer": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.ranged": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.runecraft": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.sailing": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.slayer": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.smithing": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.strength": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.thieving": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.woodcutting": {
+          "base_level": 1,
+          "xp_tenths": 0
+        }
+      },
+      "tile": {
+        "plane": 0,
+        "x": 3094,
+        "y": 3106
+      },
+      "tutorial_stage": "stage.tutorial.appearance",
+      "vitals": {
+        "activity": "idle",
+        "hitpoints": 10,
+        "prayer_points": 1,
+        "run_energy": 10000
+      }
+    },
+    "quote": null,
+    "recovery": null,
+    "revision": 4,
+    "shop": null,
+    "tick": 2,
+    "ui": {
+      "activeInterface": "interface.appearance",
+      "appearance": {
+        "base": {
+          "adaptation": "milestones/approvals/m1-reference-pack-v1.3.0.json",
+          "asset": "asset.source.osrs.cache2695.npc.2063",
+          "sourceNpc": 2063
+        },
+        "choices": [
+          {
+            "choices": [
+              {
+                "permission": {
+                  "allowed": true
+                },
+                "value": 0
+              },
+              {
+                "permission": {
+                  "allowed": true
+                },
+                "value": 1
+              }
+            ],
+            "key": "body_type"
+          }
+        ],
+        "confirmed": false
+      },
+      "combatStyle": "style.unarmed.punch",
+      "combatStyles": [
+        {
+          "id": "style.unarmed.punch",
+          "name": "Punch",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "selected": true,
+          "visible": true
+        },
+        {
+          "id": "style.unarmed.kick",
+          "name": "Kick",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "selected": false,
+          "visible": true
+        },
+        {
+          "id": "style.unarmed.block",
+          "name": "Block",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "selected": false,
+          "visible": true
+        }
+      ],
+      "equipment": {
+        "attack": [
+          {
+            "amount": 0,
+            "kind": "stab"
+          },
+          {
+            "amount": 0,
+            "kind": "slash"
+          },
+          {
+            "amount": 0,
+            "kind": "crush"
+          },
+          {
+            "amount": 0,
+            "kind": "ranged"
+          },
+          {
+            "amount": 0,
+            "kind": "magic"
+          }
+        ],
+        "defence": [
+          {
+            "amount": 0,
+            "kind": "stab"
+          },
+          {
+            "amount": 0,
+            "kind": "slash"
+          },
+          {
+            "amount": 0,
+            "kind": "crush"
+          },
+          {
+            "amount": 0,
+            "kind": "ranged"
+          },
+          {
+            "amount": 0,
+            "kind": "magic"
+          }
+        ],
+        "magicDamagePercent": 0,
+        "meleeStrength": 0,
+        "prayer": 0,
+        "rangedStrength": 0,
+        "slots": [
+          "slot.head",
+          "slot.cape",
+          "slot.neck",
+          "slot.weapon",
+          "slot.body",
+          "slot.shield",
+          "slot.legs",
+          "slot.hands",
+          "slot.feet",
+          "slot.ring",
+          "slot.ammo"
+        ],
+        "weightGrams": "0"
+      },
+      "interfaces": [
+        {
+          "highlighted": false,
+          "interface": "interface.account",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.account_links",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.adventure_paths",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.appearance",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.bank",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.combat",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.cooking",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.death_retrieval",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.emotes",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.equipment",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.equipment_stats",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.experience",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.grave",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.grouping",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "UNAVAILABLE",
+              "message": "A required source binding is unavailable."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.inventory",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.items_kept_on_death",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.level_up",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.logout",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.magic",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.music",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.newcomer_map",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.poll",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.prayer",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.quest_reward",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.quests",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.read_book",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.settings",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.shop",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.skills",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.smithing",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "inventoryActions": [],
+      "prayers": [
+        {
+          "id": "prayer.thick_skin",
+          "name": "Thick Skin",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "selected": false,
+          "visible": false
+        }
+      ],
+      "publicChat": {
+        "channel": "public",
+        "maximumBytes": 80,
+        "messages": [],
+        "permission": {
+          "allowed": false,
+          "denial": {
+            "code": "REQUIREMENT_NOT_MET",
+            "message": "Source requirements are not satisfied."
+          }
+        }
+      },
+      "spells": [
+        {
+          "id": "spell.lumbridge_home_teleport",
+          "name": "Lumbridge Home Teleport",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "selected": false,
+          "visible": false
+        },
+        {
+          "id": "spell.wind_strike",
+          "name": "Wind Strike",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "selected": false,
+          "visible": false
+        }
+      ],
+      "version": 1
+    },
+    "unavailable_views": []
+  },
+  "input_count": 614,
+  "last_sequence": 505,
+  "last_snapshot": {
+    "bank_context": null,
+    "character_revision": 3852,
+    "dialogue": null,
+    "dynamic_objects": [
+      {
+        "definitionId": "transform.scenery.12348.3207.3217.p0.t0.r1",
+        "doorOpen": false,
+        "id": "transform.scenery.12348.3207.3217.p0.t0.r1",
+        "objectId": "object.scenery.12348",
+        "quarterTurns": 1,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3207,
+          "y": 3217
+        }
+      },
+      {
+        "definitionId": "transform.scenery.12349.3213.3221.p0.t0.r0",
+        "doorOpen": false,
+        "id": "transform.scenery.12349.3213.3221.p0.t0.r0",
+        "objectId": "object.scenery.12349",
+        "quarterTurns": 0,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3213,
+          "y": 3221
+        }
+      },
+      {
+        "definitionId": "transform.scenery.12350.3213.3222.p0.t0.r0",
+        "doorOpen": false,
+        "id": "transform.scenery.12350.3213.3222.p0.t0.r0",
+        "objectId": "object.scenery.12350",
+        "quarterTurns": 0,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3213,
+          "y": 3222
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1524.3243.3216.p0.t0.r3",
+        "doorOpen": false,
+        "id": "transform.scenery.1524.3243.3216.p0.t0.r3",
+        "objectId": "object.scenery.1524",
+        "quarterTurns": 3,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3243,
+          "y": 3216
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1535.3225.3240.p0.t0.r2",
+        "doorOpen": false,
+        "id": "transform.scenery.1535.3225.3240.p0.t0.r2",
+        "objectId": "object.scenery.1535",
+        "quarterTurns": 2,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3225,
+          "y": 3240
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1535.3226.3214.p0.t0.r2",
+        "doorOpen": false,
+        "id": "transform.scenery.1535.3226.3214.p0.t0.r2",
+        "objectId": "object.scenery.1535",
+        "quarterTurns": 2,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3226,
+          "y": 3214
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1535.3226.3223.p0.t0.r2",
+        "doorOpen": false,
+        "id": "transform.scenery.1535.3226.3223.p0.t0.r2",
+        "objectId": "object.scenery.1535",
+        "quarterTurns": 2,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3226,
+          "y": 3223
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1535.3234.3207.p0.t0.r0",
+        "doorOpen": false,
+        "id": "transform.scenery.1535.3234.3207.p0.t0.r0",
+        "objectId": "object.scenery.1535",
+        "quarterTurns": 0,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3234,
+          "y": 3207
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1535.3235.3198.p0.t0.r1",
+        "doorOpen": false,
+        "id": "transform.scenery.1535.3235.3198.p0.t0.r1",
+        "objectId": "object.scenery.1535",
+        "quarterTurns": 1,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3235,
+          "y": 3198
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1540.3238.3210.p0.t0.r0",
+        "doorOpen": false,
+        "id": "transform.scenery.1540.3238.3210.p0.t0.r0",
+        "objectId": "object.scenery.1540",
+        "quarterTurns": 0,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3238,
+          "y": 3210
+        }
+      },
+      {
+        "definitionId": "transform.scenery.56376.3230.3235.p0.t0.r1",
+        "doorOpen": false,
+        "id": "transform.scenery.56376.3230.3235.p0.t0.r1",
+        "objectId": "object.scenery.56376",
+        "quarterTurns": 1,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3230,
+          "y": 3235
+        }
+      }
+    ],
+    "event_history_gap": false,
+    "next_sequence": 506,
+    "player": {
+      "action": null,
+      "active_death": "death.engine.1615.0",
+      "actor_id": "actor.05a9c9bae95142fabe29d3ec35e8cf9e",
+      "appearance": {
+        "body_type": 0
+      },
+      "appearance_confirmed": true,
+      "bank": null,
+      "bank_visibility": "not_observable",
+      "combat_style": "style.sword.bronze.stab.accurate",
+      "equipment": {
+        "slot.weapon": {
+          "charges": null,
+          "instance_id": null,
+          "item": "item.sword.bronze",
+          "quantity": 1
+        }
+      },
+      "experience": "experience.brand_new",
+      "instance": null,
+      "interfaces": [
+        "interface.account",
+        "interface.account_links",
+        "interface.appearance",
+        "interface.bank",
+        "interface.combat",
+        "interface.cooking",
+        "interface.death_retrieval",
+        "interface.equipment",
+        "interface.equipment_stats",
+        "interface.experience",
+        "interface.grave",
+        "interface.inventory",
+        "interface.logout",
+        "interface.magic",
+        "interface.poll",
+        "interface.prayer",
+        "interface.quest_reward",
+        "interface.quests",
+        "interface.settings",
+        "interface.skills",
+        "interface.smithing"
+      ],
+      "inventory": [
+        {
+          "index": 0,
+          "stack": {
+            "charges": null,
+            "instance_id": null,
+            "item": "item.bread.burnt",
+            "quantity": 1
+          }
+        },
+        {
+          "index": 1,
+          "stack": {
+            "charges": null,
+            "instance_id": null,
+            "item": "item.pot",
+            "quantity": 1
+          }
+        },
+        {
+          "index": 2,
+          "stack": {
+            "charges": null,
+            "instance_id": null,
+            "item": "item.bucket",
+            "quantity": 1
+          }
+        }
+      ],
+      "movement_tick": null,
+      "presence": {
+        "acceptsInput": true,
+        "connected": true,
+        "kind": "CONNECTED",
+        "presentInWorld": true
+      },
+      "quest_points": 2,
+      "quests": {
+        "quest.cooks_assistant": "stage.cooks.completed",
+        "quest.learning_the_ropes": "stage.learning_the_ropes.completed"
+      },
+      "region": "region.osrs.12850",
+      "running": false,
+      "settings": {
+        "1": false,
+        "2": true,
+        "3": true,
+        "4": false
+      },
+      "skills": {
+        "skill.agility": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.attack": {
+          "base_level": 1,
+          "xp_tenths": 360
+        },
+        "skill.construction": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.cooking": {
+          "base_level": 4,
+          "xp_tenths": 3000
+        },
+        "skill.crafting": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.defence": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.farming": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.firemaking": {
+          "base_level": 1,
+          "xp_tenths": 400
+        },
+        "skill.fishing": {
+          "base_level": 1,
+          "xp_tenths": 100
+        },
+        "skill.fletching": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.herblore": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.hitpoints": {
+          "base_level": 10,
+          "xp_tenths": 11618
+        },
+        "skill.hunter": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.magic": {
+          "base_level": 1,
+          "xp_tenths": 75
+        },
+        "skill.mining": {
+          "base_level": 1,
+          "xp_tenths": 525
+        },
+        "skill.prayer": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.ranged": {
+          "base_level": 1,
+          "xp_tenths": 120
+        },
+        "skill.runecraft": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.sailing": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.slayer": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.smithing": {
+          "base_level": 1,
+          "xp_tenths": 187
+        },
+        "skill.strength": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.thieving": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.woodcutting": {
+          "base_level": 1,
+          "xp_tenths": 250
+        }
+      },
+      "tile": {
+        "plane": 0,
+        "x": 3211,
+        "y": 3215
+      },
+      "tutorial_stage": "stage.tutorial.mainland",
+      "vitals": {
+        "activity": "idle",
+        "hitpoints": 10,
+        "prayer_points": 1,
+        "run_energy": 10000
+      }
+    },
+    "quote": null,
+    "recovery": null,
+    "revision": 3854,
+    "shop": null,
+    "tick": 3326,
+    "ui": {
+      "activeInterface": "interface.magic",
+      "activeTab": "interface.magic",
+      "appearance": {
+        "base": {
+          "adaptation": "milestones/approvals/m1-reference-pack-v1.3.0.json",
+          "asset": "asset.source.osrs.cache2695.npc.2063",
+          "sourceNpc": 2063
+        },
+        "choices": [
+          {
+            "choices": [
+              {
+                "permission": {
+                  "allowed": false,
+                  "denial": {
+                    "code": "REQUIREMENT_NOT_MET",
+                    "message": "Source requirements are not satisfied."
+                  }
+                },
+                "value": 0
+              },
+              {
+                "permission": {
+                  "allowed": false,
+                  "denial": {
+                    "code": "REQUIREMENT_NOT_MET",
+                    "message": "Source requirements are not satisfied."
+                  }
+                },
+                "value": 1
+              }
+            ],
+            "key": "body_type"
+          }
+        ],
+        "confirmed": true
+      },
+      "combatStyle": "style.sword.bronze.stab.accurate",
+      "combatStyles": [
+        {
+          "id": "style.sword.bronze.stab.accurate",
+          "name": "Stab",
+          "permission": {
+            "allowed": true
+          },
+          "selected": true,
+          "visible": true
+        },
+        {
+          "id": "style.sword.bronze.stab.aggressive",
+          "name": "Lunge",
+          "permission": {
+            "allowed": true
+          },
+          "selected": false,
+          "visible": true
+        },
+        {
+          "id": "style.sword.bronze.slash.aggressive",
+          "name": "Slash",
+          "permission": {
+            "allowed": true
+          },
+          "selected": false,
+          "visible": true
+        },
+        {
+          "id": "style.sword.bronze.stab.defensive",
+          "name": "Block",
+          "permission": {
+            "allowed": true
+          },
+          "selected": false,
+          "visible": true
+        }
+      ],
+      "equipment": {
+        "attack": [
+          {
+            "amount": 4,
+            "kind": "stab"
+          },
+          {
+            "amount": 3,
+            "kind": "slash"
+          },
+          {
+            "amount": -2,
+            "kind": "crush"
+          },
+          {
+            "amount": 0,
+            "kind": "ranged"
+          },
+          {
+            "amount": 0,
+            "kind": "magic"
+          }
+        ],
+        "defence": [
+          {
+            "amount": 0,
+            "kind": "stab"
+          },
+          {
+            "amount": 2,
+            "kind": "slash"
+          },
+          {
+            "amount": 1,
+            "kind": "crush"
+          },
+          {
+            "amount": 0,
+            "kind": "ranged"
+          },
+          {
+            "amount": 0,
+            "kind": "magic"
+          }
+        ],
+        "magicDamagePercent": 0,
+        "meleeStrength": 5,
+        "prayer": 0,
+        "rangedStrength": 0,
+        "slots": [
+          "slot.head",
+          "slot.cape",
+          "slot.neck",
+          "slot.weapon",
+          "slot.body",
+          "slot.shield",
+          "slot.legs",
+          "slot.hands",
+          "slot.feet",
+          "slot.ring",
+          "slot.ammo"
+        ],
+        "weightGrams": "3617"
+      },
+      "interfaces": [
+        {
+          "highlighted": false,
+          "interface": "interface.account",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.account_links",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.adventure_paths",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.appearance",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.bank",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.combat",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.cooking",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.death_retrieval",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.emotes",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.equipment",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.equipment_stats",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.experience",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.grave",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.grouping",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "UNAVAILABLE",
+              "message": "A required source binding is unavailable."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.inventory",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.items_kept_on_death",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.level_up",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.logout",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.magic",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.music",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.newcomer_map",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.poll",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.prayer",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.quest_reward",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.quests",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.read_book",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.settings",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.shop",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.skills",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.smithing",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "inventoryActions": [
+        {
+          "actions": [],
+          "item": "item.bread.burnt",
+          "slot": 0
+        },
+        {
+          "actions": [],
+          "item": "item.pot",
+          "slot": 1
+        },
+        {
+          "actions": [],
+          "item": "item.bucket",
+          "slot": 2
+        }
+      ],
+      "prayers": [
+        {
+          "id": "prayer.thick_skin",
+          "name": "Thick Skin",
+          "permission": {
+            "allowed": true
+          },
+          "selected": false,
+          "visible": true
+        }
+      ],
+      "publicChat": {
+        "channel": "public",
+        "maximumBytes": 80,
+        "messages": [],
+        "permission": {
+          "allowed": true
+        }
+      },
+      "spells": [
+        {
+          "id": "spell.lumbridge_home_teleport",
+          "name": "Lumbridge Home Teleport",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "selected": false,
+          "visible": true
+        },
+        {
+          "id": "spell.wind_strike",
+          "name": "Wind Strike",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "INSUFFICIENT_ITEMS",
+              "message": "Insufficient items or currency."
+            }
+          },
+          "selected": false,
+          "visible": true
+        }
+      ],
+      "version": 1
+    },
+    "unavailable_views": []
+  },
+  "limits": {
+    "gameplay_sql": false,
+    "max_inputs": 128,
+    "max_seconds": 600,
+    "poll_interval_ms": 600,
+    "rng_override": false,
+    "stalled_clock_polls": 20
+  },
+  "mainland_continuation": false,
+  "mainland_continuation_boundary": {
+    "authority": "db74895cd5d9f109d292eea20f07f5c2a57e3343",
+    "decoded_original_control": {
+      "decoded_command": "poll_world",
+      "failed_control_exception_used": false,
+      "observed_error": null,
+      "observed_http_status": 200,
+      "operation_id": "e48b0dd0-c197-49c6-be61-61d2221a38f5",
+      "request_replayed": false
+    },
+    "historical_source_checks": 321,
+    "new_account_or_death": false,
+    "separate_observation_checks": 3
+  },
+  "milestone_accepted": false,
+  "observation_checks_passed": 3,
+  "observation_only": false,
+  "observation_snapshot_origin": "actual_current_invocation",
+  "performance_verified": false,
+  "presentation_verified": false,
+  "prior_failure": {
+    "action": "cooks.reward_range_actual_recipe",
+    "reason": "No bounded source route from Tile { x: 3208, y: 3216, plane: 0 } to {Tile { x: 3206, y: 3215, plane: 0 }}; missing travel/collision is not a teleport",
+    "sequence": 499,
+    "stage": "stage.tutorial.mainland",
+    "tick": 3280,
+    "unknown_or_unchecked_is_not_success": true
+  },
+  "private_checkpoint_resume": {
+    "historical_prefix_copied_byte_for_byte": true,
+    "historical_trace_sha256": "77626dce598e8293d68ba27fe8dcb3b4ec49169b91e3c94ef583faa9b60e0d4f",
+    "resumed_at_unix_ms": 1789645517134,
+    "same_original_account_required": true,
+    "state_reconstructed_or_seeded": false
+  },
+  "private_client_checkpoint": {
+    "bytes": 24561,
+    "database_snapshot_still_required": true,
+    "private_payload_published": false,
+    "resume_authorized": false,
+    "sha256": "1fa74c1deb1fad522b9104de984103d00e3127dc2c6ea8941708e4ee532b4091",
+    "status": "captured"
+  },
+  "quest_completed_checkpoint": {
+    "bank_context": null,
+    "character_revision": 3393,
+    "dialogue": null,
+    "dynamic_objects": [
+      {
+        "definitionId": "transform.scenery.12348.3207.3217.p0.t0.r1",
+        "doorOpen": false,
+        "id": "transform.scenery.12348.3207.3217.p0.t0.r1",
+        "objectId": "object.scenery.12348",
+        "quarterTurns": 1,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3207,
+          "y": 3217
+        }
+      },
+      {
+        "definitionId": "transform.scenery.12349.3213.3221.p0.t0.r0",
+        "doorOpen": false,
+        "id": "transform.scenery.12349.3213.3221.p0.t0.r0",
+        "objectId": "object.scenery.12349",
+        "quarterTurns": 0,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3213,
+          "y": 3221
+        }
+      },
+      {
+        "definitionId": "transform.scenery.12350.3213.3222.p0.t0.r0",
+        "doorOpen": false,
+        "id": "transform.scenery.12350.3213.3222.p0.t0.r0",
+        "objectId": "object.scenery.12350",
+        "quarterTurns": 0,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3213,
+          "y": 3222
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1535.3225.3240.p0.t0.r2",
+        "doorOpen": false,
+        "id": "transform.scenery.1535.3225.3240.p0.t0.r2",
+        "objectId": "object.scenery.1535",
+        "quarterTurns": 2,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3225,
+          "y": 3240
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1535.3226.3214.p0.t0.r2",
+        "doorOpen": false,
+        "id": "transform.scenery.1535.3226.3214.p0.t0.r2",
+        "objectId": "object.scenery.1535",
+        "quarterTurns": 2,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3226,
+          "y": 3214
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1535.3226.3223.p0.t0.r2",
+        "doorOpen": false,
+        "id": "transform.scenery.1535.3226.3223.p0.t0.r2",
+        "objectId": "object.scenery.1535",
+        "quarterTurns": 2,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3226,
+          "y": 3223
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1535.3234.3207.p0.t0.r0",
+        "doorOpen": false,
+        "id": "transform.scenery.1535.3234.3207.p0.t0.r0",
+        "objectId": "object.scenery.1535",
+        "quarterTurns": 0,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3234,
+          "y": 3207
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1535.3235.3198.p0.t0.r1",
+        "doorOpen": false,
+        "id": "transform.scenery.1535.3235.3198.p0.t0.r1",
+        "objectId": "object.scenery.1535",
+        "quarterTurns": 1,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3235,
+          "y": 3198
+        }
+      },
+      {
+        "definitionId": "transform.scenery.1540.3238.3210.p0.t0.r0",
+        "doorOpen": false,
+        "id": "transform.scenery.1540.3238.3210.p0.t0.r0",
+        "objectId": "object.scenery.1540",
+        "quarterTurns": 0,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3238,
+          "y": 3210
+        }
+      },
+      {
+        "definitionId": "transform.scenery.56376.3230.3235.p0.t0.r1",
+        "doorOpen": false,
+        "id": "transform.scenery.56376.3230.3235.p0.t0.r1",
+        "objectId": "object.scenery.56376",
+        "quarterTurns": 1,
+        "state": "object_state.closed",
+        "tile": {
+          "plane": 0,
+          "x": 3230,
+          "y": 3235
+        }
+      }
+    ],
+    "event_history_gap": true,
+    "next_sequence": 462,
+    "player": {
+      "action": null,
+      "active_death": "death.engine.1615.0",
+      "actor_id": "actor.05a9c9bae95142fabe29d3ec35e8cf9e",
+      "appearance": {
+        "body_type": 0
+      },
+      "appearance_confirmed": true,
+      "bank": null,
+      "bank_visibility": "not_observable",
+      "combat_style": "style.sword.bronze.stab.accurate",
+      "equipment": {
+        "slot.weapon": {
+          "charges": null,
+          "instance_id": null,
+          "item": "item.sword.bronze",
+          "quantity": 1
+        }
+      },
+      "experience": "experience.brand_new",
+      "instance": null,
+      "interfaces": [
+        "interface.account",
+        "interface.account_links",
+        "interface.appearance",
+        "interface.bank",
+        "interface.combat",
+        "interface.cooking",
+        "interface.death_retrieval",
+        "interface.equipment",
+        "interface.equipment_stats",
+        "interface.experience",
+        "interface.grave",
+        "interface.inventory",
+        "interface.logout",
+        "interface.magic",
+        "interface.poll",
+        "interface.prayer",
+        "interface.quest_reward",
+        "interface.quests",
+        "interface.settings",
+        "interface.skills",
+        "interface.smithing"
+      ],
+      "inventory": [],
+      "movement_tick": null,
+      "presence": {
+        "acceptsInput": true,
+        "connected": true,
+        "kind": "CONNECTED",
+        "presentInWorld": true
+      },
+      "quest_points": 2,
+      "quests": {
+        "quest.cooks_assistant": "stage.cooks.completed",
+        "quest.learning_the_ropes": "stage.learning_the_ropes.completed"
+      },
+      "region": "region.osrs.12850",
+      "running": false,
+      "settings": {
+        "1": false,
+        "2": true,
+        "3": true,
+        "4": false
+      },
+      "skills": {
+        "skill.agility": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.attack": {
+          "base_level": 1,
+          "xp_tenths": 360
+        },
+        "skill.construction": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.cooking": {
+          "base_level": 4,
+          "xp_tenths": 3000
+        },
+        "skill.crafting": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.defence": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.farming": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.firemaking": {
+          "base_level": 1,
+          "xp_tenths": 400
+        },
+        "skill.fishing": {
+          "base_level": 1,
+          "xp_tenths": 100
+        },
+        "skill.fletching": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.herblore": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.hitpoints": {
+          "base_level": 10,
+          "xp_tenths": 11618
+        },
+        "skill.hunter": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.magic": {
+          "base_level": 1,
+          "xp_tenths": 75
+        },
+        "skill.mining": {
+          "base_level": 1,
+          "xp_tenths": 525
+        },
+        "skill.prayer": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.ranged": {
+          "base_level": 1,
+          "xp_tenths": 120
+        },
+        "skill.runecraft": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.sailing": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.slayer": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.smithing": {
+          "base_level": 1,
+          "xp_tenths": 187
+        },
+        "skill.strength": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.thieving": {
+          "base_level": 1,
+          "xp_tenths": 0
+        },
+        "skill.woodcutting": {
+          "base_level": 1,
+          "xp_tenths": 250
+        }
+      },
+      "tile": {
+        "plane": 0,
+        "x": 3207,
+        "y": 3213
+      },
+      "tutorial_stage": "stage.tutorial.mainland",
+      "vitals": {
+        "activity": "idle",
+        "hitpoints": 10,
+        "prayer_points": 1,
+        "run_energy": 10000
+      }
+    },
+    "quote": null,
+    "recovery": null,
+    "revision": 3395,
+    "shop": null,
+    "tick": 2918,
+    "ui": {
+      "activeInterface": "interface.quest_reward",
+      "activeTab": "interface.magic",
+      "appearance": {
+        "base": {
+          "adaptation": "milestones/approvals/m1-reference-pack-v1.3.0.json",
+          "asset": "asset.source.osrs.cache2695.npc.2063",
+          "sourceNpc": 2063
+        },
+        "choices": [
+          {
+            "choices": [
+              {
+                "permission": {
+                  "allowed": false,
+                  "denial": {
+                    "code": "REQUIREMENT_NOT_MET",
+                    "message": "Source requirements are not satisfied."
+                  }
+                },
+                "value": 0
+              },
+              {
+                "permission": {
+                  "allowed": false,
+                  "denial": {
+                    "code": "REQUIREMENT_NOT_MET",
+                    "message": "Source requirements are not satisfied."
+                  }
+                },
+                "value": 1
+              }
+            ],
+            "key": "body_type"
+          }
+        ],
+        "confirmed": true
+      },
+      "combatStyle": "style.sword.bronze.stab.accurate",
+      "combatStyles": [
+        {
+          "id": "style.sword.bronze.stab.accurate",
+          "name": "Stab",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "selected": true,
+          "visible": true
+        },
+        {
+          "id": "style.sword.bronze.stab.aggressive",
+          "name": "Lunge",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "selected": false,
+          "visible": true
+        },
+        {
+          "id": "style.sword.bronze.slash.aggressive",
+          "name": "Slash",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "selected": false,
+          "visible": true
+        },
+        {
+          "id": "style.sword.bronze.stab.defensive",
+          "name": "Block",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "selected": false,
+          "visible": true
+        }
+      ],
+      "equipment": {
+        "attack": [
+          {
+            "amount": 4,
+            "kind": "stab"
+          },
+          {
+            "amount": 3,
+            "kind": "slash"
+          },
+          {
+            "amount": -2,
+            "kind": "crush"
+          },
+          {
+            "amount": 0,
+            "kind": "ranged"
+          },
+          {
+            "amount": 0,
+            "kind": "magic"
+          }
+        ],
+        "defence": [
+          {
+            "amount": 0,
+            "kind": "stab"
+          },
+          {
+            "amount": 2,
+            "kind": "slash"
+          },
+          {
+            "amount": 1,
+            "kind": "crush"
+          },
+          {
+            "amount": 0,
+            "kind": "ranged"
+          },
+          {
+            "amount": 0,
+            "kind": "magic"
+          }
+        ],
+        "magicDamagePercent": 0,
+        "meleeStrength": 5,
+        "prayer": 0,
+        "rangedStrength": 0,
+        "slots": [
+          "slot.head",
+          "slot.cape",
+          "slot.neck",
+          "slot.weapon",
+          "slot.body",
+          "slot.shield",
+          "slot.legs",
+          "slot.hands",
+          "slot.feet",
+          "slot.ring",
+          "slot.ammo"
+        ],
+        "weightGrams": "1814"
+      },
+      "interfaces": [
+        {
+          "highlighted": false,
+          "interface": "interface.account",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.account_links",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.adventure_paths",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.appearance",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.bank",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.combat",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.cooking",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.death_retrieval",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.emotes",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.equipment",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.equipment_stats",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.experience",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.grave",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.grouping",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "UNAVAILABLE",
+              "message": "A required source binding is unavailable."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.inventory",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.items_kept_on_death",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.level_up",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.logout",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.magic",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.music",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "locked"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.newcomer_map",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.poll",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.prayer",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.quest_reward",
+          "permission": {
+            "allowed": true
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.quests",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.read_book",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.settings",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.shop",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.skills",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "BUSY",
+              "message": "The source action cannot currently be performed."
+            }
+          },
+          "visibility": "enabled"
+        },
+        {
+          "highlighted": false,
+          "interface": "interface.smithing",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "inventoryActions": [],
+      "prayers": [
+        {
+          "id": "prayer.thick_skin",
+          "name": "Thick Skin",
+          "permission": {
+            "allowed": true
+          },
+          "selected": false,
+          "visible": true
+        }
+      ],
+      "publicChat": {
+        "channel": "public",
+        "maximumBytes": 80,
+        "messages": [],
+        "permission": {
+          "allowed": true
+        }
+      },
+      "reward": {
+        "continuation": {
+          "dismiss": {
+            "id": "ui.6"
+          }
+        },
+        "id": "ui.6",
+        "interface": "interface.quest_reward",
+        "items": [],
+        "kind": "quest",
+        "lines": [
+          "1 Quest Point",
+          "300 Cooking XP",
+          "Access to the Cook's range"
+        ],
+        "quest": "quest.cooks_assistant",
+        "questPoints": 1,
+        "title": "Cook's Assistant",
+        "xp": [
+          {
+            "amountTenths": "3000",
+            "skill": "skill.cooking"
+          }
+        ]
+      },
+      "spells": [
+        {
+          "id": "spell.lumbridge_home_teleport",
+          "name": "Lumbridge Home Teleport",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "REQUIREMENT_NOT_MET",
+              "message": "Source requirements are not satisfied."
+            }
+          },
+          "selected": false,
+          "visible": true
+        },
+        {
+          "id": "spell.wind_strike",
+          "name": "Wind Strike",
+          "permission": {
+            "allowed": false,
+            "denial": {
+              "code": "INSUFFICIENT_ITEMS",
+              "message": "Insufficient items or currency."
+            }
+          },
+          "selected": false,
+          "visible": true
+        }
+      ],
+      "version": 1
+    },
+    "unavailable_views": []
+  },
+  "recorded_at_unix_ms": 1789503616832,
+  "recovery_checks_passed": [
+    {
+      "check": "durable_duplicate_operation",
+      "checkpoint": "onboarding.before_reconnect",
+      "next_sequence": 56,
+      "tick": 195
+    },
+    {
+      "check": "reused_sequence_rejected",
+      "checkpoint": "reused_sequence_rejected",
+      "next_sequence": 56,
+      "tick": 197
+    },
+    {
+      "check": "future_sequence_rejected",
+      "checkpoint": "future_sequence_rejected",
+      "next_sequence": 56,
+      "tick": 199
+    },
+    {
+      "check": "transport_reconnect",
+      "checkpoint": "onboarding",
+      "next_sequence": 56,
+      "tick": 199
+    },
+    {
+      "check": "durable_duplicate_operation",
+      "checkpoint": "onboarding.after_transport_reconnect",
+      "next_sequence": 56,
+      "tick": 201
+    },
+    {
+      "check": "logout_login",
+      "checkpoint": "onboarding",
+      "next_sequence": 56,
+      "tick": 202
+    },
+    {
+      "check": "durable_duplicate_operation",
+      "checkpoint": "onboarding.after_logout_login",
+      "next_sequence": 56,
+      "tick": 204
+    },
+    {
+      "check": "owned_server_restart",
+      "checkpoint": "onboarding",
+      "next_sequence": 56,
+      "tick": 205
+    },
+    {
+      "check": "durable_duplicate_operation",
+      "checkpoint": "onboarding.after_owned_restart",
+      "next_sequence": 56,
+      "tick": 207
+    },
+    {
+      "check": "durable_duplicate_operation",
+      "checkpoint": "restored_original_grant_deduplicated",
+      "next_sequence": 202,
+      "tick": 874
+    },
+    {
+      "check": "durable_duplicate_operation",
+      "checkpoint": "restored_original_grant_deduplicated",
+      "next_sequence": 294,
+      "tick": 1376
+    },
+    {
+      "check": "durable_duplicate_operation",
+      "checkpoint": "cooks_reward_before_recovery",
+      "next_sequence": 462,
+      "tick": 2920
+    },
+    {
+      "check": "durable_duplicate_operation",
+      "checkpoint": "saved_water.before_reconnect",
+      "next_sequence": 506,
+      "tick": 3319
+    },
+    {
+      "check": "transport_reconnect",
+      "checkpoint": "after_quest",
+      "next_sequence": 506,
+      "tick": 3319
+    },
+    {
+      "check": "durable_duplicate_operation",
+      "checkpoint": "saved_water.after_reconnect",
+      "next_sequence": 506,
+      "tick": 3321
+    },
+    {
+      "check": "logout_login",
+      "checkpoint": "after_quest",
+      "next_sequence": 506,
+      "tick": 3322
+    },
+    {
+      "check": "durable_duplicate_operation",
+      "checkpoint": "saved_water.after_logout_login",
+      "next_sequence": 506,
+      "tick": 3324
+    },
+    {
+      "check": "owned_server_restart",
+      "checkpoint": "after_quest",
+      "next_sequence": 506,
+      "tick": 3324
+    },
+    {
+      "check": "durable_duplicate_operation",
+      "checkpoint": "saved_water.after_restart",
+      "next_sequence": 506,
+      "tick": 3326
+    }
+  ],
+  "runelite_verified": false,
+  "saved_water_boundary": {
+    "completed_segments_replayed": false,
+    "from_artifact": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "historical_source_checks": 377,
+    "historical_tutorial_edges": 70,
+    "latest_acknowledged_sequence": 498,
+    "next_sequence": 499,
+    "old_reward_replayed": false,
+    "original_control": {
+      "decoded_command": "join_world",
+      "failed_control_exception_used": false,
+      "observed_error": null,
+      "observed_http_status": 200,
+      "operation_id": "3b97bf17-60c6-4734-abc5-f8f4f1be4b6c",
+      "request_replayed": false
+    },
+    "remaining": [
+      "saved_bucket_water",
+      "existing_flour_dough_range",
+      "after_quest_recovery"
+    ],
+    "separate_observation_checks": 3,
+    "to_artifact": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650"
+  },
+  "saved_water_continuation": true,
+  "saved_water_conversion": {
+    "acknowledged_operation_id": "5469d258-df7e-4fff-842c-19a739e5e4e0",
+    "converted_buckets": 1,
+    "extra_items_xp_or_quests": false,
+    "sequence": 500,
+    "source_contact_tile": {
+      "plane": 0,
+      "x": 3206,
+      "y": 3216
+    },
+    "source_recipe": "recipe.water.bucket",
+    "status": "passed"
+  },
+  "saved_water_history": {
+    "checks_passed": 377,
+    "completed_segments": {
+      "after_quest_recovery": {
+        "status": "unchecked"
+      },
+      "cooks_legitimate_acquisition_partial_delivery": {
+        "at_unix_ms": 1789578062222,
+        "status": "passed"
+      },
+      "cooks_reward_and_range": {
+        "status": "unchecked"
+      },
+      "full_tutorial_learning_the_ropes": {
+        "at_unix_ms": 1789506604218,
+        "status": "passed"
+      },
+      "goblin_combat": {
+        "at_unix_ms": 1789507662171,
+        "status": "passed"
+      },
+      "inventory_equipment_bank_shop": {
+        "at_unix_ms": 1789506752004,
+        "status": "passed"
+      },
+      "lumbridge_copper": {
+        "at_unix_ms": 1789506651380,
+        "status": "passed"
+      },
+      "onboarding_recovery": {
+        "at_unix_ms": 1789503751666,
+        "status": "passed"
+      },
+      "registration_login": {
+        "at_unix_ms": 1789503618375,
+        "status": "passed"
+      },
+      "source_death_office_grave_recovery": {
+        "at_unix_ms": 1789567700267,
+        "status": "passed"
+      },
+      "source_initial_character": {
+        "at_unix_ms": 1789503618922,
+        "status": "passed"
+      }
+    },
+    "historical_work_performed_on_target": false,
+    "input_count": 603,
+    "observation_checks_passed": 3,
+    "original_capsule_sha256": "3238651fb65193903ef92f551993c99b77fc9bb6d919ff743aaf27c1da100f45",
+    "original_report_sha256": "76955e32d877b9bf6d0e513abd1c1c95af4bee3406a1b1877ec6321db748e910",
+    "previous_resume_lineage": {
+      "historical_prefix_copied_byte_for_byte": true,
+      "historical_trace_sha256": "ba2bb4c9d2460a644fb637e56d6cb1fbb5de4a0a274122e461929329279e7a78",
+      "resumed_at_unix_ms": 1789577460146,
+      "same_original_account_required": true,
+      "state_reconstructed_or_seeded": false
+    },
+    "source_identity": {
+      "baseline": "OSRS live build 240 / cache 2695; post-July-2026 normal F2P behavior contracts",
+      "content_artifact": {
+        "artifact_version": 4,
+        "bytes": 520392,
+        "path": "content/m1/game-content.csc.gz",
+        "schema_version": 4,
+        "sha256": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f",
+        "uncompressed_bytes": 13116201,
+        "uncompressed_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f"
+      },
+      "content_revision": "m1.source-backed.v4.3ff4292b311453cc",
+      "content_schema_version": 4,
+      "file_sha256": {
+        "content/m1/game-content.csc.gz": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f",
+        "content/m1/game-content.json.gz": "294ede7e3d8e08633051338385f189c0d420000e74cd2344ce54b13bbfa28706",
+        "content/m1/manifest.json": "327ac384f8d4b83225bb95682946fea742f0e444a3906e0a111bb66a4fbc8cc1",
+        "crates/protocol/proto/account.proto": "c777fa303f0aa0c287649de65e25cea2a40130f06d65c095b7fb79074cf21bc8",
+        "crates/protocol/proto/game.proto": "67a227c8d4cdf95428070d910fcc291734317f0fd5793393afae28265ffa9c55",
+        "research/journey-rules/activities.json": "a0eb67f8615642161f7ba05ecfda99bd1ba62102f5fc23f335a340df4645f6f7",
+        "research/journey-rules/cooks-assistant.json": "ccb21048828e1d1a774f09c809d01aaf6900425bc52ea2e1bc471142ff4295cf",
+        "research/journey-rules/expected-scenarios.json": "c9dc703ab7ad139d6df90791d13bcb3cbfcdd518973517e3bdabcbc93ba29a68",
+        "research/journey-rules/initial-state.json": "3f6cefa5f68f226878df5286d1689c1ebe5a2fa28b4d6c5d0fd34a7741447ad3",
+        "research/journey-rules/tutorial.json": "774789d1559f438f3db6036d831d4b341a093d77949d416ff9bc8bfe48d0087b",
+        "research/m1-bindings/application-result.json": "522a87c393069c1f8b6d530cf734164685adb54bd8b67b8139506b6266b6f49f",
+        "research/m1-bindings/graph-bindings.json": "602e1bddb3ab14a1d13c69e83a4aad56584cc4c037d8aa0640fc56ed758db022",
+        "research/m1-bindings/location-bindings.json": "eaa32ef2b1f72bd78c2121a46877e48a9f17052d18b0b5f8c55d836bc5c5d37b",
+        "research/m1-bindings/runtime3-policy.json": "bc8cd2fbed9ce49ea1d1aeac40034894a01439266acf85adad4f6c111f426ec7",
+        "research/m1-bindings/runtime3-selectors.json": "cac46c39ec6c04e40000dc27b10c27d12ef09d15594ea915109380953dcb5e93",
+        "research/m1-bindings/runtime3-sources.json": "2076c006b7eac60b5a17f212430fc5cb18f1b8fc44bf2ad100bae3ad92e5b395",
+        "research/m1-bindings/selection.json": "eba70c376dfb2facd5dda8c08522089d384cff93260db235c5b45e79dcad45ba",
+        "research/m1-bindings/travel-bindings.json": "47e89010516afd1bca4cef727cb2eebb0cdc5d542029fc66cb655dde38529f90",
+        "research/runtime-bindings/application-result.json": "db43912383e9b9e8fad62eb3f7a06cdaa6491a6d672001a6c8c1cbbc18ec11a6",
+        "tests/scenarios/m1_fresh_account.json": "34164cf09a1b94c8af0d90f374d4e4bfb9db330c18bd90b1db8cac7903437784"
+      },
+      "generated_descriptor_sha256": "d66a326fa3c02c493efbd636bcaaa31c7fe94d0246dba377123a32efefc44614",
+      "protocol_version": 1,
+      "source_classification_limits": "Retains source-contract assumptions/inferences; this run cannot promote them to owner approval.",
+      "source_oracle_policy": "Expected values come from independently authored source contracts/scenario literals, never engine execution or seeded state."
+    },
+    "trace_records": 4547
+  },
+  "saved_water_lifecycle_only_entry": true,
+  "saved_water_new_input_count": 11,
+  "saved_water_postquest_recovery": {
+    "new_water_receipt_only": true,
+    "replayed_operation_id": "5469d258-df7e-4fff-842c-19a739e5e4e0",
+    "replayed_sequence": 500,
+    "replays": 4,
+    "same_target_logout_login_reconnect_restart": true,
+    "status": "passed"
+  },
+  "saved_water_range": {
+    "burns": 1,
+    "cooking_xp_tenths": 3000,
+    "ingredient_reacquisition": false,
+    "old_reward_replayed": false,
+    "rng_controlled": false,
+    "status": "passed",
+    "successes": 0
+  },
+  "saved_water_remainder_passed": true,
+  "scenario": "m1_fresh_account",
+  "schema_version": 1,
+  "segments": {
+    "after_quest_recovery": {
+      "at_unix_ms": 1789645544747,
+      "status": "passed"
+    },
+    "cooks_legitimate_acquisition_partial_delivery": {
+      "at_unix_ms": 1789578062222,
+      "status": "passed"
+    },
+    "cooks_reward_and_range": {
+      "at_unix_ms": 1789645533806,
+      "status": "passed"
+    },
+    "full_tutorial_learning_the_ropes": {
+      "at_unix_ms": 1789506604218,
+      "status": "passed"
+    },
+    "goblin_combat": {
+      "at_unix_ms": 1789507662171,
+      "status": "passed"
+    },
+    "inventory_equipment_bank_shop": {
+      "at_unix_ms": 1789506752004,
+      "status": "passed"
+    },
+    "lumbridge_copper": {
+      "at_unix_ms": 1789506651380,
+      "status": "passed"
+    },
+    "onboarding_recovery": {
+      "at_unix_ms": 1789503751666,
+      "status": "passed"
+    },
+    "registration_login": {
+      "at_unix_ms": 1789503618375,
+      "status": "passed"
+    },
+    "source_death_office_grave_recovery": {
+      "at_unix_ms": 1789567700267,
+      "status": "passed"
+    },
+    "source_initial_character": {
+      "at_unix_ms": 1789503618922,
+      "status": "passed"
+    }
+  },
+  "server_build_revision": "0b6105d66a615fcaf47886cc97f094d6063320e8",
+  "server_capabilities": [
+    "accounts.v1",
+    "sessions.v1",
+    "game.v1",
+    "game.observer.v1",
+    "game.ui.v1",
+    "game.ui.amounts.v1",
+    "game.ui.recovery.v1"
+  ],
+  "source_transition": {
+    "execution_admission_sha256": "dd631f975c73e5e1bbcfcb850e2503eaf767b5561636d75ac0acaf703ec53b26",
+    "from_artifact": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "multi_artifact_journey": true,
+    "next_sequence": 499,
+    "original_checkpoint_rewritten": false,
+    "to_artifact": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650"
+  },
+  "status": "continued",
+  "synthetic_account_id": "f43da325-ffcc-4753-a823-7a345dfce33b",
+  "trace_path": ".local/journey-runs/4282ed4b806b4be4/scenario.trace.jsonl",
+  "trace_records": 4633,
+  "tutorial_edges_passed": [
+    {
+      "from": "stage.tutorial.appearance",
+      "source_transition": "transition.tutorial.appearance",
+      "tick": 4,
+      "to": "stage.tutorial.experience"
+    },
+    {
+      "from": "stage.tutorial.experience",
+      "source_transition": "transition.tutorial.experience",
+      "tick": 6,
+      "to": "stage.tutorial.guide_greeting"
+    },
+    {
+      "from": "stage.tutorial.guide_greeting",
+      "source_transition": "transition.tutorial.guide_intro",
+      "tick": 56,
+      "to": "stage.tutorial.settings_open"
+    },
+    {
+      "from": "stage.tutorial.settings_open",
+      "source_transition": "transition.tutorial.settings",
+      "tick": 57,
+      "to": "stage.tutorial.guide_settings"
+    },
+    {
+      "from": "stage.tutorial.guide_settings",
+      "source_transition": "transition.tutorial.guide_exit_permission",
+      "tick": 137,
+      "to": "stage.tutorial.starting_exit"
+    },
+    {
+      "from": "stage.tutorial.starting_exit",
+      "source_transition": "transition.tutorial.starting_door",
+      "tick": 146,
+      "to": "stage.tutorial.survival_greeting"
+    },
+    {
+      "from": "stage.tutorial.survival_greeting",
+      "source_transition": "transition.tutorial.net",
+      "tick": 170,
+      "to": "stage.tutorial.inventory_open"
+    },
+    {
+      "from": "stage.tutorial.inventory_open",
+      "source_transition": "transition.tutorial.inventory",
+      "tick": 172,
+      "to": "stage.tutorial.catch_shrimp"
+    },
+    {
+      "from": "stage.tutorial.catch_shrimp",
+      "source_transition": "transition.tutorial.shrimp",
+      "tick": 193,
+      "to": "stage.tutorial.skills_open"
+    },
+    {
+      "from": "stage.tutorial.skills_open",
+      "source_transition": "transition.tutorial.skills",
+      "tick": 208,
+      "to": "stage.tutorial.survival_tools"
+    },
+    {
+      "from": "stage.tutorial.survival_tools",
+      "source_transition": "transition.tutorial.survival_tools",
+      "tick": 243,
+      "to": "stage.tutorial.cut_logs"
+    },
+    {
+      "from": "stage.tutorial.cut_logs",
+      "source_transition": "transition.tutorial.logs",
+      "tick": 253,
+      "to": "stage.tutorial.light_fire"
+    },
+    {
+      "from": "stage.tutorial.light_fire",
+      "source_transition": "transition.tutorial.fire",
+      "tick": 279,
+      "to": "stage.tutorial.cook_shrimp"
+    },
+    {
+      "from": "stage.tutorial.cook_shrimp",
+      "source_transition": "transition.tutorial.shrimp_cooked",
+      "tick": 282,
+      "to": "stage.tutorial.survival_exit"
+    },
+    {
+      "from": "stage.tutorial.survival_exit",
+      "source_transition": "transition.tutorial.survival_gate",
+      "tick": 303,
+      "to": "stage.tutorial.chef_entry"
+    },
+    {
+      "from": "stage.tutorial.chef_entry",
+      "source_transition": "transition.tutorial.chef_door",
+      "tick": 327,
+      "to": "stage.tutorial.chef_greeting"
+    },
+    {
+      "from": "stage.tutorial.chef_greeting",
+      "source_transition": "transition.tutorial.chef_ingredients",
+      "tick": 333,
+      "to": "stage.tutorial.make_dough"
+    },
+    {
+      "from": "stage.tutorial.make_dough",
+      "source_transition": "transition.tutorial.dough",
+      "tick": 336,
+      "to": "stage.tutorial.bake_bread"
+    },
+    {
+      "from": "stage.tutorial.bake_bread",
+      "source_transition": "transition.tutorial.bread",
+      "tick": 344,
+      "to": "stage.tutorial.chef_exit"
+    },
+    {
+      "from": "stage.tutorial.chef_exit",
+      "source_transition": "transition.tutorial.chef_exit",
+      "tick": 358,
+      "to": "stage.tutorial.run_toggle"
+    },
+    {
+      "from": "stage.tutorial.run_toggle",
+      "source_transition": "transition.tutorial.run",
+      "tick": 360,
+      "to": "stage.tutorial.quest_entry"
+    },
+    {
+      "from": "stage.tutorial.quest_entry",
+      "source_transition": "transition.tutorial.quest_door",
+      "tick": 394,
+      "to": "stage.tutorial.quest_greeting"
+    },
+    {
+      "from": "stage.tutorial.quest_greeting",
+      "source_transition": "transition.tutorial.quest_intro",
+      "tick": 403,
+      "to": "stage.tutorial.journal_open"
+    },
+    {
+      "from": "stage.tutorial.journal_open",
+      "source_transition": "transition.tutorial.journal",
+      "tick": 404,
+      "to": "stage.tutorial.quest_explanation"
+    },
+    {
+      "from": "stage.tutorial.quest_explanation",
+      "source_transition": "transition.tutorial.quest_explanation",
+      "tick": 406,
+      "to": "stage.tutorial.quest_ladder"
+    },
+    {
+      "from": "stage.tutorial.quest_ladder",
+      "source_transition": "transition.tutorial.quest_ladder",
+      "tick": 412,
+      "to": "stage.tutorial.mining_greeting"
+    },
+    {
+      "from": "stage.tutorial.mining_greeting",
+      "source_transition": "transition.tutorial.pickaxe",
+      "tick": 430,
+      "to": "stage.tutorial.mine_first"
+    },
+    {
+      "from": "stage.tutorial.mine_first",
+      "source_transition": "transition.tutorial.first_ore",
+      "tick": 446,
+      "to": "stage.tutorial.mine_second"
+    },
+    {
+      "from": "stage.tutorial.mine_second",
+      "source_transition": "transition.tutorial.both_ores",
+      "tick": 469,
+      "to": "stage.tutorial.smelt_bronze"
+    },
+    {
+      "from": "stage.tutorial.smelt_bronze",
+      "source_transition": "transition.tutorial.bronze_bar",
+      "tick": 482,
+      "to": "stage.tutorial.mining_hammer"
+    },
+    {
+      "from": "stage.tutorial.mining_hammer",
+      "source_transition": "transition.tutorial.hammer",
+      "tick": 488,
+      "to": "stage.tutorial.anvil_open"
+    },
+    {
+      "from": "stage.tutorial.anvil_open",
+      "source_transition": "transition.tutorial.smithing_menu",
+      "tick": 493,
+      "to": "stage.tutorial.smith_dagger"
+    },
+    {
+      "from": "stage.tutorial.smith_dagger",
+      "source_transition": "transition.tutorial.dagger",
+      "tick": 501,
+      "to": "stage.tutorial.mining_exit"
+    },
+    {
+      "from": "stage.tutorial.mining_exit",
+      "source_transition": "transition.tutorial.mining_gate",
+      "tick": 519,
+      "to": "stage.tutorial.combat_greeting"
+    },
+    {
+      "from": "stage.tutorial.combat_greeting",
+      "source_transition": "transition.tutorial.combat_intro",
+      "tick": 529,
+      "to": "stage.tutorial.equipment_open"
+    },
+    {
+      "from": "stage.tutorial.equipment_open",
+      "source_transition": "transition.tutorial.equipment",
+      "tick": 530,
+      "to": "stage.tutorial.equipment_stats_open"
+    },
+    {
+      "from": "stage.tutorial.equipment_stats_open",
+      "source_transition": "transition.tutorial.equipment_stats",
+      "tick": 531,
+      "to": "stage.tutorial.equip_dagger"
+    },
+    {
+      "from": "stage.tutorial.equip_dagger",
+      "source_transition": "transition.tutorial.dagger_equipped",
+      "tick": 532,
+      "to": "stage.tutorial.melee_supply"
+    },
+    {
+      "from": "stage.tutorial.melee_supply",
+      "source_transition": "transition.tutorial.melee_gear",
+      "tick": 534,
+      "to": "stage.tutorial.equip_melee"
+    },
+    {
+      "from": "stage.tutorial.equip_melee",
+      "source_transition": "transition.tutorial.melee_equipped",
+      "tick": 536,
+      "to": "stage.tutorial.combat_open"
+    },
+    {
+      "from": "stage.tutorial.combat_open",
+      "source_transition": "transition.tutorial.combat_options",
+      "tick": 537,
+      "to": "stage.tutorial.enter_rat_pen"
+    },
+    {
+      "from": "stage.tutorial.enter_rat_pen",
+      "source_transition": "transition.tutorial.rat_pen_entry",
+      "tick": 548,
+      "to": "stage.tutorial.melee_rat"
+    },
+    {
+      "from": "stage.tutorial.melee_rat",
+      "source_transition": "transition.tutorial.melee_kill",
+      "tick": 563,
+      "to": "stage.tutorial.leave_rat_pen"
+    },
+    {
+      "from": "stage.tutorial.leave_rat_pen",
+      "source_transition": "transition.tutorial.rat_pen_exit",
+      "tick": 567,
+      "to": "stage.tutorial.ranged_supply"
+    },
+    {
+      "from": "stage.tutorial.ranged_supply",
+      "source_transition": "transition.tutorial.ranged_gear",
+      "tick": 576,
+      "to": "stage.tutorial.equip_ranged"
+    },
+    {
+      "from": "stage.tutorial.equip_ranged",
+      "source_transition": "transition.tutorial.ranged_equipped",
+      "tick": 578,
+      "to": "stage.tutorial.ranged_rat"
+    },
+    {
+      "from": "stage.tutorial.ranged_rat",
+      "source_transition": "transition.tutorial.ranged_kill",
+      "tick": 599,
+      "to": "stage.tutorial.combat_exit"
+    },
+    {
+      "from": "stage.tutorial.combat_exit",
+      "source_transition": "transition.tutorial.combat_ladder",
+      "tick": 607,
+      "to": "stage.tutorial.bank_open"
+    },
+    {
+      "from": "stage.tutorial.bank_open",
+      "source_transition": "transition.tutorial.bank",
+      "tick": 623,
+      "to": "stage.tutorial.bank_close"
+    },
+    {
+      "from": "stage.tutorial.bank_close",
+      "source_transition": "transition.tutorial.bank_closed",
+      "tick": 624,
+      "to": "stage.tutorial.poll_inspect"
+    },
+    {
+      "from": "stage.tutorial.poll_inspect",
+      "source_transition": "transition.tutorial.poll",
+      "tick": 628,
+      "to": "stage.tutorial.account_entry"
+    },
+    {
+      "from": "stage.tutorial.account_entry",
+      "source_transition": "transition.tutorial.account_door",
+      "tick": 636,
+      "to": "stage.tutorial.account_greeting"
+    },
+    {
+      "from": "stage.tutorial.account_greeting",
+      "source_transition": "transition.tutorial.account_intro",
+      "tick": 642,
+      "to": "stage.tutorial.account_open"
+    },
+    {
+      "from": "stage.tutorial.account_open",
+      "source_transition": "transition.tutorial.account",
+      "tick": 643,
+      "to": "stage.tutorial.account_explanation"
+    },
+    {
+      "from": "stage.tutorial.account_explanation",
+      "source_transition": "transition.tutorial.account_explanation",
+      "tick": 645,
+      "to": "stage.tutorial.account_exit"
+    },
+    {
+      "from": "stage.tutorial.account_exit",
+      "source_transition": "transition.tutorial.account_exit",
+      "tick": 651,
+      "to": "stage.tutorial.chapel_entry"
+    },
+    {
+      "from": "stage.tutorial.chapel_entry",
+      "source_transition": "transition.tutorial.chapel_door",
+      "tick": 669,
+      "to": "stage.tutorial.prayer_greeting"
+    },
+    {
+      "from": "stage.tutorial.prayer_greeting",
+      "source_transition": "transition.tutorial.prayer_intro",
+      "tick": 686,
+      "to": "stage.tutorial.prayer_open"
+    },
+    {
+      "from": "stage.tutorial.prayer_open",
+      "source_transition": "transition.tutorial.prayer",
+      "tick": 687,
+      "to": "stage.tutorial.prayer_explanation"
+    },
+    {
+      "from": "stage.tutorial.prayer_explanation",
+      "source_transition": "transition.tutorial.prayer_explanation",
+      "tick": 931,
+      "to": "stage.tutorial.chapel_exit"
+    },
+    {
+      "from": "stage.tutorial.chapel_exit",
+      "source_transition": "transition.tutorial.chapel_exit",
+      "tick": 940,
+      "to": "stage.tutorial.magic_entry"
+    },
+    {
+      "from": "stage.tutorial.magic_entry",
+      "source_transition": "transition.tutorial.magic_entry",
+      "tick": 955,
+      "to": "stage.tutorial.magic_greeting"
+    },
+    {
+      "from": "stage.tutorial.magic_greeting",
+      "source_transition": "transition.tutorial.magic_intro",
+      "tick": 957,
+      "to": "stage.tutorial.magic_open"
+    },
+    {
+      "from": "stage.tutorial.magic_open",
+      "source_transition": "transition.tutorial.magic",
+      "tick": 958,
+      "to": "stage.tutorial.magic_supply"
+    },
+    {
+      "from": "stage.tutorial.magic_supply",
+      "source_transition": "transition.tutorial.runes",
+      "tick": 970,
+      "to": "stage.tutorial.wind_strike"
+    },
+    {
+      "from": "stage.tutorial.wind_strike",
+      "source_transition": "transition.tutorial.chicken_cast",
+      "tick": 978,
+      "to": "stage.tutorial.departure_offer"
+    },
+    {
+      "from": "stage.tutorial.departure_offer",
+      "source_transition": "transition.tutorial.departure_offer",
+      "tick": 994,
+      "to": "stage.tutorial.departure_confirmation"
+    },
+    {
+      "from": "stage.tutorial.departure_confirmation",
+      "source_transition": "transition.tutorial.confirm_normal_departure",
+      "tick": 996,
+      "to": "stage.tutorial.home_teleport"
+    },
+    {
+      "from": "stage.tutorial.home_teleport",
+      "source_transition": "transition.tutorial.start_home_teleport",
+      "tick": 997,
+      "to": "stage.tutorial.teleport_channel"
+    },
+    {
+      "from": "stage.tutorial.teleport_channel",
+      "source_transition": "transition.tutorial.arrive",
+      "tick": 1021,
+      "to": "stage.tutorial.mainland"
+    }
+  ],
+  "unique_events_observed": 2738
+}

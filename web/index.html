@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <title>ClubScape</title>
+  </head>
+  <body>
+    <main id="clubscape" aria-label="ClubScape">
+      <canvas id="world" aria-label="Game world"></canvas>
+      <canvas id="overlay" aria-label="Game interface" tabindex="0"></canvas>
+      <p id="bootstrap-status" role="status">Starting ClubScape…</p>
+      <noscript>ClubScape requires JavaScript, WebAssembly and WebGPU.</noscript>
+    </main>
+    <script type="module" src="/app/main.ts"></script>
+  </body>
+</html>

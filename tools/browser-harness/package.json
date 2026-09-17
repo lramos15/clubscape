@@ -1,0 +1,30 @@
+{
+  "name": "@clubscape/browser-harness",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.4.1",
+  "engines": {
+    "node": ">=24.18.0"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "node --test --test-reporter=spec tests/unit.test.ts tests/platform.test.ts tests/owner.test.ts",
+    "test:browser": "node src/desktop.ts --test --test-reporter=spec tests/browser.test.ts",
+    "smoke": "node src/desktop.ts src/cli.ts --config config/fixture.json --tool-fixture",
+    "capture": "node src/desktop.ts src/cli.ts",
+    "handoff": "node src/owner.ts",
+    "owner:probe": "node src/desktop.ts src/owner.ts probe",
+    "fixture": "node src/fixture-server.ts"
+  },
+  "dependencies": {
+    "playwright-core": "1.63.0",
+    "pngjs": "7.0.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "26.5.1",
+    "@types/pngjs": "6.0.5",
+    "typescript": "7.0.2"
+  }
+}

@@ -1,0 +1,1663 @@
+{
+  "scope": "Full native UI region accounting on component-only transparent world surface",
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "comparison": "original source, not prior ClubScape output",
+  "results": [
+    {
+      "case": "native-inventory",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-inventory.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-inventory",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-inventory.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-inventory",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-inventory.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-inventory",
+      "region": "active-panel",
+      "bounds": [
+        1704,
+        782,
+        190,
+        261
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-inventory.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 49590,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-inventory",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-inventory.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-equipment",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-equipment.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-equipment",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-equipment.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-equipment",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-equipment.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-equipment",
+      "region": "active-panel",
+      "bounds": [
+        1704,
+        782,
+        190,
+        261
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-equipment.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 49590,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-equipment",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-equipment.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-skills",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-skills.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-skills",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-skills.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-skills",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-skills.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-skills",
+      "region": "active-panel",
+      "bounds": [
+        1704,
+        782,
+        190,
+        261
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-skills.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 49590,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-skills",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-skills.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-combat",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-combat.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-combat",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-combat.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-combat",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-combat.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-combat",
+      "region": "active-panel",
+      "bounds": [
+        1704,
+        782,
+        190,
+        261
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-combat.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 49590,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-combat",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-combat.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-prayer",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-prayer.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-prayer",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-prayer.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-prayer",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-prayer.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-prayer",
+      "region": "active-panel",
+      "bounds": [
+        1704,
+        782,
+        190,
+        261
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-prayer.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 49590,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-prayer",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-prayer.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-magic",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-magic.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-magic",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-magic.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-magic",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-magic.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-magic",
+      "region": "active-panel",
+      "bounds": [
+        1704,
+        782,
+        190,
+        261
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-magic.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 49590,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-magic",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-magic.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-quest-list",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-quest-list.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-quest-list",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-quest-list.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-quest-list",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-quest-list.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-quest-list",
+      "region": "active-panel",
+      "bounds": [
+        1704,
+        782,
+        190,
+        261
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-quest-list.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 49590,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-quest-list",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-quest-list.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-bank",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-bank.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-bank",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-bank.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-bank",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-bank.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-bank",
+      "region": "active-panel",
+      "bounds": [
+        579,
+        290,
+        512,
+        334
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-bank.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 171008,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-bank",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-bank.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-shop",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-shop.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-shop",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-shop.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-shop",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-shop.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-shop",
+      "region": "active-panel",
+      "bounds": [
+        591,
+        310,
+        488,
+        300
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-shop.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 146400,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-shop",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-shop.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-guide-dialogue",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-guide-dialogue.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-guide-dialogue",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-guide-dialogue.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-guide-dialogue",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-guide-dialogue.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-guide-dialogue",
+      "region": "active-panel",
+      "bounds": [
+        8,
+        922,
+        506,
+        129
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-guide-dialogue.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 65274,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "native-guide-dialogue",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/native-guide-dialogue.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-guide",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-guide.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-guide",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-guide.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-guide",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-guide.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-guide",
+      "region": "active-panel",
+      "bounds": [
+        8,
+        922,
+        506,
+        129
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-guide.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 65274,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-guide",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-guide.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-survival",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-survival.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-survival",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-survival.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-survival",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-survival.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-survival",
+      "region": "active-panel",
+      "bounds": [
+        8,
+        922,
+        506,
+        129
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-survival.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 65274,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-survival",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-survival.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-quest-guide",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-quest-guide.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-quest-guide",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-quest-guide.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-quest-guide",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-quest-guide.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-quest-guide",
+      "region": "active-panel",
+      "bounds": [
+        8,
+        922,
+        506,
+        129
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-quest-guide.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 65274,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-quest-guide",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-quest-guide.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-combat",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-combat.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-combat",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-combat.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-combat",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-combat.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-combat",
+      "region": "active-panel",
+      "bounds": [
+        8,
+        922,
+        506,
+        129
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-combat.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 65274,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-combat",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-combat.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-prayer",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-prayer.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-prayer",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-prayer.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-prayer",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-prayer.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-prayer",
+      "region": "active-panel",
+      "bounds": [
+        8,
+        922,
+        506,
+        129
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-prayer.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 65274,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-prayer",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-prayer.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-magic",
+      "region": "minimap",
+      "bounds": [
+        1709,
+        0,
+        211,
+        207
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-magic.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 43677,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-magic",
+      "region": "chat",
+      "bounds": [
+        0,
+        915,
+        519,
+        165
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-magic.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 85635,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-magic",
+      "region": "sidebar",
+      "bounds": [
+        1679,
+        745,
+        241,
+        335
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-magic.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 80735,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-magic",
+      "region": "active-panel",
+      "bounds": [
+        8,
+        922,
+        506,
+        129
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-magic.png",
+      "accounting_role": "nested_diagnostic_do_not_sum",
+      "profile": "native_hud",
+      "checked_pixels": 65274,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "family-magic",
+      "region": "full-ui-canvas",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "source": "web/ui/evidence/original-ui-only/family-magic.png",
+      "accounting_role": "whole_overlay",
+      "profile": "native_hud",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "owner-branding",
+      "region": "full-composition",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "profile": "owner_composition",
+      "source": "research/reference-pack/v1/proposals/branding.png",
+      "accounting_role": "whole_composition",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "owner-capability",
+      "region": "full-composition",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "profile": "owner_composition",
+      "source": "research/reference-pack/v1/proposals/capability.png",
+      "accounting_role": "whole_composition",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "owner-connecting",
+      "region": "full-composition",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "profile": "owner_composition",
+      "source": "research/reference-pack/v1/proposals/connecting.png",
+      "accounting_role": "whole_composition",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "owner-registration-rejected",
+      "region": "full-composition",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "profile": "owner_composition",
+      "source": "research/reference-pack/v1/proposals/registration-rejected.png",
+      "accounting_role": "whole_composition",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "owner-registration",
+      "region": "full-composition",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "profile": "owner_composition",
+      "source": "research/reference-pack/v1/proposals/registration.png",
+      "accounting_role": "whole_composition",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "owner-runtime-error",
+      "region": "full-composition",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "profile": "owner_composition",
+      "source": "research/reference-pack/v1/proposals/runtime-error.png",
+      "accounting_role": "whole_composition",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    },
+    {
+      "case": "owner-unavailable",
+      "region": "full-composition",
+      "bounds": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "profile": "owner_composition",
+      "source": "research/reference-pack/v1/proposals/unavailable.png",
+      "accounting_role": "whole_composition",
+      "checked_pixels": 2073600,
+      "coverage": 1.0,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
+      "tolerance_different_pixels": 0,
+      "passed": true
+    }
+  ],
+  "panelsExcluded": 0,
+  "gameplayAcceptance": false,
+  "finalAcceptance": false
+}

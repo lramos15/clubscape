@@ -1,0 +1,167 @@
+import type { AppServices, AppState, GameIntent, ItemView, UiHandle, WorldView, GameplayUiView, UiPermission } from "../../shared/contracts.ts";
+import { createUi, forwardWorldPointer, onUiCameraRequest, getUiPreviewRequest, setUiMinimap, getUiMinimapStatus } from "../index.ts";
+import type { UiMinimapSurface } from "../index.ts";
+import { TABS } from "../layout.ts";
+import { testAssets } from "./source-fixture.ts";
+
+export function immutable<T>(value: T): T {
+  if (value && typeof value === "object") {
+    Object.freeze(value);
+    for (const child of Object.values(value)) immutable(child);
+  }
+  return value;
+}
+
+function item(id: string, name: string, sourceId: number, quantity: number, actions: string[]): ItemView {
+  return { id, name, sourceId, quantity, actions, iconAsset: null, instanceId: null, charges: null };
+}
+
+export function fixtureWorld(): WorldView {
+  const inventory = Array.from({ length: 28 }, (_, index) => ({ index, item: null as ItemView | null }));
+  const values = [
+    item("item.pickaxe.bronze", "Bronze pickaxe", 1265, 1, ["Wield", "Drop"]),
+    item("item.axe.bronze", "Bronze axe", 1351, 1, ["Wield", "Drop"]),
+    item("item.shrimps", "Shrimps", 315, 2, ["Eat", "Drop"]),
+    item("item.coins", "Coins", 995, 12345, ["Drop"]),
+    item("item.rune.air", "Air rune", 556, 25, ["Drop"]),
+    item("item.rune.mind", "Mind rune", 558, 25, ["Drop"]),
+  ];
+  values.forEach((value, index) => { inventory[index]!.item = value; });
+  const skills = ["attack", "defence", "strength", "hitpoints", "ranged", "prayer", "magic", "cooking",
+    "woodcutting", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblore",
+    "agility", "thieving", "slayer", "farming", "runecraft", "hunter", "construction", "sailing"]
+    .map(id => ({ id: `skill.${id}`, name: id[0]!.toUpperCase() + id.slice(1), currentLevel: id === "hitpoints" ? 10 : 1,
+      baseLevel: id === "hitpoints" ? 10 : 1, xpTenths: id === "hitpoints" ? "11540" : "0", iconAsset: null }));
+  return {
+    revision: "1", tick: "1",
+    player: {
+      id: "component-only", displayName: "Reference", appearance: { body_type: 0 }, region: "region.lumbridge",
+      tile: { x: 3222, y: 3218, plane: 0 }, instance: null, inventory,
+      equipment: [{ slot: "slot.weapon", item: item("item.sword.bronze", "Bronze sword", 1277, 1, ["Wield"]) }],
+      skills, hitpoints: 10, prayerPoints: 1, runEnergy: 0, questPoints: 0, tutorialStage: "stage.tutorial.mainland",
+      tutorialInstruction: "", quests: [{ id: "quest.cooks_assistant", name: "Cook's Assistant", stage: "stage.cooks.ingredients",
+        journal: "<col=000080>Cook's Assistant</col><br><str>I spoke to the Cook.</str><br>I need to bring him a bucket of milk, an egg and a pot of flour.", completed: false }],
+      unlockedInterfaces: TABS.map(tab => tab.interface), activePrayers: [], activity: "idle", animation: "idle",
+      settings: [{ setting: "run", enabled: false }, { setting: "auto_retaliate", enabled: true }],
+    },
+    entities: [{ id: "spawn.cook", definitionId: "npc.cook", sourceId: 3308, name: "Cook", kind: "npc",
+      tile: { x: 3223, y: 3218, plane: 0 }, instance: null, hitpoints: 10, maxHitpoints: 10, available: true,
+      animation: "idle", actions: [{ name: "Talk-to", allowed: true, reason: null }, { name: "Attack", allowed: false, reason: "This NPC cannot be attacked." }],
+      appearance: {}, equipment: [] }],
+    groundItems: [], dialogue: null, bank: null, shop: null, recovery: null, messages: [],
+  };
+}
+
+export function fixtureUi(world: WorldView): GameplayUiView {
+  const allowed: UiPermission = { allowed: true, code: null, reason: null };
+  const ability = (id: string, name: string, selected = false) => ({ id, name, selected, visible: true, permission: { ...allowed } });
+  return {
+    version: 1, activeTab: "interface.inventory", activeInterface: null, production: null, reward: null, confirmation: null, document: null,
+    interfaces: [...TABS.map(tab => ({ interface: tab.interface, visibility: "enabled" as const, highlighted: false, permission: { ...allowed } })),
+      ...["interface.equipment_stats", "interface.items_kept_on_death", "interface.bank", "interface.grave", "interface.death_retrieval",
+        "interface.cooking", "interface.smithing", "interface.quest_reward", "interface.appearance", "interface.experience",
+        "interface.read_book", "interface.newcomer_map", "interface.level_up"]
+        .map(id => ({ interface: id, visibility: "enabled" as const, highlighted: false, permission: { ...allowed } }))],
+    combatStyle: "style.sword.bronze.stab.accurate",
+    combatStyles: [ability("style.sword.bronze.stab.accurate", "Stab", true), ability("style.sword.bronze.stab.aggressive", "Lunge"),
+      ability("style.sword.bronze.slash.aggressive", "Slash"), ability("style.sword.bronze.stab.defensive", "Block")],
+    prayers: [ability("prayer.thick_skin", "Thick Skin")],
+    spells: [ability("spell.wind_strike", "Wind Strike"), ability("spell.lumbridge_home_teleport", "Lumbridge Home Teleport")],
+    equipment: { bonuses: { attack: { stab: 4, slash: 3, crush: -2, magic: 0, ranged: 0 }, defence: { stab: 0, slash: 2, crush: 1, magic: 0, ranged: 0 },
+      meleeStrength: 5, rangedStrength: 0, magicDamagePercent: 0, prayer: 0 }, weightGrams: "1814", slots: ["slot.weapon"] },
+    inventoryActions: world.player.inventory.filter(row => row.item).map(row => ({
+      slot: row.index, item: row.item!.id, instance: row.item!.instanceId,
+      actions: row.item!.actions.map((label, index) => ({ id: `action.component.${row.index}.${index}`, label, permission: { ...allowed } })),
+    })),
+    bank: null, keptOnDeath: null, recovery: null,
+    appearance: { choices: { body_type: [{ value: 0, label: "A", permission: { ...allowed } }, { value: 1, label: "B", permission: { ...allowed } }] },
+      base: { asset: "asset.source.osrs.cache2695.npc.2063", sourceNpc: 2063, adaptation: "component.approved-penguin-base" }, confirmed: true },
+    publicChat: { permission: { ...allowed }, maximumBytes: 80, channel: "public", messages: [] },
+  };
+}
+
+export class ComponentServices implements AppServices {
+  current: Readonly<AppState>;
+  readonly intents: GameIntent[] = [];
+  readonly calls: Array<{ method: string; args: unknown[] }> = [];
+  readonly errors: Array<{ message: string; errorId: string | null }> = [];
+  readonly cameraRequests: number[] = [];
+  rejection: { message: string; errorId: string } | null = null;
+  automaticTabReplies = true;
+  private listeners = new Set<(state: Readonly<AppState>) => void>();
+
+  constructor(phase: AppState["phase"] = "world") {
+    this.current = immutable({ phase, world: phase === "world" ? fixtureWorld() : null,
+      loading: null, accountName: null, error: null, soundEnabled: false });
+  }
+  state(): Readonly<AppState> { return this.current; }
+  subscribe(listener: (state: Readonly<AppState>) => void): () => void {
+    this.listeners.add(listener); return () => { this.listeners.delete(listener); };
+  }
+  get subscriptions(): number { return this.listeners.size; }
+  publish(state: AppState): void {
+    this.current = immutable(state);
+    this.listeners.forEach(listener => listener(this.current));
+  }
+  patchWorld(patch: Partial<WorldView>): void {
+    const world = { ...structuredClone(this.current.world!), ...patch };
+    world.revision = String(BigInt(world.revision) + 1n);
+    this.publish({ ...this.current, world });
+  }
+  enableUi(): void {
+    const world = structuredClone(this.current.world!);
+    world.ui = fixtureUi(world);
+    this.patchWorld(world);
+  }
+  private async accept(method: string, ...args: unknown[]): Promise<void> {
+    this.calls.push({ method, args });
+    if (this.rejection) {
+      const details = this.rejection; this.rejection = null;
+      throw Object.assign(new Error(details.message), { errorId: details.errorId });
+    }
+  }
+  register(name: string, password: string): Promise<void> { return this.accept("register", name, password); }
+  login(name: string, password: string): Promise<void> { return this.accept("login", name, password); }
+  logout(): Promise<void> { return this.accept("logout"); }
+  createCharacter(appearance: Record<string, number>): Promise<void> { return this.accept("createCharacter", appearance); }
+  enterWorld(): Promise<void> { return this.accept("enterWorld"); }
+  async send(intent: GameIntent): Promise<void> {
+    this.intents.push(structuredClone(intent));
+    await this.accept("send", intent);
+    const world = this.current.world;
+    if (this.automaticTabReplies && world?.ui && intent.kind === "open_interface" &&
+        TABS.some(tab => tab.interface === intent.interface))
+      this.patchWorld({ ui: { ...world.ui, activeTab: intent.interface } });
+  }
+  setScreen(phase: "title" | "register" | "login"): void { this.calls.push({ method: "setScreen", args: [phase] }); this.publish({ ...this.current, phase, error: null }); }
+  unlockAudio(): Promise<void> { return this.accept("unlockAudio"); }
+  audioVolume(channel: "music" | "effects" | "area", value: number): void { this.calls.push({ method: "audioVolume", args: [channel, value] }); }
+  report(error: Error, errorId?: string): void { this.errors.push({ message: error.message, errorId: errorId ?? null }); }
+}
+
+let current: { services: ComponentServices; ui: UiHandle } | null = null;
+export function componentMinimap(world: WorldView, revision = 1): UiMinimapSurface {
+  const pixels = new ImageData(512, 512);
+  for (let index = 3; index < pixels.data.length; index += 4) pixels.data[index] = 255;
+  return {
+    width: 512, height: 512, scale: 4, marginX: 48, marginY: 48,
+    baseX: world.player.tile.x - 52, baseY: world.player.tile.y - 52, plane: world.player.tile.plane,
+    revision, complete: false, notes: ["Explicit blank component-test surface; no terrain or live renderer fidelity is claimed."],
+    stats: { terrainTiles: 0, wallMarks: 0, diagonalMarks: 0, mapScenes: 0, unresolved: 0 },
+    icons: [], pixels, mask: new Uint8Array(512 * 512),
+  };
+}
+export async function mount(phase: AppState["phase"] = "world"): Promise<typeof current> {
+  current?.ui.dispose();
+  const canvas = document.querySelector("canvas")!;
+  canvas.width = innerWidth; canvas.height = innerHeight;
+  canvas.style.width = `${innerWidth}px`; canvas.style.height = `${innerHeight}px`;
+  const services = new ComponentServices(phase), ui = await createUi(canvas, services, testAssets);
+  if (services.state().world) setUiMinimap(ui, componentMinimap(services.state().world!));
+  onUiCameraRequest(ui, yaw => services.cameraRequests.push(yaw));
+  current = { services, ui };
+  Object.assign(window, { component: current, forwardWorldPointer, fixtureWorld, getUiPreviewRequest,
+    setUiMinimap, getUiMinimapStatus, componentMinimap });
+  await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
+  return current;
+}

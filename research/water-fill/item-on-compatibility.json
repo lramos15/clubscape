@@ -1,0 +1,66 @@
+{
+  "migration_admitted": false,
+  "passed": true,
+  "profiles": [
+    {
+      "compiler_command": [
+        "cargo",
+        "run",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/crates/content/Cargo.toml",
+        "-p",
+        "clubscape-content",
+        "--",
+        "--input",
+        "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/tools/m1-content/.local/water-fill/current5b-baseline/game-content.json",
+        "--output",
+        "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/tools/m1-content/.local/water-fill/current5b-baseline/game-content.csc"
+      ],
+      "compiler_versions": [
+        4,
+        4
+      ],
+      "compressed_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+      "exact_recompile": true,
+      "new_field_absent_and_omitted": true,
+      "profile": "current5b",
+      "raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+      "source_input": "research/water-fill/inputs/current5b-source.json.gz",
+      "source_sha256": "2782a2fbb164ca4c11a964778adf0ca544986f6b2e17aa9bb9bd55f730092ed2"
+    },
+    {
+      "compiler_command": [
+        "cargo",
+        "run",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/crates/content/Cargo.toml",
+        "-p",
+        "clubscape-content",
+        "--",
+        "--input",
+        "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/tools/m1-content/.local/water-fill/legacy5e-baseline/game-content.json",
+        "--output",
+        "/home/lramos15/clubscape/.worktrees/m1-water-dispatch/tools/m1-content/.local/water-fill/legacy5e-baseline/game-content.csc"
+      ],
+      "compiler_versions": [
+        4,
+        4
+      ],
+      "compressed_sha256": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f",
+      "exact_recompile": true,
+      "new_field_absent_and_omitted": true,
+      "profile": "legacy5e",
+      "raw_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+      "source_input": "research/water-fill/inputs/legacy5e-source.json.gz",
+      "source_sha256": "294ede7e3d8e08633051338385f189c0d420000e74cd2344ce54b13bbfa28706"
+    }
+  ],
+  "schema_version": 1,
+  "source_archives_changed": false
+}

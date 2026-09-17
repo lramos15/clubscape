@@ -1,0 +1,1717 @@
+{
+  "schemaVersion": 1,
+  "fixtureOnly": true,
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "browser": "Google Chrome for Testing 153.0.8010.12",
+  "node": "v24.18.0",
+  "startedAt": "2026-09-15T22:30:29.141Z",
+  "sourceAssets": 275,
+  "sourceFilesChanged": 0,
+  "sandbox": {
+    "namespace": true,
+    "seccompBpf": true,
+    "noSandboxFlag": false,
+    "muteAudioFlag": true
+  },
+  "audioDevice": {
+    "sampleRate": 22050,
+    "state": "running",
+    "baseLatency": 0.01070294784580499,
+    "outputLatency": 0.024,
+    "sinkId": ""
+  },
+  "frozenOriginalAssets": 266,
+  "additiveAssets": 9,
+  "supplementManifestSha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91",
+  "implementationFiles": [
+    {
+      "path": "web/audio/buffers.ts",
+      "sha256": "90992badd533b2f301c81e774353aedac377272f3a799124e639d4248829f6ec"
+    },
+    {
+      "path": "web/audio/clock.ts",
+      "sha256": "ef48818dfbd97d45bab987395437f5f5ac67bd471fd62024cf33ada17ae1872e"
+    },
+    {
+      "path": "web/audio/errors.ts",
+      "sha256": "99d956ccee69b27a17d3e47b1d9af18aa6b0e64365c9768c76193f6bc32629f1"
+    },
+    {
+      "path": "web/audio/events.ts",
+      "sha256": "f1d337a085eddba8a4e87a469e4fb8adfdd840235fd0bc79fe4977e57e07436e"
+    },
+    {
+      "path": "web/audio/index.ts",
+      "sha256": "17a7175b828a21180597fc249d6dfe859f26861f68d7bc4ce926061498f070c8"
+    },
+    {
+      "path": "web/audio/native-data.ts",
+      "sha256": "b7a1e322d98c5f0aebba2e3e35bf6372d6ad06de45d8bb9cfa7a13caa67283d5"
+    },
+    {
+      "path": "web/audio/native-policy.ts",
+      "sha256": "1a0564343d649c11435ac2f11b88bfb192da4d64ceeccc1272101a251b3fa5e8"
+    },
+    {
+      "path": "web/audio/native-scene.ts",
+      "sha256": "c6980e5efd162de08abc4390dc57f994d206d88e107d8182eaceb486ffb434dd"
+    },
+    {
+      "path": "web/audio/preferences.ts",
+      "sha256": "1cb445e484b7f9e600a2879554ec62299f0bb8d7de891000bfe24fec993d8447"
+    },
+    {
+      "path": "web/audio/queue.ts",
+      "sha256": "17c429eb30bf4829854dc9d1b2960c13088997d6e290af5af2e2ebe0eb8b2369"
+    },
+    {
+      "path": "web/audio/reward-levels.ts",
+      "sha256": "ff41337cefe8a29a8b8da80e07d674ea25dbe479e675097439b9a9f21b3a2a99"
+    },
+    {
+      "path": "web/audio/source.ts",
+      "sha256": "a8e1cc35306e413307e35624a641b36a4dc25d10ed3f601c48063a6e7a770fd1"
+    },
+    {
+      "path": "web/shared/contracts.ts",
+      "sha256": "9f4a2619082c01d02b27951160ae63c9386509040f2164c74a3b35217b5431bc"
+    },
+    {
+      "path": "tools/browser-audio-tests/run.mjs",
+      "sha256": "f14491a03a80a395fe4d3e8645e9c3f3641671e87e3e81dd1326fe77d3b6eb1b"
+    },
+    {
+      "path": "tools/browser-audio-tests/fixture.mjs",
+      "sha256": "5b3059d5c8215df5268a6cba16b3de62ae44062d36c495b4c20405fa1c846d00"
+    },
+    {
+      "path": "tools/browser-audio-tests/fixture.html",
+      "sha256": "f936bc3fbe614b068307860118ba9e7dbceb9dff979d91e4da70af9fed36f305"
+    },
+    {
+      "path": "tools/browser-audio-tests/monitor.js",
+      "sha256": "b3bc16008ecc23319883fee06c32ee19358a1339ba1ba0dab2a84159eb10b28b"
+    },
+    {
+      "path": "research/browser-audio-policy/cook-reward-boundary.json",
+      "sha256": "c0ac07c608c6f7c84beeee31612c6bc36966233fd1c4cf1ef7ed457b644a1575"
+    },
+    {
+      "path": "assets/manifests/osrs/audio-m1-supplement.json",
+      "sha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91"
+    },
+    {
+      "path": "research/browser-audio-policy/supplement-browser-oracles.json",
+      "sha256": "60340d777362b6a88de76853508a633f75d2c93be7e90b0ff624cd780c1e0d65"
+    },
+    {
+      "path": "tools/browser-audio-tests/preferences.mjs",
+      "sha256": "cd4891e76706aa0b64f7592c931f73a34ea92602a3b61f4b496aa3deaf19d797"
+    },
+    {
+      "path": "research/browser-audio-policy/native-preference-controls.json",
+      "sha256": "c6e8454034724e2a51a6f229601399e927a29b340939925a9d30e73a3157d1c7"
+    }
+  ],
+  "headless": true,
+  "hostSpeakerPerception": "not tested",
+  "macEdge": "not tested",
+  "validationScope": "full-browser-audio-control-and-native-playlist-boundary",
+  "longDurationChecks": true,
+  "browserOutputMutedForSharedHost": true,
+  "gameplayOrM1Acceptance": false,
+  "results": [
+    {
+      "name": "explicit permission: no startup audio request or source before a real gesture",
+      "passed": true,
+      "durationMs": 4,
+      "actualContextState": "suspended",
+      "syntheticGestureRejected": true,
+      "syntheticClickRejected": true,
+      "scriptUserGesture": false,
+      "requestedPlayableFiles": 0
+    },
+    {
+      "name": "mouse unlock starts original Scape Main 0 through the enabled destination",
+      "passed": true,
+      "durationMs": 1056,
+      "nativeStart": {
+        "id": 1,
+        "requestedAt": 0.2786394557823129,
+        "when": 0.2786394557823129,
+        "offset": 0,
+        "duration": 197.89061224489797,
+        "frames": 4363488,
+        "loop": false,
+        "loopEnd": 0,
+        "state": "running",
+        "sampleRate": 22050,
+        "wallTime": 419.6800003051758
+      },
+      "monitor": {
+        "kind": "stats",
+        "request": 1,
+        "frames": 22656,
+        "nonzero": 13991,
+        "peak": 0.00047065265243873,
+        "clips": 0,
+        "channels": 2,
+        "currentFrame": 22656,
+        "currentTime": 1.0274829931972789,
+        "sampleRate": 22050
+      },
+      "actualTimeAdvance": 0.748843537414966
+    },
+    {
+      "name": "actual native defaults, master-before-lookup slider composition and qualified Modern geography",
+      "passed": true,
+      "durationMs": 126,
+      "nativeDefaultMixer": {
+        "music": 255,
+        "effects": 127,
+        "area": 127
+      },
+      "nativeMaster50Mixer": {
+        "music": 44,
+        "effects": 22,
+        "area": 22
+      },
+      "modernArea": 1,
+      "originalGroups": [
+        2,
+        64,
+        327,
+        163,
+        76,
+        145
+      ],
+      "publicPolygonRevision": 15258397,
+      "classification": "dated_public_source_geography_with_native_music_table_corroboration"
+    },
+    {
+      "name": "needed-region music 62 / 144 / 76 / east 2, repeated snapshots, reset and reconnect",
+      "passed": true,
+      "durationMs": 7524,
+      "routes": [
+        {
+          "region": "region.osrs.12336",
+          "group": 62,
+          "sourceStarted": true,
+          "duplicateSnapshotStarts": 0
+        },
+        {
+          "region": "region.osrs.12436",
+          "group": 144,
+          "sourceStarted": true,
+          "duplicateSnapshotStarts": 0
+        },
+        {
+          "region": "region.osrs.12850",
+          "group": 76,
+          "sourceStarted": true,
+          "duplicateSnapshotStarts": 0
+        },
+        {
+          "region": "region.osrs.12851",
+          "group": 2,
+          "sourceStarted": true,
+          "duplicateSnapshotStarts": 0
+        }
+      ],
+      "reconnectBackgroundSources": 1,
+      "pausedNetworkSources": 0
+    },
+    {
+      "name": "same-track Tutorial squares do not restart music, and a region change preserves the active jingle",
+      "passed": true,
+      "durationMs": 6628,
+      "sameGroupRestarts": 0,
+      "jingleInterruptedByRegion": false,
+      "newRememberedBackground": 2
+    },
+    {
+      "name": "real original shortbow, rat, goblin and smelt cues start and naturally end",
+      "passed": true,
+      "durationMs": 7905,
+      "bindings": [
+        {
+          "selector": "shortbow_release",
+          "sourceId": 2693,
+          "start": 15.391020408163097,
+          "end": 16.399092970521544,
+          "nativeNaturalEnd": true
+        },
+        {
+          "selector": "rat_attack",
+          "sourceId": 710,
+          "start": 16.471020408163074,
+          "end": 17.03183673469388,
+          "nativeNaturalEnd": true
+        },
+        {
+          "selector": "rat_hit",
+          "sourceId": 713,
+          "start": 17.11102040816306,
+          "end": 17.362721088435375,
+          "nativeNaturalEnd": true
+        },
+        {
+          "selector": "rat_death",
+          "sourceId": 711,
+          "start": 17.451020408163053,
+          "end": 18.860408163265305,
+          "nativeNaturalEnd": true
+        },
+        {
+          "selector": "goblin_attack",
+          "sourceId": 469,
+          "start": 18.943628117913832,
+          "end": 19.545396825396825,
+          "nativeNaturalEnd": true
+        },
+        {
+          "selector": "goblin_hit",
+          "sourceId": 472,
+          "start": 19.631020408163007,
+          "end": 19.783401360544218,
+          "nativeNaturalEnd": true
+        },
+        {
+          "selector": "goblin_death",
+          "sourceId": 471,
+          "start": 19.871020408163,
+          "end": 20.77605442176871,
+          "nativeNaturalEnd": true
+        },
+        {
+          "selector": "bronze_smelt_start",
+          "sourceId": 2725,
+          "start": 20.85102040816298,
+          "end": 23.208344671201814,
+          "nativeNaturalEnd": true
+        }
+      ],
+      "monitor": {
+        "kind": "stats",
+        "request": 2,
+        "frames": 512128,
+        "nonzero": 559584,
+        "peak": 1.0609354972839355,
+        "clips": 8,
+        "channels": 2,
+        "currentFrame": 512128,
+        "currentTime": 23.225759637188208,
+        "sampleRate": 22050
+      }
+    },
+    {
+      "name": "live monitor waveform and real slider gain match the original rat WAV within approved float tolerance",
+      "passed": true,
+      "durationMs": 2239,
+      "measurements": [
+        {
+          "sliderPercent": 100,
+          "nativeVolume": 127,
+          "assetGain": 0.9921875,
+          "maxAbsoluteError": 0.000009119510650634766,
+          "peak": 0.2986524701118469,
+          "extraClipSamples": 0,
+          "shiftSamples": 1383
+        },
+        {
+          "sliderPercent": 50,
+          "nativeVolume": 22,
+          "assetGain": 0.171875,
+          "maxAbsoluteError": 0.0000015795230865478516,
+          "peak": 0.05173507332801819,
+          "extraClipSamples": 0,
+          "shiftSamples": 1645
+        }
+      ],
+      "originalWavSha256": "2fa8cd356b1088333dc83457f9c04d4e6556c08d005f8278675e7b26ba6b0e61"
+    },
+    {
+      "name": "actual source animation cues are activity-prepared, scheduled on source cycles, and cancel cleanly",
+      "passed": true,
+      "durationMs": 5539,
+      "cues": [
+        {
+          "sequence": 621,
+          "frame": 4,
+          "sound": 2603,
+          "sourceCycles": 16,
+          "processingCalls": 16,
+          "errorMs": 2.040816326140316
+        },
+        {
+          "sequence": 625,
+          "frame": 11,
+          "sound": 3220,
+          "sourceCycles": 50,
+          "processingCalls": 50,
+          "errorMs": 7.936507936111752
+        },
+        {
+          "sequence": 733,
+          "frame": 8,
+          "sound": 2597,
+          "sourceCycles": 45,
+          "processingCalls": 45,
+          "errorMs": 3.0385487524129076
+        },
+        {
+          "sequence": 733,
+          "frame": 10,
+          "sound": 2597,
+          "sourceCycles": 70,
+          "processingCalls": 70,
+          "errorMs": 3.0385487524129076
+        },
+        {
+          "sequence": 879,
+          "frame": 3,
+          "sound": 2735,
+          "sourceCycles": 18,
+          "processingCalls": 18,
+          "errorMs": 9.206349205896345
+        },
+        {
+          "sequence": 898,
+          "frame": 5,
+          "sound": 3790,
+          "sourceCycles": 20,
+          "processingCalls": 20,
+          "errorMs": 8.662131518813226
+        },
+        {
+          "sequence": 898,
+          "frame": 7,
+          "sound": 3791,
+          "sourceCycles": 41,
+          "processingCalls": 41,
+          "errorMs": 8.662131518814931
+        },
+        {
+          "sequence": 898,
+          "frame": 9,
+          "sound": 3790,
+          "sourceCycles": 62,
+          "processingCalls": 62,
+          "errorMs": 8.662131518813112
+        },
+        {
+          "sequence": 898,
+          "frame": 11,
+          "sound": 3791,
+          "sourceCycles": 83,
+          "processingCalls": 83,
+          "errorMs": 8.662131518814931
+        }
+      ],
+      "cancelledActionStartedSources": 0
+    },
+    {
+      "name": "native countdown timing and approved eating frame-1 offset, stable callback deduplication",
+      "passed": true,
+      "durationMs": 3098,
+      "sourceStartDelayMs": 84.39909297010217,
+      "sourceCycleLateMs": 7.105427357601002e-12,
+      "actualWaveformOnset": 33.116961451247164,
+      "expectedWithExactlyOneBakedOffset": 33.117006802720674,
+      "onsetErrorMs": 0.045351473509924745,
+      "duplicateSources": 0,
+      "processingCalls": 4
+    },
+    {
+      "name": "source-silence 2411 does not request a missing asset or renormalize to an audible alternative",
+      "passed": true,
+      "durationMs": 347,
+      "originalSilentWeight": 74,
+      "testedRoll": 73,
+      "playableRequests": 0,
+      "silenceStillOccupiesNativeFifo": true
+    },
+    {
+      "name": "50-entry FIFO overflow is preserved on real sources with no stress-fixture clipping",
+      "passed": true,
+      "durationMs": 647,
+      "capacity": 50,
+      "submitted": 51,
+      "started": 50,
+      "newEntryDropped": "fifo/50",
+      "processingCallsForDelay2": 3,
+      "perEventFixtureGain": 0.01,
+      "additionalClipSamples": 0
+    },
+    {
+      "name": "native scene emitter gain, footprint, signed fades, plane/instance and movement without sourceGain",
+      "passed": true,
+      "durationMs": 684,
+      "originalObject": 114,
+      "originalFootprint": [
+        1,
+        2
+      ],
+      "originalLoopEndSeconds": 2,
+      "nativeMixerVolumes": [
+        127,
+        85,
+        127
+      ],
+      "unchangedVoiceId": 82,
+      "callerSuppliedSourceGain": false,
+      "normalFadeBaseMs": 300,
+      "visibilityFadeMs": 150,
+      "wrongPlaneOrInstanceSources": 0,
+      "packetFifoOccupancy": 0
+    },
+    {
+      "name": "native morph variables suppress inactive base sounds and random ambience runs independently of the FIFO",
+      "passed": true,
+      "durationMs": 4810,
+      "originalMorph": 34815,
+      "sourceVarp": 491,
+      "values": [
+        0,
+        4
+      ],
+      "inactiveBaseSoundNotPlayed": 3141,
+      "randomObject": 16433,
+      "originalRandomGroups": [
+        1984,
+        1985,
+        1986,
+        1987,
+        1988
+      ],
+      "sourceIntervalRangeCycles": [
+        150,
+        300
+      ],
+      "packetFifoOccupancy": 0
+    },
+    {
+      "name": "last accepted jingle wins in both directions; sentinel and auxiliary values have no priority",
+      "passed": true,
+      "durationMs": 4298,
+      "cases": [
+        {
+          "requests": [
+            154,
+            33,
+            -1
+          ],
+          "playing": 33,
+          "simultaneousMusicalSources": 1
+        },
+        {
+          "requests": [
+            33,
+            154,
+            -1
+          ],
+          "playing": 154,
+          "simultaneousMusicalSources": 1
+        }
+      ],
+      "resumedRememberedBackground": 2,
+      "resumedFromFrame": 0
+    },
+    {
+      "name": "once-only completion preserves a pre-trained Cook skill delta and source-selected reward jingle",
+      "passed": true,
+      "durationMs": 303,
+      "learningClassification": "approved_adaptation",
+      "learningReplaySources": 0,
+      "cookJingle": 152,
+      "committedCookingDelta": {
+        "before": {
+          "xpTenths": "1000",
+          "baseLevel": 2
+        },
+        "after": {
+          "xpTenths": "4000",
+          "baseLevel": 5
+        }
+      },
+      "sourceSelectedRewardGroup": 34,
+      "rewardAfterSourceScroll153": 34,
+      "reconnectReplaySources": 0,
+      "duplicateRewardSources": 0,
+      "sourceBoundary": "research/browser-audio-policy/cook-reward-boundary.json",
+      "fixtureQualification": "Committed-projection fixture, not a played quest or a new per-quest jingle selector."
+    },
+    {
+      "name": "mute/unmute and zero-volume admission never leak nodes or replay rejected effects",
+      "passed": true,
+      "durationMs": 508,
+      "mutedSamplesNonzero": 0,
+      "musicAfterUnmute": 1,
+      "rejectedEffectReplay": 0
+    },
+    {
+      "name": "untrusted IDs, selectors, source bounds and noncommitted actions fail explicitly without fetching audio",
+      "passed": true,
+      "durationMs": 9,
+      "rejectedCases": 8,
+      "additionalPlayableFetches": 0,
+      "additionalSourceStarts": 0
+    },
+    {
+      "name": "real suspend freezes context time; injected resume rejection reports failure; keyboard gesture recovers the same music node",
+      "passed": true,
+      "durationMs": 350,
+      "realSuspension": true,
+      "frozenTime": 45.88843537414966,
+      "resumeFaultInjected": true,
+      "keyboardRecovered": true,
+      "duplicateMusicSources": 0
+    },
+    {
+      "name": "malformed source bytes, HTTP failure and truncation are not decode/playback success",
+      "passed": true,
+      "durationMs": 222,
+      "cases": [
+        {
+          "sourceId": 60,
+          "failure": "bytes",
+          "code": "AUDIO_INTEGRITY",
+          "sourceStarted": false
+        },
+        {
+          "sourceId": 62,
+          "failure": "http",
+          "code": "AUDIO_NETWORK",
+          "sourceStarted": false
+        },
+        {
+          "sourceId": 193,
+          "failure": "truncated",
+          "code": "AUDIO_BYTES",
+          "sourceStarted": false
+        }
+      ]
+    },
+    {
+      "name": "decoder rejection and a slow superseded jingle report/recover without a stale start",
+      "passed": true,
+      "durationMs": 1099,
+      "decoderFailureInjected": true,
+      "hashVerifiedRetryPlayedNaturally": 2739,
+      "supersededSlowJingle": 30,
+      "winner": 33,
+      "staleStarts": 0
+    },
+    {
+      "name": "initialization integrity/origin failures create no context and no fallback audio",
+      "passed": true,
+      "durationMs": 15,
+      "externalOriginRejectedBeforeRequest": true,
+      "manifestCorruptionRejected": true,
+      "createdContexts": 0
+    },
+    {
+      "name": "a missing background file is not retried on every snapshot; a real gesture retries the original",
+      "passed": true,
+      "durationMs": 5815,
+      "snapshotRetryStormRequests": 0,
+      "missingFileStartedSources": 0,
+      "trustedRetryPlayedOriginalGroup": 0
+    },
+    {
+      "name": "a real silent-device sink is not treated as enabled playback, and resume timeout is explicit",
+      "passed": true,
+      "durationMs": 3948,
+      "actualSilentSinkRejected": true,
+      "realDefaultSinkRestored": true,
+      "timeoutFaultInjected": true,
+      "timeoutCode": "AUDIO_RESUME_TIMEOUT",
+      "actualRecoveredState": "running"
+    },
+    {
+      "name": "native fade steps run on the real graph and offline PCM, without a fabricated seamless music loop",
+      "passed": true,
+      "durationMs": 1292,
+      "actualNativeFadeCycles": 60,
+      "measured": [
+        {
+          "elapsed": 0.20317460317460245,
+          "nativeMixerLevel": 38
+        },
+        {
+          "elapsed": 0.4179591836734673,
+          "nativeMixerLevel": 85
+        },
+        {
+          "elapsed": 0.6095238095238074,
+          "nativeMixerLevel": 127
+        },
+        {
+          "elapsed": 0.8068934240362751,
+          "nativeMixerLevel": 170
+        },
+        {
+          "elapsed": 1.2654875283446714,
+          "nativeMixerLevel": 255
+        }
+      ],
+      "nativeLoopFlag": false,
+      "manualModeSurvivesRegionChange": true,
+      "offline": {
+        "frames": 44100,
+        "sampleRate": 22050,
+        "channels": 2,
+        "maxError": 0,
+        "boundarySamples": 18,
+        "maximumBoundaryRoundingMs": 0.045351473922902494,
+        "extraClipSamples": 0
+      },
+      "replayTimerSeconds": 137.4
+    },
+    {
+      "name": "a real slider change switches to the original native255 representation without restarting its clock",
+      "passed": true,
+      "durationMs": 6168,
+      "group": 54,
+      "oldAsset": "asset.source.osrs.cache2695.audio-runtime.jingle.54",
+      "newAsset": "asset.source.osrs.cache2695.audio-supplement.jingle.54.native255",
+      "voiceId": 101,
+      "unchangedSourceStart": 56.05877551020408,
+      "replacementOffset": 0.290249433106581,
+      "expectedEnd": 62.059002267573696,
+      "actualEnd": 62.061133786848075,
+      "duplicatePlayingSources": 0
+    },
+    {
+      "name": "all nine additive native files play through the real factory and exactly match independent PCM oracles",
+      "passed": true,
+      "durationMs": 33418,
+      "publishedAssets": [
+        {
+          "assetId": "asset.source.osrs.cache2695.audio-supplement.music.64.native255",
+          "nativeVolume": 255,
+          "sourceId": 64,
+          "kind": "music",
+          "frames": 7158457,
+          "pcmFloatHashesExact": true,
+          "nativeFullScaleSamples": 2973,
+          "additionalClipSamples": 0,
+          "actualStart": 62.62421768707483,
+          "naturallyEnded": false
+        },
+        {
+          "assetId": "asset.source.osrs.cache2695.audio-supplement.music.327.native255",
+          "nativeVolume": 255,
+          "sourceId": 327,
+          "kind": "music",
+          "frames": 3409041,
+          "pcmFloatHashesExact": true,
+          "nativeFullScaleSamples": 0,
+          "additionalClipSamples": 0,
+          "actualStart": 63.756190476190476,
+          "naturallyEnded": false
+        },
+        {
+          "assetId": "asset.source.osrs.cache2695.audio-supplement.music.163.native255",
+          "nativeVolume": 255,
+          "sourceId": 163,
+          "kind": "music",
+          "frames": 2562293,
+          "pcmFloatHashesExact": true,
+          "nativeFullScaleSamples": 0,
+          "additionalClipSamples": 0,
+          "actualStart": 64.7720634920635,
+          "naturallyEnded": false
+        },
+        {
+          "assetId": "asset.source.osrs.cache2695.audio-supplement.music.145.native255",
+          "nativeVolume": 255,
+          "sourceId": 145,
+          "kind": "music",
+          "frames": 5248065,
+          "pcmFloatHashesExact": true,
+          "nativeFullScaleSamples": 0,
+          "additionalClipSamples": 0,
+          "actualStart": 65.85179138321996,
+          "naturallyEnded": false
+        },
+        {
+          "assetId": "asset.source.osrs.cache2695.audio-supplement.jingle.40.native255",
+          "nativeVolume": 255,
+          "sourceId": 40,
+          "kind": "jingle",
+          "frames": 149945,
+          "pcmFloatHashesExact": true,
+          "nativeFullScaleSamples": 12,
+          "additionalClipSamples": 0,
+          "actualStart": 66.80380952380952,
+          "naturallyEnded": true
+        },
+        {
+          "assetId": "asset.source.osrs.cache2695.audio-supplement.jingle.54.native255",
+          "nativeVolume": 255,
+          "sourceId": 54,
+          "kind": "jingle",
+          "frames": 154355,
+          "pcmFloatHashesExact": true,
+          "nativeFullScaleSamples": 555,
+          "additionalClipSamples": 0,
+          "actualStart": 72.6378231292517,
+          "naturallyEnded": true
+        },
+        {
+          "assetId": "asset.source.osrs.cache2695.audio-supplement.jingle.58.native255",
+          "nativeVolume": 255,
+          "sourceId": 58,
+          "kind": "jingle",
+          "frames": 138478,
+          "pcmFloatHashesExact": true,
+          "nativeFullScaleSamples": 18,
+          "additionalClipSamples": 0,
+          "actualStart": 78.66340136054421,
+          "naturallyEnded": true
+        },
+        {
+          "assetId": "asset.source.osrs.cache2695.audio-supplement.jingle.64.native255",
+          "nativeVolume": 255,
+          "sourceId": 64,
+          "kind": "jingle",
+          "frames": 139654,
+          "pcmFloatHashesExact": true,
+          "nativeFullScaleSamples": 93,
+          "additionalClipSamples": 0,
+          "actualStart": 83.98657596371882,
+          "naturallyEnded": true
+        },
+        {
+          "assetId": "asset.source.osrs.cache2695.audio-supplement.jingle.65.native255",
+          "nativeVolume": 255,
+          "sourceId": 65,
+          "kind": "jingle",
+          "frames": 154355,
+          "pcmFloatHashesExact": true,
+          "nativeFullScaleSamples": 169,
+          "additionalClipSamples": 0,
+          "actualStart": 89.36780045351473,
+          "naturallyEnded": true
+        }
+      ],
+      "sourcePackChanged": false,
+      "baseOriginalsUnchanged": 266
+    },
+    {
+      "name": "declared single/shuffle state is idempotent and source-unlocked groups are not fabricated",
+      "passed": true,
+      "durationMs": 2572,
+      "identicalStateRestarts": 0,
+      "lockedSelectionRejected": true,
+      "singleReconnectSources": 1,
+      "shuffleGroups": [
+        327,
+        64,
+        145,
+        163
+      ],
+      "sourceGainGuessing": false
+    },
+    {
+      "name": "full-length live playlist uses the native table44 timer and preserves the one-pass release",
+      "passed": true,
+      "durationMs": 137631,
+      "actualElapsedSourceSeconds": 137.60725623582766,
+      "from": 2,
+      "to": 76,
+      "expectedBoundary": 235.48108843537415,
+      "actualScheduledBoundary": 235.48108843537415,
+      "timingErrorMs": 0,
+      "originalNaturallyEndedAt": 235.09043083900227,
+      "simultaneousPlayingMusicSources": 1,
+      "sourceDurationTicks": 229,
+      "sourceReleaseTailPreserved": 22050,
+      "additionalClipSamples": 0,
+      "monitor": {
+        "kind": "stats",
+        "request": 28,
+        "frames": 5197184,
+        "nonzero": 8646858,
+        "peak": 1.0609354972839355,
+        "clips": 24,
+        "channels": 2,
+        "currentFrame": 5197184,
+        "currentTime": 235.69995464852607,
+        "sampleRate": 22050
+      }
+    },
+    {
+      "name": "Modern area selects its next original track internally without a caller selector or exhausted silence",
+      "passed": true,
+      "durationMs": 116543,
+      "sourceArea": 1,
+      "actualOriginalMembership": [
+        2,
+        64,
+        327,
+        163,
+        76,
+        145
+      ],
+      "from": 163,
+      "to": 145,
+      "actualNextAssetId": "asset.source.osrs.cache2695.audio-supplement.music.145.native255",
+      "callerSelector": null,
+      "expectedBoundary": 352.11156462585035,
+      "actualBoundary": 352.11156462585035,
+      "timingErrorMs": 0,
+      "sameAreaSquareRestart": false,
+      "exhausted": false
+    },
+    {
+      "name": "single mode re-enters the complete original pass on its native timer without looping release samples",
+      "passed": true,
+      "durationMs": 117731,
+      "sourceGroup": 163,
+      "firstStart": 353.44090702947847,
+      "secondStart": 469.84090702947844,
+      "nativeDurationTicks": 194,
+      "timingErrorMs": 0,
+      "sampleLoop": false,
+      "originalReleaseTailPreserved": true
+    },
+    {
+      "name": "a pre-trained Cook reward with unchanged base level produces no level-up source before or after its scroll closes",
+      "passed": true,
+      "durationMs": 271,
+      "committedCookingDelta": {
+        "before": {
+          "xpTenths": "52000",
+          "baseLevel": 21
+        },
+        "after": {
+          "xpTenths": "55000",
+          "baseLevel": 21
+        }
+      },
+      "levelUpSources": 0,
+      "currentLevelBoostNotTreatedAsBaseGain": true,
+      "productionQuestOrXpMutations": 0
+    },
+    {
+      "name": "client preferences require the real character and detach all three slots without autoplay or persistence",
+      "passed": true,
+      "durationMs": 24,
+      "version": 1,
+      "nativeSavedSlots": [
+        1,
+        2,
+        3
+      ],
+      "slotsPerPlaylist": 100,
+      "detached": true,
+      "idempotentReapplications": 20,
+      "autoplaySources": 0,
+      "audioOwnedPersistenceKeys": 0
+    },
+    {
+      "name": "direct Skip unlocks from a real keyboard gesture and obeys source Area/Single eligibility",
+      "passed": true,
+      "durationMs": 5053,
+      "originalCallback": 9292,
+      "originalClick": 2266,
+      "rejectedSyntheticUnlock": "AUDIO_GESTURE_REQUIRED",
+      "trustedGesture": {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      "requested": {
+        "status": "requested",
+        "previousGroup": 62,
+        "nextGroup": 64
+      },
+      "actualStartedGroup": 64,
+      "actualStart": 472.1471201814059,
+      "nativeTransitionCycles": [
+        0,
+        60,
+        60,
+        0
+      ],
+      "delayErrorMs": 1.1324274851176597e-11,
+      "disabledModes": [
+        "area",
+        "single"
+      ]
+    },
+    {
+      "name": "three native saved playlists keep holes, selection rules and explicit empty/unpublished rejection",
+      "passed": true,
+      "durationMs": 2610,
+      "inactivePlaylistStarts": 0,
+      "holeAfterRemoval": 1,
+      "firstHoleInsertion": 2,
+      "slot2LastGroup": 144,
+      "sourceSelectionMode": 1,
+      "allMusicSelectionMode": 0,
+      "emptyPlaylistReported": true,
+      "invalid": {
+        "codes": [
+          "AUDIO_PREFERENCES",
+          "AUDIO_PREFERENCE_TRACK",
+          "AUDIO_PREFERENCE_VERSION"
+        ],
+        "unchanged": true
+      }
+    },
+    {
+      "name": "native remembered mute vectors, first-use fallbacks and slider-zero differ from global privacy mute",
+      "passed": true,
+      "durationMs": 3413,
+      "originalRestore": [
+        100,
+        20,
+        45,
+        25
+      ],
+      "restoredSavedVector": [
+        37,
+        21,
+        66,
+        83
+      ],
+      "restoredNativeMixer": [
+        3,
+        7,
+        10
+      ],
+      "sliderZeroDidNotRewriteMemory": true,
+      "globalMutePersistedAsChannelZero": false,
+      "mutedMonitorPeak": 0
+    },
+    {
+      "name": "Skip during a jingle updates remembered source and fades without consuming another bag entry",
+      "passed": true,
+      "durationMs": 9328,
+      "previous": 62,
+      "remembered": 2,
+      "repeatedRequests": [
+        "pending",
+        "pending"
+      ],
+      "nativeTransition": [
+        0,
+        60,
+        60,
+        0
+      ],
+      "expectedJingleEnd": 489.40167800453514,
+      "nextSourceStart": 490.61278911564625,
+      "transitionErrorMs": 11.11111111110863,
+      "sameRememberedTrackRetainedItsZeroTransition": true,
+      "sameGroupReentryErrorMs": 5.306122448985207,
+      "jingleNativeVoiceId": 141,
+      "jingleRestarts": 0,
+      "nativeStartsIncludingBoundClicks": 4
+    },
+    {
+      "name": "Shuffle preserves every entry across pending Skip, mute, reconnect and bag rollover",
+      "passed": true,
+      "durationMs": 6617,
+      "order": [
+        62,
+        2,
+        76
+      ],
+      "firstBagActuallyPlayed": [
+        62,
+        2,
+        76
+      ],
+      "pendingSkipPreservedThroughMute": 2,
+      "reconnectRestartedOnlyCurrentGroup": 2,
+      "nextBagFirst": 62,
+      "skippedOrDoubleConsumedEntries": 0,
+      "snapshotStarts": 0
+    },
+    {
+      "name": "native keep-playing and Single membership selection retain nodes; one-song Shuffle cannot invent an alternative",
+      "passed": true,
+      "durationMs": 1528,
+      "retainedNativeVoiceId": 151,
+      "keepPlayingRestartCount": 0,
+      "nonmemberSelectionSwitchedToNativeShuffle": true,
+      "onlyEligibleGroup": 144,
+      "inventedNextTrack": false
+    },
+    {
+      "name": "gesture failure and cross-character reset cannot inherit preferences, tracks or pending commands",
+      "passed": true,
+      "durationMs": 2625,
+      "injectedResumeFailure": "AUDIO_UNLOCK",
+      "nativeBagChangedOnFailure": false,
+      "deferredResumeAcrossSameIdReset": "AUDIO_CONTROL_SUPERSEDED",
+      "staleSkipAppliedToNewSession": false,
+      "previousPlayer": "player.audio-preference-bag",
+      "newPlayer": "player.audio-preference-new-character",
+      "inheritedBinding": false,
+      "freshLoginMode": "area",
+      "nativeCurrentPlaylist": 0
+    },
+    {
+      "name": "bound native Single repeats at 194 source ticks even when native4137 is clear, without extra clipping",
+      "passed": true,
+      "durationMs": 117734,
+      "sourceScript": 9630,
+      "native4137": 0,
+      "nativeMode": 2,
+      "durationTicks": 194,
+      "firstStart": 502.53623582766437,
+      "secondStart": 618.9362358276644,
+      "timingErrorMs": 0,
+      "releasePaddingSampleLoop": false,
+      "addedClipSamples": 0,
+      "actualNativeMixer": 44
+    },
+    {
+      "name": "real AudioContext closure is a device failure, followed by idempotent complete disposal",
+      "passed": true,
+      "durationMs": 19,
+      "contextClosed": true,
+      "activeNodesAfterDispose": 0,
+      "queuedAfterDispose": 0,
+      "decodedCacheBytesAfterDispose": 0
+    }
+  ],
+  "failures": [],
+  "complete": true,
+  "crossOriginIsolated": true,
+  "nativePlayback": {
+    "starts": 158,
+    "ends": 157,
+    "startedOnlyWhileRunning": true,
+    "endedSourceIds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      53,
+      32,
+      67,
+      73,
+      66,
+      77,
+      37,
+      35,
+      39,
+      40,
+      68,
+      56,
+      71,
+      38,
+      52,
+      59,
+      48,
+      80,
+      74,
+      41,
+      44,
+      79,
+      60,
+      42,
+      81,
+      51,
+      34,
+      46,
+      72,
+      65,
+      61,
+      58,
+      75,
+      69,
+      49,
+      50,
+      76,
+      64,
+      54,
+      47,
+      62,
+      55,
+      78,
+      33,
+      36,
+      70,
+      43,
+      63,
+      45,
+      57,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      95,
+      94,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      128,
+      126,
+      130,
+      127,
+      129,
+      131,
+      133,
+      132,
+      135,
+      134,
+      137,
+      136,
+      138,
+      140,
+      139,
+      141,
+      143,
+      144,
+      145,
+      142,
+      146,
+      148,
+      147,
+      149,
+      150,
+      151,
+      152,
+      153,
+      155,
+      154,
+      156,
+      157
+    ],
+    "gestures": [
+      {
+        "control": "unlock",
+        "trusted": false,
+        "active": false,
+        "input": "keyboard-or-synthetic"
+      },
+      {
+        "control": "unlock",
+        "trusted": true,
+        "active": true,
+        "input": "mouse"
+      },
+      {
+        "control": "unlock",
+        "trusted": true,
+        "active": true,
+        "input": "mouse"
+      },
+      {
+        "control": "unlock",
+        "trusted": true,
+        "active": true,
+        "input": "keyboard-or-synthetic"
+      },
+      {
+        "control": "unlock",
+        "trusted": true,
+        "active": true,
+        "input": "mouse"
+      },
+      {
+        "control": "unlock",
+        "trusted": true,
+        "active": true,
+        "input": "mouse"
+      },
+      {
+        "control": "unlock",
+        "trusted": true,
+        "active": true,
+        "input": "mouse"
+      },
+      {
+        "control": "unlock",
+        "trusted": true,
+        "active": true,
+        "input": "mouse"
+      },
+      {
+        "control": "unlock",
+        "trusted": true,
+        "active": true,
+        "input": "mouse"
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "playlist-1",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "playlist-0",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "playlist-3",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-master",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-music",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-effects",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-area",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-music",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-master",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-music",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-effects",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-area",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-master",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-music",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-effects",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-area",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "playlist-2",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "playlist-2",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "playlist-2",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "unlock",
+        "trusted": true,
+        "active": true,
+        "input": "mouse"
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      }
+    ]
+  },
+  "observedRuntimeErrors": [
+    {
+      "code": "AUDIO_GESTURE_REQUIRED",
+      "message": "Sound is waiting for a real mouse or keyboard gesture. AudioContext has not been unlocked.",
+      "recoverable": true,
+      "detail": {
+        "state": "suspended"
+      }
+    },
+    {
+      "code": "AUDIO_QUEUE_FULL",
+      "message": "The native 50-entry FIFO is full; the new request was dropped.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_QUEUE_FULL",
+      "message": "The native 50-entry FIFO is full; the new request was dropped.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_ASSET_ID",
+      "message": "Unknown or mismatched original sfx identity 65000. No replacement is permitted.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_ASSET_ID",
+      "message": "Unknown or mismatched original sfx identity 710. No replacement is permitted.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_EVENT",
+      "message": "Action sounds require an authoritative committed event, never an optimistic UI request.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_BINDING",
+      "message": "UI 2266 is allowed only for its explicit bound source event, never every click.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_BINDING",
+      "message": "This action-to-sound selector is not bound by the approved reference.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_BINDING",
+      "message": "This sequence has no bound frame sounds. Do not invent bow, NPC, smelt, walk, or silent-829 cues.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_EVENT",
+      "message": "Received effects require explicit native repeatCount and delayCycles; no guessed server delay is added.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_VOLUME",
+      "message": "Audio volume must be a finite source slider position between 0 and 1.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_CONTEXT_SUSPENDED",
+      "message": "AudioContext is suspended; playback is not running. Use a real gesture to resume.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_UNLOCK",
+      "message": "Cannot enable audio: Injected device resume rejection",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_INTEGRITY",
+      "message": "Source hash mismatch for asset.source.osrs.cache2695.audio-runtime.sfx.60.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_NETWORK",
+      "message": "Audio input asset.source.osrs.cache2695.audio-runtime.sfx.62 returned HTTP 503.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_BYTES",
+      "message": "Wrong length for asset.source.osrs.cache2695.audio-runtime.sfx.193.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_DECODE",
+      "message": "Cannot decode original audio asset.source.osrs.cache2695.audio-runtime.sfx.2739: Injected decoder rejection on hash-verified input",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_NETWORK",
+      "message": "Audio input asset.source.osrs.cache2695.audio-runtime.music.0 returned HTTP 503.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_CONTEXT_SUSPENDED",
+      "message": "AudioContext is suspended; playback is not running. Use a real gesture to resume.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_OUTPUT_DISABLED",
+      "message": "The browser selected a silent AudioContext output sink. A running clock alone is not enabled playback.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_CONTEXT_SUSPENDED",
+      "message": "AudioContext is suspended; playback is not running. Use a real gesture to resume.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_CONTEXT_SUSPENDED",
+      "message": "AudioContext is suspended; playback is not running. Use a real gesture to resume.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_RESUME_TIMEOUT",
+      "message": "The browser did not grant running audio. Try the sound control again.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_CONTEXT_SUSPENDED",
+      "message": "AudioContext is suspended; playback is not running. Use a real gesture to resume.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_LOADING_LATE",
+      "message": "Original cue 2266 was not decoded for its scheduled source-cycle dispatch.",
+      "recoverable": true,
+      "detail": {
+        "eventId": "source-control/1",
+        "dueAt": 470.48530612244895
+      }
+    },
+    {
+      "code": "AUDIO_PLAYLIST_EMPTY",
+      "message": "The selected original playlist is empty; no track is substituted.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_CONTEXT_SUSPENDED",
+      "message": "AudioContext is suspended; playback is not running. Use a real gesture to resume.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_UNLOCK",
+      "message": "Cannot enable audio: Injected source control resume denial",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_CONTEXT_SUSPENDED",
+      "message": "AudioContext is suspended; playback is not running. Use a real gesture to resume.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_CONTEXT_CLOSED",
+      "message": "AudioContext is closed; playback is not running. Recreate the audio handle.",
+      "recoverable": false,
+      "detail": {}
+    }
+  ],
+  "implementationChangedDuringRun": [],
+  "requestedPlayableIds": [
+    "asset.source.osrs.cache2695.audio-runtime.music.0",
+    "asset.source.osrs.cache2695.audio-runtime.music.62",
+    "asset.source.osrs.cache2695.audio-runtime.music.144",
+    "asset.source.osrs.cache2695.audio-runtime.music.76",
+    "asset.source.osrs.cache2695.audio-runtime.music.2",
+    "asset.source.osrs.cache2695.audio-runtime.jingle.33",
+    "reference.audio.sfx.2693",
+    "reference.audio.sfx.710",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.713",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.711",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.469",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.472",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.471",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.2725",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.2603",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.3220",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.2597",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.2735",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.3790",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.3791",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.2393",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.2065",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.2184",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.1988",
+    "asset.source.osrs.cache2695.audio-runtime.jingle.154",
+    "asset.source.osrs.cache2695.audio-runtime.jingle.152",
+    "asset.source.osrs.cache2695.audio-runtime.jingle.34",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.60",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.62",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.193",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.2739",
+    "asset.source.osrs.cache2695.audio-runtime.jingle.30",
+    "asset.source.osrs.cache2695.audio-runtime.jingle.54",
+    "asset.source.osrs.cache2695.audio-supplement.jingle.54.native255",
+    "asset.source.osrs.cache2695.audio-supplement.music.64.native255",
+    "asset.source.osrs.cache2695.audio-supplement.music.327.native255",
+    "asset.source.osrs.cache2695.audio-supplement.music.163.native255",
+    "asset.source.osrs.cache2695.audio-supplement.music.145.native255",
+    "asset.source.osrs.cache2695.audio-supplement.jingle.40.native255",
+    "asset.source.osrs.cache2695.audio-supplement.jingle.58.native255",
+    "asset.source.osrs.cache2695.audio-supplement.jingle.64.native255",
+    "asset.source.osrs.cache2695.audio-supplement.jingle.65.native255",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.2266"
+  ],
+  "finishedAt": "2026-09-15T22:40:51.985Z"
+}

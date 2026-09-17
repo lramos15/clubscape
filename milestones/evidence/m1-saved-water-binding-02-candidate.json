@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "kind": "saved52_fixed_successor_binding_candidate",
+  "task": "M1-SAVED-WATER-BINDING-02",
+  "status": "independently_reviewed_integrated_root_qualified",
+  "author": "director",
+  "recorded_at": "2026-09-17T11:13:36.578113+00:00",
+  "implementation_admission": "milestones/evidence/m1-saved-water-binding-02-implementation.json",
+  "owner_approval": "milestones/approvals/m1-saved-water-continuation-02.json",
+  "owner_approval_revision": "90feaf285cfa91eb91fa6a2b050d17429bf142ef",
+  "owner_approval_sha256": "facac6a31f526be54bb40dd670208d1a7bc808f792df49c1bdbd8d3dc7193495",
+  "worktree": ".worktrees/m1-saved-water-continuation",
+  "branch": "task/m1-saved-water-continuation",
+  "base_revision": "76971ee95040130ddd2084f7fa7c9fd275982e2c",
+  "code_revision": "0b6105d66a615fcaf47886cc97f094d6063320e8",
+  "binding": "Only execution-02.json, saved-water-continuation-02 and its authority-v1.json are selected. The exact successor owner approval is an additional mandatory public input with a code-pinned hash. No generic selector, retry switch, new launcher or alternate authority types.",
+  "semantic_preservation": "AST normalization removes only the two new owner constants, one owner public-input entry and one exact owner-pin require, and restores the two changed fixed paths. The resulting complete gate AST is identical to769, including original declarations, all prior guards, main and cli.",
+  "source_files": [
+    {"path": "tools/journey-tests/SAVED_WATER.md", "bytes": 14650, "sha256": "389113f6d811daee70aa184295b45701a4358dface9a0000a5ad2f6a99c61c68"},
+    {"path": "tools/journey-tests/saved_water_gate.py", "bytes": 25831, "sha256": "04fe075115cbbe8f7f09578cd110421816259963ae62b7863cd8e1cd0848923e"},
+    {"path": "tools/journey-tests/test_saved_water.py", "bytes": 27134, "sha256": "ab3fd6866dcaebcd84c1a498c1c8535a9fd4c7eb71304cc6870fe20fcddfebb7"}
+  ],
+  "python": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/journey-tests timeout 120 python3 -m unittest test_saved_water test_saved_water_runtime test_private_checkpoint test_resume test_run test_cook_continue test_mainland_continue test_dying_observe",
+    "qualification_stage": "Precommit run of the exact subsequently committed three-path edits; no separate clean0b or root successor qualification is claimed.",
+    "tests_passed": 98,
+    "actual_exit_code": 0,
+    "runner_seconds": 6.936,
+    "elapsed_seconds": 7.02,
+    "new_cases": [
+      "Old admission hash and old-output payload aliased under the new admission name are rejected without reservation.",
+      "Missing, differently pinned or changed successor owner approval is rejected before reservation.",
+      "The retained actual-script/runtime-reader test reserves the successor once, refuses its second launch and leaves a synthetic consumed old journal byte-identical."
+    ],
+    "all_fixtures_synthetic": true
+  },
+  "evidence": [
+    {"path": "milestones/evidence/m1-saved-water-binding-02/python.log", "bytes": 702, "sha256": "2c3baafd86358ec78b04a0416af0cd6326695b911d4b4eff41015271d0b0f72e"},
+    {"path": "milestones/evidence/m1-saved-water-binding-02/python.time", "bytes": 71, "sha256": "ff486ed5457a1fa7ef7d200c2aaa4ba40d8bd8deb084400bffa6c559e4d0c00f"},
+    {"path": "milestones/evidence/m1-saved-water-binding-02/python.exit", "bytes": 2, "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"}
+  ],
+  "native_callsite_checked_statically": "tools/simulator/src/journey/saved_water.rs:105-122 still invokes the same saved_water.py --claim-native CLI. It contains no original admission/output binding; selection remains in the shared Python gate.",
+  "runtime_native_source_dependencies_or_binary_paths_changed": false,
+  "native_builds_game_binary_invocations_or_elf_rehashes": 0,
+  "actual_old_journal_report_or_original_checkpoint_accesses": 0,
+  "original_public_admission_sha256_unchanged": "228dfd7e5af154f45f87b85f9b76f56e25602ea2c041ab112f1cad39ada37ea1",
+  "actual_entrypoint_services_databases_restores_migrations_or_gameplay": 0,
+  "source_generation_operator_browser_gpu_or_runelite": 0,
+  "independent_review": "milestones/evidence/m1-saved-water-binding-02-review.json",
+  "director_integration_admission": "milestones/evidence/m1-saved-water-binding-02-integration-admission.json",
+  "main_integration": true,
+  "director_integration_revision": "3c9c43d66e3839d9b4aef66913f4d966d494fefa",
+  "director_root_qualification": "milestones/evidence/m1-saved-water-binding-02-root-qualification.json",
+  "executable_admission_created": true,
+  "executable_admission": "milestones/evidence/m1-saved-water-execution-02.json",
+  "separate_actual_execution_result": "milestones/evidence/m1-saved-water-execution-02-result.json",
+  "activity_count_scope": "Zero-operation counts above describe binding implementation/qualification only. Separate actual4282 execution is recorded in its own result and consumes the new allowance.",
+  "owner_conditionally_authorized_new_attempts_unconsumed": 0,
+  "prior_attempts_remaining": 0,
+  "pre_execution_requirement": "Completed by reviewed0b, root3c9c43d/98cases and exact admission3a52. Actual4282 remaining-only continuation passed and consumed02. No further protected access or retry is admitted.",
+  "milestone_accepted": false
+}

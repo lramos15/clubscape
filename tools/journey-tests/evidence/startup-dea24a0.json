@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "scope": "Actual standalone GameRoot startup, normal public character creation and first source action only",
+  "startup_verified": true,
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_claims": false,
+  "authorized_parent_fix": "2c5fe68b9a6e2e99bcbf3543174f5540be02e95f",
+  "local_cherry_pick": "dea24a024e39d6e17f5db472300717c1c39e2e23",
+  "run_id": "ed442fcf030a421b",
+  "command": "python3 tools/journey-tests/run.py --report .local/evidence/m1-full-fresh-assets.json",
+  "production_server_entrypoint": "clubscape-server with GAME_ROOT and without WEB_ROOT",
+  "source_artifact_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+  "source_revision": "m1.source-backed.v3.0e506f3dab24bbe0",
+  "genuine_required_asset_mappings": 5010,
+  "descriptor_bytes": 272433,
+  "actual_ordinary_normal_f2p_proofs": "Server game_readiness event proved all six inactive paths; no source binding was removed/coerced.",
+  "gameplay_hello_capabilities": ["accounts.v1", "sessions.v1", "game.v1"],
+  "account_id": "55e06ebf-2fd3-4ebb-998d-8c7a7fbf6d45",
+  "actor_id": "actor.0744446dcde44015aa8a6c540292be22",
+  "creation_method": ["Register", "Login", "CreateCharacter with empty options", "JoinWorld"],
+  "source_initial_checkpoint": {
+    "status": "passed",
+    "inventory": [],
+    "equipment": {},
+    "appearance_confirmed": false,
+    "experience": null,
+    "tutorial_stage": "stage.tutorial.appearance",
+    "tile": {"x": 3094, "y": 3106, "plane": 0},
+    "quest_points": 0,
+    "source_skill_count": 24,
+    "source_initial_skills_vitals_and_quest_assertions": "Passed against independent source oracles; complete actual values remain in the detailed report/trace."
+  },
+  "first_legitimate_source_transitions": [
+    {
+      "input": "ConfirmAppearance",
+      "from": "stage.tutorial.appearance",
+      "to": "stage.tutorial.experience",
+      "source_transition": "transition.tutorial.appearance",
+      "tick": 4
+    },
+    {
+      "input": "SelectExperience",
+      "from": "stage.tutorial.experience",
+      "to": "stage.tutorial.guide_greeting",
+      "source_transition": "transition.tutorial.experience",
+      "tick": 5
+    }
+  ],
+  "deployment_packaging_correction": {
+    "earlier_diagnostic_run": "005c795db065490f",
+    "earlier_real_error": "game_assets",
+    "cause": "Owned packager used extensionless storage paths, rejected by the unchanged server extension allowlist.",
+    "repair": "Store byte-identical original payloads at .bin paths while keeping the same public asset URLs/IDs and hashes.",
+    "source_asset_omission_or_substitution": false,
+    "startup_checks_weakened": false
+  },
+  "subsequent_candidate_failure": {
+    "action": "tutorial.guide_greeting / Talk-to spawn.gielinor_guide",
+    "sequence": 7,
+    "http_status": 409,
+    "error_id": "7e647f84-5e37-4ce7-a8f9-372f9647fd30",
+    "actual_server_game_error_code": "OutOfReach",
+    "scope": "Observed moving NPC targeting race after successful startup; not a failed startup or completed tutorial.",
+    "runner_follow_up": "Bounded observed NPC re-approach with unchanged-sequence reconciliation; no RNG/clock/state mutation."
+  },
+  "identity": {
+    "world_id": "fe8cff70-12cf-439b-abd6-021509f46b9c",
+    "descriptor_sha256": "8fc67f96ff8c977994fd8044effd58ed7333bea8df0bd690d9502fde2888c7de",
+    "assets_manifest_sha256": "e5cc5ab112bfc3f14860df32df0cd2c28a20cc1903666535a69bcef82304a28c",
+    "server_sha256": "3b913c23af6612eaaf86a41b721084fa91a62e4588966bf36ddd3c93b72ef0a4",
+    "simulator_sha256": "213da2184f942455d9b3c8dcc524c9213c8112dab40dab89e7dd8fb8d52eb420"
+  },
+  "owned_resources_cleaned": true,
+  "gameplay_sql_or_state_seeding_used": false,
+  "sql_startup_task": "m1-game-root-startup marked done only after these actual results",
+  "sql_full_journey_task": "m1-headless-journey remains separate and unpassed",
+  "detailed_report": ".local/evidence/journey-ed442fcf030a421b/m1-fresh-account.json"
+}

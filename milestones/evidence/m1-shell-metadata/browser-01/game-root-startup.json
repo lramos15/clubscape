@@ -1,0 +1,19 @@
+{
+  "kind": "actual-canonical-game-root-startup",
+  "result": "passed",
+  "testedRevision": "b4f63046a75f90978afb432441316c70cf96f73b",
+  "sourceRunPin": {
+    "schemaVersion": 1,
+    "worldId": "ffd86a81-8dd1-4a19-bc2a-442e91025559",
+    "artifactSha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "contentRevision": "m1.source-backed.v4.bdbf8a3788b842be",
+    "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+    "descriptorSha256": "465fbd00d6881ca96eb724ee77d2bd1c05de1808f23e42212f21cd908b08d9b8",
+    "gameAssetsManifestSha256": "adf8e97b7bf3839d0cd162113931532029f531ed5739c33651ec07a3f0c7db20",
+    "contentManifestSha256": "996434524e3b711b70590cbef04f4670f23d5d20f32dd9a98a42d11622ff252a"
+  },
+  "standaloneWithoutWebRoot": true,
+  "descriptorBytes": 406966,
+  "descriptorLimit": 524288,
+  "gameplayAccepted": false
+}

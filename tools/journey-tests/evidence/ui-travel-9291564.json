@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "scope": "Safe integration of the authorized timed-UI source travel interruption repair",
+  "authorized_commit": "0575fe0051b649adbd19b194b8521f328a54aad2",
+  "local_cherry_pick": "9291564",
+  "all_five_authorized_files_applied": true,
+  "dependency_change": "Only the authorized existing flate2 test dependency edge, including its lockfile edge; no package version change.",
+  "safe_boundary": {
+    "older_owned_candidates_active": 0,
+    "older_world_or_artifact_repinned": false,
+    "unknown_departure_operation_retried": false,
+    "new_game_services_started": false
+  },
+  "unchanged_candidate": {
+    "revision": "m1.source-backed.v4.67e4f1fcc55d71d5",
+    "raw_artifact_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3",
+    "content_artifact_version": 4,
+    "state_runtime_ui_versions": 1,
+    "source_geometry_rng_cadence_or_grants_changed": false
+  },
+  "integration": {
+    "actual_hook": "Before UI dispatch, when ui_request_requires_tick is true, call existing interrupt_travel(AnotherAction) on the transaction draft.",
+    "read_only_ui_retains_noninterrupting_policy": true,
+    "source_refusals_remain_atomic": true,
+    "no_browser_or_client_outcome_setter_added": true
+  },
+  "validation": [
+    {
+      "command": "cargo test --quiet --package clubscape-world-engine --test ui_travel_interruption",
+      "result": "passed",
+      "passed_tests": 5,
+      "scope": "Controlled canonical/source-policy and negative component regressions, not a complete protocol journey."
+    },
+    {
+      "command": "cargo test --quiet --package clubscape-sim --package clubscape-protocol --all-features",
+      "result": "passed",
+      "passed_tests": 48
+    },
+    {
+      "command": "cargo clippy --quiet --package clubscape-world-engine --package clubscape-sim --all-features --all-targets -- -D warnings",
+      "result": "passed"
+    },
+    {
+      "command": "cargo fmt --package clubscape-world-engine --package clubscape-sim --check",
+      "result": "passed"
+    }
+  ],
+  "prior_actual_journey": {
+    "run_id": "37b566d34a474437",
+    "source_edges_acknowledged": 66,
+    "anvil_typed_selection_combat_banking_and_learning_the_ropes": "Previously verified; evidence remains unchanged.",
+    "onboarding_recovery": "Previously verified; no newer live-recovery claim is inferred from this integration.",
+    "remaining_source_blocker": "Magic Instructor departure_confirmation has three same-guard primary entries; offer_mainland returned HTTP500 game_source_view with an unknown commit outcome.",
+    "evidence": "tools/journey-tests/evidence/ui4-departure-1e9c7be.json",
+    "no_fresh_full_journey_run_before_that_independent_source_blocker_is_resolved": true
+  },
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_acceptance": false
+}

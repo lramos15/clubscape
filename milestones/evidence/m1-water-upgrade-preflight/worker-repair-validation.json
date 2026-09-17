@@ -1,0 +1,103 @@
+[
+  {
+    "check": "focused",
+    "command": [
+      "cargo",
+      "test",
+      "--quiet",
+      "--locked",
+      "--offline",
+      "-p",
+      "clubscape-world-engine",
+      "--test",
+      "item_on_target"
+    ],
+    "exit_code": 0,
+    "target": ".local/water-dispatch/persisted-repair/after-target",
+    "passed": 10,
+    "binaries": 1
+  },
+  {
+    "check": "full",
+    "command": [
+      "cargo",
+      "test",
+      "--quiet",
+      "--locked",
+      "--offline",
+      "-p",
+      "clubscape-game-types",
+      "-p",
+      "clubscape-content",
+      "-p",
+      "clubscape-world-engine",
+      "--all-targets"
+    ],
+    "exit_code": 0,
+    "target": ".local/water-dispatch/persisted-repair/after-target",
+    "passed": 420,
+    "binaries": 37
+  },
+  {
+    "check": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--quiet",
+      "--locked",
+      "--offline",
+      "-p",
+      "clubscape-game-types",
+      "-p",
+      "clubscape-content",
+      "-p",
+      "clubscape-world-engine",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "target": ".local/water-dispatch/persisted-repair/after-target"
+  },
+  {
+    "check": "wasm-clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--quiet",
+      "--locked",
+      "--offline",
+      "-p",
+      "clubscape-game-types",
+      "-p",
+      "clubscape-content",
+      "-p",
+      "clubscape-world-engine",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "target": ".local/water-dispatch/persisted-repair/after-target"
+  },
+  {
+    "check": "format",
+    "command": [
+      "cargo",
+      "fmt",
+      "-p",
+      "clubscape-game-types",
+      "-p",
+      "clubscape-content",
+      "-p",
+      "clubscape-world-engine",
+      "--",
+      "--check"
+    ],
+    "exit_code": 0,
+    "target": ".local/water-dispatch/persisted-repair/after-target"
+  }
+]

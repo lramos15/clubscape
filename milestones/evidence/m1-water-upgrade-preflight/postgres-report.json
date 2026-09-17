@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "scope": "Exact source-pair migration/receipt components using controlled test-owned state",
+  "code_revision": "ee81bbf0501584e22550845666c7dd690acf991f",
+  "workspace_dirty": true,
+  "executable": "target/debug/deps/clubscape_server-edd05d8cb1a2fada",
+  "executable_sha256": "a31577100151e3a3f4dff2f7d5a9bda937b80cfd4af61989730ab5a7865a2944",
+  "test_source_sha256": "c2d2392d94423128eb0a3a180be8e1f93bea10784fbbc481a892d1252d54e29c",
+  "database_image": "postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685",
+  "selected_tests": [
+    "game_service::tests::water_migration::current_water_migration_preserves_fences_journals_and_resolves_once_after_restart",
+    "game_service::tests::water_migration::legacy_water_migration_preserves_fences_journals_and_resolves_once_after_restart"
+  ],
+  "result": "passed",
+  "passed_tests": 2,
+  "saved_checkpoint_accessed": false,
+  "actual_saved_world_migrated": false,
+  "milestone_accepted": false,
+  "ready_on_owned_loopback": true,
+  "command": [
+    "target/debug/deps/clubscape_server-edd05d8cb1a2fada",
+    "game_service::tests::water_migration::",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "owned_database_removed": true,
+  "temporary_credentials_removed": true
+}

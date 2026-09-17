@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "task": "M1-NATIVE-RECOVERY-REVIEW",
+  "reviewer": "e6925772-df1f-4ff7-9efc-219f800a5a14",
+  "reviewer_read_through_turn": 3,
+  "code_revision": "7f30a0aa5a1dabd89e890f16781f70f0b3d51045",
+  "evidence_revision": "ba8397ff4f7e48e64db0d21c8e57e022d08ef0b8",
+  "result": "no_high_confidence_findings",
+  "scope": [
+    "Native context identity, complete source slot ordering and independent captions",
+    "Atomic partial and whole-context recovery planning",
+    "Protocol and Rust/WASM/TypeScript forwarding",
+    "Current recovery UI consumers and stale selection lifecycle",
+    "Durable replay, authentication renewal and world-lease fencing"
+  ],
+  "expectations": "Existing source contract and original caption regression31203c6, not candidate goldens.",
+  "reviewer_edits_builds_tests_or_captures": false,
+  "private_account_or_checkpoint_access": false,
+  "qualifications": [
+    "Original-server selected-item All across records remains unresolved.",
+    "Office overflow above120 and ordinary-grave Bank-All remain unresolved.",
+    "This is not saved-account journey, whole-client, presentation, performance, security or M1 acceptance."
+  ],
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

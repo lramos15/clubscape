@@ -1,0 +1,571 @@
+syntax = "proto3";
+
+package clubscape.game.v1;
+
+message CreateCharacter {
+  // New servers require empty options here: confirmation/selection are sequenced source intents.
+  map<string, uint32> appearance = 1;
+  string experience_choice = 2;
+}
+message JoinWorld {}
+message PollWorld {
+  string world_session_id = 1;
+  uint64 after_revision = 2;
+  QuoteRequest quote = 3;
+}
+message LeaveWorld { string world_session_id = 1; }
+
+message WorldInput {
+  string world_session_id = 1;
+  uint64 sequence = 2;
+  optional uint64 expected_character_revision = 3;
+  oneof action {
+    Walk walk = 10;
+    Interact interact = 11;
+    DialogueChoice dialogue_choice = 12;
+    OpenInterface open_interface = 13;
+    Empty close_interface = 14;
+    InventorySlot equip = 15;
+    Unequip unequip = 16;
+    Drop drop = 17;
+    TakeGroundItem take_ground_item = 18;
+    UseItem use_item = 19;
+    MoveInventory move_inventory = 20;
+    InventorySlot eat = 21;
+    Produce produce = 22;
+    BankDeposit bank_deposit = 23;
+    BankWithdraw bank_withdraw = 24;
+    ShopBuy shop_buy = 25;
+    ShopSell shop_sell = 26;
+    SetCombatStyle set_combat_style = 27;
+    Cast cast = 28;
+    SetPrayer set_prayer = 29;
+    Empty cancel_activity = 30;
+    Empty request_logout = 31;
+    InteractWith interact_with = 32;
+    ProduceAt produce_at = 33;
+    SetSetting set_setting = 34;
+    ConfirmAppearance confirm_appearance = 35;
+    SelectExperience select_experience = 36;
+    Reclaim reclaim = 37;
+    ProduceSelected produce_selected = 38;
+    OpenGrave open_grave = 39;
+    Empty open_death_office = 40;
+    GameplayUiRequest ui = 41;
+  }
+}
+
+message Empty {}
+message Tile {
+  uint32 x = 1;
+  uint32 y = 2;
+  uint32 plane = 3;
+}
+message Walk { Tile destination = 1; bool running = 2; }
+message Interact { string target = 1; string action = 2; }
+message DialogueChoice { string speaker = 1; string choice = 2; }
+message OpenInterface { string interface = 1; }
+message InventorySlot { uint32 slot = 1; }
+message Unequip { string slot = 1; }
+message Drop { uint32 inventory_slot = 1; uint32 quantity = 2; }
+message TakeGroundItem { string ground_item_id = 1; }
+message UseItem {
+  uint32 inventory_slot = 1;
+  oneof target {
+    uint32 other_inventory_slot = 2;
+    string world_spawn = 3;
+    string temporary_object = 4;
+    string ground_item = 5;
+  }
+}
+message MoveInventory { uint32 from = 1; uint32 to = 2; }
+message Produce { string recipe = 1; optional string target = 2; uint32 quantity = 3; }
+message BankDeposit { string banker = 1; uint32 inventory_slot = 2; uint32 quantity = 3; }
+message BankWithdraw { string banker = 1; uint32 bank_slot = 2; uint32 quantity = 3; bool noted = 4; }
+message ShopBuy {
+  string shop = 1;
+  uint32 item_index = 2;
+  uint32 quantity = 3;
+  // Required for mutable extra rows; absence is supported only for fixed source catalogue rows.
+  optional string expected_item = 4;
+}
+message ShopSell { string shop = 1; uint32 inventory_slot = 2; uint32 quantity = 3; }
+message SetCombatStyle { string style = 1; }
+message Cast { string spell = 1; optional string target = 2; }
+message SetPrayer { string prayer = 1; bool enabled = 2; }
+message WorldTarget {
+  oneof target {
+    string spawn = 1;
+    string temporary_object = 2;
+  }
+}
+message InteractWith { WorldTarget target = 1; string action = 2; }
+message ProduceAt { string recipe = 1; WorldTarget target = 2; uint32 quantity = 3; }
+enum SettingKind {
+  SETTING_UNSPECIFIED = 0;
+  RUN = 1;
+  AUTO_RETALIATE = 2;
+  DEATH_AUTO_EQUIP = 3;
+  DEATH_SUPPLY_PILES = 4;
+}
+message SetSetting { SettingKind setting = 1; bool enabled = 2; }
+message ConfirmAppearance { map<string, uint32> appearance = 1; }
+message SelectExperience { string experience = 1; }
+enum RecoveryStorage {
+  RECOVERY_UNSPECIFIED = 0;
+  GRAVE = 1;
+  DEATH_OFFICE = 2;
+}
+message Reclaim { string death = 1; RecoveryStorage storage = 2; repeated string items = 3; }
+enum ProductionMode { PRODUCTION_MODE_UNSPECIFIED = 0; SINGLE = 1; MAKE_X = 2; }
+message ProduceSelected {
+  string recipe = 1; WorldTarget target = 2; uint32 quantity = 3; ProductionMode mode = 4;
+}
+message OpenGrave { string death = 1; }
+message InventoryAmount { uint32 inventory_slot = 1; uint32 quantity = 2; }
+message BankWithdrawal { uint32 bank_slot = 1; uint32 quantity = 2; bool noted = 3; }
+message QuoteRequest {
+  oneof request {
+    InventoryAmount bank_deposit = 1;
+    BankWithdrawal bank_withdraw = 2;
+    ShopBuy shop_buy = 3;
+    ShopSell shop_sell = 4;
+    Reclaim recovery = 5;
+  }
+}
+
+message CharacterCreated {
+  string actor_id = 1;
+  string content_revision = 2;
+}
+message WorldJoined {
+  string world_session_id = 1;
+  uint64 next_sequence = 2;
+  string content_revision = 3;
+  string content_manifest_path = 4;
+  WorldSnapshot snapshot = 5;
+}
+message WorldLeft {}
+message ActionResult {
+  uint64 sequence = 1;
+  string operation_id = 2;
+  bool duplicate = 3;
+  WorldSnapshot snapshot = 4;
+}
+message WorldSnapshot {
+  uint64 revision = 1;
+  uint64 tick = 2;
+  uint64 character_revision = 3;
+  Player player = 4;
+  repeated Entity entities = 5;
+  repeated GroundItem ground_items = 6;
+  Dialogue dialogue = 7;
+  repeated Event events = 8;
+  bool full_snapshot = 9;
+  repeated string removed_entities = 10;
+  // Player and ground_items are always complete. A gap resets entity state and omits old audio.
+  bool event_history_gap = 11;
+  uint64 event_history_floor_revision = 12;
+  repeated DynamicObject dynamic_objects = 13;
+  repeated UnavailableView unavailable_views = 14;
+  uint64 next_sequence = 15;
+  BankContext bank_context = 16;
+  ShopView shop = 17;
+  RecoveryContext recovery = 18;
+  Quote quote = 19;
+  // Present and versioned when game.ui.v1 is advertised; absent is unsupported legacy.
+  GameplayUiView ui = 20;
+  CurrentScene scene = 21;
+  AudioAuthority audio_authority = 22;
+}
+message AudioAuthority {
+  uint32 version = 1;
+  string profile = 2;
+  MusicAuthority music = 3;
+  repeated NativeVarp varps = 4;
+}
+enum MusicHistoryStatus {
+  MUSIC_HISTORY_UNSPECIFIED = 0;
+  FROM_CREATION = 1;
+  LEGACY_UNTRACKED = 2;
+}
+enum MusicUnlockStatus {
+  MUSIC_UNLOCK_UNSPECIFIED = 0;
+  UNLOCKED = 1;
+  LOCKED = 2;
+  UNKNOWN = 3;
+}
+message MusicAuthority {
+  MusicHistoryStatus history = 1;
+  string tracked_from_tick = 2;
+  string revision = 3;
+  bool complete = 4;
+  repeated uint32 unlocked_groups = 5;
+  repeated MusicUnlock tracks = 6;
+}
+message MusicUnlock {
+  uint32 group = 1;
+  MusicUnlockStatus status = 2;
+  optional string confirmed_at_tick = 3;
+  optional string rule = 4;
+}
+message NativeVarp {
+  uint32 id = 1;
+  optional sint32 value = 2;
+  string binding = 3;
+  optional string unavailable_reason = 4;
+  uint32 known_bits = 5;
+}
+message CurrentScene {
+  string region = 1;
+  optional string instance = 2;
+  optional string instance_template = 3;
+}
+message UnavailableView { string view = 1; string reason = 2; }
+message DynamicObject {
+  string id = 1;
+  string definition_id = 2;
+  optional string object_id = 3;
+  Tile tile = 4;
+  optional string instance = 5;
+  optional string state = 6;
+  optional bool door_open = 7;
+  uint32 quarter_turns = 8;
+  optional uint64 expires_at_tick = 9;
+}
+message Stack {
+  string item = 1;
+  uint32 quantity = 2;
+  optional string instance_id = 3;
+  optional uint32 charges = 4;
+}
+message ItemSlot { uint32 index = 1; Stack stack = 2; }
+message EquipmentSlot { string slot = 1; Stack stack = 2; }
+message Skill {
+  string id = 1;
+  uint64 xp_tenths = 2;
+  uint32 base_level = 3;
+  uint32 current_level = 4;
+}
+message Quest {
+  string id = 1;
+  string stage = 2;
+  string journal = 3;
+}
+message Player {
+  string actor_id = 1;
+  string display_name = 2;
+  map<string, uint32> appearance = 3;
+  string region = 4;
+  Tile tile = 5;
+  repeated ItemSlot inventory = 6;
+  repeated EquipmentSlot equipment = 7;
+  repeated ItemSlot bank = 8;
+  bool bank_open = 9;
+  repeated Skill skills = 10;
+  uint32 hitpoints = 11;
+  uint32 prayer_points = 12;
+  uint32 run_energy = 13;
+  uint32 quest_points = 14;
+  string tutorial_stage = 15;
+  string tutorial_instruction = 16;
+  repeated Quest quests = 17;
+  repeated string unlocked_interfaces = 18;
+  string activity = 19;
+  string animation = 20;
+  uint32 bank_capacity = 21;
+  repeated SetSetting settings = 22;
+  optional string experience = 23;
+  optional string instance = 24;
+  repeated string active_prayers = 25;
+  optional string active_death = 26;
+  bool appearance_confirmed = 27;
+  optional string combat_style = 28;
+  Presence presence = 29;
+  optional bool running = 30;
+  optional string movement_tick = 31;
+  ActorAction action = 32;
+}
+message ActorAction {
+  uint32 version = 1;
+  string id = 2;
+  string activity = 3;
+  optional string action_id = 4;
+  WorldTarget target = 5;
+  optional string recipe_id = 6;
+  optional string style_id = 7;
+  optional string spell_id = 8;
+  optional string animation = 9;
+  string started_at_tick = 10;
+  string cycle_started_at_tick = 11;
+  optional string next_action_tick = 12;
+  string observed_at_tick = 13;
+}
+enum PresenceKind { PRESENCE_UNSPECIFIED = 0; CONNECTED = 1; DISCONNECTING = 2; OFFLINE = 3; }
+message Presence { PresenceKind kind = 1; bool connected = 2; bool accepts_input = 3; bool present_in_world = 4; }
+enum EntityKind {
+  ENTITY_KIND_UNSPECIFIED = 0;
+  NPC = 1;
+  OBJECT = 2;
+  PLAYER = 3;
+}
+message Entity {
+  string id = 1;
+  string definition_id = 2;
+  string name = 3;
+  Tile tile = 4;
+  uint32 hitpoints = 5;
+  uint32 max_hitpoints = 6;
+  bool available = 7;
+  string animation = 8;
+  repeated string actions = 9;
+  map<string, uint32> appearance = 10;
+  repeated EquipmentSlot equipment = 11;
+  optional string instance = 12;
+  bool actions_evaluated = 13;
+  EntityKind kind = 14;
+  repeated InteractionOption interaction_options = 15;
+  optional string asset = 16;
+  uint32 width = 17;
+  uint32 height = 18;
+  Presence presence = 19;
+  optional bool running = 20;
+  optional string movement_tick = 21;
+  ActorAction action = 22;
+}
+message GroundItem {
+  string id = 1;
+  Tile tile = 2;
+  Stack stack = 3;
+  bool can_take = 4;
+  optional string instance = 5;
+  bool permissions_evaluated = 6;
+  Permission permission = 7;
+}
+message Dialogue {
+  string id = 1;
+  string speaker = 2;
+  string speaker_name = 3;
+  string text = 4;
+  repeated Choice choices = 5;
+}
+message Choice { string id = 1; string text = 2; }
+message Event {
+  string kind = 1;
+  string target = 2;
+  string text = 3;
+  Stack item = 4;
+  string skill = 5;
+  uint64 xp_tenths = 6;
+  uint32 damage = 7;
+  string sound_asset = 8;
+  string animation_asset = 9;
+  string event_id = 10;
+  repeated Stack items = 11;
+  string actor_id = 12;
+  PublicChatLine public_chat = 13;
+}
+
+message GameplayUiRequest {
+  optional string expected_bank_revision = 21;
+  oneof request {
+    UiIdentity dismiss = 1;
+    UiProductionSelection production = 2;
+    UiItemAction item_action = 3;
+    UiTab select_tab = 4;
+    UiIdentity create_tab = 5;
+    UiBankMove bank_move = 6;
+    UiTab collapse_tab = 7;
+    UiToggle insert_mode = 8;
+    UiToggle placeholders = 9;
+    UiIdentity release_placeholder = 10;
+    Empty deposit_equipment = 11;
+    UiBankWithdrawal bank_withdraw = 12;
+    UiBankOptions bank_options = 13;
+    Empty death_preview = 14;
+    Reclaim discard_recovery = 15;
+    UiCofferOffer coffer_offer = 16;
+    UiConfirmation confirmation = 17;
+    UiChat public_chat = 18;
+    UiDocumentPage document_page = 19;
+    UiIdentity placeholder = 20;
+    UiProductionAll production_all = 22;
+    UiBankAmount bank_amount = 23;
+    UiRecoveryTake recovery_take = 24;
+    UiRecoveryBankAll recovery_bank_all = 25;
+    UiRecoveryTakeAll recovery_take_all = 26;
+  }
+}
+message UiIdentity { string id = 1; }
+message UiTab { uint32 tab = 1; }
+message UiToggle { bool enabled = 1; }
+message UiProductionSelection { string menu_id = 1; string recipe = 2; uint32 quantity = 3; ProductionMode mode = 4; }
+message UiProductionAll { string menu_id = 1; string recipe = 2; }
+message UiAmount { oneof selection { uint32 quantity = 1; Empty all = 2; } }
+message UiBankAmount { UiAmount amount = 1; bool noted = 2; }
+message UiRecoveryItemAmount { string id = 1; UiAmount amount = 2; }
+message UiRecoveryRecordSelection { string death = 1; repeated string items = 2; }
+message UiRecoveryTake { string death = 1; RecoveryStorage storage = 2; repeated UiRecoveryItemAmount items = 3; }
+message UiRecoveryBankAll { repeated UiRecoveryRecordSelection records = 1; }
+message UiRecoveryGraveContext { string interface = 1; string death = 2; }
+message UiRecoveryOfficeContext { string interface = 1; optional string instance = 2; }
+message UiRecoveryContextIdentity {
+  oneof context {
+    UiRecoveryGraveContext grave = 1;
+    UiRecoveryOfficeContext death_office = 2;
+  }
+}
+message UiRecoveryContextEntrySelection {
+  string id = 1; uint32 quantity = 2; RecoveryStorage current_storage = 3;
+}
+message UiRecoveryContextRecordSelection {
+  string death = 1; repeated UiRecoveryContextEntrySelection entries = 2;
+}
+message UiRecoveryContextSelection {
+  UiRecoveryContextIdentity context = 1; repeated UiRecoveryContextRecordSelection records = 2;
+}
+message UiRecoveryTakeAll { UiRecoveryContextSelection selection = 1; }
+message UiItemAction { uint32 inventory_slot = 1; string expected_item = 2; optional string expected_instance = 3; string action = 4; }
+message UiBankMove { string entry_id = 1; optional string before_entry_id = 2; uint32 tab = 3; }
+message UiBankWithdrawal { string entry_id = 1; uint32 quantity = 2; bool noted = 3; }
+message UiBankOptions { uint32 amount = 1; bool noted = 2; }
+message UiCofferOffer { uint32 inventory_slot = 1; string expected_item = 2; optional string expected_instance = 3; uint32 quantity = 4; }
+message UiConfirmation { string id = 1; bool accept = 2; }
+message UiChat { string channel = 1; string text = 2; }
+message UiDocumentPage { string id = 1; uint32 page = 2; }
+
+message UiItem { Stack stack = 1; string name = 2; optional uint32 source_id = 3; optional string asset = 4; }
+message UiXp { string skill = 1; string amount_tenths = 2; }
+message UiProductionChoice { string recipe = 1; string name = 2; repeated UiItem outputs = 3; Permission single = 4; Permission make_x = 5; Permission all = 6; }
+// target is absent for genuine inventory-only production, never a fabricated facility.
+message UiProduction { string id = 1; string interface = 2; WorldTarget target = 3; repeated UiProductionChoice recipes = 4; }
+message UiReward {
+  string id = 1; string kind = 2; string interface = 3; string title = 4; repeated string lines = 5;
+  repeated UiItem items = 6; repeated UiXp xp = 7; uint32 quest_points = 8;
+  optional string quest = 9; optional string skill = 10; optional uint32 level = 11;
+  GameplayUiRequest continuation = 12;
+}
+message UiConfirmationView { string id = 1; string kind = 2; string title = 3; repeated string lines = 4; repeated UiItem items = 5; optional string credit = 6; }
+message UiDocument { string id = 1; string interface = 2; string title = 3; repeated string pages = 4; uint32 page = 5; optional string map_asset = 6; bool native_map = 7; }
+message UiInterfaceState { string interface = 1; string visibility = 2; bool highlighted = 3; Permission permission = 4; }
+message UiAbility { string id = 1; string name = 2; bool selected = 3; bool visible = 4; Permission permission = 5; }
+message UiBonus { string kind = 1; sint32 amount = 2; }
+message UiEquipment {
+  repeated UiBonus attack = 1; repeated UiBonus defence = 2;
+  sint32 melee_strength = 3; sint32 ranged_strength = 4; sint32 magic_damage_percent = 5; sint32 prayer = 6;
+  string weight_grams = 7; repeated string slots = 8;
+}
+message UiItemOperation { string id = 1; string label = 2; Permission permission = 3; }
+message UiInventoryActions { uint32 slot = 1; string item = 2; optional string instance = 3; repeated UiItemOperation actions = 4; }
+message UiBankTab { uint32 tab = 1; optional string first_entry = 2; uint32 entries = 3; }
+message UiBankEntry { string id = 1; uint32 slot = 2; uint32 tab = 3; string item = 4; UiItem value = 5; bool placeholder = 6; }
+message UiBank {
+  string revision = 1; uint32 capacity = 2; uint32 selected_tab = 3; bool insert_mode = 4; bool placeholders = 5;
+  uint32 amount = 6; bool noted = 7; repeated UiBankTab tabs = 8; repeated UiBankEntry entries = 9;
+  Permission deposit_equipment = 10; repeated UiItemOperation unavailable_containers = 11;
+  UiAmount amount_selection = 12;
+}
+message UiDeathPreview { string scope = 1; repeated UiItem kept = 2; repeated UiItem lost = 3; string full_grave_fee = 4; string full_office_fee = 5; string value_revision = 6; }
+message UiRecoveryControls {
+  string coffer_balance = 1; Permission discard = 2; Permission coffer_offer = 3;
+  repeated UiInventoryActions coffer_items = 4; UiRecoveryManagement management = 5;
+}
+message UiRecoveryEntryControl {
+  string id = 1; UiItem item = 2; string unit_fee = 3; string full_stack_fee = 4;
+  uint32 inventory_capacity = 5; uint32 bank_capacity = 6; Permission take = 7; Permission bank = 8;
+}
+message UiRecoveryPanelControl {
+  string death = 1; RecoveryStorage storage = 2; repeated UiRecoveryEntryControl entries = 3;
+  string full_selection_fee = 4; Permission take_all = 5;
+}
+message UiRecoveryManagement {
+  string bank_revision = 1; repeated UiRecoveryPanelControl panels = 2;
+  Permission bank_all = 3; repeated UiRecoveryRecordSelection bank_all_records = 4;
+  UiRecoveryContext context = 5;
+}
+enum UiRecoveryCapacityUnit {
+  RECOVERY_CAPACITY_UNSPECIFIED = 0;
+  RECOVERY_CAPACITY_ENTRIES = 1;
+  RECOVERY_CAPACITY_ITEM_TYPES_OR_INSTANCES = 2;
+}
+message UiRecoveryContextCounts {
+  uint32 entries = 1; optional uint32 native_item_types = 2; uint32 capacity = 3;
+  UiRecoveryCapacityUnit capacity_unit = 4; uint32 stored = 5; uint32 offered = 6;
+}
+message UiRecoverySourceTypeCaption {
+  uint32 source_id = 1; string quantity = 2; string unit_fee = 3; string total_fee = 4;
+}
+message UiRecoveryTypeCaption {
+  oneof caption {
+    UiRecoverySourceTypeCaption source = 1;
+    string unavailable_reason = 2;
+  }
+}
+message UiRecoveryContextSlot {
+  uint32 slot = 1; string death = 2; RecoveryStorage current_storage = 3;
+  UiRecoveryEntryControl entry = 4; UiRecoveryTypeCaption selected_type_caption = 5;
+}
+message UiRecoveryPlannedItem {
+  string death = 1; string id = 2; uint32 quantity = 3; string fee = 4;
+}
+message UiRecoveryExecution {
+  string total_fee = 1; repeated UiRecoveryPlannedItem transfers = 2; bool partial = 3;
+}
+message UiRecoveryTakeAllControl {
+  Permission permission = 1; UiRecoveryContextSelection selection = 2; UiRecoveryExecution plan = 3;
+}
+message UiRecoveryContext {
+  uint32 version = 1; UiRecoveryContextIdentity identity = 2;
+  UiRecoveryContextCounts counts = 3; repeated UiRecoveryContextSlot slots = 4;
+  UiRecoveryTakeAllControl take_all = 5;
+}
+message UiAppearanceChoice { uint32 value = 1; optional string label = 2; Permission permission = 3; }
+message UiAppearanceParameter { string key = 1; repeated UiAppearanceChoice choices = 2; }
+message UiPenguinBase { string asset = 1; uint32 source_npc = 2; string adaptation = 3; }
+message UiAppearance { repeated UiAppearanceParameter choices = 1; UiPenguinBase base = 2; bool confirmed = 3; }
+message PublicChatLine { string id = 1; string actor = 2; string sender = 3; string channel = 4; string text = 5; uint32 colour = 6; uint32 effect = 7; }
+message UiPublicChat { Permission permission = 1; uint32 maximum_bytes = 2; string channel = 3; repeated PublicChatLine messages = 4; }
+message GameplayUiView {
+  uint32 version = 1; optional string active_interface = 2; UiProduction production = 3; UiReward reward = 4;
+  UiConfirmationView confirmation = 5; repeated UiInterfaceState interfaces = 6; optional string combat_style = 7;
+  repeated UiAbility combat_styles = 8; repeated UiAbility prayers = 9; repeated UiAbility spells = 10;
+  UiEquipment equipment = 11; repeated UiInventoryActions inventory_actions = 12; UiBank bank = 13;
+  UiDeathPreview kept_on_death = 14; UiRecoveryControls recovery = 15; UiAppearance appearance = 16; UiPublicChat public_chat = 17;
+  UiDocument document = 18; optional string active_tab = 19;
+}
+
+enum RuleErrorCode {
+  RULE_ERROR_UNSPECIFIED = 0;
+  INVALID_INPUT = 1; UNKNOWN_CONTENT = 2; INVALID_CONTENT = 3; UNAVAILABLE = 4;
+  NOT_OWNED = 5; INSUFFICIENT_ITEMS = 6; INVENTORY_FULL = 7; STACK_OVERFLOW = 8;
+  REQUIREMENT_NOT_MET = 9; OUT_OF_REACH = 10; BLOCKED = 11; BUSY = 12;
+  STALE_COMMAND = 13; SESSION_CONFLICT = 14;
+}
+message RuleDenial { RuleErrorCode code = 1; string message = 2; }
+message Permission { bool allowed = 1; RuleDenial denial = 2; }
+message InteractionOption { string name = 1; Permission permission = 2; }
+message BankContext {
+  string banker = 1; optional string interface = 2; Permission deposit = 3; Permission withdraw = 4;
+}
+message ShopLine { uint32 index = 1; string item = 2; uint32 stock = 3; uint32 buy_price = 4; uint32 sell_price = 5; }
+message ShopView { string shop = 1; optional string interface = 2; string currency = 3; repeated ShopLine lines = 4; }
+message ItemLayout { oneof location { uint32 inventory_slot = 1; string equipment_slot = 2; } }
+message RecoveryEntry {
+  string id = 1; Stack stack = 2; ItemLayout layout = 3; uint64 full_entry_fee = 4; RecoveryStorage current_storage = 5;
+}
+message RecoveryView {
+  string death = 1; RecoveryStorage storage = 2; optional string interface = 3;
+  repeated RecoveryEntry entries = 4; optional uint32 active_ticks_remaining = 5;
+}
+message RecoveryContext { repeated RecoveryView views = 1; }
+message BankQuote { uint32 requested = 1; Stack transferred = 2; }
+message ShopQuote {
+  string shop = 1; string item = 2; uint32 requested = 3; uint32 quantity = 4; string currency = 5;
+  uint32 total_price = 6; uint32 stock_after = 7; RuleDenial partial_reason = 8;
+}
+message RecoveryQuote {
+  string death = 1; RecoveryStorage storage = 2; repeated string selected = 3;
+  // Full selected quantities, not a promise that a later partial transfer fits.
+  uint64 full_selection_fee = 4;
+}
+message Quote { oneof result { BankQuote bank = 1; ShopQuote shop = 2; RecoveryQuote recovery = 3; } }

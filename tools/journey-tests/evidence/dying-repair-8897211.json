@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "scope": "Authorized native derived-style repair integration while the actual journey remains parked.",
+  "authorized_commit": "634cff997ab290eb482c1a2923885ca25eea620a",
+  "local_cherry_pick": "88972119054feb5eac053eba2a4a866e8786bb41",
+  "authorized_files_applied": 4,
+  "game_content_or_schema_changed": false,
+  "actual_checkpoint": {
+    "run_id": "7fa370e14c9b421e",
+    "archive_sha256": "d2e586a51f78ed36ab30443f0297b1273e984957ae5b8f78c73b86be53ca16e1",
+    "archive_mode": "0600",
+    "private_inventory_sha256": "7a4253a1f067f84320f8d513c6757f269a02fd29861d75b7f53e0acececcf6c6",
+    "raw_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "archive_and_preserved_files_changed": false
+  },
+  "actual_cause_already_proven": {
+    "owned_diagnostic_commit": "16152a88fddb55988e644869a827bb01ed94c367",
+    "evidence": "tools/journey-tests/evidence/dying-ui-style-7fa370e14c9b421e.json",
+    "selected_style": "style.sword.bronze.stab.accurate",
+    "equipped_items": {},
+    "sword_present_in_actual_grave_record": true,
+    "direct_immutable_ui_view_error": {
+      "code": "RequirementNotMet",
+      "message": "Style is not offered by the equipped weapon or source unarmed profile."
+    },
+    "other_queries": "presence_view, actor_observer, context_view and ground_item_views succeeded on that exact saved state.",
+    "actual_world_modified_by_that_diagnostic": false,
+    "native_component_fixture_retention_not_substituted_for_actual_checkpoint_items": true
+  },
+  "repair": {
+    "new_deaths": "Call the existing refresh_combat_style after equipment retention.",
+    "preexisting_saved_states": "Trusted Join/Rejoin/CoordinatorRestart recomputes derived style only for Dying/Respawning/FirstDeathOffice.",
+    "query_mutation_or_blank_success_fallback_added": false,
+    "actual_saved_world_reconciliation_executed_in_this_followup": false,
+    "qualification": "The immutable frozen checkpoint is deliberately not rewritten by a query. Applying the repair to that saved actor requires the later authorized trusted lifecycle path; native fixture checks are not that live restoration."
+  },
+  "validation": [
+    {
+      "command": "cargo test --quiet --package clubscape-world-engine --test dying_observation",
+      "result": "passed",
+      "tests": 4,
+      "scope": "Controlled canonical native regression preconditions only; no actual private checkpoint or live service used."
+    },
+    {
+      "command": "cargo test --quiet --package clubscape-sim --package clubscape-protocol --all-features",
+      "result": "passed",
+      "tests": 56
+    },
+    {
+      "command": "cargo fmt --package clubscape-world-engine --package clubscape-sim --check",
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --quiet --package clubscape-world-engine --package clubscape-sim --all-features --all-targets -- -D warnings",
+      "result": "passed"
+    }
+  ],
+  "remaining_gate": {
+    "director_postgresql_suite_confirmation_required": true,
+    "explicit_source_safe_dying_resume_adapter_authorization_required": true,
+    "existing_pre_start_identity_comparison_relaxed": false,
+    "existing_narrow_resume_boundaries_changed": false,
+    "game_server_or_postgresql_started": false,
+    "actual_game_rpc_restore_or_resume": false,
+    "actual_hp_life_ticks_items_xp_receipts_or_rng_changed": false,
+    "private_auth_rng_or_checkpoint_payload_published": false
+  },
+  "new_journey_progress_claimed": false,
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "status": "parked_pending_director_gates"
+}

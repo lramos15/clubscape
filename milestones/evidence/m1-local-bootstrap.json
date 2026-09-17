@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "kind": "local_account_infrastructure",
+  "revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
+  "verified_on": "2026-09-13",
+  "result": "passed",
+  "commands": [
+    {"command": "just bootstrap", "result": "passed", "rust_unit_and_transport_tests": 30},
+    {"command": "just lint", "result": "passed"},
+    {"command": "just check-wasm", "result": "passed", "scope": "Shared protocol only, not a renderer"},
+    {"command": "python3 -m unittest discover -s tests/workflow -q", "result": "passed", "tests": 31},
+    {"command": "just reference-verify", "result": "passed", "verified_source_inputs": 2},
+    {"command": "just server; curl --noproxy '*' http://127.0.0.1:4010/healthz; just sim", "result": "passed", "readiness": "ready"},
+    {"command": "just db-stop; just db-start; query owned development account/session counts; just db-stop", "result": "passed", "accounts_before_restart": 1, "accounts_after_restart": 1, "active_sessions": 0},
+    {"command": "python3 tools/milestone.py check", "result": "correctly_rejected_incomplete_milestone", "exit_code": 1, "verified_gates": 0, "required_gates": 28}
+  ],
+  "pinned_postgresql_image_has_native_arm64_and_amd64_manifests": true,
+  "development_service_stopped": true,
+  "development_database_container_exit_code": 0,
+  "owned_running_integration_containers": 0,
+  "listeners_remaining_on_4010_or_55432": 0,
+  "tracked_secret_files": 0,
+  "browser_signup_verified": false,
+  "gameplay_verified": false,
+  "presentation_verified": false,
+  "integrated_gpu_performance_verified": false,
+  "hosted_ci_executed": false,
+  "milestone_accepted": false
+}

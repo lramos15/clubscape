@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "kind": "saved_water_deadline_root_qualification",
+  "status": "passed_code_only",
+  "root_revision": "b95b1d9a60b8e6837182528c43fa55eb8795679c",
+  "executor_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
+  "candidate": "milestones/evidence/m1-saved-water-deadline-repair-candidate.json",
+  "independent_review": "milestones/evidence/m1-saved-water-deadline-review.json",
+  "recorded_at": "2026-09-17T04:46:38.580007+00:00",
+  "imported_repair_files_verified_byte_identical": 7,
+  "python": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/journey-tests timeout 120 python3 -m unittest test_saved_water test_saved_water_runtime test_private_checkpoint test_resume test_run test_cook_continue test_mainland_continue test_dying_observe",
+    "tests_passed": 95,
+    "exit_code": 0,
+    "elapsed_seconds": 6.85,
+    "log": "milestones/evidence/m1-saved-water-deadline-repair/root-python.log",
+    "log_bytes": 728,
+    "log_sha256": "da57338e94f2cb642655be32f0aac6e05576bcbcd591997347ce5f5cd1cbb3ba",
+    "blocking_restart_fixture_native_alive_at_1_5_second_sample": false
+  },
+  "native_source_dependencies_and_reviewed_executor_binaries_changed": false,
+  "native_builds_or_suites_repeated_for_this_python_only_append": false,
+  "local_execution_environment_read_only_verification": {
+    "docker_context": "default",
+    "docker_endpoint": "unix:///var/run/docker.sock",
+    "postgres_image": "postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685",
+    "image_id": "sha256:c05eced0bdb41ea9b95a656472a6aa4d50cad0d8a2e33d14eb1c53fd6204f2ae",
+    "image_platform": "linux/arm64",
+    "image_pulled_or_container_started": false
+  },
+  "original_failed_deadline_evidence_preserved": true,
+  "protected_checkpoint_accesses": 0,
+  "actual_databases_services_restores_migrations_or_gameplay": 0,
+  "saved_execution_admitted": false,
+  "milestone_accepted": false
+}

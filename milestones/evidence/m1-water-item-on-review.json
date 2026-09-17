@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "task": "M1-WATER-ITEM-ON-REVIEW",
+  "status": "passed",
+  "authority": "Director bounded independent review within approved M1",
+  "implementation_authority": "milestones/evidence/m1-water-item-on-dispatch-authorization.json",
+  "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
+  "reviewer": "619c994e-a208-4acf-8c2a-261ae52c892b",
+  "reserved_reviewer_slot_consumed": "water-item-on-review",
+  "previous_reviewer": {
+    "id": "e6925772-df1f-4ff7-9efc-219f800a5a14",
+    "resumption": "Rejected by runtime because the completed agent was retired; no water review executed.",
+    "replacement_count": 1
+  },
+  "worktree": ".worktrees/m1-water-dispatch",
+  "base_content_owned_commit": "eaa527a8f3d9d408d6bf1a4b8fdc47269abe0137",
+  "base_content_candidate_commit": "cba2016f5f403ea793f875a40ec7c5191c9521cd",
+  "implementation_commit": "5c6c581136310b48e8043e7920199d7236f9b88c",
+  "handoff": "research/water-fill/item-on-validation.json",
+  "reported_evidence_not_director_reruns": {
+    "both_profiles_positive_before": "0/4",
+    "both_profiles_positive_after": "4/4",
+    "both_profiles_negative_after": "15/15",
+    "native_tests": 415,
+    "source_tests": 104,
+    "identical_repeated_outputs": 106,
+    "old5b_and_old5e_raw_and_gzip_recompile_exact": true,
+    "guarded_database_or_durable_receipt_tests": false
+  },
+  "current5b_water": {
+    "revision": "m1.source-backed.v4.71c86749d02088ee",
+    "raw_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+    "gzip_sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+    "delta": ["/recipes/recipe.water.bucket", "/revision", "/ui/actor_animations/recipes/recipe.water.bucket"]
+  },
+  "legacy5e_water": {
+    "revision": "m1.source-backed.v4.3ff4292b311453cc.water.e337c77cc5ccd980",
+    "raw_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+    "gzip_sha256": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+    "delta": ["/recipes/recipe.water.bucket", "/revision"],
+    "unrelated_current_ui_audio_actor_metadata_imported": false
+  },
+  "review_scope": [
+    "Optional omitted-when-absent SourceBinding<ItemOnTargetRule> and strict malformed/unresolved/mixed-declaration rejection.",
+    "Reuse of existing target availability, ownership, instance, plane, footprint, access-side, collision, sight and contact rules.",
+    "Exactly one conversion through item use and canonical Produce; start, projection, pending tick and saved pending state agree.",
+    "Ordinary Production-menu behavior and old-profile artifact serialization remain unchanged.",
+    "Source-bound empty sink menu, ingredient conservation, actual meaningful positive/negative probes and exact source deltas."
+  ],
+  "source_limitations_retained": [
+    "Water actor motion remains unverified.",
+    "One-tick first/repeat values are qualified interpretations, not batching authority.",
+    "Ordinary-grave Bank-All, dough and seven Empty motion questions remain open."
+  ],
+  "forbidden": [
+    "Edits, tests, builds, GPU/browser/RuneLite or original-source capture.",
+    "Private checkpoint/account reads, restore, network journey or database migration.",
+    "Nested agents/factory, acceptance claims or changes to source/frozen presentation gates."
+  ],
+  "review_result": {
+    "execution": "Static independent code review; no tests or builds executed by the reviewer.",
+    "findings": [
+      {
+        "id": "persisted-item-on-batch",
+        "severity": "MEDIUM",
+        "path": "crates/game-types/src/runtime_validation.rs",
+        "lines": [231, 273],
+        "trigger": "An otherwise valid deserialized item-on Producing activity with remaining2, or ProducingSelected with remaining1 and MakeX, passes persisted-state validation.",
+        "effect": "The due-time check in activities.rs returns Unavailable; the error is not an ordinary interruption and propagates to abort the whole tick.",
+        "required_fix": "Reuse one content-aware single-conversion predicate for start, projection, execution and persisted validation of all three production activity variants, regardless of deadline. Reject malformed pending work; never normalize or discard it.",
+        "status": "resolved_in_reviewed_append",
+        "resolved_by": "04a40ee84d0a95866264a3c087071e0f63904377"
+      }
+    ]
+  },
+  "bounded_fix_admission": {
+    "worker": "2766e089-44e5-4a1d-974e-7b03ad9c269d",
+    "worktree": ".worktrees/m1-water-dispatch",
+    "base": "5c6c581136310b48e8043e7920199d7236f9b88c",
+    "scope": "Only the reported persisted-state gap, shared restriction predicate and complete serialized-state regressions in the original allowed game-types/world-engine paths.",
+    "required_cases": "All three activity variants at future, due and overdue deadlines; invalid count/mode rejected before ticks, valid single work round-trips, ordinary recipes preserve supported behavior.",
+    "source_artifact_change_expected": false,
+    "prior_forbidden_work_unchanged": true
+  },
+  "fix_review": {
+    "status": "passed",
+    "reviewer": "0f5fd134-c7e3-4d93-ba2e-c5cd448e33a1",
+    "reserved_reviewer_slot": "water-persisted-fix-review",
+    "previous_reviewer": {
+      "id": "619c994e-a208-4acf-8c2a-261ae52c892b",
+      "resumption": "Runtime retired the initial reviewer after its park acknowledgement; the explicit fix-delta request was rejected before execution.",
+      "initial_finding_remains_valid": true,
+      "fix_delta_assessment_executed": false
+    },
+    "previous_park_acknowledged": true,
+    "base": "5c6c581136310b48e8043e7920199d7236f9b88c",
+    "implementation_commit": "04a40ee84d0a95866264a3c087071e0f63904377",
+    "clean_worker_head_confirmed": true,
+    "scope": "Assess only the six-file append and necessary callers for the original persisted-item-on finding: shared production-mode predicate, all three serialized activity forms and unchanged ordinary completion timing.",
+    "worker_reported_not_director_rerun": {
+      "before": "One passing and three failing regressions reproduced malformed-state acceptance and repeated Unavailable ticks.",
+      "after": "Five new regressions and420 full native tests pass; strict native/WASM Clippy and formatting pass.",
+      "source": "Both water profiles retain4/4 positive and15/15 negative cases; both water and both old profiles recompile to exact raw/gzip identities.",
+      "logs": ".worktrees/m1-water-dispatch/.local/water-dispatch/persisted-repair/"
+    },
+    "forbidden_work_unchanged": true,
+    "result": {
+      "execution": "Independent static inspection only; no tests or builds executed by the reviewer.",
+      "original_finding": "Resolved in04a40ee.",
+      "new_significant_correctness_findings": [],
+      "evidence": [
+        "runtime_validation.rs231-267 rejects invalid modes/counts for all three production variants without a deadline-dependent bypass.",
+        "content.rs232-257 shares the former execution checks; activities.rs498/790 and gameplay_ui/projections.rs424 use the same predicate.",
+        "item_on_target.rs316-483 serializes/deserializes actual WorldState JSON across future/due/overdue deadlines and preserves ordinary completions at ticks3 and6."
+      ],
+      "normalization_activity_clearing_or_tick_error_swallowing_added": false
+    }
+  },
+  "main_integrated": true,
+  "main_integration": "milestones/evidence/m1-water-main-integration.json",
+  "saved_world_migration_or_continuation_admitted": false,
+  "milestone_accepted": false
+}

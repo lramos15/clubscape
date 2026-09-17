@@ -1,0 +1,2216 @@
+{
+  "schema_version": 1,
+  "runtime": "unmodified injected-client-1.12.38",
+  "game_build": 240,
+  "cache_id": 2695,
+  "result": "passed",
+  "cases": [
+    {
+      "case": "original-audio-gameval-labels",
+      "group_types": [
+        {
+          "name": "ITEMS",
+          "group": 0
+        },
+        {
+          "name": "NPCS",
+          "group": 1
+        },
+        {
+          "name": "INVENTORIES",
+          "group": 2
+        },
+        {
+          "name": "VARPS",
+          "group": 3
+        },
+        {
+          "name": "VARBITS",
+          "group": 4
+        },
+        {
+          "name": "OBJECTS",
+          "group": 6
+        },
+        {
+          "name": "ANIMATIONS",
+          "group": 7
+        },
+        {
+          "name": "SPOTANIMS",
+          "group": 8
+        },
+        {
+          "name": "DBROWS",
+          "group": 9
+        },
+        {
+          "name": "DBTABLES",
+          "group": 10
+        },
+        {
+          "name": "JINGLES",
+          "group": 11
+        },
+        {
+          "name": "SPRITES",
+          "group": 12
+        },
+        {
+          "name": "INTERFACES_LEGACY",
+          "group": 13
+        },
+        {
+          "name": "INTERFACES",
+          "group": 14
+        },
+        {
+          "name": "VARCS",
+          "group": 15
+        }
+      ],
+      "labels": [
+        {
+          "group": 3,
+          "id": 18,
+          "source_sha256": "e6d2220d7b0ea3eaebecaa08744d9e594c8035dbd1ab33cfe5b6aa0fe4a2cc1c",
+          "definition": {
+            "gameValId": 3,
+            "id": 18,
+            "name": "musicplay",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 19,
+          "source_sha256": "33ef8bea39747549cc33da1e146b10b201aabd3142c15ab8d97a0efd28695f5d",
+          "definition": {
+            "gameValId": 3,
+            "id": 19,
+            "name": "musicloop",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 168,
+          "source_sha256": "fae2b4d4158ba5f27bcd559935afa78aa08717a9101a06be2a0792d6ae4283a0",
+          "definition": {
+            "gameValId": 3,
+            "id": 168,
+            "name": "option_music",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 169,
+          "source_sha256": "692b18cffe6549427de5fe39bfd55b9047d3c3711416f2fd33396dd173a128f6",
+          "definition": {
+            "gameValId": 3,
+            "id": 169,
+            "name": "option_sounds",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 297,
+          "source_sha256": "78154455070061cd9e2303420efb033032d3bba562c389b4ba932c33a44b3237",
+          "definition": {
+            "gameValId": 3,
+            "id": 297,
+            "name": "musiclength",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 375,
+          "source_sha256": "ec851dfb8c0d09dfec46fd3a8f6718893dd70359610b801f04a7484e83990927",
+          "definition": {
+            "gameValId": 3,
+            "id": 375,
+            "name": "armourhitsound",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 843,
+          "source_sha256": "f65a76cc89d312f374faf73eba6c80897c4d41d7a79175b7925cf997cc5f7de7",
+          "definition": {
+            "gameValId": 3,
+            "id": 843,
+            "name": "randomhitsound",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 872,
+          "source_sha256": "497c99f81a76e7a78f79d3bdd34f84e52925895b1d3491e92d84cbb2664a90d2",
+          "definition": {
+            "gameValId": 3,
+            "id": 872,
+            "name": "option_areasounds",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 915,
+          "source_sha256": "b2c960e8a36fab2712a9cd66ab152e63f5f3aa5c91ac2ee802ea16c684524f52",
+          "definition": {
+            "gameValId": 3,
+            "id": 915,
+            "name": "last_musiclength",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 2975,
+          "source_sha256": "ba671016bce867d022ece0dc31f4d89f39f3e782236414c09280a3d0632b64c0",
+          "definition": {
+            "gameValId": 3,
+            "id": 2975,
+            "name": "music_current_id",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 2978,
+          "source_sha256": "25cb0b5068ec40ab4f7bad25885eb04046ff809fc072e0b4d74267fb286987bf",
+          "definition": {
+            "gameValId": 3,
+            "id": 2978,
+            "name": "music_current_id_remembered",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 2979,
+          "source_sha256": "6c78c755611a41e23af87d368be243bbaddf17a37f581a3f0daef4fe545f3e85",
+          "definition": {
+            "gameValId": 3,
+            "id": 2979,
+            "name": "music_next_id_remembered",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 3109,
+          "source_sha256": "695a536b247d6d29e1d131645baae501e49f448f8a8059442ecb3f7a913a6860",
+          "definition": {
+            "gameValId": 3,
+            "id": 3109,
+            "name": "options_save_sounds",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 3796,
+          "source_sha256": "d0513baeb459f83ce8b21f72c7d46c066a39b9afd81d3621012c980f9ed6bd64",
+          "definition": {
+            "gameValId": 3,
+            "id": 3796,
+            "name": "option_master_volume",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 3797,
+          "source_sha256": "31e5cd0e931df08edfa5aa2475398e8284c1efc5d6b3e9c7dc3c4416423479d2",
+          "definition": {
+            "gameValId": 3,
+            "id": 3797,
+            "name": "options_save_sounds2",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 3883,
+          "source_sha256": "41c60a879b47071a1b7262c4d8ab61855b9d65c3532a1b3043c79cdb5677baaf",
+          "definition": {
+            "gameValId": 3,
+            "id": 3883,
+            "name": "music_current_track",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 3885,
+          "source_sha256": "572b7e9eaeaffb920bca66a898f1e141c2140587eb87eff0e1ce2e6e6fab7440",
+          "definition": {
+            "gameValId": 3,
+            "id": 3885,
+            "name": "music_last_track",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 3886,
+          "source_sha256": "7af1fea593295d8e4cfe3dc46ea9de33671c010fbed78b754d3577e780b5ac46",
+          "definition": {
+            "gameValId": 3,
+            "id": 3886,
+            "name": "music_override_track",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 5235,
+          "source_sha256": "ee57a5b3bd5595026d1c4e6498c399496dd03e1e63ad33fbe81838d36865d75c",
+          "definition": {
+            "gameValId": 3,
+            "id": 5235,
+            "name": "music_player_colour_locked",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 5236,
+          "source_sha256": "e09b20761af2cf8851a18eb0e9ca4833dc0b028e96d436a223f9738238b121a9",
+          "definition": {
+            "gameValId": 3,
+            "id": 5236,
+            "name": "music_player_colour_unlocked",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 5237,
+          "source_sha256": "32396a4fd406a6aee4e63a25e0fd1c94722ba1bfb1900135ae64ba19d7aebdbd",
+          "definition": {
+            "gameValId": 3,
+            "id": 5237,
+            "name": "music_player_colour_unavailable",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 5396,
+          "source_sha256": "73fd42c1e75039e1721cf9effb6eaa8f9a889577b4d186793f841293c419e958",
+          "definition": {
+            "gameValId": 3,
+            "id": 5396,
+            "name": "options_volumes_saved_desktop_1",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 5397,
+          "source_sha256": "d838dcc8579324e8ea4e15f8909f44765eebb59a3247b8085dd6cd6baa4d6e07",
+          "definition": {
+            "gameValId": 3,
+            "id": 5397,
+            "name": "options_volumes_saved_desktop_2",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 5398,
+          "source_sha256": "1edbfc7d5d7959ff523fb8bf205f85841aaca24342dc4129d1a8e3eeb03da789",
+          "definition": {
+            "gameValId": 3,
+            "id": 5398,
+            "name": "options_volumes_saved_mobile_1",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 5399,
+          "source_sha256": "5d7b69cc65b44566f0fb33929215511ccba5e53c2ed83756704ab3bf57c32faf",
+          "definition": {
+            "gameValId": 3,
+            "id": 5399,
+            "name": "options_volumes_saved_mobile_2",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 5400,
+          "source_sha256": "d938c98a73454efbfac1e0eb900201707a6b129cfcae13bd39ecded0ec425e19",
+          "definition": {
+            "gameValId": 3,
+            "id": 5400,
+            "name": "music_override_area",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 5401,
+          "source_sha256": "c18c9ca355b6c5267f96f1dd84739fabfebd4586f9ea278e2c7eac625f335976",
+          "definition": {
+            "gameValId": 3,
+            "id": 5401,
+            "name": "music_player_colour_playing",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 5588,
+          "source_sha256": "59cf7f5c793841499c13ee3e7d413c9d70ba674e1127886956d7175a1e327adf",
+          "definition": {
+            "gameValId": 3,
+            "id": 5588,
+            "name": "areasounds_override",
+            "files": {}
+          }
+        },
+        {
+          "group": 3,
+          "id": 5589,
+          "source_sha256": "7cc92a4d21c2575a5f4cb4112b02a54a61dd8ece8aaf67cfa2d19d63d548dea4",
+          "definition": {
+            "gameValId": 3,
+            "id": 5589,
+            "name": "option_areasounds_override",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 1421,
+          "source_sha256": "7bb20c2e64f95b43135ca68df07ce5ed7d8a48cfd83043c3247e9439f1d701c3",
+          "definition": {
+            "gameValId": 4,
+            "id": 1421,
+            "name": "ratcatch_music_len",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 2629,
+          "source_sha256": "97912c2468af751cf09ab5affd3c1c2677e19f1489b6d6654439a51821d2896c",
+          "definition": {
+            "gameValId": 4,
+            "id": 2629,
+            "name": "slug2_door_sound_control",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 3709,
+          "source_sha256": "97b72b82a90cf0b1ee394eeb145a29077fcf16926b7f408e671c3807e003b3fc",
+          "definition": {
+            "gameValId": 4,
+            "id": 3709,
+            "name": "grim_musicsheet_found",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 3723,
+          "source_sha256": "404c28eb872f06290803a8e98859c05bacbcc783cc889c410b889c60b4a1d014",
+          "definition": {
+            "gameValId": 4,
+            "id": 3723,
+            "name": "grim_show_musicsheet",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 4137,
+          "source_sha256": "8468db692ffc4a71f5960e3c18c2c21ea8ed90c63be0dee38b2cb5d0e91def85",
+          "definition": {
+            "gameValId": 4,
+            "id": 4137,
+            "name": "music_enableloop",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 4670,
+          "source_sha256": "4f4cf23339b00ff8dd6b35f0ef2bac1a3829d7208b07d73b08ea880e9b83965b",
+          "definition": {
+            "gameValId": 4,
+            "id": 4670,
+            "name": "music_cape_replace",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 4671,
+          "source_sha256": "8bb0bfe0c50349e6af64adfc4bf8dba9889d2711d4d1ca4506b094b91e7e2871",
+          "definition": {
+            "gameValId": 4,
+            "id": 4671,
+            "name": "music_hood_replace",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 4672,
+          "source_sha256": "c6495d77522227a792586edf1aa79a24d6830705aca2916d06ad55104f6df735",
+          "definition": {
+            "gameValId": 4,
+            "id": 4672,
+            "name": "music_cape_i_like_mine_trimmed",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 4673,
+          "source_sha256": "147921e59694c4f1c50d5ccebcd34d0c5802412d8669a26e3f66f6e80700819d",
+          "definition": {
+            "gameValId": 4,
+            "id": 4673,
+            "name": "emote_musiccape",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 4688,
+          "source_sha256": "5b1551af77acc2fa877bfae43640cb81434d24a4cb660bbb0404d3f2189b246f",
+          "definition": {
+            "gameValId": 4,
+            "id": 4688,
+            "name": "stone_music_key",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 8371,
+          "source_sha256": "68d0318c78abac5407141ae0dd59b56acabb836ffd4c8649740947f46de4e23b",
+          "definition": {
+            "gameValId": 4,
+            "id": 8371,
+            "name": "music_cape_status",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 9674,
+          "source_sha256": "dab7b332963ad530dd969a45dfbbb88237685d09d85bac701994f7f80008e0db",
+          "definition": {
+            "gameValId": 4,
+            "id": 9674,
+            "name": "option_sounds_remember",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 9675,
+          "source_sha256": "a58ef6e7caddd099c214a7f8f84daaccd866adbe61e1132bdec93b38ae6dbd2c",
+          "definition": {
+            "gameValId": 4,
+            "id": 9675,
+            "name": "option_areasounds_remember",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 10078,
+          "source_sha256": "953dca8a57446d0f29f08be728befb7ab6238e3c7e4495b18de0d0ccf8f164f4",
+          "definition": {
+            "gameValId": 4,
+            "id": 10078,
+            "name": "music_unlock_text_toggle",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 10731,
+          "source_sha256": "0853ccd3920fb3748ab7ae0b1aa23f1537450477024a0b1dd4c13205ca5a0272",
+          "definition": {
+            "gameValId": 4,
+            "id": 10731,
+            "name": "settings_hit_sounds",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 12233,
+          "source_sha256": "0dc403597c1b7357afe288fc087fe102b623a8fbda2bd789a644e7fa0c64b0e7",
+          "definition": {
+            "gameValId": 4,
+            "id": 12233,
+            "name": "music_area_mode",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 12323,
+          "source_sha256": "577c4c1163bf41b016141e0aae12c03f0a32adbf26da0c94ec6cced5a91a4430",
+          "definition": {
+            "gameValId": 4,
+            "id": 12323,
+            "name": "akd_rose_basement_exit_music",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 12426,
+          "source_sha256": "dc7db86a547a89ae32f300743436884c80c75e31f8e0f0b437ef338c4f4186b5",
+          "definition": {
+            "gameValId": 4,
+            "id": 12426,
+            "name": "option_music_saved",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 12427,
+          "source_sha256": "da00c035c4979e970d6ac255ca6b0cbc2b8196cda31f7397f8a195604f82d617",
+          "definition": {
+            "gameValId": 4,
+            "id": 12427,
+            "name": "option_sounds_saved",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 12428,
+          "source_sha256": "cab3b189a546e0f9e2b001b8c0747e20dfba6b81ca271014ca76694e73d48c0c",
+          "definition": {
+            "gameValId": 4,
+            "id": 12428,
+            "name": "option_areasounds_saved",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 14817,
+          "source_sha256": "bea6f88a18bb9e4088f97645426166d14fb3e012d333305c5844876297dd7fdc",
+          "definition": {
+            "gameValId": 4,
+            "id": 14817,
+            "name": "option_master_volume_saved",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 15174,
+          "source_sha256": "3f55a1e516a808596c1514d95bab63a4c63d1d81011c50e941eb2f09104ef9f7",
+          "definition": {
+            "gameValId": 4,
+            "id": 15174,
+            "name": "dt2_horn_cutscene_music",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 15490,
+          "source_sha256": "8f2f64f835095fadb35e3cf906f0827c207cc0575624c62839df57bc955582ab",
+          "definition": {
+            "gameValId": 4,
+            "id": 15490,
+            "name": "myq6_hideout_defence_music",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 18582,
+          "source_sha256": "01ed2a20d197cd3022bce84387ca0a999f79ae20d2721cce4a56be43b6263e28",
+          "definition": {
+            "gameValId": 4,
+            "id": 18582,
+            "name": "sailing_charting_generic_rowboat_mudskipper_sound_complete",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 18618,
+          "source_sha256": "217c988ffab147ab1492f867fce04740fd8f8beaa60d6f950bbde3a7e27ecdd3",
+          "definition": {
+            "gameValId": 4,
+            "id": 18618,
+            "name": "sailing_charting_mermaid_guide_mudskipper_sound_complete",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 18890,
+          "source_sha256": "cedd4ef4611f12e339bc3f17eb3ef215a8377c388ab9b415426b898c181382e0",
+          "definition": {
+            "gameValId": 4,
+            "id": 18890,
+            "name": "sailing_charting_spyglass_great_sound_complete",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 18901,
+          "source_sha256": "46b3c83d29c55b958a000fb099ca1e6f2a5c051878ad2ba1c718a9995acb7128",
+          "definition": {
+            "gameValId": 4,
+            "id": 18901,
+            "name": "sailing_charting_current_duck_great_sound_complete",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 18936,
+          "source_sha256": "aac6a4ca763200f36c1996f5258b031315ec3ab0cd62e492776965643898aea8",
+          "definition": {
+            "gameValId": 4,
+            "id": 18936,
+            "name": "sailing_sea_mudskipper_sound_charting_complete",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 18980,
+          "source_sha256": "2077167c3a67120de056ce4b246e0f1547bfdfd571a8c082bf7db1bcdfd175b3",
+          "definition": {
+            "gameValId": 4,
+            "id": 18980,
+            "name": "sailing_sea_great_sound_charting_complete",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 19017,
+          "source_sha256": "2fca5a6e3937e3c2b7076003d216beeafb17ae538279b99a7757b438f050ef0f",
+          "definition": {
+            "gameValId": 4,
+            "id": 19017,
+            "name": "sailing_sea_mudskipper_sound_charting_ever_complete",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 19061,
+          "source_sha256": "45fa2b9f38508fddd0277383fda1b729d22247c11d8b4b35ee775b3817e1c351",
+          "definition": {
+            "gameValId": 4,
+            "id": 19061,
+            "name": "sailing_sea_great_sound_charting_ever_complete",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 19731,
+          "source_sha256": "1755cb312a13800b687500df86f6615b1a5c7d3544719bb53458ea5788c1fffa",
+          "definition": {
+            "gameValId": 4,
+            "id": 19731,
+            "name": "music_current_playlist",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 19732,
+          "source_sha256": "0b709c3ae0717f50ec4e44f46c2b7f7561c376b3020fd500789379c1968b15b5",
+          "definition": {
+            "gameValId": 4,
+            "id": 19732,
+            "name": "settings_music_player_disable_text_shadow",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 19733,
+          "source_sha256": "56cbef25277b8e140d04cc2ba66570d4e4ac29112165cd6d158c8155cf9a0653",
+          "definition": {
+            "gameValId": 4,
+            "id": 19733,
+            "name": "settings_music_player_hide_tracks",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 19734,
+          "source_sha256": "d258ad1d8d96f59f5dc09fc67f7a2e8428f028f8779cad2123a580d29a68f87e",
+          "definition": {
+            "gameValId": 4,
+            "id": 19734,
+            "name": "use_previous_music_mode_on_login",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 19735,
+          "source_sha256": "6292bcd4e1b0180137d4d052c38a7ad505f928080eb28f1ae5d8585c217ceecd",
+          "definition": {
+            "gameValId": 4,
+            "id": 19735,
+            "name": "settings_music_default_track_on_area_entry",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 19736,
+          "source_sha256": "730d59bbfa64fb270a49ab19de3064fc3fb97d42c316d945bdf54042f809c222",
+          "definition": {
+            "gameValId": 4,
+            "id": 19736,
+            "name": "dont_update_music_on_playlist_change",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 19737,
+          "source_sha256": "3529acbd6aeced05fbce229689b4be710a73a1e17a1567e3c1eec7511b004b62",
+          "definition": {
+            "gameValId": 4,
+            "id": 19737,
+            "name": "use_shuffle_mode_on_manual_music_selection",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20038,
+          "source_sha256": "074483ac4a335dea557d0ed676991149f2bd2180db8c5dcdac6e4c5247dc6065",
+          "definition": {
+            "gameValId": 4,
+            "id": 20038,
+            "name": "option_master_volume_desktop",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20039,
+          "source_sha256": "fdb0d6db7b37fd519a4d45182cbe6a1259fb2865d2a954906c04f6f4868e9798",
+          "definition": {
+            "gameValId": 4,
+            "id": 20039,
+            "name": "option_master_volume_saved_desktop",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20040,
+          "source_sha256": "2a242ac16df69d3b5a03a7533a0e764e27c35e3af41d9b0932c602122e2d139c",
+          "definition": {
+            "gameValId": 4,
+            "id": 20040,
+            "name": "option_music_desktop",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20041,
+          "source_sha256": "e05e72aeea1a4565edf120a51a3751d301405dd70ef60b000bd76cddd4fd30e3",
+          "definition": {
+            "gameValId": 4,
+            "id": 20041,
+            "name": "option_music_saved_desktop",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20042,
+          "source_sha256": "718de28c070446ba053782cc1b078c65a2485bb8be0ba71786dafc26ae1adb28",
+          "definition": {
+            "gameValId": 4,
+            "id": 20042,
+            "name": "option_sounds_desktop",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20043,
+          "source_sha256": "a6e177a2d31144e0c7eea3c8646276cd200fd2471e5c5445f015c52aa109beee",
+          "definition": {
+            "gameValId": 4,
+            "id": 20043,
+            "name": "option_sounds_saved_desktop",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20044,
+          "source_sha256": "f9ffcd7dda85c2670dfa3644979d2dfe474094f04512979596634570a3fc1203",
+          "definition": {
+            "gameValId": 4,
+            "id": 20044,
+            "name": "option_areasounds_desktop",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20045,
+          "source_sha256": "67783f154fe96c9e21df5eb1df6244a5ec9207104842998be98540681b1cf399",
+          "definition": {
+            "gameValId": 4,
+            "id": 20045,
+            "name": "option_areasounds_saved_desktop",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20046,
+          "source_sha256": "a8398a0c1fca7863ebb9758582b3db28ed476ba1fc6e0987fa0bcfb111caa2c6",
+          "definition": {
+            "gameValId": 4,
+            "id": 20046,
+            "name": "option_master_volume_mobile",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20047,
+          "source_sha256": "fdd2afc48b54edf42883eddb4d569b562696bc05ce8a3bc69a39d636e92920aa",
+          "definition": {
+            "gameValId": 4,
+            "id": 20047,
+            "name": "option_master_volume_saved_mobile",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20048,
+          "source_sha256": "174eaaab36ce99d5a773f4ca4aba389ad5e434d96cbc8d016ff35e4281d2e336",
+          "definition": {
+            "gameValId": 4,
+            "id": 20048,
+            "name": "option_music_mobile",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20049,
+          "source_sha256": "56d264e00366369af11a4ca0ffb67c0eb4fc199b867632289facb30211b37bb5",
+          "definition": {
+            "gameValId": 4,
+            "id": 20049,
+            "name": "option_music_saved_mobile",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20050,
+          "source_sha256": "c78218cc332789b8f4e6010e11ad4097f4bb3a8863666b4e21c070f58ea1e03f",
+          "definition": {
+            "gameValId": 4,
+            "id": 20050,
+            "name": "option_sounds_mobile",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20051,
+          "source_sha256": "4c5b7b97bfe2b7dfc398c27f935f8a58a3c3b4e9e7475d9691deea41f905f726",
+          "definition": {
+            "gameValId": 4,
+            "id": 20051,
+            "name": "option_sounds_saved_mobile",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20052,
+          "source_sha256": "1a5268df2cdc7a575c925972fbf31d4d87af98358a6d357b142a121e3434d37e",
+          "definition": {
+            "gameValId": 4,
+            "id": 20052,
+            "name": "option_areasounds_mobile",
+            "files": {}
+          }
+        },
+        {
+          "group": 4,
+          "id": 20053,
+          "source_sha256": "ec6962708eea66b01985dacb76969a92c73a2237d59fce6230b73ffec6217ec0",
+          "definition": {
+            "gameValId": 4,
+            "id": 20053,
+            "name": "option_areasounds_saved_mobile",
+            "files": {}
+          }
+        },
+        {
+          "group": 10,
+          "id": 13,
+          "source_sha256": "2b4bed3c5a6f7bfe2d1451ba7cefab366f327c8d78be69f81bc856978b9d3f51",
+          "definition": {
+            "gameValId": 10,
+            "id": 13,
+            "name": "cluehelper_clue_music",
+            "files": {
+              "0": "id",
+              "1": "difficulty",
+              "2": "music",
+              "3": "unlock_text",
+              "4": "target",
+              "5": "requirements",
+              "6": "region",
+              "7": "allregions",
+              "8": "related_content"
+            }
+          }
+        },
+        {
+          "group": 10,
+          "id": 44,
+          "source_sha256": "bc15cda5f7c6dba1b99e7eb49b8e649bdedf178e7c6e1fda714968f07a66b80e",
+          "definition": {
+            "gameValId": 10,
+            "id": 44,
+            "name": "music",
+            "files": {
+              "0": "sortname",
+              "1": "displayname",
+              "2": "unlockhint",
+              "3": "duration",
+              "4": "midi",
+              "5": "variable",
+              "6": "automatic_unlock",
+              "7": "area",
+              "8": "area_default",
+              "9": "hidden",
+              "10": "holiday",
+              "11": "secondary_track",
+              "12": "parent_track",
+              "13": "release_type",
+              "14": "related_content"
+            }
+          }
+        },
+        {
+          "group": 10,
+          "id": 128,
+          "source_sha256": "106b87fda395742b8c2d5d8ea693d23357913dcc9351e28775fea620f49fb926",
+          "definition": {
+            "gameValId": 10,
+            "id": 128,
+            "name": "music_area_group",
+            "files": {
+              "0": "area"
+            }
+          }
+        },
+        {
+          "group": 15,
+          "id": 967,
+          "source_sha256": "9ba919b1458ada783a7cc7bc0bd1a572c4353843f3d2c1ad931a85ef83c5f709",
+          "definition": {
+            "gameValId": 15,
+            "id": 967,
+            "name": "option_audio_override",
+            "files": {}
+          }
+        },
+        {
+          "group": 15,
+          "id": 1503,
+          "source_sha256": "d221d51e695e254baca1c464a48258d7a9207948bcbdc6546bdf2f42cf54e3f6",
+          "definition": {
+            "gameValId": 15,
+            "id": 1503,
+            "name": "music_client_sync_timer_last_interval",
+            "files": {}
+          }
+        },
+        {
+          "group": 15,
+          "id": 1504,
+          "source_sha256": "758221f6a1fa1fba0bda3d55cedd5828b12a5593b92207154517564223aa212f",
+          "definition": {
+            "gameValId": 15,
+            "id": 1504,
+            "name": "music_client_sync_timer_time_per_interval",
+            "files": {}
+          }
+        }
+      ]
+    },
+    {
+      "case": "native-music-archive-name-identities",
+      "matches": [
+        {
+          "name": "scape main",
+          "group": 0,
+          "name_hash": 1120933843,
+          "revision": 1785237710,
+          "crc": 334060859
+        },
+        {
+          "name": "newbie melody",
+          "group": 62,
+          "name_hash": 1749113330,
+          "revision": 3,
+          "crc": 1449226782
+        },
+        {
+          "name": "scape cave",
+          "group": 144,
+          "name_hash": 1120636327,
+          "revision": 2,
+          "crc": -334807571
+        },
+        {
+          "name": "harmony",
+          "group": 76,
+          "name_hash": 696768774,
+          "revision": 3,
+          "crc": 515045830
+        },
+        {
+          "name": "autumn voyage",
+          "group": 2,
+          "name_hash": 828650857,
+          "revision": 3,
+          "crc": -1541637014
+        },
+        {
+          "name": "book of spells",
+          "group": 64,
+          "name_hash": 289742397,
+          "revision": 2,
+          "crc": 591054286
+        },
+        {
+          "name": "dream",
+          "group": 327,
+          "name_hash": 95848451,
+          "revision": 2,
+          "crc": 2117192905
+        },
+        {
+          "name": "yesteryear",
+          "group": 145,
+          "name_hash": 1258863383,
+          "revision": 2,
+          "crc": 486745395
+        }
+      ]
+    },
+    {
+      "case": "original-music-table44-and-area-group128",
+      "table44": {
+        "id": 44,
+        "types": [
+          [
+            "STRING"
+          ],
+          [
+            "STRING"
+          ],
+          [
+            "STRING"
+          ],
+          [
+            "INTEGER"
+          ],
+          [
+            "MIDI"
+          ],
+          [
+            "INTEGER",
+            "INTEGER"
+          ],
+          [
+            "BOOLEAN"
+          ],
+          [
+            "INTEGER"
+          ],
+          [
+            "INTEGER"
+          ],
+          [
+            "BOOLEAN"
+          ],
+          [
+            "INTEGER"
+          ],
+          [
+            "DBROW"
+          ],
+          [
+            "DBROW"
+          ],
+          [
+            "INTEGER"
+          ],
+          [
+            "INTEGER"
+          ]
+        ],
+        "defaultColumnValues": [
+          null,
+          null,
+          [
+            "somewhere."
+          ],
+          null,
+          null,
+          [
+            -1,
+            -1
+          ],
+          [
+            0
+          ],
+          null,
+          null,
+          [
+            0
+          ],
+          [
+            -1
+          ],
+          null,
+          null,
+          [
+            1
+          ],
+          null
+        ]
+      },
+      "table128": {
+        "id": 128,
+        "types": [
+          [
+            "INTEGER"
+          ]
+        ],
+        "defaultColumnValues": null
+      },
+      "selected_rows": [
+        {
+          "source_sha256": "dd8d0aa70c49d587c1c42e80640133c76390b4328598c9270c1b3f5bcd04e1cd",
+          "definition": {
+            "id": 2549,
+            "tableId": 44,
+            "columnTypes": [
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "INTEGER"
+              ],
+              [
+                "MIDI"
+              ],
+              [
+                "INTEGER",
+                "INTEGER"
+              ],
+              null,
+              [
+                "INTEGER"
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "columnValues": [
+              [
+                "Autumn Voyage"
+              ],
+              [
+                "Autumn Voyage"
+              ],
+              [
+                "in Lumbridge."
+              ],
+              [
+                229
+              ],
+              [
+                2
+              ],
+              [
+                1,
+                17
+              ],
+              null,
+              [
+                1
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        {
+          "source_sha256": "d2295bc04d504ee7d9f0d72af5f926983025ca9e4672ad618148d66a244c5a3c",
+          "definition": {
+            "id": 2777,
+            "tableId": 44,
+            "columnTypes": [
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "INTEGER"
+              ],
+              [
+                "MIDI"
+              ],
+              [
+                "INTEGER",
+                "INTEGER"
+              ],
+              null,
+              [
+                "INTEGER"
+              ],
+              [
+                "INTEGER"
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "columnValues": [
+              [
+                "Harmony"
+              ],
+              [
+                "Harmony"
+              ],
+              [
+                "in Lumbridge."
+              ],
+              [
+                362
+              ],
+              [
+                76
+              ],
+              [
+                2,
+                26
+              ],
+              null,
+              [
+                1
+              ],
+              [
+                1
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        {
+          "source_sha256": "7935aa7abf44bef529adfc415bfee3c8f4397f0a23f0b4b633823822bbc2ac58",
+          "definition": {
+            "id": 2938,
+            "tableId": 44,
+            "columnTypes": [
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "INTEGER"
+              ],
+              [
+                "MIDI"
+              ],
+              [
+                "INTEGER",
+                "INTEGER"
+              ],
+              [
+                "BOOLEAN"
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "columnValues": [
+              [
+                "Newbie Melody"
+              ],
+              [
+                "Newbie Melody"
+              ],
+              [
+                "on Tutorial Island."
+              ],
+              [
+                372
+              ],
+              [
+                62
+              ],
+              [
+                27,
+                0
+              ],
+              [
+                1
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        {
+          "source_sha256": "c29ed69df20544588c5cafd15b5d60d39ad8d43cb6c78124450ec604b08d7fd9",
+          "definition": {
+            "id": 3012,
+            "tableId": 44,
+            "columnTypes": [
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "INTEGER"
+              ],
+              [
+                "MIDI"
+              ],
+              [
+                "INTEGER",
+                "INTEGER"
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "columnValues": [
+              [
+                "Scape Cave"
+              ],
+              [
+                "Scape Cave"
+              ],
+              [
+                "in the Varrock Sewers."
+              ],
+              [
+                266
+              ],
+              [
+                144
+              ],
+              [
+                4,
+                6
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        }
+      ],
+      "selected_areas": [
+        1
+      ],
+      "same_area_rows": [
+        {
+          "source_sha256": "dd8d0aa70c49d587c1c42e80640133c76390b4328598c9270c1b3f5bcd04e1cd",
+          "definition": {
+            "id": 2549,
+            "tableId": 44,
+            "columnTypes": [
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "INTEGER"
+              ],
+              [
+                "MIDI"
+              ],
+              [
+                "INTEGER",
+                "INTEGER"
+              ],
+              null,
+              [
+                "INTEGER"
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "columnValues": [
+              [
+                "Autumn Voyage"
+              ],
+              [
+                "Autumn Voyage"
+              ],
+              [
+                "in Lumbridge."
+              ],
+              [
+                229
+              ],
+              [
+                2
+              ],
+              [
+                1,
+                17
+              ],
+              null,
+              [
+                1
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        {
+          "source_sha256": "d6faf0a38bafaa416f9352db7375ccd760ccc931c0f7c2757752d374195d55db",
+          "definition": {
+            "id": 2583,
+            "tableId": 44,
+            "columnTypes": [
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "INTEGER"
+              ],
+              [
+                "MIDI"
+              ],
+              [
+                "INTEGER",
+                "INTEGER"
+              ],
+              null,
+              [
+                "INTEGER"
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "columnValues": [
+              [
+                "Book of Spells"
+              ],
+              [
+                "Book of Spells"
+              ],
+              [
+                "in Lumbridge."
+              ],
+              [
+                546
+              ],
+              [
+                64
+              ],
+              [
+                1,
+                23
+              ],
+              null,
+              [
+                1
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        {
+          "source_sha256": "4f19529050447b0042e09e9bf383f4eaebd6ac5746321635687c3ae351336fdd",
+          "definition": {
+            "id": 2674,
+            "tableId": 44,
+            "columnTypes": [
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "INTEGER"
+              ],
+              [
+                "MIDI"
+              ],
+              [
+                "INTEGER",
+                "INTEGER"
+              ],
+              null,
+              [
+                "INTEGER"
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "columnValues": [
+              [
+                "Dream"
+              ],
+              [
+                "Dream"
+              ],
+              [
+                "in Lumbridge."
+              ],
+              [
+                257
+              ],
+              [
+                327
+              ],
+              [
+                2,
+                3
+              ],
+              null,
+              [
+                1
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        {
+          "source_sha256": "b31f31aac5f2cb9fb87a3aaa46d47418d093b2a3aeeef267d9bb20571e14d576",
+          "definition": {
+            "id": 2721,
+            "tableId": 44,
+            "columnTypes": [
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "INTEGER"
+              ],
+              [
+                "MIDI"
+              ],
+              [
+                "INTEGER",
+                "INTEGER"
+              ],
+              null,
+              [
+                "INTEGER"
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "columnValues": [
+              [
+                "Flute Salad"
+              ],
+              [
+                "Flute Salad"
+              ],
+              [
+                "in Lumbridge."
+              ],
+              [
+                194
+              ],
+              [
+                163
+              ],
+              [
+                2,
+                15
+              ],
+              null,
+              [
+                1
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        {
+          "source_sha256": "d2295bc04d504ee7d9f0d72af5f926983025ca9e4672ad618148d66a244c5a3c",
+          "definition": {
+            "id": 2777,
+            "tableId": 44,
+            "columnTypes": [
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "INTEGER"
+              ],
+              [
+                "MIDI"
+              ],
+              [
+                "INTEGER",
+                "INTEGER"
+              ],
+              null,
+              [
+                "INTEGER"
+              ],
+              [
+                "INTEGER"
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "columnValues": [
+              [
+                "Harmony"
+              ],
+              [
+                "Harmony"
+              ],
+              [
+                "in Lumbridge."
+              ],
+              [
+                362
+              ],
+              [
+                76
+              ],
+              [
+                2,
+                26
+              ],
+              null,
+              [
+                1
+              ],
+              [
+                1
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        {
+          "source_sha256": "f7e822265106bfd593109b53c35843aae7aa60c17e6c73d13fcbf678999ce4f7",
+          "definition": {
+            "id": 3237,
+            "tableId": 44,
+            "columnTypes": [
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "STRING"
+              ],
+              [
+                "INTEGER"
+              ],
+              [
+                "MIDI"
+              ],
+              [
+                "INTEGER",
+                "INTEGER"
+              ],
+              null,
+              [
+                "INTEGER"
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "columnValues": [
+              [
+                "Yesteryear"
+              ],
+              [
+                "Yesteryear"
+              ],
+              [
+                "in Lumbridge."
+              ],
+              [
+                397
+              ],
+              [
+                145
+              ],
+              [
+                6,
+                1
+              ],
+              null,
+              [
+                1
+              ],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        }
+      ],
+      "area_groups": [
+        {
+          "source_sha256": "e347e15993527b8f15066d3d77fd4a9e61b3511adc8c03480e11c5f8045831db",
+          "definition": {
+            "id": 7097,
+            "tableId": 128,
+            "columnTypes": [
+              [
+                "INTEGER"
+              ]
+            ],
+            "columnValues": [
+              [
+                30,
+                31,
+                32,
+                33,
+                34,
+                35
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case": "readonly-native-cache-inputs",
+      "groups": {
+        "255/24": {
+          "index": 255,
+          "group": 24,
+          "container_sha256": "0c29d0d2bc6e447741dcea0f401a221db2b90265634dd7a285f143e8ccba3975",
+          "container_size_bytes": 2513,
+          "revision": 1,
+          "groups": 14,
+          "named": false
+        },
+        "24/3": {
+          "index": 24,
+          "group": 3,
+          "revision": 1,
+          "crc32": 464845313,
+          "name_hash": 0,
+          "container_sha256": "add8e90e4b3e3fcf77ce90c61b87a49fdc89ee9d0cfd6c709ba53f6d58bc281f",
+          "container_size_bytes": 16105,
+          "file_id_count": 2943,
+          "file_ids_sha256": "563fc6ca5a710d2004bc3ae17b03bdac0d5c6879fb7605b4a9a0672caee37dfe"
+        },
+        "24/4": {
+          "index": 24,
+          "group": 4,
+          "revision": 1,
+          "crc32": 1762761021,
+          "name_hash": 0,
+          "container_sha256": "d0f064751b43e1664df57f2a1321a1396098de9712d4f78f00f8e7dfda37768e",
+          "container_size_bytes": 82727,
+          "file_id_count": 13315,
+          "file_ids_sha256": "db0bc2a5f618d18412b77feea951f30355176978650ab7e89180c32372351af4"
+        },
+        "24/9": {
+          "index": 24,
+          "group": 9,
+          "revision": 1,
+          "crc32": 4028437604,
+          "name_hash": 0,
+          "container_sha256": "417d15ec30f16e157802f765198cd227a20169f99cadb34222f8ed9e05dd14b4",
+          "container_size_bytes": 104248,
+          "file_id_count": 16858,
+          "file_ids_sha256": "f5b92e691f978a827d69010a012356fac81612511d60f32b93248de4a4871912"
+        },
+        "24/10": {
+          "index": 24,
+          "group": 10,
+          "revision": 1,
+          "crc32": 3832600277,
+          "name_hash": 0,
+          "container_sha256": "639c83b86c9cdaf6b3c1154c84c438dc867b35be261583e02770543241b77f53",
+          "container_size_bytes": 11846,
+          "file_id_count": 249,
+          "file_ids_sha256": "7ea4f1a7fbe15b600dc2af0f92829e8a46a639b1ff831fc80b7a851287fd76d1"
+        },
+        "24/14": {
+          "index": 24,
+          "group": 14,
+          "revision": 1,
+          "crc32": 1810022419,
+          "name_hash": 0,
+          "container_sha256": "dd5505dc9d3605369472a111689c1a90116999a4418538d7a8987bf46021c3b4",
+          "container_size_bytes": 98186,
+          "file_id_count": 970,
+          "file_ids_sha256": "03816f13ac7f3ef872ccac5b1c81dcd8c99d1fe2e1b1feffe9bdc7a2d4bcb8b6"
+        },
+        "24/15": {
+          "index": 24,
+          "group": 15,
+          "revision": 1,
+          "crc32": 87730655,
+          "name_hash": 0,
+          "container_sha256": "2ced617044be20ac2fb4cefdcd3ecb5803dc61168399a6d7996683084d2985c0",
+          "container_size_bytes": 7358,
+          "file_id_count": 1512,
+          "file_ids_sha256": "58dd164eebae26fde96c4bbf42d6cb7ba783bf1cf21046c3c2744fe40d94dd6b"
+        },
+        "255/6": {
+          "index": 255,
+          "group": 6,
+          "container_sha256": "38ea95b7840f697131b075d8df6bfd6fbf562944a8dcfb7b6475d9e1a2c85ef3",
+          "container_size_bytes": 13012,
+          "revision": 1785237711,
+          "groups": 882,
+          "named": true
+        },
+        "255/2": {
+          "index": 255,
+          "group": 2,
+          "container_sha256": "768d1e61394e5f4f60d6ad838887cbd003dedfa07c1ecefaa3259b153d55b682",
+          "container_size_bytes": 1370,
+          "revision": 1788780612,
+          "groups": 41,
+          "named": false
+        },
+        "2/39": {
+          "index": 2,
+          "group": 39,
+          "revision": 1788780612,
+          "crc32": 2222173613,
+          "name_hash": 0,
+          "container_sha256": "1cfd354ddcd5be9b17e3a702cf8474120427b29394e6e9edc27e63b7e7b3a34a",
+          "container_size_bytes": 2518,
+          "file_id_count": 249,
+          "file_ids_sha256": "7ea4f1a7fbe15b600dc2af0f92829e8a46a639b1ff831fc80b7a851287fd76d1"
+        },
+        "2/38": {
+          "index": 2,
+          "group": 38,
+          "revision": 1788780611,
+          "crc32": 4159884401,
+          "name_hash": 0,
+          "container_sha256": "ac177aabcb6f2551d3ae0448b48d25c62726fa3d8894275192e2c0a601d111b5",
+          "container_size_bytes": 400146,
+          "file_id_count": 16858,
+          "file_ids_sha256": "f5b92e691f978a827d69010a012356fac81612511d60f32b93248de4a4871912"
+        }
+      }
+    }
+  ],
+  "external_account": false,
+  "personal_preferences_read": false,
+  "hardware_audio_opened": false,
+  "source_pack_modified": false,
+  "acceptance": false,
+  "input_artifacts": [
+    {
+      "name": "cache-1.12.39-SNAPSHOT.jar",
+      "size_bytes": 444766,
+      "sha256": "8056039bee74da629e596896048645085f7753159a064da51c24e9bd99f13e8e"
+    },
+    {
+      "name": "client-1.12.38.jar",
+      "size_bytes": 5261401,
+      "sha256": "6dcd0da2fdbf48d35c3d8f666d801d05afa964030c553e806eb173dba97323d5"
+    },
+    {
+      "name": "commons-compress-1.10.jar",
+      "size_bytes": 409475,
+      "sha256": "807c95293e41e8159477442077da6d0962a7f486d4b980be61f60a8db9cb290f"
+    },
+    {
+      "name": "gson-2.8.5.jar",
+      "size_bytes": 241622,
+      "sha256": "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81"
+    },
+    {
+      "name": "guava-23.2-jre.jar",
+      "size_bytes": 2649860,
+      "sha256": "5be9a7d05ba0ccd74708bc8018ae412255f85843c0b92302e9b9befa6ed52564"
+    },
+    {
+      "name": "injected-client-1.12.38.jar",
+      "size_bytes": 4235748,
+      "sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947"
+    },
+    {
+      "name": "jna-5.9.0.jar",
+      "size_bytes": 1729586,
+      "sha256": "eafcc780b445434d3c5ae7fa2fb6665de1a7560d537d2c408a8e80cd14d27161"
+    },
+    {
+      "name": "json-20090211.jar",
+      "size_bytes": 45944,
+      "sha256": "055be110a570f9cda3eba8d70a006ff46c77a048bc67868524879211c48b330a"
+    },
+    {
+      "name": "runelite-api-1.12.38-runtime.jar",
+      "size_bytes": 272846,
+      "sha256": "6d50aa843c070120a5093c5ead29d72e92742074346241e0359a133dad008852"
+    },
+    {
+      "name": "slf4j-api-1.7.25.jar",
+      "size_bytes": 41203,
+      "sha256": "18c4a0095d5c1da6b817592e767bb23d29dd2f560ad74df75ff3961dbde25b79"
+    },
+    {
+      "name": "slf4j-simple-1.7.25.jar",
+      "size_bytes": 15257,
+      "sha256": "0966e86fffa5be52d3d9e7b89dd674d98a03eed0a454fbaf7c1bd9493bd9d874"
+    }
+  ],
+  "probe_sources": [
+    {
+      "path": "tools/audio-import/SourceAudio.java",
+      "size_bytes": 18150,
+      "sha256": "1ece6e31e04c5ea51ff899f483dbb57a08ee1565ac283c59d29adeaf26f59555"
+    },
+    {
+      "path": "tools/audio-import/BindingCache.java",
+      "size_bytes": 6484,
+      "sha256": "4730fe7ec8cc16e91a6f40f6cc8e587fb42b25dd92ef853a7619f104a59cae43"
+    },
+    {
+      "path": "tools/audio-import/BindingExtract.java",
+      "size_bytes": 11128,
+      "sha256": "53ac21f8928b3edaec00815a8a64bfee7fb60c511a24d0b81735fb5e5d9626ec"
+    },
+    {
+      "path": "tools/source-capture/FixturePreferenceWrites.java",
+      "size_bytes": 905,
+      "sha256": "7ca846b781906131e57594db73c57db0f87d17bfaf0fa9f06f200ec87135391a"
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativeArchive.java",
+      "size_bytes": 2115,
+      "sha256": "48ecaa0e9c12387dab5724029759d1394a5782830e5c91e01f7bcde9a3f364a4"
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativeScriptPolicy.java",
+      "size_bytes": 3836,
+      "sha256": "84ccc3ffc7918910b153c751ed98bdc442bfb69caf700cc03f096f6123552bc5"
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativeObjects.java",
+      "size_bytes": 4566,
+      "sha256": "bd3e4fd050ead78d14e4c10d5b55796d2e20032db2006f74eb4ed8cc279e1642"
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativeMusicPcm.java",
+      "size_bytes": 4753,
+      "sha256": "8dd50e45d66657b66cdc055977d6efe73926365db0ef71ce943f1164c8eec927"
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativePolicyProbe.java",
+      "size_bytes": 26884,
+      "sha256": "448c059f0bf7792f1d3fc69f428a5845a0ddcf74f35c28276b6300a4f19e6bf6"
+    }
+  ],
+  "runner": {
+    "path": "tools/browser-audio-tests/native/probe.py",
+    "size_bytes": 4776,
+    "sha256": "1ad275d5c98d639c5c67f05202ff7e4f6f74ba8efab9a01f70663944668940d9"
+  }
+}

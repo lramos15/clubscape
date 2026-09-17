@@ -1,0 +1,23 @@
+{
+  "phase": "before",
+  "code_commit": "5c6c581136310b48e8043e7920199d7236f9b88c",
+  "target": ".local/water-dispatch/persisted-repair/before-target",
+  "host": "aarch64",
+  "command": [
+    "cargo",
+    "test",
+    "--quiet",
+    "--locked",
+    "--offline",
+    "-p",
+    "clubscape-world-engine",
+    "--test",
+    "item_on_target",
+    "persisted::",
+    "--",
+    "--nocapture"
+  ],
+  "exit_code": 101,
+  "log_sha256": "e5c59928fc2991727ed4d86879f619326d08746e4ccc8508d01ba18334dd5f44",
+  "source_artifact_changed": false
+}

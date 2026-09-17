@@ -1,0 +1,1466 @@
+[
+  {
+    "title": "Account Management",
+    "page_id": 121641,
+    "revision": 15327969,
+    "revision_timestamp": "2026-09-02T01:40:02Z",
+    "url": "https://oldschool.runescape.wiki/w/Account_Management?oldid=15327969",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/121641-15327969.json.gz",
+      "sha256": "a0adc83d651cd1df1ac7b5afbc59d14075c6601d301f98f364c56db4f35e7e78",
+      "size_bytes": 3744
+    },
+    "images": [
+      "Account Management - Account icon.png",
+      "Account Management - Bond Pouch icon.png",
+      "Account Management - Community icon.png",
+      "Account Management - Links icon.png",
+      "Account Management - Name Changer icon.png",
+      "Account Management - Open Store icon.png",
+      "Account Management - View Archive icon.png",
+      "Account Management - View History icon.png",
+      "Account Management - View Inbox icon.png",
+      "Account Management - View Newspost icon.png",
+      "Account Management - View Poll icon.png",
+      "Account Management tab.png",
+      "Display name interface.png",
+      "Previous name.png"
+    ]
+  },
+  {
+    "title": "Adventure Paths",
+    "page_id": 229956,
+    "revision": 14741525,
+    "revision_timestamp": "2024-09-08T02:35:18Z",
+    "url": "https://oldschool.runescape.wiki/w/Adventure_Paths?oldid=14741525",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/229956-14741525.json.gz",
+      "sha256": "059e2558f948f0a6b42fe63b341d8633f06c823da0ebd48370c3456b673eb9a8",
+      "size_bytes": 2919
+    },
+    "images": [
+      "Adventure Paths interface.png",
+      "Adventure Paths.png",
+      "Adventurer Paths - Combat Path interface.png",
+      "Adventurer Paths - Gatherer Path interface.png",
+      "Adventurer_Paths_-_Combat_Path_interface.png",
+      "Combat Path icon.png",
+      "Combat_Path_icon.png",
+      "Gatherer Path icon.png"
+    ]
+  },
+  {
+    "title": "Audio",
+    "page_id": 108138,
+    "revision": 15313930,
+    "revision_timestamp": "2026-08-20T13:30:04Z",
+    "url": "https://oldschool.runescape.wiki/w/Audio?oldid=15313930",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/108138-15313930.json.gz",
+      "sha256": "b8e776b4ff715ded53d9b66e924900a420d64e3901e82619a9da46270321a015",
+      "size_bytes": 4535
+    },
+    "images": [
+      "Area Sound.png",
+      "Harmony (v1).ogg",
+      "Harmony.ogg",
+      "Music.png",
+      "Nora's Melody (Grim Tales) (8-bit).ogg",
+      "Nora's Melody (Grim Tales) (Fossil Island).ogg",
+      "Rose (8-bit).ogg",
+      "Rose.ogg",
+      "Sound Effect.png",
+      "Wilderness 2 (bugged).ogg",
+      "Wilderness 2 (v1).ogg",
+      "Wilderness 2.ogg"
+    ]
+  },
+  {
+    "title": "Autumn Voyage",
+    "page_id": 96865,
+    "revision": 15329193,
+    "revision_timestamp": "2026-09-03T01:29:59Z",
+    "url": "https://oldschool.runescape.wiki/w/Autumn_Voyage?oldid=15329193",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/96865-15329193.json.gz",
+      "sha256": "b021ae090da7c53917c0a996f69bdc46c166dffdf675d6449ec20cfd294d0842",
+      "size_bytes": 2131
+    },
+    "images": [
+      "Autumn Voyage (8-bit).ogg",
+      "Autumn Voyage (Fossil Island).ogg",
+      "Autumn Voyage (v1).ogg",
+      "Autumn Voyage.ogg"
+    ]
+  },
+  {
+    "title": "Bank",
+    "page_id": 10069,
+    "revision": 15315062,
+    "revision_timestamp": "2026-08-21T03:53:00Z",
+    "url": "https://oldschool.runescape.wiki/w/Bank?oldid=15315062",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/10069-15315062.json.gz",
+      "sha256": "c84f69cd5911cfb7e75fbbc9a4db908506c8ef512865b1880577724bc5d445cf",
+      "size_bytes": 12774
+    },
+    "images": [
+      "Bank Deposit Box.png",
+      "Bank filler detail.png",
+      "Bank icon.png",
+      "Bank interface.png",
+      "Bank logo.png",
+      "Bank settings menu.png",
+      "Banker (male).png",
+      "Item Incinerator.png",
+      "Potion_storage_detail.png"
+    ]
+  },
+  {
+    "title": "Bronze bar",
+    "page_id": 9874,
+    "revision": 15315107,
+    "revision_timestamp": "2026-08-21T04:18:17Z",
+    "url": "https://oldschool.runescape.wiki/w/Bronze_bar?oldid=15315107",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/9874-15315107.json.gz",
+      "sha256": "a2dadaa0449a8cf003b9f3a158c6285ae9c16fe54e8a05aa77da9318c1f8a9d6",
+      "size_bytes": 1549
+    },
+    "images": [
+      "Bronze bar detail.png",
+      "Bronze bar.png"
+    ]
+  },
+  {
+    "title": "Category:Transcripts",
+    "page_id": 198655,
+    "revision": 15007886,
+    "revision_timestamp": "2025-10-20T07:14:21Z",
+    "url": "https://oldschool.runescape.wiki/w/Category:Transcripts?oldid=15007886",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/198655-15007886.json.gz",
+      "sha256": "8a062e8bbe9fdaf274ef79df76ba3a226a83320ecc296549839883dfaf3d05ef",
+      "size_bytes": 323
+    },
+    "images": []
+  },
+  {
+    "title": "Choose Option",
+    "page_id": 54339,
+    "revision": 15200847,
+    "revision_timestamp": "2026-04-28T13:41:30Z",
+    "url": "https://oldschool.runescape.wiki/w/Choose_Option?oldid=15200847",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/54339-15200847.json.gz",
+      "sha256": "ecb1468c3bd3b6e9777e61675b8f297b96b7661b8dfbb0e088466478678bf58c",
+      "size_bytes": 2949
+    },
+    "images": [
+      "Choose Option interface.png",
+      "Choose Option monster interface.png",
+      "Choose Option object interface.png",
+      "Choose Option spell interface.png",
+      "Choose Option use interface.png",
+      "Choose Option weapon interface.png",
+      "Choose option leagues trophy adamant.png",
+      "Choose option leagues trophy bronze.png",
+      "Choose option leagues trophy dragon.png",
+      "Choose option leagues trophy iron.png",
+      "Choose option leagues trophy mithril.png",
+      "Choose option leagues trophy rune.png",
+      "Choose option leagues trophy steel.png",
+      "Choose option mobile.png",
+      "Choose option skull 1 loot key.png",
+      "Choose option skull 2 loot key.png",
+      "Choose option skull 3 loot key.png",
+      "Choose option skull 4 loot key.png",
+      "Choose option skull 5 loot key.png"
+    ]
+  },
+  {
+    "title": "Combat Options",
+    "page_id": 17946,
+    "revision": 15274532,
+    "revision_timestamp": "2026-07-25T14:33:18Z",
+    "url": "https://oldschool.runescape.wiki/w/Combat_Options?oldid=15274532",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/17946-15274532.json.gz",
+      "sha256": "710825e626064559a7e5030dd70fa42f07a472862c46e787f476d7ac00a4c529",
+      "size_bytes": 3631
+    },
+    "images": [
+      "Attack style tab.png",
+      "Combat icon.png",
+      "Combat options mobile interface.png",
+      "CombatStyles Crossbow.png",
+      "CombatStyles Slash Sword.png",
+      "CombatStyles Staff.png"
+    ]
+  },
+  {
+    "title": "Cook's Assistant",
+    "page_id": 2088,
+    "revision": 15320469,
+    "revision_timestamp": "2026-08-26T06:44:42Z",
+    "url": "https://oldschool.runescape.wiki/w/Cook%27s_Assistant?oldid=15320469",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/2088-15320469.json.gz",
+      "sha256": "4d95c848de3ab72f47435d018d632296cc26f16b6f9b983a0ee8ef953eddff25",
+      "size_bytes": 3235
+    },
+    "images": [
+      "Cook (Lumbridge) chathead.png",
+      "Cook's Assistant reward scroll.png",
+      "Cook's Assistant.png"
+    ]
+  },
+  {
+    "title": "Death",
+    "page_id": 12001,
+    "revision": 15341882,
+    "revision_timestamp": "2026-09-12T17:55:26Z",
+    "url": "https://oldschool.runescape.wiki/w/Death?oldid=15341882",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/12001-15341882.json.gz",
+      "sha256": "b8af38e55fbbc71f8f7983cd0c9ad5d20052edfc17d4e100ae3d07274e696006",
+      "size_bytes": 3515
+    },
+    "images": [
+      "Death (Doom).webp",
+      "Death (Raging Echoes League).gif",
+      "Death (Trailblazer Reloaded League).gif",
+      "Death Animations.png",
+      "Death appears.gif",
+      "Dying animation.gif",
+      "Hardcore group ironman chat badge.png",
+      "Hardcore ironman chat badge.png"
+    ]
+  },
+  {
+    "title": "Death's Office",
+    "page_id": 268235,
+    "revision": 15273706,
+    "revision_timestamp": "2026-07-24T02:58:30Z",
+    "url": "https://oldschool.runescape.wiki/w/Death%27s_Office?oldid=15273706",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/268235-15273706.json.gz",
+      "sha256": "5658ca6c5058d247f79f8946000aa81ee2a9fa90f5fa348ae6dc1b6710f32345",
+      "size_bytes": 2678
+    },
+    "images": [
+      "Death's Office icon.png",
+      "Death's Office.png",
+      "Siren's tome in Death's Office.png"
+    ]
+  },
+  {
+    "title": "Equipment Stats",
+    "page_id": 19950,
+    "revision": 15167515,
+    "revision_timestamp": "2026-04-07T04:42:00Z",
+    "url": "https://oldschool.runescape.wiki/w/Equipment_Stats?oldid=15167515",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/19950-15167515.json.gz",
+      "sha256": "688e08f57ff8c802ec33d30388b1f3112646598f1a621622d7eb6a7ff8836af9",
+      "size_bytes": 2650
+    },
+    "images": [
+      "Damage hitsplat.png",
+      "Equipment Stats interface.png",
+      "Equipment Stats.png",
+      "Zero damage hitsplat.png"
+    ]
+  },
+  {
+    "title": "Goblin",
+    "page_id": 11672,
+    "revision": 15318086,
+    "revision_timestamp": "2026-08-24T13:44:18Z",
+    "url": "https://oldschool.runescape.wiki/w/Goblin?oldid=15318086",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/11672-15318086.json.gz",
+      "sha256": "1b33a5b6eb45715eca0278a43b20a5e00eef59db09fee87a50d1382b3d946158",
+      "size_bytes": 5130
+    },
+    "images": [
+      "Goblin (armed) chathead.png",
+      "Goblin (armed).png",
+      "Goblin (armed, 3).png",
+      "Goblin (level 13) chathead.png",
+      "Goblin (level 13).png",
+      "Goblin (level 5) chathead.png",
+      "Goblin (level 5).png",
+      "Goblin chathead.png",
+      "Goblin.png"
+    ]
+  },
+  {
+    "title": "Grave",
+    "page_id": 83783,
+    "revision": 15272680,
+    "revision_timestamp": "2026-07-22T21:18:31Z",
+    "url": "https://oldschool.runescape.wiki/w/Grave?oldid=15272680",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/83783-15272680.json.gz",
+      "sha256": "a829a87985747063b40db9dab8e21f129e1dabb41b9edcc16e557c465994a45a",
+      "size_bytes": 5009
+    },
+    "images": [
+      "Grave (Angel).png",
+      "Grave.png",
+      "Gravestone icon (v1).png",
+      "Gravestone icon.png"
+    ]
+  },
+  {
+    "title": "Harmony",
+    "page_id": 255784,
+    "revision": 15339521,
+    "revision_timestamp": "2026-09-10T13:55:43Z",
+    "url": "https://oldschool.runescape.wiki/w/Harmony?oldid=15339521",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/255784-15339521.json.gz",
+      "sha256": "0f1c3c052beb97fc56c6af4a9d5452b6bb2b8b3f12c406f3a4e1e8085d428d6e",
+      "size_bytes": 665
+    },
+    "images": []
+  },
+  {
+    "title": "Interface",
+    "page_id": 13522,
+    "revision": 15167714,
+    "revision_timestamp": "2026-04-07T04:44:15Z",
+    "url": "https://oldschool.runescape.wiki/w/Interface?oldid=15167714",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/13522-15167714.json.gz",
+      "sha256": "0d2406211444a5bf0cdf714ad379996edc1d8ea4e5027e55eeb9ab3db19d90da",
+      "size_bytes": 6836
+    },
+    "images": [
+      "Account Management.png",
+      "Achievement Diaries icon.png",
+      "Achievement Diaries tab icon.png",
+      "Activating quick prayers.gif",
+      "Ancient spellbook.png",
+      "Arceuus spellbook.png",
+      "Character Summary icon.png",
+      "Character Summary tab icon.png",
+      "Chat Interface.png",
+      "Chat-channel.png",
+      "Combat icon.png",
+      "Compass.png",
+      "Disease hitpoints minimap.png",
+      "Emotes button.png",
+      "Follower Details.png",
+      "Friends List.png",
+      "Grouping icon.png",
+      "Hitpoints orb.png",
+      "Ignore List.png",
+      "Interface.png",
+      "Inventory.png",
+      "Logout.png",
+      "Lunar spellbook.png",
+      "Music.png",
+      "Poison hitpoints minimap.png",
+      "Prayer tab icon.png",
+      "Quest List tab icon.png",
+      "Quest point icon.png",
+      "Run energy orb.gif",
+      "Sailing Options icon.png",
+      "Settings.png",
+      "Special attack orb.gif",
+      "Spellbook.png",
+      "Standard spellbook.png",
+      "Stats icon.png",
+      "Venom hitpoints minimap.png",
+      "View_another_clan_icon.png",
+      "Wiki lookup.png",
+      "Worn Equipment.png",
+      "Your Clan icon.png"
+    ]
+  },
+  {
+    "title": "Inventory",
+    "page_id": 9572,
+    "revision": 15122006,
+    "revision_timestamp": "2026-02-06T05:22:40Z",
+    "url": "https://oldschool.runescape.wiki/w/Inventory?oldid=15122006",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/9572-15122006.json.gz",
+      "sha256": "0684936916cd44398b4823354d6f6c4a507d5b6f470b427daaa55a38f1360ba7",
+      "size_bytes": 1497
+    },
+    "images": [
+      "Inventory tab.png",
+      "Inventory.png"
+    ]
+  },
+  {
+    "title": "Items Kept on Death",
+    "page_id": 36390,
+    "revision": 15322198,
+    "revision_timestamp": "2026-08-27T18:11:51Z",
+    "url": "https://oldschool.runescape.wiki/w/Items_Kept_on_Death?oldid=15322198",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/36390-15322198.json.gz",
+      "sha256": "6c8f2f12fbbe99c42673c860a2fecd0ed9f99aa19b56d0e313d6f57163d3eb09",
+      "size_bytes": 11214
+    },
+    "images": [
+      "Items kept on death.png",
+      "Protect_Item.png",
+      "Skull_(status)_icon.png"
+    ]
+  },
+  {
+    "title": "Jingles",
+    "page_id": 301204,
+    "revision": 15341660,
+    "revision_timestamp": "2026-09-12T12:07:45Z",
+    "url": "https://oldschool.runescape.wiki/w/Jingles?oldid=15341660",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/301204-15341660.json.gz",
+      "sha256": "84c625175cf1e711a3e80b4fca5a04dd8936478b08448615beac6796f0c2bdac",
+      "size_bytes": 16705
+    },
+    "images": []
+  },
+  {
+    "title": "Lag",
+    "page_id": 257026,
+    "revision": 15329030,
+    "revision_timestamp": "2026-09-02T22:26:04Z",
+    "url": "https://oldschool.runescape.wiki/w/Lag?oldid=15329030",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/257026-15329030.json.gz",
+      "sha256": "881c9fd16679299ea733ef6cf8b30193a556ecb2d129cbc073d67397105890d9",
+      "size_bytes": 3465
+    },
+    "images": [
+      "Connection lost.png"
+    ]
+  },
+  {
+    "title": "Learning the Ropes",
+    "page_id": 636136,
+    "revision": 15315138,
+    "revision_timestamp": "2026-08-21T04:26:03Z",
+    "url": "https://oldschool.runescape.wiki/w/Learning_the_Ropes?oldid=15315138",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/636136-15315138.json.gz",
+      "sha256": "06350f8f6546a4aed0ef31d4443e3584dfae0e863cd93ff0fc4f669cf317b45d",
+      "size_bytes": 4078
+    },
+    "images": [
+      "Account Guide chathead.png",
+      "Brother Brace chathead.png",
+      "Combat Instructor chathead.png",
+      "Gielinor Guide chathead.png",
+      "Learning the Ropes reward scroll.png",
+      "Magic Instructor chathead.png",
+      "Master Chef chathead.png",
+      "Mining Instructor chathead.png",
+      "Newbie Melody.ogg",
+      "Quest Guide chathead.png",
+      "Scape Cave.ogg",
+      "Starting house.png",
+      "Survival Expert chathead.png",
+      "Tutorial Island.png"
+    ]
+  },
+  {
+    "title": "Lumbridge",
+    "page_id": 9837,
+    "revision": 15275326,
+    "revision_timestamp": "2026-07-25T20:45:54Z",
+    "url": "https://oldschool.runescape.wiki/w/Lumbridge?oldid=15275326",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/9837-15275326.json.gz",
+      "sha256": "4c59babf1149d193f035987d5f8f4a1de4dd06eace1bb1610a20e5d9b4dbf3a0",
+      "size_bytes": 8709
+    },
+    "images": [
+      "Autumn_Voyage.ogg",
+      "Book of Spells.ogg",
+      "Broken Raft (Shortcut - Lumbridge).png",
+      "Dream.ogg",
+      "Flute Salad.ogg",
+      "Goblin house.png",
+      "Harmony.ogg",
+      "Harmony_2.ogg",
+      "House of Fred the Farmer.png",
+      "Lumbridge Castle 2004.png",
+      "Lumbridge Castle.png",
+      "Lumbridge Courtyard 2004.png",
+      "Lumbridge General Store.png",
+      "Lumbridge Graveyard.png",
+      "Lumbridge Swamp Caves.png",
+      "Lumbridge logo.png",
+      "Lumbridge.png",
+      "The Sheared Ram old house exterior.png",
+      "The Sheared Ram old house interior.png",
+      "Yesteryear.ogg"
+    ]
+  },
+  {
+    "title": "Lumbridge Home Teleport",
+    "page_id": 18030,
+    "revision": 15322888,
+    "revision_timestamp": "2026-08-28T11:08:39Z",
+    "url": "https://oldschool.runescape.wiki/w/Lumbridge_Home_Teleport?oldid=15322888",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/18030-15322888.json.gz",
+      "sha256": "3175d1862926332c24acb520562e90d0ae5682b6d51b085166146c5ea379bb70",
+      "size_bytes": 1983
+    },
+    "images": [
+      "Home Teleport.gif",
+      "Home Teleport.ogg",
+      "Lumbridge Home Teleport icon (mobile).png",
+      "Lumbridge Home Teleport.png"
+    ]
+  },
+  {
+    "title": "Main Menu",
+    "page_id": 54340,
+    "revision": 15301773,
+    "revision_timestamp": "2026-08-15T04:45:47Z",
+    "url": "https://oldschool.runescape.wiki/w/Main_Menu?oldid=15301773",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/54340-15301773.json.gz",
+      "sha256": "ac17b974467c4078d3c25d61727b277a681663afcebac94d3bf84e69d5e419e5",
+      "size_bytes": 3917
+    },
+    "images": [
+      "Default login screen.png"
+    ]
+  },
+  {
+    "title": "Mill Lane Mill",
+    "page_id": 53674,
+    "revision": 15264815,
+    "revision_timestamp": "2026-07-16T02:28:20Z",
+    "url": "https://oldschool.runescape.wiki/w/Mill_Lane_Mill?oldid=15264815",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/53674-15264815.json.gz",
+      "sha256": "79471f75b5747d6e5dc4da1f3b9ac3cb331445c60b7d46523325cf6ce854f85c",
+      "size_bytes": 1480
+    },
+    "images": [
+      "Mill Lane Mill (interior, 1st floor).png",
+      "Mill Lane Mill (interior, 2nd floor).png",
+      "Mill Lane Mill (interior, ground floor).png",
+      "Mill Lane Mill.png"
+    ]
+  },
+  {
+    "title": "Minimap",
+    "page_id": 9589,
+    "revision": 15275372,
+    "revision_timestamp": "2026-07-25T22:16:32Z",
+    "url": "https://oldschool.runescape.wiki/w/Minimap?oldid=15275372",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/9589-15275372.json.gz",
+      "sha256": "6218f73a7d5df1bd4d43ccb47f55618beeb776ceec9f2619578d9cbaa5f31c33",
+      "size_bytes": 5989
+    },
+    "images": [
+      "Activating quick prayers.gif",
+      "Activity Adviser orb.png",
+      "Compass.png",
+      "Corruption prayer points data orb.png",
+      "Disease hitpoints minimap.png",
+      "Flag map marker.png",
+      "Gate map marker.png",
+      "Hitpoints orb.png",
+      "Map icon - Raft.png",
+      "Map icon - Skiff.png",
+      "Map icon - Sloop.png",
+      "Minimap NPC marker.png",
+      "Minimap clan chat marker.png",
+      "Minimap clan marker.png",
+      "Minimap friend marker.png",
+      "Minimap item marker.png",
+      "Minimap player marker.png",
+      "Minimap self marker.png",
+      "Minimap team marker.png",
+      "Minimap.png",
+      "Multicombat.png",
+      "Parasite infection hitpoints minimap.png",
+      "Poison disease hitpoints minimap.png",
+      "Poison hitpoints minimap.png",
+      "Poison infected hitpoints minimap.png",
+      "Red arrow map marker.png",
+      "Run energy orb.gif",
+      "Special attack orb.gif",
+      "Store orb interface.png",
+      "Store orb.png",
+      "Venom disease hitpoints minimap.png",
+      "Venom hitpoints minimap.png",
+      "Venom infected hitpoints minimap.png",
+      "Wiki lookup.png",
+      "World map icon.png",
+      "XP drops icon.png",
+      "Yellow arrow map marker.png"
+    ]
+  },
+  {
+    "title": "Music Player",
+    "page_id": 22384,
+    "revision": 15300649,
+    "revision_timestamp": "2026-08-14T05:40:32Z",
+    "url": "https://oldschool.runescape.wiki/w/Music_Player?oldid=15300649",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/22384-15300649.json.gz",
+      "sha256": "1724ff58ad7116d754917a3aa53e4ca3e3183f413b113fa05dc8e739191b8514",
+      "size_bytes": 1723
+    },
+    "images": [
+      "Music tab.png",
+      "Music.png"
+    ]
+  },
+  {
+    "title": "Newbie Melody",
+    "page_id": 97323,
+    "revision": 15330643,
+    "revision_timestamp": "2026-09-04T07:31:44Z",
+    "url": "https://oldschool.runescape.wiki/w/Newbie_Melody?oldid=15330643",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/97323-15330643.json.gz",
+      "sha256": "ad5fdf6a61724bfc612ee9c508511b35b72744e76507e8fefbc858e60aec94ee",
+      "size_bytes": 2405
+    },
+    "images": [
+      "Newbie Melody (8-bit).ogg",
+      "Newbie Melody (Fossil Island).ogg",
+      "Newbie Melody (v1).ogg",
+      "Newbie Melody.ogg"
+    ]
+  },
+  {
+    "title": "Player character",
+    "page_id": 17848,
+    "revision": 15333571,
+    "revision_timestamp": "2026-09-08T00:03:53Z",
+    "url": "https://oldschool.runescape.wiki/w/Player_character?oldid=15333571",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/17848-15333571.json.gz",
+      "sha256": "c1ad4f1506a06a1f3d0e57871a5ce71c80aba3acea414ec8543a20cf35adac13",
+      "size_bytes": 5196
+    },
+    "images": [
+      "Plain clothing (female).png",
+      "Plain clothing (male).png",
+      "Player character default appearance (female).png",
+      "Player character default appearance (male).png"
+    ]
+  },
+  {
+    "title": "Polls",
+    "page_id": 180464,
+    "revision": 15341770,
+    "revision_timestamp": "2026-09-12T14:30:33Z",
+    "url": "https://oldschool.runescape.wiki/w/Polls?oldid=15341770",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/180464-15341770.json.gz",
+      "sha256": "28358b563307af5aabaf8eb5e7ea66dff265061cae854a32335eda4ee0770ac7",
+      "size_bytes": 13288
+    },
+    "images": [
+      "Greenlight poll icon.png",
+      "Lock-in poll icon.png",
+      "Opinion survey poll icon.png",
+      "Poll Result Pre-Hiding.png",
+      "Poll icon.png",
+      "Polls interface.png",
+      "Voter participation in polls.png"
+    ]
+  },
+  {
+    "title": "Prayer",
+    "page_id": 11851,
+    "revision": 15337464,
+    "revision_timestamp": "2026-09-09T14:11:30Z",
+    "url": "https://oldschool.runescape.wiki/w/Prayer?oldid=15337464",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/11851-15337464.json.gz",
+      "sha256": "19f8a4a3df2fbf9d299880fdd3c41a71165cb72596f72e012fcb441da8c8ffca",
+      "size_bytes": 16590
+    },
+    "images": [
+      "Activated prayer.png",
+      "Activating quick prayers.gif",
+      "Altar icon.png",
+      "Corruption hitsplat.png",
+      "Prayer flicking (1-tick).gif",
+      "Prayer flicking (4-tick, ranged).gif",
+      "Prayer flicking (4t vs 4t).gif",
+      "Prayer flicking (4t vs 6t).gif",
+      "Prayer icon (detail).png",
+      "Prayer icon.png",
+      "Prayer tab.png",
+      "Protect from Magic and Melee overhead.png",
+      "Protect from Magic and Missiles overhead.png",
+      "Protect from Missiles and Melee overhead.png",
+      "Protect from Summoning.png",
+      "Protect from all.png",
+      "Protect_from_Magic_and_Melee_overhead.png",
+      "Protect_from_Magic_and_Missiles_overhead.png",
+      "Protect_from_Missiles_and_Melee_overhead.png",
+      "Quick prayers interface.png",
+      "Saradomin Strike.png"
+    ]
+  },
+  {
+    "title": "Quest List",
+    "page_id": 36921,
+    "revision": 15288327,
+    "revision_timestamp": "2026-08-05T23:20:51Z",
+    "url": "https://oldschool.runescape.wiki/w/Quest_List?oldid=15288327",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/36921-15288327.json.gz",
+      "sha256": "c335189baae65d148c2de2183705be5a72752e4f246e78cd31c591b07478d4f3",
+      "size_bytes": 1533
+    },
+    "images": [
+      "Quest point icon.png",
+      "Quest tab.png"
+    ]
+  },
+  {
+    "title": "RuneLite",
+    "page_id": 310668,
+    "revision": 15341863,
+    "revision_timestamp": "2026-09-12T17:26:43Z",
+    "url": "https://oldschool.runescape.wiki/w/RuneLite?oldid=15341863",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/310668-15341863.json.gz",
+      "sha256": "c58d56439181bd4d87ee99d5d8e25f91de1ec749d4b967f45b932b4397bb048e",
+      "size_bytes": 3402
+    },
+    "images": [
+      "Login screen runelite v1.png",
+      "Login screen runelite.png",
+      "RuneLite HD.png",
+      "RuneLite client.png",
+      "RuneLite icon.png"
+    ]
+  },
+  {
+    "title": "Scape Cave",
+    "page_id": 97619,
+    "revision": 15333690,
+    "revision_timestamp": "2026-09-08T05:12:49Z",
+    "url": "https://oldschool.runescape.wiki/w/Scape_Cave?oldid=15333690",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/97619-15333690.json.gz",
+      "sha256": "eb81c97e0e8af7a47a9de9ebd14ff954cb6679088f90b16fe3aa03e82d1c201a",
+      "size_bytes": 1444
+    },
+    "images": [
+      "Scape Cave (8-bit).ogg",
+      "Scape Cave (Fossil Island).ogg",
+      "Scape Cave (v1).ogg",
+      "Scape Cave.ogg"
+    ]
+  },
+  {
+    "title": "Scape Main",
+    "page_id": 96862,
+    "revision": 15341502,
+    "revision_timestamp": "2026-09-12T06:48:51Z",
+    "url": "https://oldschool.runescape.wiki/w/Scape_Main?oldid=15341502",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/96862-15341502.json.gz",
+      "sha256": "845f824638a31522d75be1fa6ddce15faf3a9bfaef506334bcb1ec7784ff8589",
+      "size_bytes": 2244
+    },
+    "images": [
+      "Scape Main (8-bit).ogg",
+      "Scape Main (Fossil Island).ogg",
+      "Scape Main (v3).ogg",
+      "Scape Main (v4).ogg",
+      "Scape Main.ogg"
+    ]
+  },
+  {
+    "title": "Settings",
+    "page_id": 22382,
+    "revision": 15272496,
+    "revision_timestamp": "2026-07-22T18:26:14Z",
+    "url": "https://oldschool.runescape.wiki/w/Settings?oldid=15272496",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/22382-15272496.json.gz",
+      "sha256": "9d1d93a0071e6703a1d711fa89e4985c7277316dcb97eccb7a61f701af76f28f",
+      "size_bytes": 23508
+    },
+    "images": [
+      "Adjust Screen Brightness.png",
+      "Area Sound.png",
+      "Audio options interface (Historical).png",
+      "Audio options interface.png",
+      "Audio options mobile interface.png",
+      "Audio.png",
+      "Chambers of Xeric helper.png",
+      "Chat options interface.png",
+      "Chatbox scrollbar.png",
+      "Controls options interface (Historical).png",
+      "Controls options interface.png",
+      "Display options interface (Historical).png",
+      "Display options interface.png",
+      "Display options mobile interface.png",
+      "Display.png",
+      "Fixed mode.png",
+      "Hitsplat tinting.png",
+      "House Options interface.png",
+      "House Options.png",
+      "Keybinding interface.png",
+      "Mobile minimenu icon.png",
+      "Mouse scroll zooming.png",
+      "Music Volume.png",
+      "Open Bond Pouch.png",
+      "Prayer tooltips.png",
+      "Resizeable mode.png",
+      "Settings - chat colour picker.png",
+      "Settings interface.png",
+      "Settings.png",
+      "Sound Effect.png",
+      "Special attack tooltips.png",
+      "Toggle 'Remaining XP'.png",
+      "Toggle Accept aid.png",
+      "Toggle Chat effects.png",
+      "Toggle Data orbs.png",
+      "Toggle Health Overlay.png",
+      "Toggle Run.png",
+      "Toggle Split private chat.png",
+      "Toggle Stones arrangement.png",
+      "Toggle Transparent chatbox.png",
+      "Toggle Wiki lookup.png",
+      "Toggle hide private chat.png",
+      "Toggle number of mouse buttons.png",
+      "Toggle roof-removal.png",
+      "Toggle transparent side panel.png"
+    ]
+  },
+  {
+    "title": "Shop",
+    "page_id": 16123,
+    "revision": 15329432,
+    "revision_timestamp": "2026-09-03T13:21:30Z",
+    "url": "https://oldschool.runescape.wiki/w/Shop?oldid=15329432",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/16123-15329432.json.gz",
+      "sha256": "8caf4d8382c4284e3e0178cd25de2da66c40fdff99ec935ab87d816c75a00c92",
+      "size_bytes": 13201
+    },
+    "images": [
+      "Amulet shop icon.png",
+      "Archery shop icon.png",
+      "Axe shop icon.png",
+      "Candle shop icon.png",
+      "Chainbody shop icon.png",
+      "Clothes shop icon.png",
+      "Cookery shop icon.png",
+      "Crafting shop icon.png",
+      "Dye trader icon.png",
+      "Farming shop icon.png",
+      "Fishing shop icon.png",
+      "Food shop icon.png",
+      "Fur trader icon.png",
+      "Gem shop icon.png",
+      "General store icon.png",
+      "Helmet shop icon.png",
+      "Herbalist icon.png",
+      "Hunter shop icon.png",
+      "Jewellery shop icon.png",
+      "Kebab shop icon.png",
+      "Lumbridge General Store stock.png",
+      "Mace shop icon.png",
+      "Magic shop icon.png",
+      "Mining shop icon.png",
+      "Platebody shop icon.png",
+      "Platelegs shop icon.png",
+      "Plateskirt shop icon.png",
+      "Pub icon.png",
+      "Scimitar shop icon.png",
+      "Shield shop icon.png",
+      "Silk trader icon.png",
+      "Silver shop icon.png",
+      "Spice shop icon.png",
+      "Staff shop icon.png",
+      "Sword shop icon.png",
+      "Vegetable shop icon.png",
+      "Wine trader icon.png"
+    ]
+  },
+  {
+    "title": "Skills",
+    "page_id": 9375,
+    "revision": 15321845,
+    "revision_timestamp": "2026-08-27T06:12:04Z",
+    "url": "https://oldschool.runescape.wiki/w/Skills?oldid=15321845",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/9375-15321845.json.gz",
+      "sha256": "903dfda25f36152f49aec6f199c27b5ae229cc98930cb40ff22f41cf81f5d56b",
+      "size_bytes": 7311
+    },
+    "images": [
+      "Skills level-up.gif",
+      "Skills tab.png",
+      "Stats icon.png"
+    ]
+  },
+  {
+    "title": "Smithing",
+    "page_id": 9845,
+    "revision": 15337467,
+    "revision_timestamp": "2026-09-09T14:11:53Z",
+    "url": "https://oldschool.runescape.wiki/w/Smithing?oldid=15337467",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/9845-15337467.json.gz",
+      "sha256": "bb0393d5f60cac6787b0093a02d74d312900d1e121d3c6eae41bc29524982cbe",
+      "size_bytes": 10441
+    },
+    "images": [
+      "Smelting.gif",
+      "Smithing icon (detail).png",
+      "Smithing icon.png"
+    ]
+  },
+  {
+    "title": "Standard spellbook",
+    "page_id": 17119,
+    "revision": 15318342,
+    "revision_timestamp": "2026-08-25T00:22:26Z",
+    "url": "https://oldschool.runescape.wiki/w/Standard_spellbook?oldid=15318342",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/17119-15318342.json.gz",
+      "sha256": "6bbe0dbfef22abdecbc19254caf385e4eed6703ad44b58e8f0c03657cefced47",
+      "size_bytes": 8411
+    },
+    "images": [
+      "Banana.png",
+      "Charge.png",
+      "Charge_icon_(mobile).png",
+      "Diamond bolts (e) 5.png",
+      "Diamond bolts (e) detail.png",
+      "Diamond bolts 5.png",
+      "Diamond dragon bolts (e) 5.png",
+      "Dragonstone bolts (e) 5.png",
+      "Dragonstone bolts (e) detail.png",
+      "Dragonstone bolts 5.png",
+      "Dragonstone dragon bolts (e) 5.png",
+      "Emerald bolts (e) 5.png",
+      "Emerald bolts (e) detail.png",
+      "Emerald bolts 5.png",
+      "Emerald dragon bolts (e) 5.png",
+      "Enchant Crossbow Bolt icon (mobile).png",
+      "Guthix staff.png",
+      "Iban's staff.png",
+      "Jade bolts (e) 5.png",
+      "Jade bolts (e) detail.png",
+      "Jade bolts 5.png",
+      "Jade dragon bolts (e) 5.png",
+      "Jewellery Enchantments icon (mobile).png",
+      "Onyx bolts (e) 5.png",
+      "Onyx bolts (e) detail.png",
+      "Onyx bolts 5.png",
+      "Onyx dragon bolts (e) 5.png",
+      "Opal bolts (e) 5.png",
+      "Opal bolts (e) detail.png",
+      "Opal bolts 5.png",
+      "Opal dragon bolts (e) 5.png",
+      "Opal dragon bolts 5.png",
+      "Pearl bolts (e) 5.png",
+      "Pearl bolts (e) detail.png",
+      "Pearl bolts 5.png",
+      "Pearl dragon bolts (e) 5.png",
+      "Restraint icon (mobile).png",
+      "Ruby bolts (e) 5.png",
+      "Ruby bolts (e) detail.png",
+      "Ruby bolts 5.png",
+      "Ruby dragon bolts (e) 5.png",
+      "Sapphire bolts (e) 5.png",
+      "Sapphire bolts (e) detail.png",
+      "Sapphire bolts 5.png",
+      "Sapphire dragon bolts (e) 5.png",
+      "Sapphire dragon bolts 5.png",
+      "Saradomin staff.png",
+      "Slayer's staff.png",
+      "Standard spellbook.png",
+      "Standard spells.png",
+      "Topaz bolts (e) 5.png",
+      "Topaz bolts (e) detail.png",
+      "Topaz bolts 5.png",
+      "Topaz dragon bolts (e) 5.png",
+      "Unpowered orb.png",
+      "Unused standard spell 1.png",
+      "Unused standard spell 2.png",
+      "Unused standard spell 3.png",
+      "Zamorak staff.png"
+    ]
+  },
+  {
+    "title": "Transcript:Cook's Assistant",
+    "page_id": 284647,
+    "revision": 15263168,
+    "revision_timestamp": "2026-07-14T17:06:32Z",
+    "url": "https://oldschool.runescape.wiki/w/Transcript:Cook%27s_Assistant?oldid=15263168",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/284647-15263168.json.gz",
+      "sha256": "11ac26607f5fcf131f89c2cc4c296908e9d8cd97bc9a7f5decabcf7564f63960",
+      "size_bytes": 2625
+    },
+    "images": []
+  },
+  {
+    "title": "Transcript:Cook's Assistant/Journal",
+    "page_id": 338668,
+    "revision": 15105447,
+    "revision_timestamp": "2026-01-14T20:41:43Z",
+    "url": "https://oldschool.runescape.wiki/w/Transcript:Cook%27s_Assistant/Journal?oldid=15105447",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/338668-15105447.json.gz",
+      "sha256": "0d644ff7d913a6ebe54f4becc75c427495489356d8e4a14f0c93e71beda80776",
+      "size_bytes": 1201
+    },
+    "images": []
+  },
+  {
+    "title": "Transcript:Death (NPC)",
+    "page_id": 268272,
+    "revision": 15255834,
+    "revision_timestamp": "2026-07-07T09:47:47Z",
+    "url": "https://oldschool.runescape.wiki/w/Transcript:Death_%28NPC%29?oldid=15255834",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/268272-15255834.json.gz",
+      "sha256": "dbbd29077303f8c9fa4bc043f1b4d802246a0812edb4ea44370ebdd2a531ffb6",
+      "size_bytes": 3671
+    },
+    "images": []
+  },
+  {
+    "title": "Transcript:Learning the Ropes",
+    "page_id": 333051,
+    "revision": 15309360,
+    "revision_timestamp": "2026-08-19T20:12:52Z",
+    "url": "https://oldschool.runescape.wiki/w/Transcript:Learning_the_Ropes?oldid=15309360",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/333051-15309360.json.gz",
+      "sha256": "34f52c598915b083e321ceed9fd654769a4b1fff53a4080af0be5e971252d750",
+      "size_bytes": 18204
+    },
+    "images": []
+  },
+  {
+    "title": "Tree",
+    "page_id": 10010,
+    "revision": 15226767,
+    "revision_timestamp": "2026-06-06T01:18:30Z",
+    "url": "https://oldschool.runescape.wiki/w/Tree?oldid=15226767",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/10010-15226767.json.gz",
+      "sha256": "09121876ffd8bd505cf2224d6cd17526aca0bbf75b6d8424a1b9b9259ee7fd9c",
+      "size_bytes": 3853
+    },
+    "images": [
+      "Map icon - Pine.png",
+      "Map icon - Tree 1.png",
+      "Map icon - Tree 2.png",
+      "Tree (double canopy) (historical v1).png",
+      "Tree (double canopy) (historical v2).png",
+      "Tree (double canopy, dark).png",
+      "Tree (pine).png",
+      "Tree (single canopy) (historical v1).png",
+      "Tree (single canopy) (historical v2).png",
+      "Tree (single canopy).png",
+      "Tree (single canopy, dark).png",
+      "Tree shadow comparison.png",
+      "Tree.png"
+    ]
+  },
+  {
+    "title": "Tutorial Island",
+    "page_id": 11831,
+    "revision": 15275369,
+    "revision_timestamp": "2026-07-25T22:14:32Z",
+    "url": "https://oldschool.runescape.wiki/w/Tutorial_Island?oldid=15275369",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/11831-15275369.json.gz",
+      "sha256": "e3a1056bf45c5cf1886634273201758cf897d5cabcd5ce22d377ab61e43ed91f",
+      "size_bytes": 9729
+    },
+    "images": [
+      "Brother Brace chathead.png",
+      "Financial Advisor chathead.png",
+      "Gielinor Guide chathead.png",
+      "Ironman tutor (Tutorial Island) chathead.png",
+      "Magic Instructor chathead.png",
+      "Magic building.png",
+      "Master Chef chathead.png",
+      "Mining Instructor chathead.png",
+      "Player customisation interface.png",
+      "Quest Guide chathead.png",
+      "Quest house.png",
+      "Starting house.png",
+      "Stayer's Bank.png",
+      "Survival Expert chathead.png",
+      "Tutorial Island bank.png",
+      "Tutorial Island chapel.png",
+      "Tutorial Island kitchen.png",
+      "Tutorial Island.png",
+      "Vannaka chathead.png"
+    ]
+  },
+  {
+    "title": "Update:Clear Private Chat & More",
+    "page_id": 54077,
+    "revision": 11842616,
+    "revision_timestamp": "2020-03-16T08:59:23Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:Clear_Private_Chat_%26_More?oldid=11842616",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/54077-11842616.json.gz",
+      "sha256": "e9c89be04cc43a46f3b2909cd2fb971fd5446ac4bf3fd90aa3a90cac88d1824b",
+      "size_bytes": 1918
+    },
+    "images": [
+      "Clear Private Chat & More (1).png",
+      "Clear Private Chat & More (2).png",
+      "Clear Private Chat & More newspost.png"
+    ]
+  },
+  {
+    "title": "Update:Cow Boss and Skill Guide & Level-Up Changes",
+    "page_id": 647494,
+    "revision": 15142929,
+    "revision_timestamp": "2026-03-05T02:25:02Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:Cow_Boss_and_Skill_Guide_%26_Level-Up_Changes?oldid=15142929",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/647494-15142929.json.gz",
+      "sha256": "a19074e724ed32a0adefd4484706c211b25e2e4e25eef6f5a6ed6b94c2bfec39",
+      "size_bytes": 5884
+    },
+    "images": [
+      "Cow Boss and Skill Guide & Level-Up Changes (10).png",
+      "Cow Boss and Skill Guide & Level-Up Changes (11).png",
+      "Cow Boss and Skill Guide & Level-Up Changes (4).gif",
+      "Cow Boss and Skill Guide & Level-Up Changes (5).png",
+      "Cow Boss and Skill Guide & Level-Up Changes (8).gif",
+      "Cow Boss and Skill Guide & Level-Up Changes (9).png",
+      "Cow Boss and Skill Guide & Level-Up Changes newspost.jpg"
+    ]
+  },
+  {
+    "title": "Update:Death Changes",
+    "page_id": 268139,
+    "revision": 14204053,
+    "revision_timestamp": "2021-11-14T11:35:55Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:Death_Changes?oldid=14204053",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/268139-14204053.json.gz",
+      "sha256": "10f21c0229393e72b547008097f986c32eba628f62bd1448232e248111f55948",
+      "size_bytes": 9293
+    },
+    "images": [
+      "Death Changes (1).png",
+      "Death Changes (10).png",
+      "Death Changes (11).png",
+      "Death Changes (12).png",
+      "Death Changes (13).gif",
+      "Death Changes (2).png",
+      "Death Changes (3).png",
+      "Death Changes (4).png",
+      "Death Changes (5).png",
+      "Death Changes (6).png",
+      "Death Changes (7).png",
+      "Death Changes (8).png",
+      "Death Changes (9).png",
+      "Death Changes newspost.jpg"
+    ]
+  },
+  {
+    "title": "Update:Dev Blog: OSRS Mobile TLI",
+    "page_id": 103870,
+    "revision": 11839988,
+    "revision_timestamp": "2020-03-16T07:00:32Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:Dev_Blog:_OSRS_Mobile_TLI?oldid=11839988",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/103870-11839988.json.gz",
+      "sha256": "2f8cddd702dc6fb2092f5ffe1d38f3bdb9f348781ee0c34f11a8c4f3b3b6623d",
+      "size_bytes": 3094
+    },
+    "images": [
+      "Dev Blog- OSRS Mobile TLI (1).png",
+      "Dev Blog- OSRS Mobile TLI (2).jpg",
+      "Dev Blog- OSRS Mobile TLI (3).png",
+      "Dev Blog- OSRS Mobile TLI (4).png",
+      "Dev Blog- OSRS Mobile TLI (5).png",
+      "Dev Blog- OSRS Mobile TLI (6).png",
+      "Dev Blog- OSRS Mobile TLI (7).png",
+      "Dev Blog- OSRS Mobile TLI newspost.jpg"
+    ]
+  },
+  {
+    "title": "Update:Grid Master Rewards, Poll & New Player Improvements",
+    "page_id": 610500,
+    "revision": 15010818,
+    "revision_timestamp": "2025-10-28T02:33:25Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:Grid_Master_Rewards%2C_Poll_%26_New_Player_Improvements?oldid=15010818",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/610500-15010818.json.gz",
+      "sha256": "51a2ee2799aad3943387ded044957a71744ea73605c36519702573c54fb7a3ec",
+      "size_bytes": 12338
+    },
+    "images": [
+      "Grid Master Rewards, Poll & New Player Improvements (1).png",
+      "Grid Master Rewards, Poll & New Player Improvements (10).jpg",
+      "Grid Master Rewards, Poll & New Player Improvements (11).gif",
+      "Grid Master Rewards, Poll & New Player Improvements (12).png",
+      "Grid Master Rewards, Poll & New Player Improvements (13).png",
+      "Grid Master Rewards, Poll & New Player Improvements (14).png",
+      "Grid Master Rewards, Poll & New Player Improvements (15).jpg",
+      "Grid Master Rewards, Poll & New Player Improvements (16).jpg",
+      "Grid Master Rewards, Poll & New Player Improvements (2).png",
+      "Grid Master Rewards, Poll & New Player Improvements (3).png",
+      "Grid Master Rewards, Poll & New Player Improvements (4).png",
+      "Grid Master Rewards, Poll & New Player Improvements (5).png",
+      "Grid Master Rewards, Poll & New Player Improvements (6).png",
+      "Grid Master Rewards, Poll & New Player Improvements (7).png",
+      "Grid Master Rewards, Poll & New Player Improvements (8).png",
+      "Grid Master Rewards, Poll & New Player Improvements (9).png",
+      "Grid Master Rewards, Poll & New Player Improvements newspost.jpg"
+    ]
+  },
+  {
+    "title": "Update:Halloween 2018 Event and Tutorial Island Improvements",
+    "page_id": 182781,
+    "revision": 11842719,
+    "revision_timestamp": "2020-03-16T09:04:07Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:Halloween_2018_Event_and_Tutorial_Island_Improvements?oldid=11842719",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/182781-11842719.json.gz",
+      "sha256": "c899927bca82872fef1b3473ba77af9ce00a0ae2b1bedc7c7e692dfb72d00b44",
+      "size_bytes": 4192
+    },
+    "images": [
+      "Halloween 2018 Event and Tutorial Island Improvements (1).png",
+      "Halloween 2018 Event and Tutorial Island Improvements (2).png",
+      "Halloween 2018 Event and Tutorial Island Improvements (3).png",
+      "Halloween 2018 Event and Tutorial Island Improvements (4).png",
+      "Halloween 2018 Event and Tutorial Island Improvements (5).png",
+      "Halloween 2018 Event and Tutorial Island Improvements (6).png",
+      "Halloween 2018 Event and Tutorial Island Improvements (7).png",
+      "Halloween 2018 Event and Tutorial Island Improvements newspost.png"
+    ]
+  },
+  {
+    "title": "Update:Interface Uplift Round 2",
+    "page_id": 607744,
+    "revision": 15002330,
+    "revision_timestamp": "2025-10-11T22:23:55Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:Interface_Uplift_Round_2?oldid=15002330",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/607744-15002330.json.gz",
+      "sha256": "8e5330939e67e9d7ea4a83dcec54005f71c5850a4dee65194416740d96884e33",
+      "size_bytes": 7653
+    },
+    "images": [
+      "Interface Uplift Round 2 (1).gif",
+      "Interface Uplift Round 2 (10).png",
+      "Interface Uplift Round 2 (11).png",
+      "Interface Uplift Round 2 (12).png",
+      "Interface Uplift Round 2 (13).png",
+      "Interface Uplift Round 2 (14).png",
+      "Interface Uplift Round 2 (15).png",
+      "Interface Uplift Round 2 (2).png",
+      "Interface Uplift Round 2 (3).gif",
+      "Interface Uplift Round 2 (4).gif",
+      "Interface Uplift Round 2 (5).gif",
+      "Interface Uplift Round 2 (6).png",
+      "Interface Uplift Round 2 (7).gif",
+      "Interface Uplift Round 2 (8).png",
+      "Interface Uplift Round 2 (9).png",
+      "Interface Uplift Round 2 newspost.jpg"
+    ]
+  },
+  {
+    "title": "Update:Music System Improvements & Deadman Tweaks",
+    "page_id": 644156,
+    "revision": 15125402,
+    "revision_timestamp": "2026-02-11T17:36:42Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:Music_System_Improvements_%26_Deadman_Tweaks?oldid=15125402",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/644156-15125402.json.gz",
+      "sha256": "eb18225a31e0f1e256ddc05ea85852028ff39349d0ae1fdb5dabe99153048547",
+      "size_bytes": 6010
+    },
+    "images": [
+      "Music System Improvements & Deadman Tweaks (1).gif",
+      "Music System Improvements & Deadman Tweaks (2).mp4",
+      "Music System Improvements & Deadman Tweaks (3).png",
+      "Music System Improvements & Deadman Tweaks (4).png",
+      "Music System Improvements & Deadman Tweaks (5).png",
+      "Music System Improvements & Deadman Tweaks (6).png",
+      "Music System Improvements & Deadman Tweaks (7).png",
+      "Music System Improvements & Deadman Tweaks (8).jpg",
+      "Music System Improvements & Deadman Tweaks newspost.jpg"
+    ]
+  },
+  {
+    "title": "Update:New Player Improvements - 2025 and Beyond",
+    "page_id": 608957,
+    "revision": 15001971,
+    "revision_timestamp": "2025-10-11T10:01:34Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:New_Player_Improvements_-_2025_and_Beyond?oldid=15001971",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/608957-15001971.json.gz",
+      "sha256": "c6da3832f8b9ed7065b97dc3c81ca633477c57058ab6f3c6da449e8a70fcc594",
+      "size_bytes": 9691
+    },
+    "images": [
+      "New Player Improvements - 2025 and Beyond (1).png",
+      "New Player Improvements - 2025 and Beyond (2).png",
+      "New Player Improvements - 2025 and Beyond (3).png",
+      "New Player Improvements - 2025 and Beyond newspost.png"
+    ]
+  },
+  {
+    "title": "Update:Resizable Mode",
+    "page_id": 53880,
+    "revision": 14249817,
+    "revision_timestamp": "2022-02-25T15:48:00Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:Resizable_Mode?oldid=14249817",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/53880-14249817.json.gz",
+      "sha256": "89b797d4fee2ec5b7575c47bb1b5c9aa658d10dc40f3c719e8ce21de5368902f",
+      "size_bytes": 2206
+    },
+    "images": [
+      "Resizeable Mode (1).png",
+      "Resizeable Mode (2).png",
+      "Resizeable Mode (3).png",
+      "Resizeable Mode (4).png",
+      "Resizeable Mode (5).png",
+      "Resizeable Mode (6).png",
+      "Resizeable Mode newspost.png"
+    ]
+  },
+  {
+    "title": "Update:Smithing and Silver Crafting Interfaces",
+    "page_id": 229888,
+    "revision": 10082161,
+    "revision_timestamp": "2019-08-09T00:22:17Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:Smithing_and_Silver_Crafting_Interfaces?oldid=10082161",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/229888-10082161.json.gz",
+      "sha256": "543e69435e3c7921d86c6a645dda18f7bfc568b27e19fe871c97ffc61a1a84ab",
+      "size_bytes": 5780
+    },
+    "images": [
+      "Smithing and Silver Crafting Interfaces (1).png",
+      "Smithing and Silver Crafting Interfaces (2).png",
+      "Smithing and Silver Crafting Interfaces (3).png",
+      "Smithing and Silver Crafting Interfaces (4).png",
+      "Smithing and Silver Crafting Interfaces (5).png",
+      "Smithing and Silver Crafting Interfaces (6).png",
+      "Smithing and Silver Crafting Interfaces (7).jpg",
+      "Smithing and Silver Crafting Interfaces (8).jpg",
+      "Smithing and Silver Crafting Interfaces newspost.png"
+    ]
+  },
+  {
+    "title": "Update:Summer Sweep-Up Gear & PvM Changes",
+    "page_id": 671801,
+    "revision": 15289827,
+    "revision_timestamp": "2026-08-07T15:04:03Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:Summer_Sweep-Up_Gear_%26_PvM_Changes?oldid=15289827",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/671801-15289827.json.gz",
+      "sha256": "83c0c54ef28b36c6e1c067622b54ea96939bde8927a9df6fc36170fd1d3fd3bf",
+      "size_bytes": 11709
+    },
+    "images": [
+      "Summer Sweep-Up Gear & PvM Changes (1).png",
+      "Summer Sweep-Up Gear & PvM Changes (2).png",
+      "Summer Sweep-Up Gear & PvM Changes (3).png",
+      "Summer Sweep-Up Gear & PvM Changes (4).png",
+      "Summer Sweep-Up Gear & PvM Changes (5).png",
+      "Summer Sweep-Up Gear & PvM Changes newspost.jpg"
+    ]
+  },
+  {
+    "title": "Update:System update: Resize tweaks",
+    "page_id": 339751,
+    "revision": 14214757,
+    "revision_timestamp": "2021-12-05T03:00:17Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:System_update:_Resize_tweaks?oldid=14214757",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/339751-14214757.json.gz",
+      "sha256": "bd8086ad0050c44d9860b8db9e5173f97bc994bba4ac52f112718383de691149",
+      "size_bytes": 867
+    },
+    "images": []
+  },
+  {
+    "title": "Update:Update 5th June - More tweaks",
+    "page_id": 339752,
+    "revision": 14214758,
+    "revision_timestamp": "2021-12-05T03:00:23Z",
+    "url": "https://oldschool.runescape.wiki/w/Update:Update_5th_June_-_More_tweaks?oldid=14214758",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/339752-14214758.json.gz",
+      "sha256": "6bd02853d49775f2a1cc42211fbf763fa59be79b897e54354f4aa032602fe178",
+      "size_bytes": 1402
+    },
+    "images": []
+  },
+  {
+    "title": "Wind Strike",
+    "page_id": 15867,
+    "revision": 15341514,
+    "revision_timestamp": "2026-09-12T06:53:56Z",
+    "url": "https://oldschool.runescape.wiki/w/Wind_Strike?oldid=15341514",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/15867-15341514.json.gz",
+      "sha256": "d82753a0d54a9fe167f599b905a15444b50adb55af6827eabd57114e1a5508f6",
+      "size_bytes": 1461
+    },
+    "images": [
+      "Wind Strike icon (mobile).png",
+      "Wind Strike.gif",
+      "Wind Strike.ogg",
+      "Wind Strike.png"
+    ]
+  },
+  {
+    "title": "Worn Equipment",
+    "page_id": 19192,
+    "revision": 15326576,
+    "revision_timestamp": "2026-08-31T20:00:40Z",
+    "url": "https://oldschool.runescape.wiki/w/Worn_Equipment?oldid=15326576",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/19192-15326576.json.gz",
+      "sha256": "a9b05317e0b7b467f4f15dc405881f464fa106e4fd580c308f003dc38b1b19d9",
+      "size_bytes": 3880
+    },
+    "images": [
+      "2h slot.png",
+      "Ammo slot.png",
+      "Body slot.png",
+      "Boots slot.png",
+      "Cape slot.png",
+      "Hands slot.png",
+      "Head slot.png",
+      "Legs slot.png",
+      "Monkey dentures detail.png",
+      "Neck slot.png",
+      "Ring slot.png",
+      "Shield slot.png",
+      "Weapon slot.png",
+      "Worn Equipment tab.png",
+      "Worn Equipment.png"
+    ]
+  }
+]

@@ -1,0 +1,38 @@
+[workspace]
+members = ["crates/*", "tools/simulator"]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.98"
+publish = false
+
+[workspace.dependencies]
+anyhow = "1.0"
+argon2 = { version = "0.5", features = ["std"] }
+axum = "0.8"
+base64 = "0.22"
+clap = { version = "4.5", features = ["derive", "env"] }
+clubscape-protocol = { path = "crates/protocol" }
+clubscape-game-types = { path = "crates/game-types" }
+getrandom = "0.3"
+http = "1"
+prost = "0.14"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio-rustls", "postgres", "uuid", "migrate", "macros"] }
+thiserror = "2"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal", "sync", "time"] }
+tower = { version = "0.5", features = ["limit", "util"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+uuid = { version = "1", default-features = false, features = ["std"] }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+all = "warn"

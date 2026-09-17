@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "classification": "owner-approved ClubScape initialization defaults, not observed OSRS account defaults",
+  "adaptation": "adaptation.m1.source_based_camera_initialization",
+  "approval": {
+    "path": "milestones/approvals/m1-camera-initialization-v1.json",
+    "sha256": "f7f1ce92826fb1bafc1e17ecbbaace34e0851c4e5044cbcfafa86817ac3539e1"
+  },
+  "adaptation_register": ["spec/adaptations.md", "spec/adaptations-m1-addendum.md"],
+  "source_contract_sha256": "745dda42fcd53d3225b9f2714e2ebbad7dbf60a76c070da1438a7289e5e0a602",
+  "angle_sources": [
+    {
+      "reference": "TutorialStartingHouse",
+      "path": "assets/reference/osrs240/scenes/tutorial-starting-house.png",
+      "sha256": "93f87ca82a91862db3d102f6910171d5c760810d53355eac6b6221a895bbe985",
+      "pitch": 2048,
+      "yaw": 0,
+      "units_per_turn": 16384,
+      "legacy_pitch": 256,
+      "legacy_yaw": 0,
+      "legacy_units_per_turn": 2048
+    },
+    {
+      "reference": "LumbridgeCastlePlaza",
+      "path": "assets/reference/osrs240/scenes/lumbridge-castle-plaza.png",
+      "sha256": "edbfa14316ce35dc31b4c5ed8a5400ed951bc91eab9055284a506c71c8dfd9d9",
+      "pitch": 2048,
+      "yaw": 0,
+      "units_per_turn": 16384,
+      "legacy_pitch": 256,
+      "legacy_yaw": 0,
+      "legacy_units_per_turn": 2048
+    }
+  ],
+  "constructor_preferences": {
+    "middle_mouse_camera": false,
+    "follow_height": 50,
+    "distance_scale": [256, 320],
+    "encoded_fov": [256, 205],
+    "source_preset_626_logical_zoom_bounds": [128, 896, 128, 896]
+  },
+  "focus_and_eye": "Required actual focus provider and source terrain determine focal height and orbit. No fixture eye, zero-world focus, camera-eye-as-player or inferred tile-centre fallback.",
+  "program_order": "Constructor preferences and preset626 bounds are established without running wheel script42. Script42's FOV/follow-height/persistence side effects occur only when requested by the corresponding source operation.",
+  "rebase_policy": "Preserve normal state and translate local coordinates through the source rebase operation; do not reinitialize to a fixture or invent reset packets.",
+  "source_session_initialization_observed": false,
+  "production_consumers_wired": false,
+  "normal_entry_or_presentation_acceptance": false
+}

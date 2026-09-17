@@ -1,0 +1,676 @@
+Unchanged injected-client1.12.38 native method evidence.
+Source JAR SHA256: 7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947
+Per-class SHA256 records: assets/reference/osrs240/m1-dynamic/phases/phase-index.json
+Original source notices: assets/source/osrs/NOTICE.txt
+No bytecode edits or native method replacement.
+
+CLASS dy
+  public int getAnimFrame();
+    Code:
+       0: aload_0
+       1: getfield      #59                 // Field ac:Lqr;
+       4: getfield      #198                // Field qr.ab:I
+       7: ldc           #199                // int 292569817
+       9: imul
+      10: ireturn
+
+
+CLASS dy
+  public int getAnimCycle();
+    Code:
+       0: iconst_m1
+       1: ireturn
+
+
+CLASS dy
+  public net.runelite.api.Animation getAnimation();
+    Code:
+       0: aload_0
+       1: invokevirtual #409                // Method pl:()Lou;
+       4: areturn
+
+
+CLASS dy
+  protected final fx ae(int);
+    Code:
+       0: getstatic     #122                // Field oe.cz:Lclient;
+       3: invokevirtual #127                // Method client.isClientThread:()Z
+       6: ifne          35
+       9: getstatic     #132                // Field tq.$assertionsDisabled:Z
+      12: ifne          25
+      15: new           #134                // class java/lang/AssertionError
+      18: dup
+      19: ldc           #136                // String must be called on client thread
+      21: invokespecial #140                // Method java/lang/AssertionError."<init>":(Ljava/lang/Object;)V
+      24: athrow
+      25: new           #142                // class java/lang/IllegalStateException
+      28: dup
+      29: ldc           #136                // String must be called on client thread
+      31: invokespecial #145                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      34: athrow
+      35: goto          38
+      38: aload_0
+      39: invokevirtual #149                // Method rf:()V
+      42: aload_0
+      43: getstatic     #155                // Field rl21.lz:Lrl21;
+      46: aload_0
+      47: getfield      #59                 // Field ac:Lqr;
+      50: invokevirtual #159                // Method vn:(Lrl21;Lqr;)Lfx;
+      53: areturn
+
+
+CLASS dy
+  public void rf();
+    Code:
+       0: aload_0
+       1: getfield      #44                 // Field af:I
+       4: ldc           #45                 // int 1680132843
+       6: imul
+       7: invokestatic  #207                // Method om.ck:(I)Lom;
+      10: astore_1
+      11: aload_1
+      12: getfield      #92                 // Field om.dg:[I
+      15: ifnull        24
+      18: aload_0
+      19: aload_1
+      20: invokevirtual #211                // Method hv:(Lom;)Lom;
+      23: astore_1
+      24: aload_1
+      25: ifnonnull     29
+      28: return
+      29: aload_0
+      30: getfield      #98                 // Field ab:I
+      33: ldc           #96                 // int -1904611005
+      35: imul
+      36: iconst_1
+      37: if_icmpeq     70
+      40: aload_0
+      41: getfield      #98                 // Field ab:I
+      44: ldc           #96                 // int -1904611005
+      46: imul
+      47: iconst_3
+      48: if_icmpeq     70
+      51: aload_1
+      52: getfield      #213                // Field om.cz:I
+      55: ldc           #214                // int -582306509
+      57: imul
+      58: istore_2
+      59: aload_1
+      60: getfield      #217                // Field om.cg:I
+      63: ldc           #218                // int 402876423
+      65: imul
+      66: istore_3
+      67: goto          86
+      70: aload_1
+      71: getfield      #217                // Field om.cg:I
+      74: ldc           #218                // int 402876423
+      76: imul
+      77: istore_2
+      78: aload_1
+      79: getfield      #213                // Field om.cz:I
+      82: ldc           #214                // int -582306509
+      84: imul
+      85: istore_3
+      86: aload_0
+      87: getfield      #220                // Field as:I
+      90: ldc           #221                // int 1026205107
+      92: imul
+      93: bipush        7
+      95: ishl
+      96: iload_2
+      97: bipush        6
+      99: ishl
+     100: iadd
+     101: istore        4
+     103: aload_0
+     104: getfield      #230                // Field ax:I
+     107: ldc           #231                // int -2058575863
+     109: imul
+     110: bipush        7
+     112: ishl
+     113: iload_3
+     114: bipush        6
+     116: ishl
+     117: iadd
+     118: istore        5
+     120: getstatic     #280                // Field client.cm:I
+     123: ldc_w         #293                // int 1612595797
+     126: imul
+     127: aload_0
+     128: getfield      #283                // Field ao:I
+     131: ldc_w         #338                // int 1618438999
+     134: imul
+     135: isub
+     136: istore        6
+     138: aload_0
+     139: getstatic     #280                // Field client.cm:I
+     142: ldc_w         #293                // int 1612595797
+     145: imul
+     146: ldc_w         #364                // int 1780002919
+     149: imul
+     150: putfield      #283                // Field ao:I
+     153: getstatic     #304                // Field at.kt:Laax;
+     156: aload_0
+     157: getfield      #286                // Field az:Ldz;
+     160: iload         4
+     162: iload         5
+     164: iconst_0
+     165: invokevirtual #367                // Method aax.dy:(Ldz;IIZ)V
+     168: aload_0
+     169: getfield      #59                 // Field ac:Lqr;
+     172: iload         6
+     174: getstatic     #304                // Field at.kt:Laax;
+     177: invokestatic  #370                // Method ou.pl:(Lqr;ILqv;)I
+     180: istore        7
+     182: getstatic     #304                // Field at.kt:Laax;
+     185: invokevirtual #373                // Method aax.gr:()V
+     188: iload         7
+     190: iconst_1
+     191: iand
+     192: ifeq          210
+     195: iload         7
+     197: bipush        8
+     199: iand
+     200: ifeq          210
+     203: aload_0
+     204: getfield      #59                 // Field ac:Lqr;
+     207: invokevirtual #376                // Method qr.iw:()V
+     210: return
+
+
+CLASS qr
+  public int ax(int);
+    Code:
+       0: ldc           #103                // int 292569817
+       2: aload_0
+       3: getfield      #62                 // Field ab:I
+       6: imul
+       7: ireturn
+       8: new           #31                 // class java/lang/StringBuilder
+      11: dup
+      12: invokespecial #35                 // Method java/lang/StringBuilder."<init>":()V
+      15: ldc           #134                // String qr.ax(
+      17: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      20: ldc           #42                 // int 41
+      22: invokevirtual #45                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      25: invokevirtual #49                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      28: invokestatic  #54                 // Method eg.af:(Ljava/lang/Throwable;Ljava/lang/String;)Laaf;
+      31: athrow
+    Exception table:
+       from    to  target type
+           0     8     8   Class java/lang/RuntimeException
+
+
+CLASS qr
+  public int ac(int);
+    Code:
+       0: aload_0
+       1: getfield      #66                 // Field as:I
+       4: ldc           #136                // int -1399668821
+       6: imul
+       7: ireturn
+       8: new           #31                 // class java/lang/StringBuilder
+      11: dup
+      12: invokespecial #35                 // Method java/lang/StringBuilder."<init>":()V
+      15: ldc           #138                // String qr.ac(
+      17: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      20: ldc           #42                 // int 41
+      22: invokevirtual #45                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      25: invokevirtual #49                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      28: invokestatic  #54                 // Method eg.af:(Ljava/lang/Throwable;Ljava/lang/String;)Laaf;
+      31: athrow
+    Exception table:
+       from    to  target type
+           0     8     8   Class java/lang/RuntimeException
+
+
+CLASS qr
+  public int as(int);
+    Code:
+       0: aload_0
+       1: getfield      #70                 // Field ag:I
+       4: ldc           #104                // int 1684838611
+       6: imul
+       7: ireturn
+       8: new           #31                 // class java/lang/StringBuilder
+      11: dup
+      12: invokespecial #35                 // Method java/lang/StringBuilder."<init>":()V
+      15: ldc           #125                // String qr.as(
+      17: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      20: ldc           #42                 // int 41
+      22: invokevirtual #45                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      25: invokevirtual #49                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      28: invokestatic  #54                 // Method eg.af:(Ljava/lang/Throwable;Ljava/lang/String;)Laaf;
+      31: athrow
+    Exception table:
+       from    to  target type
+           0     8     8   Class java/lang/RuntimeException
+
+
+CLASS qr
+  public void ai(byte);
+    Code:
+       0: aload_0
+       1: getfield      #72                 // Field ae:Lou;
+       4: ifnull        62
+       7: iload_1
+       8: iconst_0
+       9: if_icmpeq     63
+      12: return
+      13: aload_0
+      14: invokestatic  #181                // Method java/lang/Math.random:()D
+      17: aload_0
+      18: getfield      #72                 // Field ae:Lou;
+      21: getfield      #185                // Field ou.bg:[I
+      24: arraylength
+      25: i2d
+      26: dmul
+      27: d2i
+      28: ldc           #90                 // int -885908119
+      30: imul
+      31: putfield      #62                 // Field ab:I
+      34: aload_0
+      35: invokestatic  #181                // Method java/lang/Math.random:()D
+      38: aload_0
+      39: getfield      #72                 // Field ae:Lou;
+      42: getfield      #188                // Field ou.bk:[I
+      45: aload_0
+      46: getfield      #62                 // Field ab:I
+      49: ldc           #103                // int 292569817
+      51: imul
+      52: iaload
+      53: i2d
+      54: dmul
+      55: d2i
+      56: ldc           #91                 // int -1873132797
+      58: imul
+      59: putfield      #66                 // Field as:I
+      62: return
+      63: aload_0
+      64: getfield      #72                 // Field ae:Lou;
+      67: iconst_0
+      68: invokevirtual #191                // Method ou.ay:(B)Z
+      71: ifne          87
+      74: iload_1
+      75: iconst_0
+      76: if_icmpeq     13
+      79: new           #96                 // class java/lang/IllegalStateException
+      82: dup
+      83: invokespecial #97                 // Method java/lang/IllegalStateException."<init>":()V
+      86: athrow
+      87: aload_0
+      88: invokestatic  #181                // Method java/lang/Math.random:()D
+      91: aload_0
+      92: getfield      #72                 // Field ae:Lou;
+      95: ldc           #192                // int 2120971860
+      97: invokestatic  #195                // Method ou.lc:(Lou;I)I
+     100: i2d
+     101: dmul
+     102: d2i
+     103: ldc           #90                 // int -885908119
+     105: imul
+     106: putfield      #62                 // Field ab:I
+     109: goto          62
+     112: new           #31                 // class java/lang/StringBuilder
+     115: dup
+     116: invokespecial #35                 // Method java/lang/StringBuilder."<init>":()V
+     119: ldc           #197                // String qr.ai(
+     121: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     124: ldc           #42                 // int 41
+     126: invokevirtual #45                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     129: invokevirtual #49                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     132: invokestatic  #54                 // Method eg.af:(Ljava/lang/Throwable;Ljava/lang/String;)Laaf;
+     135: athrow
+    Exception table:
+       from    to  target type
+           0   112   112   Class java/lang/RuntimeException
+
+
+CLASS ou
+  public static int pl(qr, int, qv);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: aload_2
+       3: ldc_w         #700                // int -189415751
+       6: invokestatic  #705                // Method rd.az:(Lqr;ILqv;I)I
+       9: ireturn
+
+
+CLASS rd
+  public static int az(qr, int, qv, int);
+    Code:
+       0: iconst_0
+       1: istore        4
+       3: goto          250
+       6: iinc          11, 1
+       9: goto          319
+      12: iload         9
+      14: istore        7
+      16: goto          609
+      19: iload         9
+      21: iconst_2
+      22: ior
+      23: istore        9
+      25: goto          514
+      28: aload_0
+      29: bipush        51
+      31: invokevirtual #104                // Method qr.ag:(B)Lou;
+      34: astore        5
+      36: iconst_m1
+      37: aload         5
+      39: getfield      #110                // Field ou.bu:I
+      42: ldc           #111                // int 1665914959
+      44: imul
+      45: if_icmpne     275
+      48: iload_3
+      49: ldc           #112                // int -113951151
+      51: if_icmplt     62
+      54: new           #73                 // class java/lang/IllegalStateException
+      57: dup
+      58: invokespecial #74                 // Method java/lang/IllegalStateException."<init>":()V
+      61: athrow
+      62: iload         4
+      64: bipush        8
+      66: ior
+      67: istore        4
+      69: goto          275
+      72: iload         4
+      74: istore        6
+      76: goto          149
+      79: iload         12
+      81: aload         10
+      83: getfield      #116                // Field ou.bk:[I
+      86: iload         11
+      88: iaload
+      89: isub
+      90: istore        12
+      92: goto          6
+      95: iconst_0
+      96: istore        11
+      98: goto          404
+     101: aload         5
+     103: iconst_0
+     104: invokevirtual #120                // Method ou.ay:(B)Z
+     107: ifne          619
+     110: iload_3
+     111: ldc           #112                // int -113951151
+     113: if_icmplt     72
+     116: new           #73                 // class java/lang/IllegalStateException
+     119: dup
+     120: invokespecial #74                 // Method java/lang/IllegalStateException."<init>":()V
+     123: athrow
+     124: iload         11
+     126: aload         10
+     128: getfield      #123                // Field ou.bg:[I
+     131: arraylength
+     132: if_icmplt     635
+     135: iload_3
+     136: ldc           #112                // int -113951151
+     138: if_icmplt     392
+     141: new           #73                 // class java/lang/IllegalStateException
+     144: dup
+     145: invokespecial #74                 // Method java/lang/IllegalStateException."<init>":()V
+     148: athrow
+     149: iload_1
+     150: istore        8
+     152: iconst_0
+     153: istore        9
+     155: aload_0
+     156: bipush        96
+     158: invokevirtual #104                // Method qr.ag:(B)Lou;
+     161: astore        10
+     163: ldc           #111                // int 1665914959
+     165: aload         10
+     167: getfield      #110                // Field ou.bu:I
+     170: imul
+     171: ifle          212
+     174: iload_3
+     175: ldc           #112                // int -113951151
+     177: if_icmplt     188
+     180: new           #73                 // class java/lang/IllegalStateException
+     183: dup
+     184: invokespecial #74                 // Method java/lang/IllegalStateException."<init>":()V
+     187: athrow
+     188: aload         10
+     190: getfield      #126                // Field ou.bo:I
+     193: ldc           #127                // int -826664243
+     195: imul
+     196: ifle          212
+     199: iload         8
+     201: aload         10
+     203: getfield      #126                // Field ou.bo:I
+     206: ldc           #127                // int -826664243
+     208: imul
+     209: irem
+     210: istore        8
+     212: aload_0
+     213: ldc           #128                // int 1719962113
+     215: invokevirtual #131                // Method qr.ax:(I)I
+     218: istore        11
+     220: goto          598
+     223: iload         9
+     225: iconst_2
+     226: ior
+     227: istore        9
+     229: goto          495
+     232: iload         4
+     234: ireturn
+     235: aload_2
+     236: aload         10
+     238: iload         11
+     240: ldc           #132                // int 1479355802
+     242: invokeinterface #137,  4          // InterfaceMethod qv.az:(Lou;II)V
+     247: goto          635
+     250: aload_0
+     251: ldc           #138                // int 374233424
+     253: invokevirtual #141                // Method qr.ab:(I)Z
+     256: ifne          28
+     259: goto          299
+     262: iload         4
+     264: ireturn
+     265: iload         12
+     267: iload         8
+     269: iadd
+     270: istore        12
+     272: goto          635
+     275: aload         5
+     277: bipush        -87
+     279: invokevirtual #144                // Method ou.ai:(B)Z
+     282: ifeq          453
+     285: iload_3
+     286: ldc           #112                // int -113951151
+     288: if_icmplt     309
+     291: new           #73                 // class java/lang/IllegalStateException
+     294: dup
+     295: invokespecial #74                 // Method java/lang/IllegalStateException."<init>":()V
+     298: athrow
+     299: aload_0
+     300: iconst_0
+     301: ldc           #145                // int 198333171
+     303: invokevirtual #149                // Method qr.cl:(II)V
+     306: goto          232
+     309: aload_0
+     310: iconst_0
+     311: ldc           #150                // int 1128422573
+     313: invokevirtual #149                // Method qr.cl:(II)V
+     316: goto          101
+     319: iload         9
+     321: iconst_4
+     322: ior
+     323: istore        9
+     325: iconst_0
+     326: iload         9
+     328: iconst_2
+     329: iand
+     330: if_icmpne     124
+     333: iload_3
+     334: ldc           #112                // int -113951151
+     336: if_icmplt     347
+     339: new           #73                 // class java/lang/IllegalStateException
+     342: dup
+     343: invokespecial #74                 // Method java/lang/IllegalStateException."<init>":()V
+     346: athrow
+     347: aconst_null
+     348: aload_2
+     349: if_acmpeq     124
+     352: iload_3
+     353: ldc           #112                // int -113951151
+     355: if_icmplt     366
+     358: new           #73                 // class java/lang/IllegalStateException
+     361: dup
+     362: invokespecial #74                 // Method java/lang/IllegalStateException."<init>":()V
+     365: athrow
+     366: aload_2
+     367: aload         10
+     369: iload         11
+     371: ldc           #151                // int 895142418
+     373: invokeinterface #137,  4          // InterfaceMethod qv.az:(Lou;II)V
+     378: goto          124
+     381: aload_0
+     382: ldc           #152                // int 22636646
+     384: invokevirtual #154                // Method qr.aa:(I)I
+     387: istore        13
+     389: goto          558
+     392: iinc          13, 1
+     395: iload         9
+     397: iconst_1
+     398: ior
+     399: istore        9
+     401: goto          437
+     404: iconst_0
+     405: istore        12
+     407: goto          265
+     410: iload         13
+     412: ldc           #155                // int 2035920365
+     414: aload         10
+     416: getfield      #158                // Field ou.bf:I
+     419: imul
+     420: if_icmplt     495
+     423: iload_3
+     424: ldc           #112                // int -113951151
+     426: if_icmplt     223
+     429: new           #73                 // class java/lang/IllegalStateException
+     432: dup
+     433: invokespecial #74                 // Method java/lang/IllegalStateException."<init>":()V
+     436: athrow
+     437: iload         11
+     439: aload         10
+     441: getfield      #110                // Field ou.bu:I
+     444: ldc           #111                // int 1665914959
+     446: imul
+     447: isub
+     448: istore        11
+     450: goto          410
+     453: aload_0
+     454: aload_0
+     455: bipush        -76
+     457: invokevirtual #162                // Method qr.aj:(B)I
+     460: iload_1
+     461: iadd
+     462: ldc           #163                // int 8925726
+     464: invokevirtual #149                // Method qr.cl:(II)V
+     467: goto          101
+     470: iload         11
+     472: aload         10
+     474: getfield      #123                // Field ou.bg:[I
+     477: arraylength
+     478: if_icmplt     517
+     481: iload_3
+     482: ldc           #112                // int -113951151
+     484: if_icmplt     19
+     487: new           #73                 // class java/lang/IllegalStateException
+     490: dup
+     491: invokespecial #74                 // Method java/lang/IllegalStateException."<init>":()V
+     494: athrow
+     495: iload         11
+     497: iflt          19
+     500: iload_3
+     501: ldc           #112                // int -113951151
+     503: if_icmplt     470
+     506: new           #73                 // class java/lang/IllegalStateException
+     509: dup
+     510: invokespecial #74                 // Method java/lang/IllegalStateException."<init>":()V
+     513: athrow
+     514: iconst_0
+     515: istore        11
+     517: iconst_0
+     518: iload         9
+     520: iconst_2
+     521: iand
+     522: if_icmpne     635
+     525: iload_3
+     526: ldc           #112                // int -113951151
+     528: if_icmplt     539
+     531: new           #73                 // class java/lang/IllegalStateException
+     534: dup
+     535: invokespecial #74                 // Method java/lang/IllegalStateException."<init>":()V
+     538: athrow
+     539: aconst_null
+     540: aload_2
+     541: if_acmpeq     635
+     544: iload_3
+     545: ldc           #112                // int -113951151
+     547: if_icmplt     235
+     550: new           #73                 // class java/lang/IllegalStateException
+     553: dup
+     554: invokespecial #74                 // Method java/lang/IllegalStateException."<init>":()V
+     557: athrow
+     558: iload         11
+     560: aload         10
+     562: getfield      #123                // Field ou.bg:[I
+     565: arraylength
+     566: if_icmplt     265
+     569: iload_3
+     570: ldc           #112                // int -113951151
+     572: if_icmplt     95
+     575: new           #73                 // class java/lang/IllegalStateException
+     578: dup
+     579: invokespecial #74                 // Method java/lang/IllegalStateException."<init>":()V
+     582: athrow
+     583: aload_0
+     584: iload         11
+     586: iload         12
+     588: iload         13
+     590: ldc           #164                // int 1587600500
+     592: invokevirtual #168                // Method qr.ap:(IIII)V
+     595: goto          12
+     598: aload_0
+     599: ldc           #169                // int 929233716
+     601: invokevirtual #172                // Method qr.ac:(I)I
+     604: istore        12
+     606: goto          381
+     609: iload         6
+     611: iload         7
+     613: ior
+     614: istore        4
+     616: goto          262
+     619: iload         4
+     621: aload_0
+     622: iload_1
+     623: aload_2
+     624: ldc           #173                // int 1289411290
+     626: invokestatic  #177                // Method ej.af:(Lqr;ILqv;I)I
+     629: ior
+     630: istore        4
+     632: goto          262
+     635: iload         12
+     637: aload         10
+     639: getfield      #116                // Field ou.bk:[I
+     642: iload         11
+     644: iaload
+     645: if_icmple     583
+     648: goto          79
+     651: new           #32                 // class java/lang/StringBuilder
+     654: dup
+     655: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+     658: ldc           #179                // String rd.az(
+     660: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     663: ldc           #43                 // int 41
+     665: invokevirtual #46                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     668: invokevirtual #50                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     671: invokestatic  #55                 // Method eg.af:(Ljava/lang/Throwable;Ljava/lang/String;)Laaf;
+     674: athrow
+    Exception table:
+       from    to  target type
+           0   651   651   Class java/lang/RuntimeException

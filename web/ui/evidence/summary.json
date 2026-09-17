@@ -1,0 +1,676 @@
+{
+  "scope": "UI component and original-source validation only. No real-server journey, final visual/audio or hardware acceptance.",
+  "status": "blocked",
+  "implementation_commit": "2cdbfac7cb57d6341d902572adcb8416cc4b8f64",
+  "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "published_contract_upstream": "d1532d6fc063d2a02383a7b4bb1ca3c449e214ce",
+  "nullable_production_correction": "351847f3f5255f6de6e345d5217a7910eaa145a3",
+  "contract_implementation_inferred_from_types": false,
+  "typecheck": {
+    "passed": true,
+    "command": "pnpm exec tsc --noEmit"
+  },
+  "unit": {
+    "passed": 54,
+    "total": 54
+  },
+  "integrated_audio_policy_units": {
+    "passed": 29,
+    "total": 29
+  },
+  "component_browser": {
+    "legacy": 20,
+    "versioned": 16,
+    "source_audio_ui": 7,
+    "source_music_ui": 6,
+    "all_settings_ui": 6,
+    "ui4": 8,
+    "browser": "153.0.8010.12"
+  },
+  "ui4_candidate": {
+    "world_snapshot_ui_tag": 20,
+    "world_input_ui_tag": 41,
+    "expected_bank_revision_field": 21,
+    "expected_bank_revision_source": "Exact decimal ui.bank.revision at request creation, never world/character revision; retain on retries.",
+    "wire_implementation_in_ui": false,
+    "final_candidate": "78fcec42226e17d715f422f8e9cc2be8a1fb8762",
+    "authorized_picks": [
+      "cd12063",
+      "ccbfbb0",
+      "e4c9669",
+      "9973948",
+      "3103033",
+      "19c85d5",
+      "30a8183",
+      "70e4294",
+      "087cfca",
+      "85843a1"
+    ],
+    "bank_precondition_in_ui": "All eleven published bank requests capture the displayed bank revision in controls, held menus and drags. Missing/stale revisions reject explicitly; existing bound intents are never rebound.",
+    "raw_artifact_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3",
+    "compressed_artifact_sha256": "f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6",
+    "versions": {
+      "content": 4,
+      "artifact": 4,
+      "state": 1,
+      "runtime": 1,
+      "ui_state": 1
+    },
+    "cargo_lock_changed_by_ui": false,
+    "awaiting": "Real shell composition using a fresh normal candidate or explicit fenced migration; never silently repin an old world."
+  },
+  "audio_contract": {
+    "upstream_commits": [
+      "888f9384e111b5f7fefeee36859bae4f873e5c95",
+      "f74652a59834815b4e57e04366dc857681fd83c1",
+      "f9e466d3feb6626785ae46b9d6549e4e7eb00443"
+    ],
+    "authorized_picks": [
+      "b7cc380",
+      "d2082e8",
+      "7475596"
+    ],
+    "volume_semantics": "Source normalized slider position, never linear gain; master is applied before lookup.",
+    "observer": "observeAudioState via bindUiAudio",
+    "music_state": "setUiMusicState delegates the published SourceMusicState with current player identity; native continuation is internal.",
+    "supplement_manifest_sha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91",
+    "supplement_assets": 9,
+    "browser_output_muted_for_component_tests": true,
+    "scene_or_committed_gameplay_events_fabricated": false
+  },
+  "source_comparisons": {
+    "source": {
+      "passed": 87,
+      "total": 87,
+      "tolerance": 0
+    },
+    "modes": {
+      "passed": 106,
+      "total": 106,
+      "tolerance": 0
+    },
+    "presentations": {
+      "passed": 45,
+      "total": 45,
+      "tolerance": 0
+    },
+    "audio_ui": {
+      "passed": 18,
+      "total": 18,
+      "tolerance": 0
+    },
+    "music_ui": {
+      "passed": 8,
+      "total": 8,
+      "tolerance": 0
+    },
+    "bounded_ui": {
+      "passed": 36,
+      "total": 36,
+      "tolerance": 0
+    },
+    "documents": {
+      "passed": 8,
+      "total": 8,
+      "tolerance": 0
+    }
+  },
+  "original_frames": {
+    "scope": "Original individual source frames/masks/offsets/alpha, no panel crops",
+    "checkedSpriteFrames": 1117,
+    "checkedFontGlyphs": 1024,
+    "failures": [],
+    "toleranceDifferentPixels": 0,
+    "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+    "gameplayAcceptance": false,
+    "finalAcceptance": false,
+    "nativeExportCopyProof": {
+      "atlases": 916,
+      "frames": 1948,
+      "toleranceDifferentPixels": 0,
+      "scope": "Original-cache export raw hashes, complete frame metrics and every RGBA pixel retained by compilation; separate from the publication-atlas comparison count."
+    }
+  },
+  "strict_source_hashes_checked": 1307,
+  "compiled_assets": {
+    "sprites": 916,
+    "fonts": 4,
+    "items": 246,
+    "native_templates": 144,
+    "static_model_contexts": 485,
+    "static_model_images": 77,
+    "map_elements": 1268,
+    "native_document_states": 4,
+    "manifest_sha256": "6bf9ba188badc6b4312eb1dad4af5af294d03f38c79755674b91510b18ce3cac"
+  },
+  "implementation_files": [
+    {
+      "path": "tools/ui-assets/UiAbilityCatalog.java",
+      "sha256": "7c4e67c6ab4b6dbd90022774cafa342ae6897505975ce7244fdfae4544004c14"
+    },
+    {
+      "path": "tools/ui-assets/UiAssetExport.java",
+      "sha256": "09d1601aad22565fb3167ef7fe5bfb7ad943c283b8d97c0ff8f41a5369aac2bc"
+    },
+    {
+      "path": "tools/ui-assets/UiAudioCapture.java",
+      "sha256": "42dffa92804999592c67e78151b004298a8917d820df6cbef1f112b1a71701df"
+    },
+    {
+      "path": "tools/ui-assets/UiBoundedCapture.java",
+      "sha256": "113f50704ab8e941ce6abfddcd4f99ede4a753538f0b85d59ee4d2436f038a30"
+    },
+    {
+      "path": "tools/ui-assets/UiDocumentCapture.java",
+      "sha256": "09e700129f2e0770b80bbc66b04d967764956414fb2696a073c65941919fde53"
+    },
+    {
+      "path": "tools/ui-assets/UiFlameCapture.java",
+      "sha256": "d3864664f96a53649a9a7ef775610b0de04482580b4f625d3bcecbb849967c3f"
+    },
+    {
+      "path": "tools/ui-assets/UiMapIcons.java",
+      "sha256": "d309d194838a0fe46795527dacfceb4d14bb0357d680c0332c7f46b03fdb72e4"
+    },
+    {
+      "path": "tools/ui-assets/UiModeCapture.java",
+      "sha256": "d277e223ffbe2f3c07838bbc7438a00e7e8904cf039035a8efc8188b769426eb"
+    },
+    {
+      "path": "tools/ui-assets/UiMusicCapture.java",
+      "sha256": "9cd3c9a836565b5b45b53f09e9a522d2f0d59d948cc8d836d3a2e7c3c405002e"
+    },
+    {
+      "path": "tools/ui-assets/UiPresentationCapture.java",
+      "sha256": "d431619b37119ad7793ae06a0405811f6495113ffe06ef2fe10e2ecd500ffe62"
+    },
+    {
+      "path": "tools/ui-assets/UiScriptDump.java",
+      "sha256": "94cdea5bdcad65fa31d4b4383cc48082ac881007a3e708f9d0de520b7c7be2c1"
+    },
+    {
+      "path": "tools/ui-assets/archive_evidence.py",
+      "sha256": "71e87c4ca31f9405cb099c92fa0712b6f84bdc735d807eccd6b1ab429d3b3cfb"
+    },
+    {
+      "path": "tools/ui-assets/compare.py",
+      "sha256": "d82991c9423bb866cdc9bda3ec7d2744be2a630109b0b4315a4a0f076db35edb"
+    },
+    {
+      "path": "tools/ui-assets/compare_modes.py",
+      "sha256": "d534b43a84247d7bc393c6e9693cdb954036166f269791d4ea6565e68431ea4a"
+    },
+    {
+      "path": "tools/ui-assets/glyph_proof.py",
+      "sha256": "54d72d5579f3a749406598a59fa13a4b4793d2f24850ddc35517b79db204e83e"
+    },
+    {
+      "path": "tools/ui-assets/inspect_scripts.py",
+      "sha256": "027e1481be063a3063cba24d906d10b874c368516eb8392417bcccd802b99884"
+    },
+    {
+      "path": "tools/ui-assets/prepare.py",
+      "sha256": "1bb75983be544cd08e531b0ccc4b88a989d2c14a4222ac024e26e96d571d1846"
+    },
+    {
+      "path": "tools/ui-assets/settings_catalog.py",
+      "sha256": "9cf596411c5f27e973959902339dbfe1454293521ba1885372a1a1b36235b31c"
+    },
+    {
+      "path": "web/audio/audio.test.ts",
+      "sha256": "af7d9c1bfef3064bfd54f2376e096bcae622447bacba8322ab67c8441c23fce2"
+    },
+    {
+      "path": "web/audio/buffers.ts",
+      "sha256": "90992badd533b2f301c81e774353aedac377272f3a799124e639d4248829f6ec"
+    },
+    {
+      "path": "web/audio/errors.ts",
+      "sha256": "99d956ccee69b27a17d3e47b1d9af18aa6b0e64365c9768c76193f6bc32629f1"
+    },
+    {
+      "path": "web/audio/events.ts",
+      "sha256": "f1d337a085eddba8a4e87a469e4fb8adfdd840235fd0bc79fe4977e57e07436e"
+    },
+    {
+      "path": "web/audio/index.ts",
+      "sha256": "e90908a8e7ff790e8a525243d5834401fe1a42060f30699c87820cc4fc6b4ef0"
+    },
+    {
+      "path": "web/audio/native-data.ts",
+      "sha256": "b7a1e322d98c5f0aebba2e3e35bf6372d6ad06de45d8bb9cfa7a13caa67283d5"
+    },
+    {
+      "path": "web/audio/native-policy.test.ts",
+      "sha256": "655006c39b90b749e2df5118ce855da542bdbe2f6d9475688096696fb27cba1f"
+    },
+    {
+      "path": "web/audio/native-policy.ts",
+      "sha256": "1a0564343d649c11435ac2f11b88bfb192da4d64ceeccc1272101a251b3fa5e8"
+    },
+    {
+      "path": "web/audio/native-scene.ts",
+      "sha256": "52cac53d37381c975eafc8038adb997cca772d0b67bf0b96c49b8c809ee5b183"
+    },
+    {
+      "path": "web/audio/queue.ts",
+      "sha256": "c9ee41978eaacbccc799d39e382e62be15e3cd9daf1c312aaaff2f1b2a08fa41"
+    },
+    {
+      "path": "web/audio/reward-levels.test.ts",
+      "sha256": "83f113da3773dd0bd7991d62b84d6624e729eb6794e45c44b3e7480265d37b65"
+    },
+    {
+      "path": "web/audio/reward-levels.ts",
+      "sha256": "ff41337cefe8a29a8b8da80e07d674ea25dbe479e675097439b9a9f21b3a2a99"
+    },
+    {
+      "path": "web/audio/source.ts",
+      "sha256": "a8e1cc35306e413307e35624a641b36a4dc25d10ed3f601c48063a6e7a770fd1"
+    },
+    {
+      "path": "web/audio/supplement.test.ts",
+      "sha256": "4c540a0c73212de82c73cdd6782d4b22d306e63652b2b505b728f1d9eb338277"
+    },
+    {
+      "path": "web/ui/assets.ts",
+      "sha256": "3ac078658d3a71989068a32fa3c97e54a92a3f12188ae764607e149abee3217b"
+    },
+    {
+      "path": "web/ui/audio-controls.ts",
+      "sha256": "684662c202e51e4d0bcd2a44a1fc5377067d63795ad8593fcf69a6ac569269b4"
+    },
+    {
+      "path": "web/ui/bank.ts",
+      "sha256": "57d9fc73e87886811e7e2898aafa7577bba21462416b300e6a066fa1dcbeb75c"
+    },
+    {
+      "path": "web/ui/death-preview.ts",
+      "sha256": "12d827148aeaaec5b3ea5a604eb8ca3bf8ddeb135ae73db54fa0047786337044"
+    },
+    {
+      "path": "web/ui/documents.ts",
+      "sha256": "7edd6dfe09344c998f9b4d5398119c4ebcc8a3bc00cc877a0d922b7f08049960"
+    },
+    {
+      "path": "web/ui/entry.ts",
+      "sha256": "f713c1e0505eb05598b162f8122ac286c00fd3e4b8befb8add5d295d13646732"
+    },
+    {
+      "path": "web/ui/filters.ts",
+      "sha256": "cf12f419ef4c894f644f38152ee89fb5789d8e6dc5f37aadb3d4b30e2855fd21"
+    },
+    {
+      "path": "web/ui/flames.ts",
+      "sha256": "51c9407ecf0850b61833f5163a76d28aedccd5600aabe5484febc61f4c01041c"
+    },
+    {
+      "path": "web/ui/gameplay-ui.ts",
+      "sha256": "62cea35bc9488379d06a8dd925ca68638582042961c9b38363d03399afb1b42c"
+    },
+    {
+      "path": "web/ui/hud.ts",
+      "sha256": "ef8496c2485817cc8e1c48f5d70404001a7ed9a61df1cfa1d70fc39b808aa142"
+    },
+    {
+      "path": "web/ui/index.ts",
+      "sha256": "3576b3aa18ff5df8218ff68339585622c280ad38a378ae447da357faa8d534f2"
+    },
+    {
+      "path": "web/ui/input.ts",
+      "sha256": "abf9ea1d5b8bc2c8d3a01a6692dbf690a4804f65bab35f64c7f667f557bf7a04"
+    },
+    {
+      "path": "web/ui/layout.ts",
+      "sha256": "1f199694399600f01f5b4f3a4442dcb096fe4df7278b2d837b22aa6d48c4c7c0"
+    },
+    {
+      "path": "web/ui/level-up.ts",
+      "sha256": "6bc2404b44329dbdefb6581a7404129bd84c094630b4a8bf0305b5ae019c6397"
+    },
+    {
+      "path": "web/ui/minimap-surface.ts",
+      "sha256": "6128c6626a11052bd960f9a0b2738eea2d389b7dc18e926d74a6a6a74bbd49a5"
+    },
+    {
+      "path": "web/ui/minimap.ts",
+      "sha256": "2126033bde86a861dc5a82424ca7482ff953828051ee3aa6cff80e74955b3129"
+    },
+    {
+      "path": "web/ui/music-controls.ts",
+      "sha256": "35bb4805db9be3b47d0911e6b6f7fde1b45f33d9116379b51930b0ee088163ba"
+    },
+    {
+      "path": "web/ui/presentations.ts",
+      "sha256": "b8499c46f1a64d5af696c2053852553e308129e4d37da532e6b9097e2f9063e5"
+    },
+    {
+      "path": "web/ui/production.ts",
+      "sha256": "7824c7d23e7e709d9fbd97eab81c70826f6d7af5cd59f5c5a88def1b4cf50903"
+    },
+    {
+      "path": "web/ui/raster.ts",
+      "sha256": "2efc9c721beea76236df7509a458cbef3568edeb9e569c6b4379a71a8bf29fc8"
+    },
+    {
+      "path": "web/ui/recovery.ts",
+      "sha256": "bec15478c31c23112e231f5ff0cc9afef4e856041507f6df03064bc7cdfa05ee"
+    },
+    {
+      "path": "web/ui/rewards.ts",
+      "sha256": "58c4bb2f30ec1757f06ed8459410c36eb89257cf20004fb6f908bebe8f08e740"
+    },
+    {
+      "path": "web/ui/settings.ts",
+      "sha256": "66876d0bca26d3d76bc173f29c0f6f99b2768370f3c62b0959f7782979f6f6d8"
+    },
+    {
+      "path": "web/ui/tests/audio-browser.mjs",
+      "sha256": "3e4dc99e483183295c2f67a1b63e84ec8933f178316dddaf26f611ee074662b5"
+    },
+    {
+      "path": "web/ui/tests/audio-controls.test.ts",
+      "sha256": "45d3fb25e7f319553d03767cbf22fbfdd5d270d09e84815d270be1e7114c907e"
+    },
+    {
+      "path": "web/ui/tests/audio-fixture.ts",
+      "sha256": "5fd45bf827d919802c1af2e0451204f403fbb08b2692cbadeed90156a2127fff"
+    },
+    {
+      "path": "web/ui/tests/bounded-browser.mjs",
+      "sha256": "83d83be51d7dd54c6a411dc38af671bbb8602aefdec3ebe86114900c0168ec4c"
+    },
+    {
+      "path": "web/ui/tests/bounded-fixture.ts",
+      "sha256": "b178810dfb180ef5e8f45af12e9a20603b74858495f496384f08a181e9ba4edd"
+    },
+    {
+      "path": "web/ui/tests/browser-host.mjs",
+      "sha256": "c473afbda7700dff687c81e8f6bbaa780d596a5fe971219058c1137f15834e11"
+    },
+    {
+      "path": "web/ui/tests/component-browser.mjs",
+      "sha256": "5f623ef37a618d7d081f2f7835b9baa0be635135bed9c077a0eac259f265dbd5"
+    },
+    {
+      "path": "web/ui/tests/component-fixture.ts",
+      "sha256": "8dce71b3387fdd68bf2f31dcc2276f5edcf6dc2a7a3157919f5f673984dd5cb1"
+    },
+    {
+      "path": "web/ui/tests/document-fixture.ts",
+      "sha256": "f60a4fb0f9e4492a45be2e9c118795c2916ac8b3a1a220b8fa110b4ab51d9eae"
+    },
+    {
+      "path": "web/ui/tests/documents-browser.mjs",
+      "sha256": "910069b8fe734de56e5665a32f96a2e69b75a612fd4c1731c01dda5b48cf31b2"
+    },
+    {
+      "path": "web/ui/tests/gameplay-ui-browser.mjs",
+      "sha256": "ebec1a6c6528a2667ad5fa418925827f2b2b4f97bc5ab3294e8d1320012b69e4"
+    },
+    {
+      "path": "web/ui/tests/gameplay-ui.test.ts",
+      "sha256": "a1b09e8ea37d13a79212c75c40a1a8480d5ffddfa6eab31fa09e7d116ee25f4e"
+    },
+    {
+      "path": "web/ui/tests/independent.test.ts",
+      "sha256": "ccd495b7d679283d2b21ac517285b488a9b328493c4eb4657b82af83379dd27b"
+    },
+    {
+      "path": "web/ui/tests/modes-browser.mjs",
+      "sha256": "bdb30ff0125259cf6334ff7dade574ddf42ca03bfb8e41b0fedff2196b3462f6"
+    },
+    {
+      "path": "web/ui/tests/music-browser.mjs",
+      "sha256": "556b60cfb990941760085c0b8b40fbcb68e5ef5cec00066c6620525e0359caa4"
+    },
+    {
+      "path": "web/ui/tests/music-controls.test.ts",
+      "sha256": "7640b24c030d779b4bf9c806047a72fd551f3f9cd63958f745fe0acefe3ffc9e"
+    },
+    {
+      "path": "web/ui/tests/presentation-fixture.ts",
+      "sha256": "2ec0c49559b2c09736c86b43363faf3438cffa71c2914626796fc9971ab41913"
+    },
+    {
+      "path": "web/ui/tests/presentations-browser.mjs",
+      "sha256": "6b373a763d0ed35a8526b170cd5e1935b3da0766b08fd5fe4c1e7de85fca8f8d"
+    },
+    {
+      "path": "web/ui/tests/settings-browser.mjs",
+      "sha256": "a4d489dec8893673949c7bc9f776354a9b3b01d6efef0f5571196a076638d19d"
+    },
+    {
+      "path": "web/ui/tests/source-browser.mjs",
+      "sha256": "e764d653751a8c687186490c1a3415e63689b9aef036f527cf9b4ebfbca84823"
+    },
+    {
+      "path": "web/ui/tests/source-fixture.ts",
+      "sha256": "ad24f5da5b541f5dda7b0f7babd64206b9a63c71e7b9ebff1dbda23f9b510878"
+    },
+    {
+      "path": "web/ui/tests/ui4-browser.mjs",
+      "sha256": "3c4e55c39c160b892c2083dc51ed2298f0cdd59c51ddc6734cfadaf6b57d2b46"
+    },
+    {
+      "path": "web/ui/tests/ui4.test.ts",
+      "sha256": "cfbb87824f80d975260d09665d14799638a374b5bb4392fac34b5d9c04d0d117"
+    },
+    {
+      "path": "web/ui/tests/unit.test.ts",
+      "sha256": "a0fb00a12519e85e4b9b72f8cba34a5fac22e30b26a44834bed589f9fd33204b"
+    },
+    {
+      "path": "web/ui/world-view.ts",
+      "sha256": "2ac3254042827e72c3785a8f27bb71e6956a8952260c3dc5d95ccbdec77b9647"
+    }
+  ],
+  "remaining": {
+    "status": "blocked",
+    "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+    "shared_contract_changed_by_ui": false,
+    "published_contract": {
+      "capability": "game.ui.v1",
+      "upstream_commit": "d1532d6fc063d2a02383a7b4bb1ca3c449e214ce",
+      "authorized_cherry_pick": "5d56c93",
+      "typescript": "web/shared/contracts.ts",
+      "rust": "crates/game-types/src/gameplay_ui.rs",
+      "nullable_production_correction": {
+        "upstream": "351847f3f5255f6de6e345d5217a7910eaa145a3",
+        "authorized_pick": "ccbfbb0",
+        "meaning": "Explicit null is legitimate inventory-only production; omitted/malformed target fields are invalid."
+      },
+      "transport_handoff": {
+        "world_snapshot_ui_tag": 20,
+        "world_input_ui_tag": 41,
+        "expected_bank_revision_field": 21,
+        "expected_bank_revision_source": "Exact decimal ui.bank.revision at request creation, never world/character revision; retain on retries.",
+        "wire_implementation_in_ui": false,
+        "final_candidate": "78fcec42226e17d715f422f8e9cc2be8a1fb8762",
+        "authorized_picks": [
+          "cd12063",
+          "ccbfbb0",
+          "e4c9669",
+          "9973948",
+          "3103033",
+          "19c85d5",
+          "30a8183",
+          "70e4294",
+          "087cfca",
+          "85843a1"
+        ],
+        "bank_precondition_in_ui": "All eleven published bank requests capture the displayed bank revision in controls, held menus and drags. Missing/stale revisions reject explicitly; existing bound intents are never rebound.",
+        "raw_artifact_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3",
+        "compressed_artifact_sha256": "f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6",
+        "versions": {
+          "content": 4,
+          "artifact": 4,
+          "state": 1,
+          "runtime": 1,
+          "ui_state": 1
+        },
+        "cargo_lock_changed_by_ui": false,
+        "awaiting": "Real shell composition using a fresh normal candidate or explicit fenced migration; never silently repin an old world."
+      },
+      "status": "The authorized passed UI4 implementation, source publications and observer prerequisites are integrated. Exact final shared/proto files and raw/compressed artifact hashes match78fcec4. UI component evidence is not a live-server journey or whole-UI acceptance.",
+      "version_rule": "WorldView.ui.version must equal 1. Absent, unknown or malformed projections are explicit unsupported/error states, never fabricated empty views."
+    },
+    "published_audio_policy": {
+      "upstream_commits": [
+        "888f9384e111b5f7fefeee36859bae4f873e5c95",
+        "f74652a59834815b4e57e04366dc857681fd83c1",
+        "f9e466d3feb6626785ae46b9d6549e4e7eb00443"
+      ],
+      "authorized_picks": [
+        "b7cc380",
+        "d2082e8",
+        "7475596"
+      ],
+      "audio_handle_abi_changed": false,
+      "volume_argument": "Source normalized slider position; percent/100 is sent exactly once, never mixer/native asset gain.",
+      "current_values": "bindUiAudio uses actual observed percentages/mixers and per-voice renderedNativeLevel/appliedNativeLevel. sourceMixerToAssetGain uses the actual 128 or 255 denominator, never an assumed music-channel gain.",
+      "supplement": {
+        "manifest": "assets/manifests/osrs/audio-m1-supplement.json",
+        "sha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91",
+        "assets": 9,
+        "status": "published_consumed_and_routed_in_ui_component_host"
+      },
+      "committed_gameplay_events_created_by_ui": false
+    },
+    "wired_versioned_controls": [
+      "Opaque inventory action IDs with canonical item and instance identity; declared permission rejection, local use selection and no optimistic ownership changes.",
+      "Production menu/recipe IDs, single versus make_x permission, 1/5/10/X requests, native one-through-eighteen-choice layouts and the source bronze smithing table. Unoffered source rows remain present with explicit feedback.",
+      "Quest reward title, narrative/item/XP/quest-point fields, native source 9..15 text slots, exact continuation request and stable presentation identity.",
+      "Opaque confirmations with real title/lines/items/u64 credit, pagination, accept/cancel and Escape.",
+      "Selected/visible/permitted abilities and interface states; combat style association retains identity even if view row ordering changes.",
+      "Equipment bonuses/weight and exact native equipment-preview request geometry; no missing-stat zero defaults.",
+      "Stable bank entries/tabs, drag/move/new-tab/collapse, placeholders, original placeholder sprites, note/amount/insert preferences and deposit-equipment permissions.",
+      "Death-preview kept/lost rows, exact fee strings and value revision. Unsupported alternate scopes retain their source controls and feedback.",
+      "Recovery coffer balance, discard permission/request and inventory coffer offering, with confirmation identity retained and no local credit/item changes.",
+      "Public chat permission, declared channel and UTF-8 byte limit; rejected drafts retained, no optimistic echo or clearing before the authoritative own-message update.",
+      "Declared body_type 0/1 permissions and confirmation, with local appearance/equipment preview descriptors. Human kit/colour/pronoun controls do not create new penguin variants.",
+      "All shop buys still send displayed canonical expected_item; held menus/amounts never retarget a reused row.",
+      "Native master/music/effects/area sliders and per-channel mute controls consume actual audio observations, preserve remembered in-session positions and source integer/nonlinear semantics; title audio uses explicit global mute rather than resetting all channel positions.",
+      "Player-scoped setUiMusicState delegates the exact published state to the audio engine. Native modes, canonical manual tracks, actual unlock coloring/counts, current playlist, loop flags, scrollbar and source dropdown cancellation are wired without fabricated music events or caller-selected next songs.",
+      "Stock All Settings group134 opens as a real local interface with original category/search/info/locked-filter/scroll/choice controls and live audio/music/death plus existing UI input behavior. Missing required display/camera values remain explicit unknowns, not fixture defaults.",
+      "Native bank main-tab/section ordering, tab graphics, placeholder opacity120/quantity glyphs and true insert icon projection; original HUD hidden/locked states and two-border highlight styling.",
+      "Authoritative activeTab is separate from activeInterface. Acknowledgement/rejection does not optimistically select a tab; explicit null renders no selected side content.",
+      "Identity-bound bank_placeholder plus decimal expected_bank_revision on every current UI-bank mutation. Ordinary deposits retain the actual WorldView.bank.banker.",
+      "Original BOOK392 facing pages, source font497/line slots/colour markup, overflow navigation, ui_document_page and identity-bound document dismissal; original AIDE_MAP615 models/tutor toggles and native-size mapAsset consumption.",
+      "Canonical interface.level_up now binds source233 with supplied text and continuation; no XP, level or committed-close event is inferred.",
+      "setUiMinimap/getUiMinimapStatus consume the exact renderer surface fields, copy pixel/mask data per revision, retain source qualifications, resolve original map-element sprites and clear stale owner/instance/plane data. Live rendering has no static-PNG fallback."
+    ],
+    "requests": [
+      {
+        "scope": "Real UI4 shell/server composition",
+        "extension": "Compose the integrated current game.ui.v1/observer candidate through AppServices with real source assets and renderer/audio inputs, using a fresh normal world or explicit fenced migration.",
+        "reason": "The backend implementation and exact candidate hashes are no longer missing. The UI cannot edit the shell or silently repin existing persisted worlds; component replies do not prove a real-server journey."
+      },
+      {
+        "scope": "Source Make-All and persistent bank All defaults",
+        "extension": "Publish the exact bank_set_options.amount All encoding, and either an authoritative production all-quantity value or an explicit All request mode.",
+        "reason": "The current u32 fields do not define either sentinel. The original All controls remain visible and report required integration. Withdraw-All already uses the current authoritative bank entry quantity; it is not blocked by this question."
+      },
+      {
+        "scope": "Complete recovery fee/quantity/bank controls",
+        "extension": "Publish RecoveryView.items.cost unit-versus-stack semantics, effective unit fee/capacity/per-row UiPermission/bank-all permission, and identity-bound partial-quantity retrieval and bank-all requests.",
+        "reason": "reclaim currently accepts whole recovery item IDs only. Partial 1/5/X cannot become a full-stack reclaim; fee units and capacity cannot be inferred. Null per-row display permission stays unknown, while existing whole-item requests remain server-validated. Coffer, discard and coffer-offer fields are now wired and no longer requested as missing."
+      },
+      {
+        "scope": "Canonical level-up chat/popup source association",
+        "extension": "Publish canonical reward.interface IDs and corresponding current source widget/style bindings for each required level-up chat/popup variant; use the existing kind/interface fields, not a second reward contract.",
+        "reason": "The current interface.level_up ->233 popup is now wired. Complete chat-only/other native style and event associations remain explicitly pending in the backend handoff metadata; unknown interfaces still receive ui.source.reward.layout instead of a fabricated substitute."
+      },
+      {
+        "scope": "Contextual ordinary bank deposits",
+        "extension": "Continue supplying WorldView.bank.banker alongside an open GameplayUiView.bank, or publish the replacement identity-bound ordinary-deposit request.",
+        "reason": "The v1 bank projection itself contains no banker identity. Existing bank_deposit still requires it. The UI explicitly reports contextual_banker_identity if a v1-only bank omits that required legacy context."
+      },
+      {
+        "scope": "Actual renderer surface/observer composition",
+        "extension": "Feed renderer.minimapSurface() to setUiMinimap(handle,surface) once per revision and consume getUiPreviewRequest/setUiPreview. Preserve game.observer.v1 null/absence/stable action IDs and decimal timestamps, and dynamicObjects field13 with validated sourceId.",
+        "reason": "The UI-side minimap setter/consumption and original icon assets now exist. Renderer edge-five-tile/instance completeness remains qualified; sourceMask/complete/notes/stats are exposed, not promoted to fidelity acceptance. Original full-HUD zoom410 at1080 is not the viewport-only662 calibration."
+      },
+      {
+        "scope": "Real source audio listener/object/varp and music-state app composition",
+        "extension": "Use setSourceAudioScene with real 128-unit listener, plane/instance/owner, placed emitters/orientations and original varps; call setUiMusicState(ui, playerId, actual SourceMusicState) after audio.update(world, events).",
+        "reason": "UI/state integration and native internal continuation are implemented. Actual shell/renderer inputs remain outside UI ownership. No caller-guessed gain, empty scene or next-song callback is required or supplied."
+      },
+      {
+        "scope": "Direct skip request and numbered playlist slots",
+        "extension": "Expose a direct Skip Track request into the audio engine's existing native next-track policy; supply saved Playlist1/2/3 identities/contents for the original numbered-slot controls.",
+        "reason": "SourceMusicState and UI controls now cover actual modes/unlocks/manual selection/current playlist/loop flags. It does not identify three saved slots, and identical-state idempotence is not a skip API. No mode-flipping workaround or caller-guessed next track is used."
+      },
+      {
+        "scope": "Native remembered mute and versioned saved client preferences",
+        "extension": "Consume the audio owner's forthcoming typed preference helpers for remembered mute varbits14817/12426/12427/12428, direct Skip and saved Playlist1/2/3.",
+        "reason": "The All Settings window and available bindings are now implemented. In-session Mute/Unmute preserves its observed value. Unprovided saved values remain unknown; this UI does not fork the audio preference contract or invent defaults."
+      },
+      {
+        "scope": "Actual source display/camera preferences",
+        "extension": "Renderer/shell must expose the real camera FOV/follow-height preference state and limits, brightness and view distance through its approved adapter.",
+        "reason": "Native setting2734/operation14 uses varcs73/74,1338\u20131341 and source42 VIEWPORT_SETFOV plus CAM_SETFOLLOWHEIGHT; RenderCamera.zoom is not a safe substitute. Brightness2736/operation15 and distance3656/operation168 retain source placement and required feedback. No display values are copied from comparison fixtures."
+      },
+      {
+        "scope": "Committed Cook reward/Widget153 close audio batches",
+        "extension": "Shell must forward coherent before/after skill observations and committed level_up events with skillId, preserved sourceId and matching completion attribution; forward actual committed Widget153 close with questId/completionId.",
+        "reason": "The authorized audio gate handles pre-trained/multi-level gains and suppresses no-level-gain rewards. UI continuation remains a request, not proof of close, XP delta or permission to create a level-up event."
+      }
+    ],
+    "implementation_gaps_without_contract_extension": [
+      "Complete source-selected/highlight/hidden/disabled projection coverage for every required current-source signature and live 71-state route. The existing 71 states/29 families/11 signatures are preserved, not reduced or declared accepted.",
+      "Apply additional backend-declared level-up chat/style variants when published; the current canonical source233 popup is now wired.",
+      "Match final canonical/live bank data to the now-calibrated main-tab/section/placeholder/selection layouts, and cover any additional required variants. The three bounded bank cases and their data projections already pass at zero tolerance.",
+      "The newcomer-map marker uses the original isolated model3062 at source frame0 and source2043 placement arithmetic. Native animation646 and visible-marker placement need further source/runtime comparison; the four document fixtures certify text/models/tutor controls with their genuinely hidden native marker, not those missing gates.",
+      "Real-server startup-to-quest-completion journey, reconnect/restart/concurrent-state behavior and final visual/audio/hardware acceptance remain separate gates."
+    ],
+    "source_comparison_scope": {
+      "preserved_native_and_owner_composition_checks": {
+        "passed": 87,
+        "total": 87,
+        "tolerance": 0
+      },
+      "preserved_native_mode_and_effect_checks": {
+        "passed": 106,
+        "total": 106,
+        "tolerance": 0
+      },
+      "additional_production_death_reward_checks": {
+        "passed": 45,
+        "total": 45,
+        "tolerance": 0
+      },
+      "additional_audio_control_checks": {
+        "passed": 18,
+        "total": 18,
+        "tolerance": 0
+      },
+      "additional_music_control_checks": {
+        "passed": 8,
+        "total": 8,
+        "tolerance": 0
+      },
+      "bounded_independent_states": {
+        "total": 18,
+        "maximum": 18,
+        "source_and_projection_checks": 36,
+        "passed": 36,
+        "tolerance": 0
+      },
+      "ui4_document_states": {
+        "total": 4,
+        "source_and_projection_checks": 8,
+        "passed": 8,
+        "tolerance": 0,
+        "visible_marker_animation_acceptance": false
+      },
+      "full_panels_excluded": 0,
+      "source_fixture_balances_are_production_values": false,
+      "component_double_is_live_gameplay": false
+    },
+    "final_m1_acceptance": false
+  },
+  "full_panels_excluded": 0,
+  "gameplay_acceptance": false,
+  "final_m1_acceptance": false
+}

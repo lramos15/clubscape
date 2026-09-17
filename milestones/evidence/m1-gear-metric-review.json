@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "task": "M1-GEAR-METRIC-REVIEW",
+  "result": "candidate_zero_failure_claim_blocked_by_confirmed_geometric_false_negative",
+  "candidate": "f7051991ae6800f56f1bb5c9be16845998466f8a",
+  "isolated_candidate": "908a7acda3b26a5c70ef49d9cb2b2356f5c0159d",
+  "regression_commit": "f1d50abda8c6aaeb7c435d0363c1af9abd757add",
+  "regression_path_at_commit": "crates/renderer/tests/gear_geometry.rs",
+  "execution_root": ".worktrees/m1-gear-metric",
+  "command": "cargo test --release --locked -p clubscape-renderer --test gear_geometry -- --nocapture",
+  "passed": 1,
+  "failed": 2,
+  "log_sha256": "a7f75804638005dbde6185e5513e95980556df038802353fbb5725044c4abed0",
+  "finding": {
+    "function": "actor::exact_penetration / actor::crossing_depth",
+    "cause": "Only embedded item vertices and embedded endpoints of crossing body edges contribute. Geometry can cross through edge/face interiors with every endpoint outside, so the claimed exact two-way metric returns zero.",
+    "closed_box_a": {"minimum": [-8, -3, -6], "maximum": [8, 3, 6]},
+    "closed_box_b": {"minimum": [-3, -8, -2], "maximum": [3, 8, 2]},
+    "vertices_inside_other_solid": 0,
+    "a_body_b_item": {
+      "actual_item_surface_point": [0, 0, 2],
+      "independently_witnessed_depth": 3,
+      "candidate_metric": 0
+    },
+    "b_body_a_item": {
+      "actual_item_surface_point": [0, 3, 0],
+      "independently_witnessed_depth": 2,
+      "candidate_metric": 0
+    },
+    "unchanged_penetration_target": 1,
+    "positive_controls": "Disjoint solids report0; the shallow vertex-contact case reports0.75 as expected."
+  },
+  "qualification": {
+    "actual_candidate_rust_code_executed": true,
+    "synthetic_geometry_is_not_a_gameplay_or_source_asset_fixture": true,
+    "this_does_not_establish_how_many_actual_2034_frames_fail_a_sound_metric": true,
+    "candidate_0_of_2034_is_not_accepted": true,
+    "new_candidate_merged_to_main": false,
+    "source_base_materials_thresholds_or_reference_inputs_changed": false,
+    "deformation_per_pass_versus_net_reporting": "Additional code-review concern, not yet presented as an independently measured second defect.",
+    "unchanged_face_indices_are_not_full_style_or_geometry_preservation_proof": true
+  },
+  "required_followup": [
+    "The existing renderer owner must fix edge/face-interior coverage or conservatively reject uncertified intersections; extra sample vertices alone cannot be relabeled exact.",
+    "Rerun the complete2034 legal source-pose denominator with the corrected criterion and retain actual failures.",
+    "Preserve real grips, source geometry/material constraints and deformation reporting without target relaxation or whole-part masks.",
+    "Keep independent style, turned scenery, source widgets, composed UI and frozen performance acceptance separate."
+  ],
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

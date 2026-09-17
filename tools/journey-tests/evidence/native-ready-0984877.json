@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "status": "blocked",
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_claims": false,
+  "gameplay_sql_or_state_seeding_used": false,
+  "authorized_parent_commit": "faa800286cfeeed4f3bec0b924d1fb01c65b97d9",
+  "original_source_fix_commit": "9bff13e9260cc185d22cf6b3db5335ac35320cb4",
+  "local_cherry_pick": "098487726df526eb8ddbe8c88169969cd995c627",
+  "current_source": {
+    "content_revision": "m1.source-backed.v3.327d3a78f3bdad7c",
+    "content_schema_version": 3,
+    "artifact_version": 3,
+    "artifact_archive_bytes": 503156,
+    "artifact_archive_sha256": "4c92b3c3cd27ee0eb7247457a6ddce703bb6323f127ccff83039b409afba2dcf",
+    "raw_artifact_bytes": 11794799,
+    "raw_artifact_sha256": "a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62",
+    "source_content_archive_sha256": "621a938508bc189eb78bca516fb750c42ad6fc8a91dbf194ad9a1ba3ac3d72d9",
+    "manifest_sha256": "510fbb63a40f6618283e65bd154fdb7e9076286d7ba66db63d7bbb48801c0721",
+    "strict_compiler_inspection": "passed",
+    "source_status_active_executor_failures": 0,
+    "source_status_fully_done": true,
+    "source_status_full_journey_executed": false,
+    "obsolete_native_failure_interlock_used": false,
+    "manifest_runtime_ready_aggregate_used_as_interlock": false,
+    "readiness_policy": "Pass the unchanged current artifact and ordinary_normal_f2p profile to the real server. Its six inactive-binding proofs remain authoritative; no binding is coerced or removed.",
+    "source_runtime_changes": [
+      "Original solid-target near-face contact; no collision changes",
+      "Single-one-tick and Make-X-of-one-three-tick timing preserved",
+      "Frozen owner-online ground clocks",
+      "Private authoritative playtime and 120000-played-tick selection",
+      "Unknown legacy playtime remains unavailable rather than reset"
+    ]
+  },
+  "native_checks": [
+    {"command": "cargo fmt --package clubscape-sim --check", "result": "passed"},
+    {
+      "command": "cargo test --quiet --package clubscape-sim --package clubscape-protocol --all-features",
+      "result": "passed",
+      "passed_tests": 29,
+      "scope": "Client/generated protocol/source-plan compatibility, not the source journey."
+    },
+    {
+      "command": "cargo clippy --quiet --package clubscape-sim --all-features --all-targets -- -D warnings",
+      "result": "passed"
+    },
+    {
+      "command": "python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q",
+      "result": "passed",
+      "passed_tests": 10
+    }
+  ],
+  "real_run": {
+    "run_id": "848fd63d68544cba",
+    "recorded_at_unix_ms": 1789442682923,
+    "command": "python3 tools/journey-tests/run.py --server-entrypoint public-api --report .local/evidence/m1-headless-native-ready.json",
+    "exit_code": 1,
+    "entrypoint": "The unchanged real Service through Config::with_game_root, not fixture/server substitutes.",
+    "independent_real_account_checks_passed": 11,
+    "real_account_only_negative_readiness_check": "passed; never counted as gameplay",
+    "compiler_required_assets": 5010,
+    "genuine_asset_mappings": 5010,
+    "original_definition_collection_deliveries": 4981,
+    "original_payload_files": 35,
+    "canonical_publication_validation": "passed",
+    "world_id": "e8ae3788-56a8-423c-bef9-d9dc95c0da32",
+    "descriptor_sha256": "8ced2f33e2ace2a56806b8b235c0878d4be6f3194add62a6b4c93aab7144d76d",
+    "first_failure": {
+      "phase": "strict_product_server_startup",
+      "event": "startup_failure",
+      "stage": "game_content",
+      "error_kind": "game_file_size",
+      "error_id": "44c3fb90-c4b8-41c6-bdf5-b19de958cc76",
+      "file": "crates/server/src/game_service/content.rs",
+      "line": 46,
+      "actual_descriptor_bytes": 272433,
+      "server_limit_bytes": 262144,
+      "reason": "The complete compact 5010-reference deployment descriptor exceeds the private loader bound. This is not an artifact/source-policy failure."
+    },
+    "binary_sha256": {
+      "production_account_server": "7937c3a7dd795d66056457aafb2a398765f9bba1b32cbbea8ab8af0080e66c2a",
+      "real_service_launcher": "6db926ba1412a3bc0eb0c5a702963a2b23d27e97294361b55ba8bc8b7c0ea6dd",
+      "simulator": "4b0624b38bb0e8346daf3252d3ec2b5cb5d9a2a18a6503194677c13ac4517c4c"
+    },
+    "protocol_version": 1,
+    "generated_protocol_descriptor_sha256": "db3ad36878170f21460e679b38c4c90f8e4940b22b0b99a5231724e307c82caf",
+    "cargo_lock_sha256_used_for_build_not_committed": "865211f6a32c844860f53dea5c77abd739f238e2e7be18b6acbc51687f2c63e3",
+    "cleanup": {
+      "owned_server_reaped": true,
+      "owned_database_removed": true,
+      "owned_credentials_and_game_root_removed": true,
+      "errors": []
+    }
+  },
+  "current_inspected_production_configuration": {
+    "file": "crates/server/src/config.rs",
+    "lines": [58, 65],
+    "game_root_still_nested_under_web_root": true,
+    "scope": "Confirmed by direct current-code inspection. Actual prior production-binary Hello failures are retained in artifact3-bcc0de9.json; this current run used explicit public Config to reach the descriptor gate."
+  },
+  "source_oracle_hashes": {
+    "research/journey-rules/initial-state.json": "3f6cefa5f68f226878df5286d1689c1ebe5a2fa28b4d6c5d0fd34a7741447ad3",
+    "research/journey-rules/tutorial.json": "774789d1559f438f3db6036d831d4b341a093d77949d416ff9bc8bfe48d0087b",
+    "research/journey-rules/activities.json": "a0eb67f8615642161f7ba05ecfda99bd1ba62102f5fc23f335a340df4645f6f7",
+    "research/journey-rules/cooks-assistant.json": "ccb21048828e1d1a774f09c809d01aaf6900425bc52ea2e1bc471142ff4295cf",
+    "research/m1-bindings/application-result.json": "4b8ea2bad71ce5cd708ec8da981ee11404d87b3c8ddf0ec02ea6d3ea5446a7e7",
+    "research/m1-bindings/runtime3-policy.json": "bc8cd2fbed9ce49ea1d1aeac40034894a01439266acf85adad4f6c111f426ec7",
+    "research/m1-bindings/runtime3-selectors.json": "4daf4f0c83d210d33e659163c6f972ee6040fbf9df4303397312dd579f348c24",
+    "tests/scenarios/m1_fresh_account.json": "34164cf09a1b94c8af0d90f374d4e4bfb9db330c18bd90b1db8cac7903437784"
+  },
+  "required_parent_repairs_before_real_journey_can_start": [
+    "Increase the private GameRoot descriptor byte limit for the complete real source asset map; do not weaken public RPC, source-readiness, collision or asset-membership checks.",
+    "Read CLUBSCAPE_GAME_ROOT independently of CLUBSCAPE_WEB_ROOT in the production binary."
+  ],
+  "still_unchecked": [
+    "Every product character/tutorial/Learning-the-Ropes stage",
+    "Legitimate Lumbridge mining, inventory/equipment, banking and shop",
+    "Actual goblin combat, source death/Office/grave/recovery",
+    "Cook ingredient acquisition, mill, partial deliveries and rewards",
+    "Onboarding/post-quest logout, reconnect, owned restart and replay"
+  ],
+  "product_characters_created": 0,
+  "product_tutorial_edges_executed": 0,
+  "required_gameplay_restarts_executed": 0
+}

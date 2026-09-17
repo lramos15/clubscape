@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "task": "M1-SHELL-METADATA-INTEGRATION",
+  "existing_admission": "milestones/evidence/m1-shell-metadata-browser-authorization.json",
+  "existing_admission_commit": "01360e5112b05604afc3e0b36494ad9ada467b30",
+  "existing_admission_sha256": "2ca9c79a9bb7d92d3e94e035fceb90637ee90ec79360b4e77dbb83dc3cd64c88",
+  "renderer_confirmation": {
+    "agent": "bb7f85f7-096a-4377-80cb-3e7eae196c6b",
+    "turn": 27,
+    "owned_gpu_browser_or_native_gpu_work_running": false,
+    "owned_shell_sessions_completed": true,
+    "further_gpu_work_held_until_director_release": true,
+    "preserved_renderer_revision": "9051712625f8cc2ead637b7ae4b90991ab578c7e"
+  },
+  "director_host_observation": {
+    "host": "sparky",
+    "architecture": "aarch64",
+    "gpu": "NVIDIA GB10",
+    "driver": "580.173.02",
+    "gpu_utilization_percent": 0,
+    "chrome": "153.0.8010.12",
+    "existing_foreign_idle_chrome_parent_pid": 154944,
+    "foreign_processes_changed": false,
+    "owned_game_or_browser_test_database_running": false
+  },
+  "candidate": "b4f63046a75f90978afb432441316c70cf96f73b",
+  "candidate_tracked_clean": true,
+  "fixed_journal_absent_at_observation": true,
+  "fixed_output_absent_at_observation": true,
+  "execution_requirement": "Reverify exact code, build and source pins, then exclusively reserve the existing fixed journal before the sole invocation. Failure consumes the allowance. Keep the GPU/timing window exclusive until owned cleanup finishes.",
+  "browser_invocations_added": 0,
+  "source_operator_invocations_added": 0,
+  "saved_checkpoint_access_or_migration_admitted": false,
+  "milestone_accepted": false
+}

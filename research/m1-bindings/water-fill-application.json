@@ -1,0 +1,55 @@
+{
+  "actual_account_read_or_changed": false,
+  "base": {
+    "commit": "00229843ab08b724b33eae29e92917f12dc86a53",
+    "compressed_artifact_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+    "input": "research/water-fill/inputs/current5b-source.json.gz",
+    "raw_artifact_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "repository_path": "content/m1/game-content.json.gz",
+    "revision": "m1.source-backed.v4.bdbf8a3788b842be",
+    "semantic_sha256_without_revision": "fc0f4fb5e73c6d9800b88bb62001b3acfc058c8c37321947f58fc5058835fc74",
+    "source_sha256": "2782a2fbb164ca4c11a964778adf0ca544986f6b2e17aa9bb9bd55f730092ed2"
+  },
+  "candidate_semantic_sha256": "ff493e80b6569df4611cc41f92bb4a9259121dee95fdef1068cbdc05f4154df6",
+  "changed_json_paths": [
+    "/recipes/recipe.water.bucket",
+    "/revision",
+    "/ui/actor_animations/recipes/recipe.water.bucket"
+  ],
+  "contact_qualification": "Original1x2 footprint, source rotation/access masks and explicit walk/sight cells. Conservative cardinal one-tile item-on contact interpretation, not an observed arrival or accepted use.",
+  "dispatch_contract": "RecipeDefinition.item_on_target is an explicit source-bound reach/guard for one conversion. The shared target admission retains availability, instance, footprint, source-side, collision/sight and near-face checks without a menu-visible Production operation.",
+  "item_on_dispatch_declared": true,
+  "migration_admitted": false,
+  "native_execution_required": true,
+  "preexisting_source_unknowns_preserved": [
+    "normal_grave_bank_all",
+    "recipe.cooking.dough.motion",
+    "empty_container.motion"
+  ],
+  "profile": "current5b",
+  "recipe_sha256": "49bf5b624bb74eea5c936b7fbb25a35e5ea56b3d2a785564dcde2a9c7d69dc1c",
+  "remainder_semantic_sha256": "fc0f4fb5e73c6d9800b88bb62001b3acfc058c8c37321947f58fc5058835fc74",
+  "source_contact_candidates": [
+    {
+      "plane": 0,
+      "x": 3205,
+      "y": 3214
+    },
+    {
+      "plane": 0,
+      "x": 3205,
+      "y": 3217
+    },
+    {
+      "plane": 0,
+      "x": 3206,
+      "y": 3216
+    }
+  ],
+  "water_actor_motion": {
+    "classification": "unresolved_source",
+    "no_animation_verified": false,
+    "reason": "Scenery animationID=-1 is not actor dispatch evidence. No filling sequence or deliberate absence was verified; do not use a similarly named vial, fountain or construction sequence.",
+    "sequence": null
+  }
+}

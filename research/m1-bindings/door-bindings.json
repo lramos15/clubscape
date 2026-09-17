@@ -1,0 +1,2723 @@
+{
+  "groups": [
+    {
+      "collision_group": "collision_group.scenery.12348.3207.3217.p0.t0.r1",
+      "counter": "counter.door.scenery.12348.3207.3217.p0.t0.r1",
+      "coverage": [
+        [
+          3207,
+          3217,
+          0
+        ],
+        [
+          3207,
+          3218,
+          0
+        ],
+        [
+          3208,
+          3217,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.12348.3207.3217.p0.t0.r1"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.12348.3207.3217.p0.t0.r1"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.12349.3213.3221.p0.t0.r0",
+      "counter": "counter.door.scenery.12349.3213.3221.p0.t0.r0",
+      "coverage": [
+        [
+          3212,
+          3221,
+          0
+        ],
+        [
+          3212,
+          3222,
+          0
+        ],
+        [
+          3213,
+          3220,
+          0
+        ],
+        [
+          3213,
+          3221,
+          0
+        ],
+        [
+          3213,
+          3222,
+          0
+        ],
+        [
+          3213,
+          3223,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.12349.3213.3221.p0.t0.r0",
+        "spawn.scenery.12350.3213.3222.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.12349.3213.3221.p0.t0.r0",
+        "transform.scenery.12350.3213.3222.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.12986.3186.3268.p0.t0.r0",
+      "counter": "counter.door.scenery.12986.3186.3268.p0.t0.r0",
+      "coverage": [
+        [
+          3185,
+          3268,
+          0
+        ],
+        [
+          3185,
+          3269,
+          0
+        ],
+        [
+          3186,
+          3267,
+          0
+        ],
+        [
+          3186,
+          3268,
+          0
+        ],
+        [
+          3186,
+          3269,
+          0
+        ],
+        [
+          3186,
+          3270,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.12986.3186.3268.p0.t0.r0",
+        "spawn.scenery.12987.3186.3269.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.12986.3186.3268.p0.t0.r0",
+        "transform.scenery.12987.3186.3269.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.12986.3188.3279.p0.t0.r1",
+      "counter": "counter.door.scenery.12986.3188.3279.p0.t0.r1",
+      "coverage": [
+        [
+          3187,
+          3279,
+          0
+        ],
+        [
+          3188,
+          3279,
+          0
+        ],
+        [
+          3188,
+          3280,
+          0
+        ],
+        [
+          3189,
+          3279,
+          0
+        ],
+        [
+          3189,
+          3280,
+          0
+        ],
+        [
+          3190,
+          3279,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.12986.3188.3279.p0.t0.r1",
+        "spawn.scenery.12987.3189.3279.p0.t0.r1"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.12986.3188.3279.p0.t0.r1",
+        "transform.scenery.12987.3189.3279.p0.t0.r1"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.12986.3213.3261.p0.t0.r0",
+      "counter": "counter.door.scenery.12986.3213.3261.p0.t0.r0",
+      "coverage": [
+        [
+          3212,
+          3261,
+          0
+        ],
+        [
+          3212,
+          3262,
+          0
+        ],
+        [
+          3213,
+          3260,
+          0
+        ],
+        [
+          3213,
+          3261,
+          0
+        ],
+        [
+          3213,
+          3262,
+          0
+        ],
+        [
+          3213,
+          3263,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.12986.3213.3261.p0.t0.r0",
+        "spawn.scenery.12987.3213.3262.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.12986.3213.3261.p0.t0.r0",
+        "transform.scenery.12987.3213.3262.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.13001.3188.3272.p0.t0.r0",
+      "counter": "counter.door.scenery.13001.3188.3272.p0.t0.r0",
+      "coverage": [
+        [
+          3187,
+          3272,
+          0
+        ],
+        [
+          3188,
+          3272,
+          0
+        ],
+        [
+          3188,
+          3273,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.13001.3188.3272.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.13001.3188.3272.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.13001.3189.3275.p0.t0.r1",
+      "counter": "counter.door.scenery.13001.3189.3275.p0.t0.r1",
+      "coverage": [
+        [
+          3189,
+          3275,
+          0
+        ],
+        [
+          3189,
+          3276,
+          0
+        ],
+        [
+          3190,
+          3275,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.13001.3189.3275.p0.t0.r1"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.13001.3189.3275.p0.t0.r1"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.15056.3147.3172.p0.t0.r1",
+      "counter": "counter.door.scenery.15056.3147.3172.p0.t0.r1",
+      "coverage": [
+        [
+          3147,
+          3172,
+          0
+        ],
+        [
+          3147,
+          3173,
+          0
+        ],
+        [
+          3148,
+          3172,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.15056.3147.3172.p0.t0.r1"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.15056.3147.3172.p0.t0.r1"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1521.3166.3302.p0.t0.r1",
+      "counter": "counter.door.scenery.1521.3166.3302.p0.t0.r1",
+      "coverage": [
+        [
+          3165,
+          3302,
+          0
+        ],
+        [
+          3166,
+          3302,
+          0
+        ],
+        [
+          3166,
+          3303,
+          0
+        ],
+        [
+          3167,
+          3302,
+          0
+        ],
+        [
+          3167,
+          3303,
+          0
+        ],
+        [
+          3168,
+          3302,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1521.3166.3302.p0.t0.r1",
+        "spawn.scenery.1524.3167.3302.p0.t0.r1"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1521.3166.3302.p0.t0.r1",
+        "transform.scenery.1524.3167.3302.p0.t0.r1"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1521.3244.3216.p0.t0.r3",
+      "counter": "counter.door.scenery.1521.3244.3216.p0.t0.r3",
+      "coverage": [
+        [
+          3242,
+          3216,
+          0
+        ],
+        [
+          3243,
+          3215,
+          0
+        ],
+        [
+          3243,
+          3216,
+          0
+        ],
+        [
+          3244,
+          3215,
+          0
+        ],
+        [
+          3244,
+          3216,
+          0
+        ],
+        [
+          3245,
+          3216,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1521.3244.3216.p0.t0.r3",
+        "spawn.scenery.1524.3243.3216.p0.t0.r3"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1521.3244.3216.p0.t0.r3",
+        "transform.scenery.1524.3243.3216.p0.t0.r3"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3118.3124.p0.t0.r0",
+      "counter": "counter.door.scenery.1535.3118.3124.p0.t0.r0",
+      "coverage": [
+        [
+          3117,
+          3124,
+          0
+        ],
+        [
+          3118,
+          3124,
+          0
+        ],
+        [
+          3118,
+          3125,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3118.3124.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3118.3124.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3124.3126.p0.t0.r3",
+      "counter": "counter.door.scenery.1535.3124.3126.p0.t0.r3",
+      "coverage": [
+        [
+          3123,
+          3126,
+          0
+        ],
+        [
+          3124,
+          3125,
+          0
+        ],
+        [
+          3124,
+          3126,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3124.3126.p0.t0.r3"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3124.3126.p0.t0.r3"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3139.3081.p0.t0.r1",
+      "counter": "counter.door.scenery.1535.3139.3081.p0.t0.r1",
+      "coverage": [
+        [
+          3139,
+          3081,
+          0
+        ],
+        [
+          3139,
+          3082,
+          0
+        ],
+        [
+          3140,
+          3081,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3139.3081.p0.t0.r1"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3139.3081.p0.t0.r1"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3207.3210.p1.t0.r2",
+      "counter": "counter.door.scenery.1535.3207.3210.p1.t0.r2",
+      "coverage": [
+        [
+          3207,
+          3209,
+          1
+        ],
+        [
+          3207,
+          3210,
+          1
+        ],
+        [
+          3208,
+          3210,
+          1
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3207.3210.p1.t0.r2"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3207.3210.p1.t0.r2"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3207.3227.p1.t0.r2",
+      "counter": "counter.door.scenery.1535.3207.3227.p1.t0.r2",
+      "coverage": [
+        [
+          3207,
+          3226,
+          1
+        ],
+        [
+          3207,
+          3227,
+          1
+        ],
+        [
+          3208,
+          3227,
+          1
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3207.3227.p1.t0.r2"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3207.3227.p1.t0.r2"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3225.3240.p0.t0.r2",
+      "counter": "counter.door.scenery.1535.3225.3240.p0.t0.r2",
+      "coverage": [
+        [
+          3225,
+          3239,
+          0
+        ],
+        [
+          3225,
+          3240,
+          0
+        ],
+        [
+          3226,
+          3240,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3225.3240.p0.t0.r2"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3225.3240.p0.t0.r2"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3225.3293.p0.t0.r0",
+      "counter": "counter.door.scenery.1535.3225.3293.p0.t0.r0",
+      "coverage": [
+        [
+          3224,
+          3293,
+          0
+        ],
+        [
+          3225,
+          3293,
+          0
+        ],
+        [
+          3225,
+          3294,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3225.3293.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3225.3293.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3226.3214.p0.t0.r2",
+      "counter": "counter.door.scenery.1535.3226.3214.p0.t0.r2",
+      "coverage": [
+        [
+          3226,
+          3213,
+          0
+        ],
+        [
+          3226,
+          3214,
+          0
+        ],
+        [
+          3227,
+          3214,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3226.3214.p0.t0.r2"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3226.3214.p0.t0.r2"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3226.3223.p0.t0.r2",
+      "counter": "counter.door.scenery.1535.3226.3223.p0.t0.r2",
+      "coverage": [
+        [
+          3226,
+          3222,
+          0
+        ],
+        [
+          3226,
+          3223,
+          0
+        ],
+        [
+          3227,
+          3223,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3226.3223.p0.t0.r2"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3226.3223.p0.t0.r2"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3230.3291.p0.t0.r2",
+      "counter": "counter.door.scenery.1535.3230.3291.p0.t0.r2",
+      "coverage": [
+        [
+          3230,
+          3290,
+          0
+        ],
+        [
+          3230,
+          3291,
+          0
+        ],
+        [
+          3231,
+          3291,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3230.3291.p0.t0.r2"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3230.3291.p0.t0.r2"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3234.3207.p0.t0.r0",
+      "counter": "counter.door.scenery.1535.3234.3207.p0.t0.r0",
+      "coverage": [
+        [
+          3233,
+          3207,
+          0
+        ],
+        [
+          3234,
+          3207,
+          0
+        ],
+        [
+          3234,
+          3208,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3234.3207.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3234.3207.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3235.3198.p0.t0.r1",
+      "counter": "counter.door.scenery.1535.3235.3198.p0.t0.r1",
+      "coverage": [
+        [
+          3235,
+          3198,
+          0
+        ],
+        [
+          3235,
+          3199,
+          0
+        ],
+        [
+          3236,
+          3198,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3235.3198.p0.t0.r1"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3235.3198.p0.t0.r1"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3246.3244.p0.t0.r3",
+      "counter": "counter.door.scenery.1535.3246.3244.p0.t0.r3",
+      "coverage": [
+        [
+          3245,
+          3244,
+          0
+        ],
+        [
+          3246,
+          3243,
+          0
+        ],
+        [
+          3246,
+          3244,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3246.3244.p0.t0.r3"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3246.3244.p0.t0.r3"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1535.3247.3193.p0.t0.r0",
+      "counter": "counter.door.scenery.1535.3247.3193.p0.t0.r0",
+      "coverage": [
+        [
+          3246,
+          3193,
+          0
+        ],
+        [
+          3247,
+          3193,
+          0
+        ],
+        [
+          3247,
+          3194,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1535.3247.3193.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1535.3247.3193.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1540.3238.3210.p0.t0.r0",
+      "counter": "counter.door.scenery.1540.3238.3210.p0.t0.r0",
+      "coverage": [
+        [
+          3237,
+          3210,
+          0
+        ],
+        [
+          3238,
+          3210,
+          0
+        ],
+        [
+          3238,
+          3211,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1540.3238.3210.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1540.3238.3210.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1543.3207.3214.p1.t0.r2",
+      "counter": "counter.door.scenery.1543.3207.3214.p1.t0.r2",
+      "coverage": [
+        [
+          3207,
+          3213,
+          1
+        ],
+        [
+          3207,
+          3214,
+          1
+        ],
+        [
+          3208,
+          3214,
+          1
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1543.3207.3214.p1.t0.r2"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1543.3207.3214.p1.t0.r2"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1543.3207.3222.p1.t0.r2",
+      "counter": "counter.door.scenery.1543.3207.3222.p1.t0.r2",
+      "coverage": [
+        [
+          3207,
+          3221,
+          1
+        ],
+        [
+          3207,
+          3222,
+          1
+        ],
+        [
+          3208,
+          3222,
+          1
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1543.3207.3222.p1.t0.r2"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1543.3207.3222.p1.t0.r2"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1558.3145.3291.p0.t0.r1",
+      "counter": "counter.door.scenery.1558.3145.3291.p0.t0.r1",
+      "coverage": [
+        [
+          3144,
+          3291,
+          0
+        ],
+        [
+          3145,
+          3291,
+          0
+        ],
+        [
+          3145,
+          3292,
+          0
+        ],
+        [
+          3146,
+          3291,
+          0
+        ],
+        [
+          3146,
+          3292,
+          0
+        ],
+        [
+          3147,
+          3291,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1558.3145.3291.p0.t0.r1",
+        "spawn.scenery.1560.3146.3291.p0.t0.r1"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1558.3145.3291.p0.t0.r1",
+        "transform.scenery.1560.3146.3291.p0.t0.r1"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1558.3163.3290.p0.t0.r3",
+      "counter": "counter.door.scenery.1558.3163.3290.p0.t0.r3",
+      "coverage": [
+        [
+          3161,
+          3290,
+          0
+        ],
+        [
+          3162,
+          3289,
+          0
+        ],
+        [
+          3162,
+          3290,
+          0
+        ],
+        [
+          3163,
+          3289,
+          0
+        ],
+        [
+          3163,
+          3290,
+          0
+        ],
+        [
+          3164,
+          3290,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1558.3163.3290.p0.t0.r3",
+        "spawn.scenery.1560.3162.3290.p0.t0.r3"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1558.3163.3290.p0.t0.r3",
+        "transform.scenery.1560.3162.3290.p0.t0.r3"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1558.3181.3289.p0.t0.r3",
+      "counter": "counter.door.scenery.1558.3181.3289.p0.t0.r3",
+      "coverage": [
+        [
+          3179,
+          3289,
+          0
+        ],
+        [
+          3180,
+          3288,
+          0
+        ],
+        [
+          3180,
+          3289,
+          0
+        ],
+        [
+          3181,
+          3288,
+          0
+        ],
+        [
+          3181,
+          3289,
+          0
+        ],
+        [
+          3182,
+          3289,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1558.3181.3289.p0.t0.r3",
+        "spawn.scenery.1560.3180.3289.p0.t0.r3"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1558.3181.3289.p0.t0.r3",
+        "transform.scenery.1560.3180.3289.p0.t0.r3"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1558.3198.3282.p0.t0.r3",
+      "counter": "counter.door.scenery.1558.3198.3282.p0.t0.r3",
+      "coverage": [
+        [
+          3196,
+          3282,
+          0
+        ],
+        [
+          3197,
+          3281,
+          0
+        ],
+        [
+          3197,
+          3282,
+          0
+        ],
+        [
+          3198,
+          3281,
+          0
+        ],
+        [
+          3198,
+          3282,
+          0
+        ],
+        [
+          3199,
+          3282,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1558.3198.3282.p0.t0.r3",
+        "spawn.scenery.1560.3197.3282.p0.t0.r3"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1558.3198.3282.p0.t0.r3",
+        "transform.scenery.1560.3197.3282.p0.t0.r3"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1558.3236.3285.p0.t0.r2",
+      "counter": "counter.door.scenery.1558.3236.3285.p0.t0.r2",
+      "coverage": [
+        [
+          3236,
+          3283,
+          0
+        ],
+        [
+          3236,
+          3284,
+          0
+        ],
+        [
+          3236,
+          3285,
+          0
+        ],
+        [
+          3236,
+          3286,
+          0
+        ],
+        [
+          3237,
+          3284,
+          0
+        ],
+        [
+          3237,
+          3285,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1558.3236.3285.p0.t0.r2",
+        "spawn.scenery.1560.3236.3284.p0.t0.r2"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1558.3236.3285.p0.t0.r2",
+        "transform.scenery.1560.3236.3284.p0.t0.r2"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1558.3236.3296.p0.t0.r2",
+      "counter": "counter.door.scenery.1558.3236.3296.p0.t0.r2",
+      "coverage": [
+        [
+          3236,
+          3294,
+          0
+        ],
+        [
+          3236,
+          3295,
+          0
+        ],
+        [
+          3236,
+          3296,
+          0
+        ],
+        [
+          3236,
+          3297,
+          0
+        ],
+        [
+          3237,
+          3295,
+          0
+        ],
+        [
+          3237,
+          3296,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1558.3236.3296.p0.t0.r2",
+        "spawn.scenery.1560.3236.3295.p0.t0.r2"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1558.3236.3296.p0.t0.r2",
+        "transform.scenery.1560.3236.3295.p0.t0.r2"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1558.3241.3301.p0.t0.r0",
+      "counter": "counter.door.scenery.1558.3241.3301.p0.t0.r0",
+      "coverage": [
+        [
+          3240,
+          3301,
+          0
+        ],
+        [
+          3240,
+          3302,
+          0
+        ],
+        [
+          3241,
+          3300,
+          0
+        ],
+        [
+          3241,
+          3301,
+          0
+        ],
+        [
+          3241,
+          3302,
+          0
+        ],
+        [
+          3241,
+          3303,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1558.3241.3301.p0.t0.r0",
+        "spawn.scenery.1560.3241.3302.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1558.3241.3301.p0.t0.r0",
+        "transform.scenery.1560.3241.3302.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1558.3253.3266.p0.t0.r0",
+      "counter": "counter.door.scenery.1558.3253.3266.p0.t0.r0",
+      "coverage": [
+        [
+          3252,
+          3266,
+          0
+        ],
+        [
+          3252,
+          3267,
+          0
+        ],
+        [
+          3253,
+          3265,
+          0
+        ],
+        [
+          3253,
+          3266,
+          0
+        ],
+        [
+          3253,
+          3267,
+          0
+        ],
+        [
+          3253,
+          3268,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1558.3253.3266.p0.t0.r0",
+        "spawn.scenery.1560.3253.3267.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1558.3253.3266.p0.t0.r0",
+        "transform.scenery.1560.3253.3267.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.1558.3261.3321.p0.t0.r1",
+      "counter": "counter.door.scenery.1558.3261.3321.p0.t0.r1",
+      "coverage": [
+        [
+          3260,
+          3321,
+          0
+        ],
+        [
+          3261,
+          3321,
+          0
+        ],
+        [
+          3261,
+          3322,
+          0
+        ],
+        [
+          3262,
+          3321,
+          0
+        ],
+        [
+          3262,
+          3322,
+          0
+        ],
+        [
+          3263,
+          3321,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.1558.3261.3321.p0.t0.r1",
+        "spawn.scenery.1560.3262.3321.p0.t0.r1"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.1558.3261.3321.p0.t0.r1",
+        "transform.scenery.1560.3262.3321.p0.t0.r1"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.23917.3177.3315.p0.t0.r1",
+      "counter": "counter.door.scenery.23917.3177.3315.p0.t0.r1",
+      "coverage": [
+        [
+          3175,
+          3315,
+          0
+        ],
+        [
+          3176,
+          3315,
+          0
+        ],
+        [
+          3176,
+          3316,
+          0
+        ],
+        [
+          3177,
+          3315,
+          0
+        ],
+        [
+          3177,
+          3316,
+          0
+        ],
+        [
+          3178,
+          3315,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.23917.3177.3315.p0.t0.r1",
+        "spawn.scenery.883.3176.3315.p0.t0.r1"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.23917.3177.3315.p0.t0.r1",
+        "transform.scenery.883.3176.3315.p0.t0.r1"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.2406.3202.3169.p0.t0.r0",
+      "counter": "counter.door.scenery.2406.3202.3169.p0.t0.r0",
+      "coverage": [
+        [
+          3201,
+          3169,
+          0
+        ],
+        [
+          3202,
+          3169,
+          0
+        ],
+        [
+          3202,
+          3170,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.2406.3202.3169.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.2406.3202.3169.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.scenery.56376.3230.3235.p0.t0.r1",
+      "counter": "counter.door.scenery.56376.3230.3235.p0.t0.r1",
+      "coverage": [
+        [
+          3230,
+          3235,
+          0
+        ],
+        [
+          3230,
+          3236,
+          0
+        ],
+        [
+          3231,
+          3235,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.scenery.56376.3230.3235.p0.t0.r1"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.scenery.56376.3230.3235.p0.t0.r1"
+      ]
+    },
+    {
+      "collision_group": "collision_group.tutorial.account_entry.3125.3124.p0.t0.r0",
+      "counter": "counter.door.tutorial.account_entry.3125.3124.p0.t0.r0",
+      "coverage": [
+        [
+          3124,
+          3124,
+          0
+        ],
+        [
+          3125,
+          3124,
+          0
+        ],
+        [
+          3125,
+          3125,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.tutorial.account_entry.3125.3124.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.tutorial.account_entry.3125.3124.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.tutorial.account_exit.3130.3124.p0.t0.r0",
+      "counter": "counter.door.tutorial.account_exit.3130.3124.p0.t0.r0",
+      "coverage": [
+        [
+          3129,
+          3124,
+          0
+        ],
+        [
+          3130,
+          3124,
+          0
+        ],
+        [
+          3130,
+          3125,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.tutorial.account_exit.3130.3124.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.tutorial.account_exit.3130.3124.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.tutorial.chapel_exit.3122.3102.p0.t0.r1",
+      "counter": "counter.door.tutorial.chapel_exit.3122.3102.p0.t0.r1",
+      "coverage": [
+        [
+          3122,
+          3102,
+          0
+        ],
+        [
+          3122,
+          3103,
+          0
+        ],
+        [
+          3123,
+          3102,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.tutorial.chapel_exit.3122.3102.p0.t0.r1"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.tutorial.chapel_exit.3122.3102.p0.t0.r1"
+      ]
+    },
+    {
+      "collision_group": "collision_group.tutorial.chef_entry.3079.3084.p0.t0.r0",
+      "counter": "counter.door.tutorial.chef_entry.3079.3084.p0.t0.r0",
+      "coverage": [
+        [
+          3078,
+          3084,
+          0
+        ],
+        [
+          3079,
+          3084,
+          0
+        ],
+        [
+          3079,
+          3085,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.tutorial.chef_entry.3079.3084.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.tutorial.chef_entry.3079.3084.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.tutorial.chef_exit.3072.3090.p0.t0.r2",
+      "counter": "counter.door.tutorial.chef_exit.3072.3090.p0.t0.r2",
+      "coverage": [
+        [
+          3072,
+          3089,
+          0
+        ],
+        [
+          3072,
+          3090,
+          0
+        ],
+        [
+          3073,
+          3090,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.tutorial.chef_exit.3072.3090.p0.t0.r2"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.tutorial.chef_exit.3072.3090.p0.t0.r2"
+      ]
+    },
+    {
+      "collision_group": "collision_group.tutorial.mine_gate.3094.9502.p0.t0.r2",
+      "counter": "counter.door.tutorial.mine_gate.3094.9502.p0.t0.r2",
+      "coverage": [
+        [
+          3094,
+          9501,
+          0
+        ],
+        [
+          3094,
+          9502,
+          0
+        ],
+        [
+          3094,
+          9503,
+          0
+        ],
+        [
+          3094,
+          9504,
+          0
+        ],
+        [
+          3095,
+          9502,
+          0
+        ],
+        [
+          3095,
+          9503,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.tutorial.mine_gate.3094.9502.p0.t0.r2",
+        "spawn.tutorial.mine_gate.second.3094.9503.p0.t0.r2"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.tutorial.mine_gate.3094.9502.p0.t0.r2",
+        "transform.tutorial.mine_gate.second.3094.9503.p0.t0.r2"
+      ]
+    },
+    {
+      "collision_group": "collision_group.tutorial.quest_entry.3086.3126.p0.t0.r3",
+      "counter": "counter.door.tutorial.quest_entry.3086.3126.p0.t0.r3",
+      "coverage": [
+        [
+          3085,
+          3126,
+          0
+        ],
+        [
+          3086,
+          3125,
+          0
+        ],
+        [
+          3086,
+          3126,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.tutorial.quest_entry.3086.3126.p0.t0.r3"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.tutorial.quest_entry.3086.3126.p0.t0.r3"
+      ]
+    },
+    {
+      "collision_group": "collision_group.tutorial.rat_gate.3111.9518.p0.t0.r0",
+      "counter": "counter.door.tutorial.rat_gate.3111.9518.p0.t0.r0",
+      "coverage": [
+        [
+          3110,
+          9518,
+          0
+        ],
+        [
+          3110,
+          9519,
+          0
+        ],
+        [
+          3111,
+          9517,
+          0
+        ],
+        [
+          3111,
+          9518,
+          0
+        ],
+        [
+          3111,
+          9519,
+          0
+        ],
+        [
+          3111,
+          9520,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.tutorial.rat_gate.3111.9518.p0.t0.r0",
+        "spawn.tutorial.rat_gate.second.3111.9519.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.tutorial.rat_gate.3111.9518.p0.t0.r0",
+        "transform.tutorial.rat_gate.second.3111.9519.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.tutorial.start_door.3098.3107.p0.t0.r0",
+      "counter": "counter.door.tutorial.start_door.3098.3107.p0.t0.r0",
+      "coverage": [
+        [
+          3097,
+          3107,
+          0
+        ],
+        [
+          3098,
+          3107,
+          0
+        ],
+        [
+          3098,
+          3108,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.tutorial.start_door.3098.3107.p0.t0.r0"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.tutorial.start_door.3098.3107.p0.t0.r0"
+      ]
+    },
+    {
+      "collision_group": "collision_group.tutorial.survival_gate.3089.3091.p0.t0.r2",
+      "counter": "counter.door.tutorial.survival_gate.3089.3091.p0.t0.r2",
+      "coverage": [
+        [
+          3089,
+          3090,
+          0
+        ],
+        [
+          3089,
+          3091,
+          0
+        ],
+        [
+          3089,
+          3092,
+          0
+        ],
+        [
+          3089,
+          3093,
+          0
+        ],
+        [
+          3090,
+          3091,
+          0
+        ],
+        [
+          3090,
+          3092,
+          0
+        ]
+      ],
+      "source": [
+        {
+          "notes": "Initial door origin, model, shape and orientation are original cache data. Open hinges retain the same source leaf/model and rotate to the adjoining wall edge; double leaves open toward opposite outer edges. Opening direction is an explicit source-geometry inference pending live state capture, not approved rendering.",
+          "reference": "research/m1-bindings/world-bindings.json.gz#placements",
+          "revision": "240/cache2695",
+          "status": "inference"
+        }
+      ],
+      "spawns": [
+        "spawn.tutorial.survival_gate.3089.3091.p0.t0.r2",
+        "spawn.tutorial.survival_gate.second.3089.3092.p0.t0.r2"
+      ],
+      "status": "bound_inference",
+      "transforms": [
+        "transform.tutorial.survival_gate.3089.3091.p0.t0.r2",
+        "transform.tutorial.survival_gate.second.3089.3092.p0.t0.r2"
+      ]
+    }
+  ],
+  "rat_pen_cells": [
+    [
+      3097,
+      9517,
+      0
+    ],
+    [
+      3098,
+      9515,
+      0
+    ],
+    [
+      3098,
+      9516,
+      0
+    ],
+    [
+      3098,
+      9517,
+      0
+    ],
+    [
+      3098,
+      9519,
+      0
+    ],
+    [
+      3098,
+      9520,
+      0
+    ],
+    [
+      3099,
+      9513,
+      0
+    ],
+    [
+      3099,
+      9514,
+      0
+    ],
+    [
+      3099,
+      9515,
+      0
+    ],
+    [
+      3099,
+      9516,
+      0
+    ],
+    [
+      3099,
+      9517,
+      0
+    ],
+    [
+      3099,
+      9518,
+      0
+    ],
+    [
+      3099,
+      9519,
+      0
+    ],
+    [
+      3099,
+      9520,
+      0
+    ],
+    [
+      3099,
+      9521,
+      0
+    ],
+    [
+      3100,
+      9512,
+      0
+    ],
+    [
+      3100,
+      9513,
+      0
+    ],
+    [
+      3100,
+      9514,
+      0
+    ],
+    [
+      3100,
+      9515,
+      0
+    ],
+    [
+      3100,
+      9516,
+      0
+    ],
+    [
+      3100,
+      9517,
+      0
+    ],
+    [
+      3100,
+      9518,
+      0
+    ],
+    [
+      3100,
+      9519,
+      0
+    ],
+    [
+      3100,
+      9520,
+      0
+    ],
+    [
+      3100,
+      9521,
+      0
+    ],
+    [
+      3100,
+      9522,
+      0
+    ],
+    [
+      3101,
+      9512,
+      0
+    ],
+    [
+      3101,
+      9513,
+      0
+    ],
+    [
+      3101,
+      9514,
+      0
+    ],
+    [
+      3101,
+      9515,
+      0
+    ],
+    [
+      3101,
+      9516,
+      0
+    ],
+    [
+      3101,
+      9517,
+      0
+    ],
+    [
+      3101,
+      9518,
+      0
+    ],
+    [
+      3101,
+      9519,
+      0
+    ],
+    [
+      3101,
+      9520,
+      0
+    ],
+    [
+      3101,
+      9521,
+      0
+    ],
+    [
+      3101,
+      9522,
+      0
+    ],
+    [
+      3102,
+      9512,
+      0
+    ],
+    [
+      3102,
+      9513,
+      0
+    ],
+    [
+      3102,
+      9514,
+      0
+    ],
+    [
+      3102,
+      9515,
+      0
+    ],
+    [
+      3102,
+      9516,
+      0
+    ],
+    [
+      3102,
+      9517,
+      0
+    ],
+    [
+      3102,
+      9518,
+      0
+    ],
+    [
+      3102,
+      9520,
+      0
+    ],
+    [
+      3102,
+      9521,
+      0
+    ],
+    [
+      3102,
+      9522,
+      0
+    ],
+    [
+      3102,
+      9523,
+      0
+    ],
+    [
+      3102,
+      9524,
+      0
+    ],
+    [
+      3102,
+      9525,
+      0
+    ],
+    [
+      3103,
+      9512,
+      0
+    ],
+    [
+      3103,
+      9513,
+      0
+    ],
+    [
+      3103,
+      9514,
+      0
+    ],
+    [
+      3103,
+      9515,
+      0
+    ],
+    [
+      3103,
+      9516,
+      0
+    ],
+    [
+      3103,
+      9517,
+      0
+    ],
+    [
+      3103,
+      9518,
+      0
+    ],
+    [
+      3103,
+      9519,
+      0
+    ],
+    [
+      3103,
+      9520,
+      0
+    ],
+    [
+      3103,
+      9521,
+      0
+    ],
+    [
+      3103,
+      9522,
+      0
+    ],
+    [
+      3103,
+      9523,
+      0
+    ],
+    [
+      3103,
+      9524,
+      0
+    ],
+    [
+      3104,
+      9512,
+      0
+    ],
+    [
+      3104,
+      9513,
+      0
+    ],
+    [
+      3104,
+      9514,
+      0
+    ],
+    [
+      3104,
+      9515,
+      0
+    ],
+    [
+      3104,
+      9516,
+      0
+    ],
+    [
+      3104,
+      9517,
+      0
+    ],
+    [
+      3104,
+      9518,
+      0
+    ],
+    [
+      3104,
+      9519,
+      0
+    ],
+    [
+      3104,
+      9520,
+      0
+    ],
+    [
+      3104,
+      9521,
+      0
+    ],
+    [
+      3104,
+      9522,
+      0
+    ],
+    [
+      3104,
+      9523,
+      0
+    ],
+    [
+      3104,
+      9524,
+      0
+    ],
+    [
+      3105,
+      9511,
+      0
+    ],
+    [
+      3105,
+      9512,
+      0
+    ],
+    [
+      3105,
+      9513,
+      0
+    ],
+    [
+      3105,
+      9514,
+      0
+    ],
+    [
+      3105,
+      9515,
+      0
+    ],
+    [
+      3105,
+      9516,
+      0
+    ],
+    [
+      3105,
+      9517,
+      0
+    ],
+    [
+      3105,
+      9518,
+      0
+    ],
+    [
+      3105,
+      9519,
+      0
+    ],
+    [
+      3105,
+      9520,
+      0
+    ],
+    [
+      3105,
+      9521,
+      0
+    ],
+    [
+      3105,
+      9522,
+      0
+    ],
+    [
+      3106,
+      9512,
+      0
+    ],
+    [
+      3106,
+      9513,
+      0
+    ],
+    [
+      3106,
+      9514,
+      0
+    ],
+    [
+      3106,
+      9515,
+      0
+    ],
+    [
+      3106,
+      9516,
+      0
+    ],
+    [
+      3106,
+      9517,
+      0
+    ],
+    [
+      3106,
+      9518,
+      0
+    ],
+    [
+      3106,
+      9519,
+      0
+    ],
+    [
+      3106,
+      9520,
+      0
+    ],
+    [
+      3106,
+      9521,
+      0
+    ],
+    [
+      3106,
+      9522,
+      0
+    ],
+    [
+      3107,
+      9514,
+      0
+    ],
+    [
+      3107,
+      9515,
+      0
+    ],
+    [
+      3107,
+      9516,
+      0
+    ],
+    [
+      3107,
+      9517,
+      0
+    ],
+    [
+      3107,
+      9518,
+      0
+    ],
+    [
+      3107,
+      9519,
+      0
+    ],
+    [
+      3107,
+      9520,
+      0
+    ],
+    [
+      3107,
+      9521,
+      0
+    ],
+    [
+      3107,
+      9522,
+      0
+    ],
+    [
+      3108,
+      9514,
+      0
+    ],
+    [
+      3108,
+      9515,
+      0
+    ],
+    [
+      3108,
+      9516,
+      0
+    ],
+    [
+      3108,
+      9517,
+      0
+    ],
+    [
+      3108,
+      9518,
+      0
+    ],
+    [
+      3108,
+      9519,
+      0
+    ],
+    [
+      3108,
+      9520,
+      0
+    ],
+    [
+      3108,
+      9521,
+      0
+    ],
+    [
+      3108,
+      9522,
+      0
+    ],
+    [
+      3109,
+      9515,
+      0
+    ],
+    [
+      3109,
+      9516,
+      0
+    ],
+    [
+      3109,
+      9517,
+      0
+    ],
+    [
+      3109,
+      9518,
+      0
+    ],
+    [
+      3109,
+      9519,
+      0
+    ],
+    [
+      3109,
+      9520,
+      0
+    ],
+    [
+      3109,
+      9521,
+      0
+    ],
+    [
+      3110,
+      9518,
+      0
+    ],
+    [
+      3110,
+      9519,
+      0
+    ]
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "status": "passed_allowance_consumed",
+  "admission_sha256": "2ca9c79a9bb7d92d3e94e035fceb90637ee90ec79360b4e77dbb83dc3cd64c88",
+  "quiet_confirmation_sha256": "5f0bf3c2aba96641f857350a04ae0409454d986fd2c7b35eec55dc03f29cf1c7",
+  "code_revision": "b4f63046a75f90978afb432441316c70cf96f73b",
+  "invocation_allowance": 1,
+  "invocations_consumed": 1,
+  "invocations_remaining": 0,
+  "started_at": "2026-09-17T00:56:37.733685+00:00",
+  "command": [
+    "pnpm",
+    "--dir",
+    "web",
+    "test:isolated",
+    "--game-root",
+    ".local/metadata-source-bundle"
+  ],
+  "pins_before": {
+    "source_run_pin": {
+      "schemaVersion": 1,
+      "worldId": "ffd86a81-8dd1-4a19-bc2a-442e91025559",
+      "artifactSha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+      "contentRevision": "m1.source-backed.v4.bdbf8a3788b842be",
+      "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+      "descriptorSha256": "465fbd00d6881ca96eb724ee77d2bd1c05de1808f23e42212f21cd908b08d9b8",
+      "gameAssetsManifestSha256": "adf8e97b7bf3839d0cd162113931532029f531ed5739c33651ec07a3f0c7db20",
+      "contentManifestSha256": "996434524e3b711b70590cbef04f4670f23d5d20f32dd9a98a42d11622ff252a"
+    },
+    "build_artifact_sha256": "5ea9e28efac39ebcf3237a9cf2d11ea1c2e7c778572bc3a1a4396fe4f4bfab1d",
+    "web_delivery": {
+      "routes": 11,
+      "bytes": 7628004,
+      "all_hashes_match": true
+    },
+    "game_delivery": {
+      "routes": 7895,
+      "bytes": 216569244,
+      "all_hashes_match": true
+    },
+    "runner_sha256": "516cee8d9a0b2b14b5157e76d07ffdaae37b7e20adbfc3a8a8eb441d58cbdce3",
+    "browser_test_sha256": "8a74f4a00cdfa307970d27c41ff9a54c7cec3e88d5746516bf705c4acfdaf78a",
+    "audio_test_sha256": "2298191d2a22d14cf9fb46d4b6c3165801099367f81253e1c5196773577780c7"
+  },
+  "pins_unchanged": true,
+  "cleanup_verified": true,
+  "protected_saved_account_accessed": false,
+  "source_operator_invocations": 0,
+  "full_journey_tested": false,
+  "milestone_accepted": false,
+  "exit_code": 0,
+  "log_sha256": "1265415112a6d31e1b4605e24cf1f24f64c84a298d724a3e7dcde8bef6265467",
+  "result_sha256": "c444d34a576c6c2457022166047145e00ef37122617dd1a1efa1ea656a9e28d5",
+  "browser_result": "passed",
+  "browser_checks": 21,
+  "elapsed_seconds": 101.139,
+  "completed_at": "2026-09-17T00:58:18.885445+00:00"
+}

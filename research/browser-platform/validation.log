@@ -1,0 +1,94 @@
+$ tsc --noEmit
+$ node --test --test-reporter=spec tests/unit.test.ts
+✔ valid pinned fixture config and monotonic submitted-frame sample (2.374171ms)
+✔ reject nonallowlisted target https://example.com/ (0.396706ms)
+✔ reject nonallowlisted target http://example.com/ (0.190817ms)
+✔ reject nonallowlisted target http://localhost:4173/ (0.154129ms)
+✔ reject nonallowlisted target http://127.0.0.1:4174/ (0.140064ms)
+✔ reject nonallowlisted target http://127.0.0.1:4173.evil.test/ (0.150065ms)
+✔ reject nonallowlisted target file:///etc/passwd (0.136593ms)
+✔ reject nonallowlisted target javascript:alert(1) (0.127425ms)
+✔ reject nonallowlisted target http://user:synthetic@127.0.0.1:4173/ (0.195873ms)
+✔ reject nonallowlisted target http://2130706433:4173/ (0.240849ms)
+✔ reject nonallowlisted target http://[::1]:4173/ (0.09496ms)
+✔ allow only explicit loopback HTTP/WebSocket origins (0.216114ms)
+✔ reject wrong configured viewport, scale, resize range and omitted endpoints (0.517506ms)
+✔ reject unknown browser switches and sandbox bypass options (0.135985ms)
+✔ a candidate needs an approved source pack and cannot use fixture identity (0.544226ms)
+✔ source observations cannot masquerade as benchmarks (0.10448ms)
+✔ fixture configuration cannot claim a source pack (0.089281ms)
+✔ source-pack bytes, not just an ID string, must match the pin (5.140392ms)
+✔ contract digest is stable by key ordering and changes with workload/budgets (0.549394ms)
+✔ 60 FPS cannot be configured down or supplied as a limiter-only metric (0.520658ms)
+✔ actual product and exact executable version are checked (0.225265ms)
+✔ namespace/seccomp diagnostics fail closed (0.318338ms)
+✔ reject missing metrics (0.164353ms)
+✔ reject NaN timestamps (0.245233ms)
+✔ reject infinite counter (0.171905ms)
+✔ reject fractional counter (0.177873ms)
+✔ reject zero rendered frames (0.187969ms)
+✔ reject unloaded scene (0.152497ms)
+✔ reject wrong backend (0.166192ms)
+✔ reject wrong workload (0.197089ms)
+✔ reject wrong source/contract pin (0.222769ms)
+✔ reject missing required assets (0.179536ms)
+✔ reject unloaded asset (0.183904ms)
+✔ reject wrong asset hash (0.174481ms)
+✔ reject missing real workload entities (0.170865ms)
+✔ reject wrong viewport (0.102993ms)
+✔ reject renderer wrong viewport (0.120928ms)
+✔ reject downscaled canvas (0.110001ms)
+✔ reject stale counter (0.419042ms)
+✔ reject future submitted timestamp (0.168001ms)
+✔ reject fake callback counter (0.166897ms)
+✔ reject submit-only counter before GPU completion (0.199009ms)
+✔ reject adapter-only with no configured canvas (0.115952ms)
+✔ reject software GPU (0.145904ms)
+✔ reject fallback GPU (0.111249ms)
+✔ reject unknown fallback qualification (0.111328ms)
+✔ reject device loss (0.125249ms)
+✔ reject uncaptured GPU error (0.108897ms)
+✔ reject nonmonotonic counts, missing frames, stale record clocks and device resets (1.310918ms)
+✔ GPU timestamps need enabled timestamp-query, not just adapter support (0.34517ms)
+✔ actual adapter identity and DPR must match pinned expectations (0.165425ms)
+✔ genuine 60 rendered FPS produces measured distributions, not a configured rate (3.467216ms)
+✔ 59 rendered FPS fails; blank/zero/short windows cannot be certified (2.840237ms)
+✔ final unrendered tail counts toward maximum gaps and stalls (2.404684ms)
+✔ fixture numbers never become a performance pass (2.04617ms)
+✔ reject black screenshot even if a frame counter was reported (5.632795ms)
+✔ reject white screenshot even if a frame counter was reported (1.47524ms)
+✔ reject transparent screenshot even if a frame counter was reported (1.239574ms)
+✔ reject tiny-mark screenshot even if a frame counter was reported (1.088165ms)
+✔ nonblank PNG detection is plumbing, not source fidelity (1.555192ms)
+ℹ tests 60
+ℹ suites 0
+ℹ pass 60
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 163.033461
+$ node src/desktop.ts --test --test-reporter=spec tests/browser.test.ts
+Retained TOOL FIXTURE ONLY artifacts: runs/test-requires-input-f605029c
+✔ Chrome namespace/seccomp + real WebGPU fixture + keyboard/mouse + nonblank primary/resize capture (5910.479024ms)
+✔ real browser rejects blank (1923.544347ms)
+✔ real browser rejects missing (2929.55038ms)
+✔ real browser rejects stale (2784.067397ms)
+✔ real browser rejects raf-only (1845.014333ms)
+✔ real browser rejects wrong-workload (1731.1377ms)
+✔ real browser rejects missing-assets (1788.059795ms)
+✔ real browser rejects wrong-backend (2085.459063ms)
+✔ real browser rejects bad-metric (2242.422837ms)
+✔ real browser rejects external-request (1842.756909ms)
+✔ real browser rejects console-error (1775.036627ms)
+✔ real browser rejects page-error (2036.465974ms)
+✔ real browser rejects http-error (2081.148153ms)
+✔ an actual tool fixture cannot be captured as a source reference (1814.093714ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 33093.712843

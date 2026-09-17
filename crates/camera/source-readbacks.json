@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "scope": "Supplemental source-bytecode interpretation for the normal-camera controller; no original trace or reference is replaced.",
+  "source_contract": {
+    "path": "research/camera-source/contract.json",
+    "sha256": "745dda42fcd53d3225b9f2714e2ebbad7dbf60a76c070da1438a7289e5e0a602"
+  },
+  "immutable_method_bundle": {
+    "path": "research/camera-source/native-methods.json.gz",
+    "sha256": "d94d1778f0fe4773c713daadf84156f1398010d6f4bf437be8831660bb60fb48"
+  },
+  "original_runtime": {
+    "name": "injected-client-1.12.38.jar",
+    "sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947",
+    "source_revision": 240,
+    "cache_id": 2695,
+    "new_download_or_runtime_modification": false
+  },
+  "additional_method_identities": [
+    {
+      "class": "kv",
+      "class_sha256": "3757a051d2dcbd53681a5861647fc7a30229d2c2a240385a6bbc748ca7341f5e",
+      "method": "static final int cj(dz, int, int, int, byte)",
+      "meaning": "Native integer world-height query entrypoint."
+    },
+    {
+      "class": "dz",
+      "class_sha256": "09cd4957195ed3d0f906346d24ffc6a62a3832a86f19c4e5c88b1baa88ec0e3c",
+      "method": "final int ad(int, int, int, byte)",
+      "meaning": "Queries original rendered tile geometry and subtracts the ground decoration raise; bilinear fallback applies only to a genuinely absent rendered surface."
+    },
+    {
+      "class": "vi",
+      "class_sha256": "8e9d06e263f09770920bfae5721cd8751739b682b25a3cfaeb688a2c63481ab0",
+      "method": "public static float aq(int, int, int, int, int, int, int, int, float, float, float, int)",
+      "meaning": "Original float barycentric height interpolation; dz.ad converts the returned float to an integer by truncation."
+    },
+    {
+      "class": "fc",
+      "class_sha256": "cf59c4ef67c5441ef426ead67267fd31e3975b998cde6862b862a7123aaa9072",
+      "method": "static int bf(int, bl, boolean, int)",
+      "meaning": "Opcode5530 clamps a negative follow-height argument to zero, then writes client.do with multiplier643105531. Native dispatch guard is -1165804573."
+    },
+    {
+      "class": "cz",
+      "class_sha256": "c9cc6d2aee73853a072294b06e34d72329c8a1118ed42a5396864e70a018b04a",
+      "method": "public void az(int, int, int, int, int)",
+      "meaning": "Native integer/table orbit uses imul and arithmetic ishr16, not widened products; large native distance scales retain original integer overflow."
+    },
+    {
+      "class": "up",
+      "class_sha256": "b8f8783716d694220dc065e38bc4d0c1c32074641e8616f9402d5205cc486022",
+      "method": "public void bc(int, int)",
+      "meaning": "Native yaw accumulation masks with the source angle mask, preserving wrap."
+    }
+  ],
+  "integer_surface_examples": [
+    {
+      "world_tile": [3215, 3218],
+      "sample_offset_source_units": [64, 64],
+      "plane": 0,
+      "object_id": 941,
+      "placement_type": 22,
+      "original_definition_raise": 7,
+      "surface_before_raise": -464,
+      "native_height": -471
+    },
+    {
+      "world_tile": [3223, 3218],
+      "sample_offset_source_units": [64, 64],
+      "plane": 0,
+      "native_triangle_height": -240,
+      "bilinear_height": -238
+    }
+  ],
+  "trace_adapter": {
+    "native_nr_raw_writer": 1533582705,
+    "historical_nr_diagnostic_decoder": 1423746095,
+    "qualification": "The original trace's nr.decoded diagnostic multiplier is not the semantic ground-height decoder. The conformance adapter reproduces that immutable diagnostic and the raw field; production State.logical_focus_ground retains the actual original surface height.",
+    "source_follow_height_raw_writer": 643105531,
+    "fixture_surface_scope": "Original scene-paint triangles in source order (NE,NW,SE), then (SW,SE,NW), plus original decoration raises. This fixture adapter is not a complete production overlay/model decoder.",
+    "region_probe_scope": "The original yk probe rebases actor/camera coordinates without replacing scene buffers or drawing a new frame. Its immediate ground query is -464 after the +8/+8 base shift and -240 after returning. The fixture adapter retains the original scene origin separately from the logical world base."
+  },
+  "additional_boundary_semantics": {
+    "qualification": "Derived from unchanged original bytecode, not newly observed source trace scenarios or account behavior.",
+    "logical_fov": "Script42 accepts ordered integer bounds. Preserve integer program arithmetic, pow-to-int-to-short conversion and the native nonpositive-short FOV gate; opcode5530 subsequently clamps negative follow height to zero.",
+    "distance_opcode": "lo.bv opcode6201 converts each input to a signed short; nonpositive fi/fb use the original256/320 gates. It does not change FOV or projection settings.",
+    "footprint_grid": "client.fa retains fractional (coordinate-half_footprint)/128 +1 grid offsets; do not ceil/floor them to integer vertices.",
+    "render_effects": {
+      "method": "client.tz() in the immutable method bundle",
+      "fields": {
+        "active_channels": "client.vk",
+        "random_radius": "client.pc",
+        "sine_amplitude": "client.ph",
+        "sine_frequency": "client.pf",
+        "phase": "client.po",
+        "suppress_jitter": "client.hg"
+      },
+      "axis_order": ["horizontal_x", "height", "horizontal_y", "yaw", "pitch"],
+      "pitch_floor": "An enabled pitch channel contributes1024+ph[4] before orbit, even when hg suppresses jitter.",
+      "jitter": "For each enabled unsuppressed channel, truncate(random*(2*pc+1)-pc+sin(po*(pf/100.0))*ph) once after the double calculation. Translation changes both native and float eye; yaw wraps and pitch clamps, then the corresponding float angle is rederived from the resulting native angle.",
+      "input_requirement": "Active effects require explicit phases and one source-compatible [0,1) random sample per active unsuppressed channel. No render-time-derived phase, random fallback, server packet or effect activation is invented.",
+      "active_effect_native_trace_scenarios": 0
+    }
+  },
+  "source_session_initialization_observed": false,
+  "original_artifacts_modified": false,
+  "browser_renderer_gameplay_or_presentation_acceptance": false
+}

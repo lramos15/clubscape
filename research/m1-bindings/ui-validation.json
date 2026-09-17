@@ -1,0 +1,73 @@
+{
+  "asset_publication_claimed": false,
+  "container_values": [
+    {
+      "canonical_item": "item.beer_glass",
+      "effective_death_value": 22,
+      "guide_price": 22,
+      "high_alchemy": 1,
+      "item": "item.beer_glass",
+      "method": "maximum_guide_and_high_alchemy",
+      "policy": "research/runtime-bindings/death-values.json",
+      "source_item_id": 1919
+    },
+    {
+      "canonical_item": "item.beer_glass",
+      "effective_death_value": 22,
+      "guide_price": 22,
+      "high_alchemy": 1,
+      "item": "item.beer_glass.noted",
+      "method": "maximum_guide_and_high_alchemy",
+      "policy": "research/runtime-bindings/death-values.json",
+      "source_item_id": 1919
+    },
+    {
+      "canonical_item": "item.vial",
+      "effective_death_value": 3,
+      "guide_price": 3,
+      "high_alchemy": 1,
+      "item": "item.vial",
+      "method": "maximum_guide_and_high_alchemy",
+      "policy": "research/runtime-bindings/death-values.json",
+      "source_item_id": 229
+    },
+    {
+      "canonical_item": "item.vial",
+      "effective_death_value": 3,
+      "guide_price": 3,
+      "high_alchemy": 1,
+      "item": "item.vial.noted",
+      "method": "maximum_guide_and_high_alchemy",
+      "policy": "research/runtime-bindings/death-values.json",
+      "source_item_id": 229
+    }
+  ],
+  "cooks_states": 10,
+  "gameplay_acceptance": false,
+  "native_level_associations": {
+    "interface.level_up": {
+      "body_widget": 15269890,
+      "continue_widget": 15269891,
+      "source_group": 233,
+      "style": "chatbox_level_up",
+      "title_widget": 15269889
+    },
+    "interface.level_up_notification": {
+      "body_widget": 43253768,
+      "source_group": 660,
+      "source_script": 3343,
+      "style": "notification_popup",
+      "title_widget": 43253764
+    }
+  },
+  "presentation_acceptance": false,
+  "remaining_source_permissions": [
+    "normal_grave_bank_all"
+  ],
+  "retained_v3_behavior_sha256": "0cdf08e3541091b51d435b93f53ac8021b8f5cc7f9bf69d0b6e6b7a3f169891e",
+  "schema_version": 1,
+  "source_scope_passed": true,
+  "tutorial_states": 71,
+  "ui_sha256": "d2bbdbe50cea4681b33679467285f803fa65b4cf46e943302c809b56b5c8447f",
+  "ui_version": 1
+}

@@ -1,0 +1,445 @@
+{
+  "links": [
+    {
+      "acceptance_impact": "Confirm exact landing tiles, animation/timing and source access guards in live reference.",
+      "actions": [
+        "Climb-down",
+        "Climb-up"
+      ],
+      "classification": "inference",
+      "id": "tutorial_quest_ladder",
+      "landing_candidates": [
+        [
+          3088,
+          3118,
+          0
+        ],
+        [
+          3088,
+          9520,
+          0
+        ]
+      ],
+      "source_endpoints": [
+        [
+          9726,
+          3088,
+          3119,
+          0
+        ],
+        [
+          9725,
+          3088,
+          9519,
+          0
+        ]
+      ],
+      "source_relationship": "Matched source staircase planes or actual surface/underground ladder origins; no resource or building relocation.",
+      "spawn_endpoints": [
+        "spawn.tutorial.quest_ladder.3088.3119.p0.t10.r3",
+        "spawn.tutorial.quest_ladder.lower.3088.9519.p0.t10.r0"
+      ]
+    },
+    {
+      "acceptance_impact": "Confirm exact landing tiles, animation/timing and source access guards in live reference.",
+      "actions": [
+        "Climb-up",
+        "Climb-down"
+      ],
+      "classification": "inference",
+      "id": "tutorial_combat_ladder",
+      "landing_candidates": [
+        [
+          3110,
+          9526,
+          0
+        ],
+        [
+          3110,
+          3126,
+          0
+        ]
+      ],
+      "source_endpoints": [
+        [
+          9727,
+          3111,
+          9526,
+          0
+        ],
+        [
+          9728,
+          3111,
+          3126,
+          0
+        ]
+      ],
+      "source_relationship": "Matched source staircase planes or actual surface/underground ladder origins; no resource or building relocation.",
+      "spawn_endpoints": [
+        "spawn.tutorial.combat_ladder.3111.9526.p0.t10.r0",
+        "spawn.tutorial.combat_ladder.upper.3111.3126.p0.t10.r1"
+      ]
+    },
+    {
+      "acceptance_impact": "Confirm exact landing tiles, animation/timing and source access guards in live reference.",
+      "actions": [
+        "Climb-down",
+        "Climb-up"
+      ],
+      "classification": "inference",
+      "id": "lumbridge_cellar",
+      "landing_candidates": [
+        [
+          3208,
+          3216,
+          0
+        ],
+        [
+          3208,
+          9616,
+          0
+        ]
+      ],
+      "source_endpoints": [
+        [
+          14880,
+          3209,
+          3216,
+          0
+        ],
+        [
+          17385,
+          3209,
+          9616,
+          0
+        ]
+      ],
+      "source_relationship": "Matched source staircase planes or actual surface/underground ladder origins; no resource or building relocation.",
+      "spawn_endpoints": [
+        "spawn.lumbridge.kitchen_trapdoor.3209.3216.p0.t22.r0",
+        "spawn.lumbridge.cellar_ladder.3209.9616.p0.t10.r3"
+      ]
+    },
+    {
+      "acceptance_impact": "Confirm exact landing tiles, animation/timing and source access guards in live reference.",
+      "actions": [
+        "Climb-up",
+        "Climb-down"
+      ],
+      "classification": "inference",
+      "id": "mill_lower",
+      "landing_candidates": [
+        [
+          3164,
+          3306,
+          0
+        ],
+        [
+          3164,
+          3306,
+          1
+        ]
+      ],
+      "source_endpoints": [
+        [
+          12964,
+          3164,
+          3307,
+          0
+        ],
+        [
+          12965,
+          3164,
+          3307,
+          1
+        ]
+      ],
+      "source_relationship": "Matched source staircase planes or actual surface/underground ladder origins; no resource or building relocation.",
+      "spawn_endpoints": [
+        "spawn.mill.ladder_lower.3164.3307.p0.t10.r0",
+        "spawn.mill.ladder_middle.3164.3307.p1.t10.r0"
+      ]
+    },
+    {
+      "acceptance_impact": "Confirm exact landing tiles, animation/timing and source access guards in live reference.",
+      "actions": [
+        "Climb-up",
+        "Climb-down"
+      ],
+      "classification": "inference",
+      "id": "mill_upper",
+      "landing_candidates": [
+        [
+          3164,
+          3306,
+          1
+        ],
+        [
+          3164,
+          3306,
+          2
+        ]
+      ],
+      "source_endpoints": [
+        [
+          12965,
+          3164,
+          3307,
+          1
+        ],
+        [
+          12966,
+          3164,
+          3307,
+          2
+        ]
+      ],
+      "source_relationship": "Matched source staircase planes or actual surface/underground ladder origins; no resource or building relocation.",
+      "spawn_endpoints": [
+        "spawn.mill.ladder_middle.3164.3307.p1.t10.r0",
+        "spawn.mill.ladder_upper.3164.3307.p2.t10.r0"
+      ]
+    },
+    {
+      "acceptance_impact": "Confirm exact landing tiles, animation/timing and source access guards in live reference.",
+      "actions": [
+        "Climb-up",
+        "Climb-down"
+      ],
+      "classification": "inference",
+      "id": "castle_south_lower",
+      "landing_candidates": [
+        [
+          3205,
+          3209,
+          0
+        ],
+        [
+          3205,
+          3209,
+          1
+        ]
+      ],
+      "source_endpoints": [
+        [
+          56230,
+          3204,
+          3207,
+          0
+        ],
+        [
+          16672,
+          3204,
+          3207,
+          1
+        ]
+      ],
+      "source_relationship": "Matched source staircase planes or actual surface/underground ladder origins; no resource or building relocation.",
+      "spawn_endpoints": [
+        "spawn.lumbridge.castle_stairs.3204.3207.p0.t10.r3",
+        "spawn.lumbridge.castle_stairs.middle.3204.3207.p1.t10.r3"
+      ]
+    },
+    {
+      "acceptance_impact": "Confirm exact landing tiles, animation/timing and source access guards in live reference.",
+      "actions": [
+        "Climb-up",
+        "Climb-down"
+      ],
+      "classification": "inference",
+      "id": "castle_south_upper",
+      "landing_candidates": [
+        [
+          3205,
+          3209,
+          1
+        ],
+        [
+          3205,
+          3209,
+          2
+        ]
+      ],
+      "source_endpoints": [
+        [
+          16672,
+          3204,
+          3207,
+          1
+        ],
+        [
+          56231,
+          3205,
+          3208,
+          2
+        ]
+      ],
+      "source_relationship": "Matched source staircase planes or actual surface/underground ladder origins; no resource or building relocation.",
+      "spawn_endpoints": [
+        "spawn.lumbridge.castle_stairs.middle.3204.3207.p1.t10.r3",
+        "spawn.lumbridge.castle_stairs.top.3205.3208.p2.t10.r3"
+      ]
+    },
+    {
+      "acceptance_impact": "Confirm exact landing tiles, animation/timing and source access guards in live reference.",
+      "actions": [
+        "Climb-up",
+        "Climb-down"
+      ],
+      "classification": "inference",
+      "id": "castle_north_lower",
+      "landing_candidates": [
+        [
+          3205,
+          3228,
+          0
+        ],
+        [
+          3205,
+          3228,
+          1
+        ]
+      ],
+      "source_endpoints": [
+        [
+          56230,
+          3204,
+          3229,
+          0
+        ],
+        [
+          16672,
+          3204,
+          3229,
+          1
+        ]
+      ],
+      "source_relationship": "Matched source staircase planes or actual surface/underground ladder origins; no resource or building relocation.",
+      "spawn_endpoints": [
+        "spawn.lumbridge.castle_stairs.3204.3229.p0.t10.r0",
+        "spawn.lumbridge.castle_stairs.middle.3204.3229.p1.t10.r0"
+      ]
+    },
+    {
+      "acceptance_impact": "Confirm exact landing tiles, animation/timing and source access guards in live reference.",
+      "actions": [
+        "Climb-up",
+        "Climb-down"
+      ],
+      "classification": "inference",
+      "id": "castle_north_upper",
+      "landing_candidates": [
+        [
+          3205,
+          3228,
+          1
+        ],
+        [
+          3205,
+          3228,
+          2
+        ]
+      ],
+      "source_endpoints": [
+        [
+          16672,
+          3204,
+          3229,
+          1
+        ],
+        [
+          56231,
+          3205,
+          3229,
+          2
+        ]
+      ],
+      "source_relationship": "Matched source staircase planes or actual surface/underground ladder origins; no resource or building relocation.",
+      "spawn_endpoints": [
+        "spawn.lumbridge.castle_stairs.middle.3204.3229.p1.t10.r0",
+        "spawn.lumbridge.castle_stairs.top.3205.3229.p2.t10.r0"
+      ]
+    },
+    {
+      "acceptance_impact": "Confirm exact landing tiles, animation/timing and source access guards in live reference.",
+      "actions": [
+        "Top-floor",
+        "Bottom-floor"
+      ],
+      "classification": "inference",
+      "id": "castle_south_top_floor",
+      "landing_candidates": [
+        [
+          3205,
+          3209,
+          0
+        ],
+        [
+          3205,
+          3209,
+          2
+        ]
+      ],
+      "source_endpoints": [
+        [
+          56230,
+          3204,
+          3207,
+          0
+        ],
+        [
+          56231,
+          3205,
+          3208,
+          2
+        ]
+      ],
+      "source_relationship": "Matched source staircase planes or actual surface/underground ladder origins; no resource or building relocation.",
+      "spawn_endpoints": [
+        "spawn.lumbridge.castle_stairs.3204.3207.p0.t10.r3",
+        "spawn.lumbridge.castle_stairs.top.3205.3208.p2.t10.r3"
+      ]
+    },
+    {
+      "acceptance_impact": "Confirm exact landing tiles, animation/timing and source access guards in live reference.",
+      "actions": [
+        "Top-floor",
+        "Bottom-floor"
+      ],
+      "classification": "inference",
+      "id": "castle_north_top_floor",
+      "landing_candidates": [
+        [
+          3205,
+          3228,
+          0
+        ],
+        [
+          3205,
+          3228,
+          2
+        ]
+      ],
+      "source_endpoints": [
+        [
+          56230,
+          3204,
+          3229,
+          0
+        ],
+        [
+          56231,
+          3205,
+          3229,
+          2
+        ]
+      ],
+      "source_relationship": "Matched source staircase planes or actual surface/underground ladder origins; no resource or building relocation.",
+      "spawn_endpoints": [
+        "spawn.lumbridge.castle_stairs.3204.3229.p0.t10.r0",
+        "spawn.lumbridge.castle_stairs.top.3205.3229.p2.t10.r0"
+      ]
+    }
+  ],
+  "unresolved": []
+}

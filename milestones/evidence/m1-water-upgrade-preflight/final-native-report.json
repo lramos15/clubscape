@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "code_revision": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
+  "workspace_dirty": false,
+  "checks": [
+    {
+      "check": "native",
+      "command": [
+        "cargo",
+        "test",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "-p",
+        "clubscape-game-types",
+        "-p",
+        "clubscape-content",
+        "-p",
+        "clubscape-world-engine",
+        "--all-targets"
+      ],
+      "timeout_seconds": 300,
+      "status": "passed",
+      "exit_code": 0,
+      "elapsed_seconds": 65.591,
+      "log_sha256": "a0d7af85e6ea2a744902edae1cae3ddc3d23b27f923e9236d6bfa5906ff82a52",
+      "passed": 420,
+      "failed": 0,
+      "ignored": 0,
+      "binaries": 37
+    },
+    {
+      "check": "source-pairs",
+      "command": [
+        "cargo",
+        "test",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "-p",
+        "clubscape-server",
+        "--lib",
+        "water_migration",
+        "--",
+        "--nocapture"
+      ],
+      "timeout_seconds": 300,
+      "status": "passed",
+      "exit_code": 0,
+      "elapsed_seconds": 34.196,
+      "log_sha256": "e4ff1677bb5314a20864ea901d76e34873381287b84d981c4e3007e364107721",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 2,
+      "binaries": 1
+    },
+    {
+      "check": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "-p",
+        "clubscape-game-types",
+        "-p",
+        "clubscape-content",
+        "-p",
+        "clubscape-world-engine",
+        "-p",
+        "clubscape-server",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "timeout_seconds": 300,
+      "status": "passed",
+      "exit_code": 0,
+      "elapsed_seconds": 6.447,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "check": "wasm-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "-p",
+        "clubscape-game-types",
+        "-p",
+        "clubscape-content",
+        "-p",
+        "clubscape-world-engine",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "timeout_seconds": 300,
+      "status": "passed",
+      "exit_code": 0,
+      "elapsed_seconds": 8.914,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "check": "format",
+      "command": [
+        "cargo",
+        "fmt",
+        "-p",
+        "clubscape-game-types",
+        "-p",
+        "clubscape-content",
+        "-p",
+        "clubscape-world-engine",
+        "-p",
+        "clubscape-server",
+        "--",
+        "--check"
+      ],
+      "timeout_seconds": 300,
+      "status": "passed",
+      "exit_code": 0,
+      "elapsed_seconds": 0.717,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "check": "operator-build",
+      "command": [
+        "cargo",
+        "build",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "-p",
+        "clubscape-server",
+        "-p",
+        "clubscape-content",
+        "-p",
+        "clubscape-sim",
+        "--features",
+        "clubscape-sim/journey-server"
+      ],
+      "timeout_seconds": 300,
+      "status": "passed",
+      "exit_code": 0,
+      "elapsed_seconds": 9.264,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "status": "passed",
+  "source_operator_invocations": 0,
+  "saved_checkpoint_accessed": false,
+  "milestone_accepted": false,
+  "executables": [
+    {
+      "path": "target/debug/clubscape-server",
+      "sha256": "83de4326673720f30143c175c3721071ddceb21100e7380b42a072cdca5d0b0a"
+    },
+    {
+      "path": "target/debug/clubscape-content",
+      "sha256": "2cea9077d6a281a5d81cde2b03cf60a0781dec85ad66595b28bbfd3f2e17f7ad"
+    },
+    {
+      "path": "target/debug/clubscape-journey-server",
+      "sha256": "0ffdcf2471fa196f40ff429fe0af859e85ceb7f574ba1d5f06e7505a3533ab78"
+    }
+  ]
+}

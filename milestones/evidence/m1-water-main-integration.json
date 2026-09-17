@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "status": "verified_on_main",
+  "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
+  "scope": "Only the passing reviewed water dependency, required native repair, focused migration tests, source packaging/operator tooling and exact evidence.",
+  "candidate": "a162eb7818639c2babcf4ad09ec21dd68c15f2ea",
+  "clean_tested_code": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
+  "independent_review": "milestones/evidence/m1-water-item-on-review.json",
+  "preflight": "milestones/evidence/m1-water-upgrade-preflight-receipt.json",
+  "owned_commits_in_order": [
+    "21d9485dbf794ea652a9ee1a8fc29784a60bf2f3",
+    "ee81bbf0501584e22550845666c7dd690acf991f",
+    "de7b66f5ead59b53012e7d7a9752cdb6a58ad03c",
+    "b66a0c7f326a5bf11421ff6a332acb1aa8d890c5",
+    "037067d1cefc56a51562cf4235f71842ba400654",
+    "2cc6c45813a51bcd4a7ff5164975936a2caf36fc",
+    "4340530c7184f4c2e03ec9982bbbfbfd82f57999",
+    "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
+    "a162eb7818639c2babcf4ad09ec21dd68c15f2ea"
+  ],
+  "source_transition": {
+    "main_from_raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "main_to_raw_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+    "separate_minimal_legacy_target_raw_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+    "existing_worlds_silently_repinned": false
+  },
+  "integration_requirements": [
+    "Import only the enumerated owned commits; never merge stale candidate task, review or approval records over canonical main.",
+    "Require the entire imported owned path set to match the passing candidate byte-for-byte, retaining the independent review and original failures.",
+    "Run affected root native/source-pair tests, strict checks, guarded database regressions and web/native consumer validation after integration.",
+    "Preserve all frozen inputs, empty sink menu, one-conversion constraints and ordinary production behavior.",
+    "Update only the directly related canonical/minimal-legacy source identities in tools/web-build/README.md; do not change browser or rendering behavior."
+  ],
+  "execution_limits": {
+    "source_operator_allowance_remaining": 0,
+    "saved_checkpoint_access_or_restore": 0,
+    "saved_world_migration_or_continuation": 0,
+    "browser_gpu_or_runelite_invocations": 0
+  },
+  "main_code_commit": "6719717f65aba8f58058e1c5d2aa94608086cccc",
+  "owned_paths_byte_identical_at_import": 140,
+  "root_validation": {
+    "tested_code_revision": "f7f81c2a5fd5407939f77097dd3facba8991d0c4",
+    "native_game_content_engine_client_protocol_tests_passed": 461,
+    "native_test_binaries": 45,
+    "exact_source_pair_case_passed": 1,
+    "actual_guarded_postgresql_cases_passed": 2,
+    "postgres_test_executable_sha256": "1f8c81cbef9a56a0cafb2979412e1449a0f2a54eff86a436f33d1f3dbaabb759",
+    "published_source_raw_and_gzip_recompiles_exact": true,
+    "published_source_profiles_positive_passed_each": 4,
+    "published_source_profiles_negative_passed_each": 15,
+    "strict_all_target_native_clippy_passed": true,
+    "strict_wasm32_clippy_six_packages_passed": true,
+    "affected_eight_package_formatting_passed": true,
+    "non_test_native_service_compiler_simulator_inspector_build_passed": true,
+    "supplemental_root_evidence": {
+      "index": "milestones/evidence/m1-water-main-integration/root-qualification/index.json",
+      "sha256": "879e0789563c0239860f641faa483c8b288052dba8f0cdfb7c21950d27b78b6f",
+      "files": 4,
+      "qualification": "Fresh root checks after01ab19f, with actual four AArch64 ELF hashes and Cargo manifest provenance. These are ordinary non-test dev-profile executables, not release-optimized builds or world executions. Selected content files remain separately pinned; no embedded content identity is claimed."
+    },
+    "operator_machinery_tests_passed": 32,
+    "web_tests_passed": 263,
+    "normal_production_build_and_typecheck_passed": true,
+    "normal_production_artifact_sha256": "05775c66438885dd3503ee5ecdf781ac68ce7e787f55b441670284364c94b5cb",
+    "normal_production_build_content": null,
+    "normal_build_qualification": "Code-only normal production delivery, not a source-configured browser run or presentation acceptance.",
+    "frozen_hashes_verified": 1307,
+    "owned_root_database_and_temporary_credentials_removed": true,
+    "additional_source_operator_invocations": 0,
+    "browser_or_gpu_test_invocations": 0
+  },
+  "root_evidence": {
+    "index": "milestones/evidence/m1-water-main-integration/index.json",
+    "sha256": "686d4d14a5b62f045572830189087e9ce1dbf23f733fe908bbfd16562645f89f",
+    "files": 23
+  },
+  "import_style_check": {
+    "initial_result": "The staged full-diff check failed only on nine byte-preserved raw stdout logs ending in blank lines; the shell still proceeded to commit the import.",
+    "resolution": "Do not normalize evidence or change its hashes. Reverified all140 imported paths and all50 indexed evidence records, then passed the code/structured-evidence diff check with only explicitly hash-indexed raw .log paths excluded.",
+    "raw_evidence_changed": false,
+    "product_code_whitespace_failure": false
+  },
+  "source_generation_qualification": {
+    "full_root_repeat": "Inspected the immutable full log:13 gates in each pass, all26 individual exits0, final done with106 identical generated outputs. Detailed retained diagnostics are second-pass only. Both selected-artifact water profiles separately pass4/4positive,15/15negative.",
+    "both_pass_log_review": "milestones/evidence/m1-water-main-integration/root-qualification/report.json",
+    "published_identity_check": "Failed after regeneration; deterministic generation is not proof of the selected published artifact identity.",
+    "cause": "input_lock includes content.rs and runtime_validation.rs. The reviewed04a40ee native changes alter their hashes and therefore the fresh generator's opaque content revision.",
+    "unadmitted_generated_revision": "m1.source-backed.v4.80142e9e9c5d6b5c",
+    "unadmitted_generated_raw_sha256": "1bc1b8347634b8af0bb3df6a75d4f55f6ac9bf235b8fbb4ea5fdb742cad0a2c4",
+    "changed_game_content_paths": ["/revision"],
+    "disposition": "Retained all22 changed generated outputs under .local/water-main-integration-01/regenerated-unadmitted, then restored only those outputs to the published6719717 bytes. No native code, unrelated edits, source inputs or hash rules were rolled back or weakened.",
+    "exact_published_recompile": "Both unchanged committed source JSON profiles now recompile with the current strict native compiler to the admitted raw and gzip bytes exactly: currentadb24c14 and minimal legacyb2a1be20.",
+    "published_input_lock_role": "Historical provenance of the selected data generation, not a claim that old native input hashes describe the current executable.",
+    "extra_operator_calls_or_world_repins": 0,
+    "evidence": ["milestones/evidence/m1-water-main-integration/source-report.json", "milestones/evidence/m1-water-main-integration/source-pin-drift.json", "milestones/evidence/m1-water-main-integration/published-source-recompile.json", "milestones/evidence/m1-water-main-integration/published-probes-report.json"]
+  },
+  "saved_world_migration_or_continuation_admitted": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

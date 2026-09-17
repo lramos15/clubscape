@@ -1,0 +1,7 @@
+{
+  "result": "passed",
+  "repeated_original_asset_records": 848,
+  "byte_identical_output_files": 3329,
+  "bundle_sha256": "4739f586fb6bd9f16de408e5f0525d082cb29587c8021ab615a0b5c8e9dd8c63",
+  "source_cache_or_reference_images_modified": false
+}

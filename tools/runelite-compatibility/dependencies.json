@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "runtime_bootstrap": {
+    "path": "research/runelite-feasibility/bootstrap-1.12.38.json",
+    "source_path": "../m1-runtime-inputs/.local/current-source/bootstrap.json",
+    "version": "1.12.38",
+    "size_bytes": 18988,
+    "sha256": "6f8f3f03e48ad4db730ae0d59f5916b4a99789e6b2bc4464eaea116a9e8d00a3"
+  },
+  "decoder_lock": "tools/cache-import/dependencies.json",
+  "cache_selection": "research/current-source/selection.json",
+  "cache_files": "research/current-source/cache-files.json",
+  "java_release": 17,
+  "protobuf_generation": {
+    "version": "3.21.12",
+    "mode": "java lite (official runtime already pins protobuf-javalite-3.21.12)",
+    "name": "protoc-3.21.12-linux-aarch_64.exe",
+    "sha256": "aa609ec1d4b08375a140b1a42340684932cd2cd0cd56ffe8d791a72f9f3894bc",
+    "url": "https://repo.maven.apache.org/maven2/com/google/protobuf/protoc/3.21.12/protoc-3.21.12-linux-aarch_64.exe",
+    "upstream_sha1": "5c040e609f94d5d2fb2e8b0a77eb7adaa9e9148a",
+    "sha1_source": "https://repo.maven.apache.org/maven2/com/google/protobuf/protoc/3.21.12/protoc-3.21.12-linux-aarch_64.exe.sha1",
+    "maximum_bytes": 16000000,
+    "reason": "protoc --version exited 127 on the current host. Generate bindings from the authoritative unmodified account.proto and game.proto, not a hand-built wire parser."
+  }
+}

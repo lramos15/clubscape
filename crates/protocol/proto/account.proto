@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package clubscape.account.v1;
+
+import "game.proto";
+
+message ClientMessage {
+  uint32 protocol_version = 1;
+  string request_id = 2;
+  reserved 3 to 9;
+  oneof command {
+    Hello hello = 10;
+    Register register = 11;
+    Login login = 12;
+    CurrentAccount current_account = 13;
+    Logout logout = 14;
+    clubscape.game.v1.CreateCharacter create_character = 100;
+    clubscape.game.v1.JoinWorld join_world = 101;
+    clubscape.game.v1.PollWorld poll_world = 102;
+    clubscape.game.v1.WorldInput world_input = 103;
+    clubscape.game.v1.LeaveWorld leave_world = 104;
+  }
+}
+
+message Hello {}
+
+message Register {
+  string login_name = 1;
+  string password = 2;
+}
+
+message Login {
+  string login_name = 1;
+  string password = 2;
+}
+
+message CurrentAccount {}
+message Logout {}
+
+message ServerMessage {
+  uint32 protocol_version = 1;
+  string request_id = 2;
+  reserved 3 to 9;
+  oneof result {
+    ServerHello hello = 10;
+    Registered registered = 11;
+    LoggedIn logged_in = 12;
+    AccountSnapshot account = 13;
+    LoggedOut logged_out = 14;
+    Error error = 20;
+    clubscape.game.v1.CharacterCreated character_created = 100;
+    clubscape.game.v1.WorldJoined world_joined = 101;
+    clubscape.game.v1.WorldSnapshot world_snapshot = 102;
+    clubscape.game.v1.ActionResult action_result = 103;
+    clubscape.game.v1.WorldLeft world_left = 104;
+  }
+}
+
+message ServerHello {
+  repeated string capabilities = 1;
+  uint32 max_request_bytes = 2;
+  bool gameplay_available = 3;
+  string gameplay_unavailable_reason = 4;
+  string build_revision = 5;
+}
+
+message Account {
+  string account_id = 1;
+  string login_name = 2;
+}
+
+message Registered {
+  Account account = 1;
+}
+
+message LoggedIn {
+  Account account = 1;
+  string session_token = 2;
+  int64 expires_at_unix_ms = 3;
+}
+
+message AccountSnapshot {
+  Account account = 1;
+  bool character_initialized = 2;
+  string gameplay_unavailable_reason = 3;
+}
+
+message LoggedOut {}
+
+enum ErrorCode {
+  UNSPECIFIED = 0;
+  INVALID_ARGUMENT = 1;
+  UNAUTHENTICATED = 2;
+  CONFLICT = 3;
+  UNSUPPORTED_VERSION = 4;
+  RESOURCE_EXHAUSTED = 5;
+  INTERNAL = 6;
+  UNAVAILABLE = 7;
+}
+
+message Error {
+  ErrorCode code = 1;
+  string message = 2;
+  string error_id = 3;
+  uint32 retry_after_seconds = 4;
+}

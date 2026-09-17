@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION",
+  "kind": "director_isolated_strict_streamed_cpu_qualification",
+  "status": "consumed_failed_on_unchanged_candidate",
+  "result": "milestones/evidence/m1-camera-consumers-director-cpu-result.json",
+  "executor": "director",
+  "candidate_revision": "93979df1319ad6ab503b0292d553f8deb766ec63",
+  "implementation_revision": "53f478d7dae383492e1bd89d3724fed54371d498",
+  "source_worktree": ".worktrees/m1-camera-consumers",
+  "review_worktree": ".worktrees/m1-camera-consumers-review",
+  "review_branch": "review/m1-camera-consumers",
+  "goal": "Execute the unchanged strict streamed-block CPU case using only the two existing exact public buffers previously absent from the candidate worktree. This is not source generation, normal entry, browser or whole-renderer qualification.",
+  "review_progress": {
+    "source_delta_files_read": 33,
+    "remaining_thirteen_files_now_read": "Both crate lib exports, four actual generated declarations, four directly related READMEs and client/input/viewport test deltas.",
+    "new_high_confidence_findings_in_thirteen_file_append": [],
+    "prior_archive_and_output_identity_verification": "milestones/evidence/m1-camera-consumers-implementation.json",
+    "evidence_log_semantics_checked": "32 original native,21 consumer native,6 renderer CPU/HUD,5 actual-WASM and289 web passes; original streamed case5pass/1fail before input assembly remains retained.",
+    "conformance_semantic_comparison": "Compared original and candidate replay JSON recursively: only /implementation_inputs/0/sha256 and /implementation_inputs/0/size_bytes differ, for the already-recorded local Cargo.lock edges. All scenario/results fields are identical.",
+    "source_producer_and_normal_entry_gates_closed": true
+  },
+  "allowed_materialization": [
+    {
+      "from": "assets/compiled/render/blocks/12850.bin.gz",
+      "to": ".worktrees/m1-camera-consumers-review/assets/compiled/render/blocks/12850.bin.gz",
+      "bytes": 277748,
+      "sha256": "cd0e617afbbc549a379c98fe6ece820478e7c5ea19364bd81036d5ee85e82086",
+      "decompressed_bytes": 1554988,
+      "decompressed_sha256": "37a49ec9f3b35fb3f7c731ef0aadf88ce5aae07274252d22fba3193044d258ae"
+    },
+    {
+      "from": "assets/compiled/render/blocks/12850.models.bin.gz",
+      "to": ".worktrees/m1-camera-consumers-review/assets/compiled/render/blocks/12850.models.bin.gz",
+      "bytes": 1156590,
+      "sha256": "7383d3c457868b6ee2b6b3700e2f573cb9b988a23d3d7364b62a144252a23a3a",
+      "decompressed_bytes": 6775915,
+      "decompressed_sha256": "01e2a273c8c9d16fc8a5c9a39151af9cb3d76a0667e30e3011e35c976b46d963"
+    }
+  ],
+  "command": "CARGO_BUILD_JOBS=4 CARGO_TARGET_DIR=$PWD/.local/director-cpu-target timeout 600s cargo test --locked --offline --quiet -p clubscape-renderer --no-default-features --test camera_source streamed_original_block_getters_preserve_real_cases_and_unloaded_boundaries -- --ignored --exact --nocapture",
+  "limits": {
+    "strict_streamed_case_invocations": 1,
+    "maximum_seconds_for_command_including_build": 600,
+    "cargo_build_jobs": 4,
+    "new_code_or_dependency_changes": 0,
+    "new_source_exports_generation_or_downloads": 0,
+    "gear_pose_recomputations": 0,
+    "gpu_browser_native_wgpu_or_runelite": 0,
+    "protected_checkpoint_stat_reads_or_hashes": 0,
+    "databases_services_accounts_gameplay_or_operators": 0,
+    "new_agents_or_factories": 0
+  },
+  "requirements": [
+    "Create an isolated worktree at the exact committed candidate; do not edit the parked worker, root source, lock or existing targets.",
+    "Verify each source and copied compressed/raw identity against the candidate manifest. Copy only the two named gzip twins; do not infer that all122 buffers exist.",
+    "Run only the named ignored CPU test, not generic renderer, gear, GPU, image or source-browser suites.",
+    "Retain exact command, actual exit/duration/log and test executable identity; preserve any failure without a weakened assertion or silent skip.",
+    "Object941 must produce-471; the shaped surface must produce-240 versus bilinear-238; unloaded corners/settings/surfaces must remain explicit errors.",
+    "This narrow input-case qualification cannot close missing live focus/footprint/effect producers, object metadata delivery, normal browser entry, full renderer/style or M1 acceptance."
+  ],
+  "main_source_integration_admitted": false,
+  "any_exhausted_allowance_renewed": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

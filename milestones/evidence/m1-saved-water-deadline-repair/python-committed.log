@@ -1,0 +1,9 @@
+...................{"synthetic_deadline_observations": [{"scenario_budget_seconds": 1, "blocking_restart_seconds": 0.0, "sample_after_seconds": 1.5, "gameplay_elapsed_seconds": 1.0012776288203895, "sample_elapsed_seconds": 1.5003089755773544, "native_still_running_after_deadline": false}, {"scenario_budget_seconds": 1, "blocking_restart_seconds": 2.0, "sample_after_seconds": 1.5, "sample_elapsed_seconds": 1.5006196959875524, "native_still_running_after_deadline": false, "gameplay_elapsed_seconds": 2.001517437864095}]}
+............................................................................
+----------------------------------------------------------------------
+Ran 95 tests in 6.749s
+
+OK
+real 6.86
+user 0.77
+sys 0.40

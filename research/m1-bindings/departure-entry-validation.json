@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "task": "m1-departure-choice-entries",
+  "generator_revision": "e8c3c43d5b1cd9f16b0b78ab34dcc958f93d9888",
+  "original_live_evidence": {
+    "revision": "34ad711",
+    "path": "tools/journey-tests/evidence/ui4-departure-1e9c7be.json",
+    "source_artifact_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3",
+    "successful_path_transitions": 66,
+    "required_path_transitions": 70,
+    "source_checks": 263,
+    "failure": "offer_mainland sequence181 returned500game_source_view from three equal-guard primary entries.",
+    "unknown_mutation_retried_or_rollback_assumed": false
+  },
+  "native_before": {
+    "command": "cargo run --quiet --locked --offline --manifest-path tools/m1-content/schema-check/Cargo.toml --example departure_entries -- <old6f-raw-artifact>",
+    "result": "failed",
+    "error": "InvalidContent: Multiple dialogue entries match."
+  },
+  "current_artifact": {
+    "content_artifact_version": 4,
+    "state_runtime_version": 1,
+    "ui_state_version": 1,
+    "revision": "m1.source-backed.v4.3ff4292b311453cc",
+    "raw_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "compressed_sha256": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f"
+  },
+  "normalization": {
+    "stage": "After unchanged104+7 source application, before supply-recovery and UI4 lowering.",
+    "dialogue": "dialogue.magic_instructor",
+    "retained_entry": "transition.tutorial.decline_departure",
+    "removed_competing_entry_ids": ["transition.tutorial.ironman_information", "transition.tutorial.confirm_normal_departure"],
+    "original_choices_in_order": ["stay_on_island", "ask_ironman_tutor", "confirm_normal_mainland"],
+    "question_text_and_choice_ids_guards_effects_unchanged": true,
+    "incompatible_prompts_duplicates_or_explicit_continuations": "Explicit generation failure, never silently merged or prioritized.",
+    "original_source_builder_and_fingerprints_unchanged": true,
+    "engine_multiple_entry_rejection_unchanged": true
+  },
+  "decoded_product_comparison": {
+    "changed_top_level_keys": ["revision", "dialogues"],
+    "changed_dialogues": ["dialogue.magic_instructor"],
+    "magic_nodes_before_after": [7, 5],
+    "tutorial_quests_mechanics_items_geometry_and_initial_state_unchanged": true
+  },
+  "validation": {
+    "focused_question_and_recovery_tests": 12,
+    "source_tests": 77,
+    "full_strict_pipeline_command": "python3 tools/m1-content/validate.py --repeat",
+    "full_pipeline_passed": true,
+    "outputs_repeated_identically": 93,
+    "active_unresolved_bindings": 0,
+    "proof_scoped_inactive_bindings": 6,
+    "runtime_compile_reload_asset_closure_and_source_oracles": "passed",
+    "native_command": "cargo run --quiet --locked --offline --manifest-path tools/m1-content/schema-check/Cargo.toml --example departure_entries -- tools/m1-content/.local/compiler/m1.csc",
+    "native_source_cases": [
+      {"choice": "offer_mainland", "resulting_stage": "departure_confirmation", "authorized": false, "passed": true},
+      {"choice": "stay_on_island", "resulting_stage": "departure_offer", "authorized": false, "passed": true},
+      {"choice": "ask_ironman_tutor", "resulting_stage": "departure_offer", "authorized": false, "passed": true},
+      {"choice": "confirm_normal_mainland", "resulting_stage": "home_teleport", "authorized": true, "passed": true}
+    ],
+    "wrong_stage_confirmation_refusal_atomic": true,
+    "source_menu_queries_immutable": true,
+    "inventory_equipment_bank_xp_qp_quests_entitlements_experience_location_unchanged": true,
+    "pending_travel_or_departure_grants_created_by_confirmation": false
+  },
+  "qualification": "Native cases use explicit controlled source preconditions. They are not a fresh-account journey or legitimate acquisition proof.",
+  "old_world_repinned": false,
+  "full_fresh_journey_recheck": "pending",
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

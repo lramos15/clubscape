@@ -1,0 +1,145 @@
+{
+  "audio_publication_evolution": {
+    "audio_or_presentation_acceptance_claimed": false,
+    "current_manifest_bytes": 845835,
+    "current_manifest_sha256": "8e6d1eca465f720829599cae0e1c11b7700a9c7162e53dd5ddec36ceb89787aa",
+    "current_rendered_asset_count": 264,
+    "historical_manifest_sha256": "1e7c37af6d303eb5db9407c9318ee532cbd4f823427fed02c89612dfefaa23b5",
+    "historical_rendered_asset_count": 258,
+    "path": "assets/manifests/osrs/audio-runtime.json",
+    "reason": "The integrated audio worker restored native percussion initialization and added original cue selectors. Rendered audio hashes legitimately changed before this task. Validate the exact current upstream manifest and every current file; retain the earlier 258-file report as historical evidence, not an unchanged-audio claim.",
+    "rendered_audio_unchanged_claimed": false,
+    "upstream_commit": "75bfde1"
+  },
+  "audited_source_application": "research/m1-bindings/application-result.json",
+  "behavior_and_geometry_unchanged": false,
+  "behavior_sha256": "5d4552cce62e04653ce62fa4caead91e1a1dce0b823af1dbee262d0454c7e3c9",
+  "bound_wind_strike_table": {
+    "source": [
+      {
+        "notes": "Pinned behavioral reference; not an executed game trace.",
+        "reference": "https://oldschool.runescape.wiki/w/Wind_Strike?oldid=15341514",
+        "revision": "15341514",
+        "status": "verified_reference"
+      },
+      {
+        "notes": "Pinned behavioral reference; not an executed game trace.",
+        "reference": "https://oldschool.runescape.wiki/w/Combat_spells?oldid=15336309",
+        "revision": "15336309",
+        "status": "verified_reference"
+      },
+      {
+        "notes": "Pinned behavioral reference; not an executed game trace.",
+        "reference": "https://oldschool.runescape.wiki/w/Magic?oldid=15337462",
+        "revision": "15337462",
+        "status": "verified_reference"
+      },
+      {
+        "notes": "Pinned behavioral reference; not an executed game trace.",
+        "reference": "https://oldschool.runescape.wiki/w/Damage_per_second/Magic?oldid=15321382",
+        "revision": "15321382",
+        "status": "verified_reference"
+      },
+      {
+        "notes": "Typed source rule binding; arithmetic/content validation is not observed runtime gameplay.",
+        "reference": "research/journey-rules/activities.json#rule.magic.wind_strike",
+        "revision": "source-contract-v1",
+        "status": "verified_reference"
+      }
+    ],
+    "status": "bound",
+    "value": {
+      "basis": "current",
+      "hits": {
+        "1": 2,
+        "13": 8,
+        "5": 4,
+        "9": 6
+      },
+      "kind": "level_table",
+      "skill": "skill.magic"
+    }
+  },
+  "compiled_artifact": {
+    "artifact_version": 4,
+    "bytes": 528842,
+    "path": "content/m1/game-content.csc.gz",
+    "schema_version": 4,
+    "sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+    "uncompressed_bytes": 13222639,
+    "uncompressed_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc"
+  },
+  "consumables_new_assets": 10,
+  "consumables_new_published_outputs": 20,
+  "consumables_requested_resolved": {
+    "interface_groups": 0,
+    "item_definition_ids": 4,
+    "model_ids": 4,
+    "npc_definition_ids": 0
+  },
+  "consumables_reused_dependencies": 7,
+  "current_asset_closure_passed": true,
+  "current_audio_files_hash_validated": 264,
+  "current_published_asset_references": 5266,
+  "gameplay_executed": false,
+  "geometry_and_prior_asset_closure_preserved": true,
+  "historical_audio_file_count": 258,
+  "merged_catalog": {
+    "path": "assets/manifests/osrs/cache2695-consumables-bundle.json.gz",
+    "sha256": "f9997077e46419d4f7c6d1954f5a097ddb4eb8566b16f70d68a5594b585298fd",
+    "size_bytes": 1919477
+  },
+  "merged_inventory_records": 12410,
+  "new_original_assets": 272,
+  "new_original_outputs": 1137,
+  "new_verified_definition_publication_needed": {
+    "interface_groups": [],
+    "item_definition_ids": [],
+    "model_ids": [],
+    "npc_definition_ids": []
+  },
+  "original_catalog_records_preserved": 12128,
+  "original_source_files_validated": 559,
+  "potion_requested_resolved": {
+    "interface_groups": 0,
+    "item_definition_ids": 2,
+    "model_ids": 1,
+    "npc_definition_ids": 0
+  },
+  "presentation_approved": false,
+  "product_assets_resolved": 5257,
+  "protected_reference_image_count": 109,
+  "protected_source_closure_evidence": {
+    "path": "research/current-source/content-closure-commands/protected-input-integrity.json",
+    "sha256": "cabaeaf8faa09b1b9f2d35d7aca2a1b9105359d0a3a3966b0e25ca08930dcffc",
+    "size_bytes": 1233
+  },
+  "publication_chain": [
+    "assets/manifests/osrs/cache2695-published.json",
+    "assets/manifests/osrs/cache2695-content-v2-published.json",
+    "assets/manifests/osrs/cache2695-potions-published.json",
+    "assets/manifests/osrs/cache2695-consumables-published.json"
+  ],
+  "publication_sha256": "2340ea5e3e6eeeeecdbda5de7f371f3ff2eb57576f4c783009344a1c348dbede",
+  "remaining_data_hookup": "Consumers resolve the merged catalog and its additive publication/shards; Canonical source application/selectors are checked separately. Potion3010/3011, original model2697 and source placeholder19365 are now published and bound. The fourth layer also binds original consumed containers229/230/1919/1920 and their four models. Original assets are not scene/render/audio acceptance.",
+  "remaining_missing_inputs": [],
+  "requested": {
+    "interface_groups": 13,
+    "item_definition_ids": 72,
+    "model_ids": 68,
+    "npc_definition_ids": 6
+  },
+  "resolved": {
+    "interface_groups": 13,
+    "item_definition_ids": 72,
+    "model_ids": 68,
+    "npc_definition_ids": 6
+  },
+  "result": "passed",
+  "revision": "m1.source-backed.v4.71c86749d02088ee",
+  "runtime_compile_passed": true,
+  "schema_version": 1,
+  "scope": "Prior original asset/provenance closure preserved; current UI publication is a separate mandatory gate. Not M1 acceptance.",
+  "task": "m1-content-asset-refresh",
+  "unresolved_behavior_bindings_unchanged": 6
+}

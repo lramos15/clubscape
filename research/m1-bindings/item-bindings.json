@@ -1,0 +1,2903 @@
+{
+  "excluded": {},
+  "items": {
+    "item.arrow.bronze": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2711
+      ],
+      "native_weight_grams": 0,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.882",
+      "source_id": 882,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "12": 7,
+        "23": 1,
+        "2431": 16924
+      }
+    },
+    "item.ashes": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2742
+      ],
+      "native_weight_grams": 56,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.592",
+      "source_id": 592,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.ashes.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2742
+      ],
+      "native_weight_grams": 56,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.593",
+      "source_id": 593,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.axe.bronze": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        510,
+        2544
+      ],
+      "native_weight_grams": 1360,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1351",
+      "source_id": 1351,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": -2,
+        "1": 4,
+        "10": 5,
+        "11": 0,
+        "13": 0,
+        "14": 5,
+        "2": 2,
+        "23": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 1,
+        "7": 0,
+        "8": 0,
+        "9": 0
+      }
+    },
+    "item.axe.bronze.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        510,
+        2544
+      ],
+      "native_weight_grams": 1360,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1352",
+      "source_id": 1352,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": -2,
+        "1": 4,
+        "10": 5,
+        "11": 0,
+        "13": 0,
+        "14": 5,
+        "2": 2,
+        "23": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 1,
+        "7": 0,
+        "8": 0,
+        "9": 0
+      }
+    },
+    "item.bar.bronze": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2408
+      ],
+      "native_weight_grams": 1814,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.2349",
+      "source_id": 2349,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "434": 13,
+        "436": 1
+      }
+    },
+    "item.bar.bronze.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2408
+      ],
+      "native_weight_grams": 1814,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.2350",
+      "source_id": 2350,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "434": 13,
+        "436": 1
+      }
+    },
+    "item.beer": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2491,
+        6098
+      ],
+      "native_weight_grams": 550,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1917",
+      "source_id": 1917,
+      "source_members": false,
+      "source_options": [
+        "Drink",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "148": -1,
+        "468": 44
+      }
+    },
+    "item.beer.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2491,
+        6098
+      ],
+      "native_weight_grams": 550,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1918",
+      "source_id": 1918,
+      "source_members": false,
+      "source_options": [
+        "Drink",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "148": -1,
+        "468": 44
+      }
+    },
+    "item.beer_glass": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2548,
+        8234
+      ],
+      "native_weight_grams": 50,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1919",
+      "source_id": 1919,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.beer_glass.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2548,
+        8234
+      ],
+      "native_weight_grams": 50,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1920",
+      "source_id": 1920,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bolts.bronze": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        16862
+      ],
+      "native_weight_grams": 0,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.877",
+      "source_id": 877,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "12": 10,
+        "23": 1
+      }
+    },
+    "item.bones": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2674
+      ],
+      "native_weight_grams": 500,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.526",
+      "source_id": 526,
+      "source_members": false,
+      "source_options": [
+        "Bury",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bones.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2674
+      ],
+      "native_weight_grams": 500,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.527",
+      "source_id": 527,
+      "source_members": false,
+      "source_options": [
+        "Bury",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bones.tutorial": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2674
+      ],
+      "native_weight_grams": 500,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.2530",
+      "source_id": 2530,
+      "source_members": false,
+      "source_options": [
+        "Bury",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bones.tutorial.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2674
+      ],
+      "native_weight_grams": 500,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.2531",
+      "source_id": 2531,
+      "source_members": false,
+      "source_options": [
+        "Bury",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bowl": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2807
+      ],
+      "native_weight_grams": 453,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1923",
+      "source_id": 1923,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bowl.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2807
+      ],
+      "native_weight_grams": 453,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1924",
+      "source_id": 1924,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.brass_necklace": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        281,
+        445,
+        2506
+      ],
+      "native_weight_grams": 10,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1009",
+      "source_id": 1009,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wear",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.brass_necklace.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        281,
+        445,
+        2506
+      ],
+      "native_weight_grams": 10,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1010",
+      "source_id": 1010,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wear",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bread": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2409
+      ],
+      "native_weight_grams": 500,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.2309",
+      "source_id": 2309,
+      "source_members": false,
+      "source_options": [
+        "Eat",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bread.burnt": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2409
+      ],
+      "native_weight_grams": 350,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.2311",
+      "source_id": 2311,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bread.burnt.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2409
+      ],
+      "native_weight_grams": 350,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.2312",
+      "source_id": 2312,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bread.dough": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2756
+      ],
+      "native_weight_grams": 600,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.2307",
+      "source_id": 2307,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bread.dough.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2756
+      ],
+      "native_weight_grams": 600,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.2308",
+      "source_id": 2308,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bread.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2409
+      ],
+      "native_weight_grams": 500,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.2310",
+      "source_id": 2310,
+      "source_members": false,
+      "source_options": [
+        "Eat",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bucket": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        543,
+        2397
+      ],
+      "native_weight_grams": 1000,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1925",
+      "source_id": 1925,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bucket.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        543,
+        2397
+      ],
+      "native_weight_grams": 1000,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1926",
+      "source_id": 1926,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bucket.pack": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        36013
+      ],
+      "native_weight_grams": 453,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.22660",
+      "source_id": 22660,
+      "source_members": false,
+      "source_options": [
+        "Open",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.bucket.pack.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        36013
+      ],
+      "native_weight_grams": 453,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.22661",
+      "source_id": 22661,
+      "source_members": false,
+      "source_options": [
+        "Open",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.cake_tin": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2596
+      ],
+      "native_weight_grams": 100,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1887",
+      "source_id": 1887,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.cake_tin.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2596
+      ],
+      "native_weight_grams": 100,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1888",
+      "source_id": 1888,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.chefs_hat": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        41,
+        99,
+        199,
+        374,
+        2782
+      ],
+      "native_weight_grams": 907,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1949",
+      "source_id": 1949,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wear",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.chefs_hat.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        41,
+        99,
+        199,
+        374,
+        2782
+      ],
+      "native_weight_grams": 907,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1950",
+      "source_id": 1950,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wear",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.chisel": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2489
+      ],
+      "native_weight_grams": 453,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1755",
+      "source_id": 1755,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.chisel.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2489
+      ],
+      "native_weight_grams": 453,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1756",
+      "source_id": 1756,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.coins": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2484
+      ],
+      "native_weight_grams": 0,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.995",
+      "source_id": 995,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.dagger.bronze": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        533,
+        2672,
+        42608
+      ],
+      "native_weight_grams": 453,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1205",
+      "source_id": 1205,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": 4,
+        "1": 2,
+        "10": 3,
+        "11": 0,
+        "13": 0,
+        "14": 4,
+        "2": -4,
+        "3": 1,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 1,
+        "9": 0
+      }
+    },
+    "item.dagger.bronze.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        533,
+        2672,
+        42608
+      ],
+      "native_weight_grams": 453,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1206",
+      "source_id": 1206,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": 4,
+        "1": 2,
+        "10": 3,
+        "11": 0,
+        "13": 0,
+        "14": 4,
+        "2": -4,
+        "3": 1,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 1,
+        "9": 0
+      }
+    },
+    "item.egg": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2437
+      ],
+      "native_weight_grams": 20,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1944",
+      "source_id": 1944,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.egg.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2437
+      ],
+      "native_weight_grams": 20,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1945",
+      "source_id": 1945,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.energy_potion.four_dose": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2789
+      ],
+      "native_weight_grams": 35,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.3008",
+      "source_id": 3008,
+      "source_members": false,
+      "source_options": [
+        "Drink",
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {
+        "468": 17
+      }
+    },
+    "item.energy_potion.four_dose.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2789
+      ],
+      "native_weight_grams": 35,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.3009",
+      "source_id": 3009,
+      "source_members": false,
+      "source_options": [
+        "Drink",
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {
+        "468": 17
+      }
+    },
+    "item.energy_potion.one_dose": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2621
+      ],
+      "native_weight_grams": 20,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.3014",
+      "source_id": 3014,
+      "source_members": false,
+      "source_options": [
+        "Drink",
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {
+        "468": 17
+      }
+    },
+    "item.energy_potion.one_dose.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2621
+      ],
+      "native_weight_grams": 20,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.3015",
+      "source_id": 3015,
+      "source_members": false,
+      "source_options": [
+        "Drink",
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {
+        "468": 17
+      }
+    },
+    "item.energy_potion.three_dose": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2697
+      ],
+      "native_weight_grams": 30,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.3010",
+      "source_id": 3010,
+      "source_members": false,
+      "source_options": [
+        "Drink",
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {
+        "434": 15,
+        "436": 26,
+        "468": 17
+      }
+    },
+    "item.energy_potion.three_dose.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2697
+      ],
+      "native_weight_grams": 30,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.3011",
+      "source_id": 3011,
+      "source_members": false,
+      "source_options": [
+        "Drink",
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {
+        "434": 15,
+        "436": 26,
+        "468": 17
+      }
+    },
+    "item.energy_potion.two_dose": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2384
+      ],
+      "native_weight_grams": 25,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.3012",
+      "source_id": 3012,
+      "source_members": false,
+      "source_options": [
+        "Drink",
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {
+        "468": 17
+      }
+    },
+    "item.energy_potion.two_dose.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2384
+      ],
+      "native_weight_grams": 25,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.3013",
+      "source_id": 3013,
+      "source_members": false,
+      "source_options": [
+        "Drink",
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {
+        "468": 17
+      }
+    },
+    "item.ensouled_goblin_head": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        30544
+      ],
+      "native_weight_grams": 453,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.13447",
+      "source_id": 13447,
+      "source_members": true,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.ensouled_goblin_head.tradable": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        30544
+      ],
+      "native_weight_grams": 453,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.13448",
+      "source_id": 13448,
+      "source_members": true,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "608": 11997
+      }
+    },
+    "item.ensouled_goblin_head.tradable.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        30544
+      ],
+      "native_weight_grams": 453,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.13449",
+      "source_id": 13449,
+      "source_members": true,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "608": 11997
+      }
+    },
+    "item.fishing_net.small": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        551,
+        2403
+      ],
+      "native_weight_grams": 4535,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.303",
+      "source_id": 303,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.fishing_net.small.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        551,
+        2403
+      ],
+      "native_weight_grams": 4535,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.304",
+      "source_id": 304,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.flour.pot": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2406
+      ],
+      "native_weight_grams": 1360,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1933",
+      "source_id": 1933,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.flour.pot.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2406
+      ],
+      "native_weight_grams": 1360,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1934",
+      "source_id": 1934,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.goblin_book": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        23887
+      ],
+      "native_weight_grams": 100,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.10999",
+      "source_id": 10999,
+      "source_members": true,
+      "source_options": [
+        "Read",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.goblin_book.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        23887
+      ],
+      "native_weight_grams": 100,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.11000",
+      "source_id": 11000,
+      "source_members": true,
+      "source_options": [
+        "Read",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.goblin_champion_scroll": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        10347
+      ],
+      "native_weight_grams": 1,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.6801",
+      "source_id": 6801,
+      "source_members": true,
+      "source_options": [
+        "Read",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.goblin_mail": {
+      "asset_available": true,
+      "equipment_disposition": "Source wear-position metadata is not permission for a normal player to wear goblin mail.",
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        24514
+      ],
+      "native_weight_grams": 3628,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.288",
+      "source_id": 288,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wear",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.goblin_mail.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        24514
+      ],
+      "native_weight_grams": 3628,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.289",
+      "source_id": 289,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wear",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.grain": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2398
+      ],
+      "native_weight_grams": 600,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1947",
+      "source_id": 1947,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.grain.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2398
+      ],
+      "native_weight_grams": 600,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1948",
+      "source_id": 1948,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.hammer": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2376,
+        34036,
+        34037
+      ],
+      "native_weight_grams": 907,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.2347",
+      "source_id": 2347,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.hammer.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2376,
+        34036,
+        34037
+      ],
+      "native_weight_grams": 907,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.2348",
+      "source_id": 2348,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.jug": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2390
+      ],
+      "native_weight_grams": 453,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1935",
+      "source_id": 1935,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.jug.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2390
+      ],
+      "native_weight_grams": 453,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1936",
+      "source_id": 1936,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.jug.pack": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        32304
+      ],
+      "native_weight_grams": 453,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.20742",
+      "source_id": 20742,
+      "source_members": false,
+      "source_options": [
+        "Open",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.jug.pack.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        32304
+      ],
+      "native_weight_grams": 453,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.20743",
+      "source_id": 20743,
+      "source_members": false,
+      "source_options": [
+        "Open",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.knife": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2559,
+        4045
+      ],
+      "native_weight_grams": 453,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.946",
+      "source_id": 946,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.knife.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2559,
+        4045
+      ],
+      "native_weight_grams": 453,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.947",
+      "source_id": 947,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.logs.normal": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        4048,
+        7760
+      ],
+      "native_weight_grams": 2000,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1511",
+      "source_id": 1511,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "434": 9,
+        "436": 1
+      }
+    },
+    "item.logs.normal.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        4048,
+        7760
+      ],
+      "native_weight_grams": 2000,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1512",
+      "source_id": 1512,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "434": 9,
+        "436": 1
+      }
+    },
+    "item.milk.bottomless_bucket": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2504,
+        36305
+      ],
+      "native_weight_grams": 1000,
+      "note_template": -1,
+      "scope_disposition": "Retained full-target charged-container alternative. The ordinary M1 route uses item.milk.bucket; parent must select reachable acquisition/charge metadata before enabling rare-container delivery.",
+      "source_asset": "asset.source.osrs.cache2695.item.33089",
+      "source_id": 33089,
+      "source_members": true,
+      "source_options": [
+        null,
+        null,
+        "Fill",
+        "Check",
+        "Empty"
+      ],
+      "source_params": {}
+    },
+    "item.milk.bottomless_bucket.empty": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2397,
+        36305
+      ],
+      "native_weight_grams": 1000,
+      "note_template": -1,
+      "scope_disposition": "Retained full-target charged-container alternative. The ordinary M1 route uses item.milk.bucket; parent must select reachable acquisition/charge metadata before enabling rare-container delivery.",
+      "source_asset": "asset.source.osrs.cache2695.item.33091",
+      "source_id": 33091,
+      "source_members": true,
+      "source_options": [
+        null,
+        null,
+        "Fill",
+        "Check",
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.milk.bucket": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2504
+      ],
+      "native_weight_grams": 2200,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1927",
+      "source_id": 1927,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.milk.bucket.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2504
+      ],
+      "native_weight_grams": 2200,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1928",
+      "source_id": 1928,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.newcomer_map": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2774
+      ],
+      "native_weight_grams": 510,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.550",
+      "source_id": 550,
+      "source_members": false,
+      "source_options": [
+        "Read",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.newcomer_map.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2774
+      ],
+      "native_weight_grams": 510,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.551",
+      "source_id": 551,
+      "source_members": false,
+      "source_options": [
+        "Read",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.ore.copper": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2748
+      ],
+      "native_weight_grams": 2267,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.436",
+      "source_id": 436,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "123": 1
+      }
+    },
+    "item.ore.copper.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2748
+      ],
+      "native_weight_grams": 2267,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.437",
+      "source_id": 437,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "123": 1
+      }
+    },
+    "item.ore.tin": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2748
+      ],
+      "native_weight_grams": 2267,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.438",
+      "source_id": 438,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "123": 1
+      }
+    },
+    "item.ore.tin.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2748
+      ],
+      "native_weight_grams": 2267,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.439",
+      "source_id": 439,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "123": 1
+      }
+    },
+    "item.pickaxe.bronze": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        509,
+        2529
+      ],
+      "native_weight_grams": 2267,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1265",
+      "source_id": 1265,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": 4,
+        "1": -2,
+        "10": 5,
+        "11": 0,
+        "13": 0,
+        "14": 5,
+        "2": 2,
+        "23": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 1,
+        "7": 0,
+        "8": 0,
+        "9": 0
+      }
+    },
+    "item.pickaxe.bronze.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        509,
+        2529
+      ],
+      "native_weight_grams": 2267,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1266",
+      "source_id": 1266,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": 4,
+        "1": -2,
+        "10": 5,
+        "11": 0,
+        "13": 0,
+        "14": 5,
+        "2": 2,
+        "23": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 1,
+        "7": 0,
+        "8": 0,
+        "9": 0
+      }
+    },
+    "item.pot": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2345,
+        12862
+      ],
+      "native_weight_grams": 453,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1931",
+      "source_id": 1931,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.pot.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2345,
+        12862
+      ],
+      "native_weight_grams": 453,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1932",
+      "source_id": 1932,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.rune.air": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2405
+      ],
+      "native_weight_grams": 0,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.556",
+      "source_id": 556,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.rune.body": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2340
+      ],
+      "native_weight_grams": 0,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.559",
+      "source_id": 559,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.rune.earth": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2737
+      ],
+      "native_weight_grams": 0,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.557",
+      "source_id": 557,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.rune.mind": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2481
+      ],
+      "native_weight_grams": 0,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.558",
+      "source_id": 558,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.rune.water": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2652
+      ],
+      "native_weight_grams": 0,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.555",
+      "source_id": 555,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.security_book": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        16013
+      ],
+      "native_weight_grams": 10,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.9003",
+      "source_id": 9003,
+      "source_members": false,
+      "source_options": [
+        "Read",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.security_book.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        16013
+      ],
+      "native_weight_grams": 10,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.9014",
+      "source_id": 9014,
+      "source_members": false,
+      "source_options": [
+        "Read",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.shears": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        525,
+        2620
+      ],
+      "native_weight_grams": 113,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1735",
+      "source_id": 1735,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.shears.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        525,
+        2620
+      ],
+      "native_weight_grams": 113,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1736",
+      "source_id": 1736,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.shield.bronze_square": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        541,
+        2720
+      ],
+      "native_weight_grams": 3628,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1173",
+      "source_id": 1173,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": 0,
+        "1": 0,
+        "11": 0,
+        "2": 0,
+        "3": -6,
+        "4": 0,
+        "5": 5,
+        "6": 6,
+        "7": 4,
+        "8": 0,
+        "9": 5
+      }
+    },
+    "item.shield.bronze_square.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        541,
+        2720
+      ],
+      "native_weight_grams": 3628,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1174",
+      "source_id": 1174,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": 0,
+        "1": 0,
+        "11": 0,
+        "2": 0,
+        "3": -6,
+        "4": 0,
+        "5": 5,
+        "6": 6,
+        "7": 4,
+        "8": 0,
+        "9": 5
+      }
+    },
+    "item.shield.wooden": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        517,
+        2601
+      ],
+      "native_weight_grams": 2267,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1171",
+      "source_id": 1171,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": 0,
+        "1": 0,
+        "11": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 4,
+        "6": 5,
+        "7": 3,
+        "8": 1,
+        "9": 4
+      }
+    },
+    "item.shield.wooden.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        517,
+        2601
+      ],
+      "native_weight_grams": 2267,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1172",
+      "source_id": 1172,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": 0,
+        "1": 0,
+        "11": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 4,
+        "6": 5,
+        "7": 3,
+        "8": 1,
+        "9": 4
+      }
+    },
+    "item.shortbow": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        512,
+        2562
+      ],
+      "native_weight_grams": 1360,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.841",
+      "source_id": 841,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "13": 7,
+        "14": 4,
+        "23": 1,
+        "4": 8
+      }
+    },
+    "item.shortbow.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        512,
+        2562
+      ],
+      "native_weight_grams": 1360,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.842",
+      "source_id": 842,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "13": 7,
+        "14": 4,
+        "23": 1,
+        "4": 8
+      }
+    },
+    "item.shrimps.burnt": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2590
+      ],
+      "native_weight_grams": 80,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.7954",
+      "source_id": 7954,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.shrimps.burnt.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2590
+      ],
+      "native_weight_grams": 80,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.7955",
+      "source_id": 7955,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.shrimps.cooked": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2590
+      ],
+      "native_weight_grams": 100,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.315",
+      "source_id": 315,
+      "source_members": false,
+      "source_options": [
+        "Eat",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.shrimps.cooked.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2590
+      ],
+      "native_weight_grams": 100,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.316",
+      "source_id": 316,
+      "source_members": false,
+      "source_options": [
+        "Eat",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.shrimps.raw": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2590
+      ],
+      "native_weight_grams": 120,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.317",
+      "source_id": 317,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.shrimps.raw.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2590
+      ],
+      "native_weight_grams": 120,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.318",
+      "source_id": 318,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.spade": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        496,
+        7304
+      ],
+      "native_weight_grams": 1814,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.952",
+      "source_id": 952,
+      "source_members": false,
+      "source_options": [
+        "Dig",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.spade.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        496,
+        7304
+      ],
+      "native_weight_grams": 1814,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.953",
+      "source_id": 953,
+      "source_members": false,
+      "source_options": [
+        "Dig",
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.spear.bronze": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        540,
+        2719
+      ],
+      "native_weight_grams": 2267,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1237",
+      "source_id": 1237,
+      "source_members": true,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": 5,
+        "1": 5,
+        "10": 6,
+        "11": 0,
+        "13": 0,
+        "14": 4,
+        "2": 5,
+        "3": 0,
+        "4": 0,
+        "5": 1,
+        "6": 1,
+        "7": 0,
+        "701": 1,
+        "8": 0,
+        "9": 0
+      }
+    },
+    "item.spear.bronze.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        540,
+        2719
+      ],
+      "native_weight_grams": 2267,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1238",
+      "source_id": 1238,
+      "source_members": true,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": 5,
+        "1": 5,
+        "10": 6,
+        "11": 0,
+        "13": 0,
+        "14": 4,
+        "2": 5,
+        "3": 0,
+        "4": 0,
+        "5": 1,
+        "6": 1,
+        "7": 0,
+        "701": 1,
+        "8": 0,
+        "9": 0
+      }
+    },
+    "item.sword.bronze": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        519,
+        2604
+      ],
+      "native_weight_grams": 1814,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1277",
+      "source_id": 1277,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": 4,
+        "1": 3,
+        "10": 5,
+        "11": 0,
+        "13": 0,
+        "14": 4,
+        "2": -2,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 2,
+        "7": 1,
+        "8": 0,
+        "9": 0
+      }
+    },
+    "item.sword.bronze.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        519,
+        2604
+      ],
+      "native_weight_grams": 1814,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1278",
+      "source_id": 1278,
+      "source_members": false,
+      "source_options": [
+        null,
+        "Wield",
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {
+        "0": 4,
+        "1": 3,
+        "10": 5,
+        "11": 0,
+        "13": 0,
+        "14": 4,
+        "2": -2,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 2,
+        "7": 1,
+        "8": 0,
+        "9": 0
+      }
+    },
+    "item.talisman.air": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2441
+      ],
+      "native_weight_grams": 15,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1438",
+      "source_id": 1438,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        "Locate",
+        "Drop"
+      ],
+      "source_params": {
+        "983": 4286
+      }
+    },
+    "item.talisman.air.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2441
+      ],
+      "native_weight_grams": 15,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1439",
+      "source_id": 1439,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        "Locate",
+        "Drop"
+      ],
+      "source_params": {
+        "983": 4286
+      }
+    },
+    "item.tinderbox": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        488,
+        2348
+      ],
+      "native_weight_grams": 35,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.590",
+      "source_id": 590,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.tinderbox.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        488,
+        2348
+      ],
+      "native_weight_grams": 35,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.591",
+      "source_id": 591,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.vial": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        561,
+        2747
+      ],
+      "native_weight_grams": 15,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.229",
+      "source_id": 229,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.vial.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        561,
+        2747
+      ],
+      "native_weight_grams": 15,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.230",
+      "source_id": 230,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.water.bucket": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2504
+      ],
+      "native_weight_grams": 3000,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.1929",
+      "source_id": 1929,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {}
+    },
+    "item.water.bucket.noted": {
+      "asset_available": true,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [],
+      "models": [
+        2504
+      ],
+      "native_weight_grams": 3000,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.1930",
+      "source_id": 1930,
+      "source_members": false,
+      "source_options": [
+        null,
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {}
+    }
+  }
+}

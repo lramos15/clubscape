@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "scope": "Version-specific offline host bindings for unchanged injected-client1.12.38. These are not ClubScape game contracts.",
+  "runtime_sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947",
+  "api_sha256": "6d50aa843c070120a5093c5ead29d72e92742074346241e0359a133dad008852",
+  "matching_resources_sha256": "6dcd0da2fdbf48d35c3d8f666d801d05afa964030c553e806eb173dba97323d5",
+  "method_selection_rule": "Use stable public API wrappers or entrypoints demonstrably called by the native runtime. Obfuscator-generated dead aliases can have corrupt arithmetic and are not interchangeable.",
+  "core": [
+    {"purpose": "client identity/thread", "binding": "oe.cz -> owned client instance; tq.km -> current fixture thread; no normal game loop"},
+    {"purpose": "revision", "binding": "aal.ae decoded by multiplier2098754687; set the value240 previously verified through actual original init. This capture is configuration binding, not a new live init observation."},
+    {"purpose": "archive slots", "binding": "Descriptor-exact client.ov:[Lvp; array, preserving its actual native length; no replacement of final fields."},
+    {"purpose": "native JS5", "binding": "vp constructor with an unpumped offline vb queue; vp.az(byte[]) -> va.bw(byte[],1479807699); original compressed groups supplied after CRC/version checks."},
+    {"purpose": "native framebuffer", "binding": "tg(width,height,Canvas,false) -> wo.qi; its original pixel array is the raster target. Required for complete title-flame and sprite behavior."},
+    {"purpose": "textures", "binding": "ec(index9,index8,64,0.8,128), installed through fh.af and rs.mr."},
+    {"purpose": "palette", "binding": "Original fh.ae(0.8), seeded fixture Math.random, no alternate shader or palette."}
+  ],
+  "configuration_archives": [
+    {"field": "pl.ae", "index": 2, "use": "NPC definitions"},
+    {"field": "pl.ab", "index": 7, "use": "NPC model parts"},
+    {"field": "ot.du", "index": 2, "use": "item definitions"},
+    {"field": "gu.dt", "index": 7, "use": "item models"},
+    {"field": "ou.av", "index": 2, "use": "sequences"},
+    {"field": "kp.at", "index": 0, "use": "legacy frames"},
+    {"field": "iy.am", "index": 1, "use": "skeletons"},
+    {"field": "gn.an", "index": 22, "use": "cached animation curves"},
+    {"field": "ak.cq", "index": 2, "use": "object definitions, confirmed via mu.ae"},
+    {"field": "kd.cl", "index": 7, "use": "object models"},
+    {"field": "pt.ae", "index": 2, "use": "varbit metadata"},
+    {"field": "hc.hv", "index": 8, "use": "title sprite lookup"}
+  ],
+  "model_ui": [
+    {"purpose": "tree", "entrypoint": "Client.loadModelData1570, ModelData.recolor3470->5029, original light and Model.drawFrustum"},
+    {"purpose": "NPC animation", "entrypoint": "Client.getNpcDefinition, Client.loadAnimation, pl.ag(...,-520150610)"},
+    {"purpose": "items", "entrypoint": "Client.createItemSprite, outline1, source default shadow, zoom512, explicit quantity mode"},
+    {"purpose": "fonts", "entrypoint": "Original zv constructor, FontTypeFace.getTextWidth/getBaseline/drawWidgetText, native glyph masks/metrics"},
+    {"purpose": "title", "entrypoint": "hs.ai(fonts496,495,494,-1492612357), native it.az JPEG decode and ym.al mirroring"},
+    {"purpose": "title palettes", "entrypoint": "aam.az(index17,-243617527), cs(runes,original graphics-default palettes)"},
+    {"purpose": "sound isolation", "entrypoint": "MutedAnimationAudio only suppresses audio-event callbacks; native animation transformations/stepping are unchanged."}
+  ],
+  "scenes": [
+    {"purpose": "scene build", "entrypoint": "dz0 worldview, xk source map-square request, rl4.fn original maploader, active loader client.rs"},
+    {"purpose": "source bases", "entrypoint": "dz.ac/aa set with original decoding multipliers; loader wb/za and center chunks follow native fk.dx/kk.dd host assignments."},
+    {"purpose": "dynamic state", "entrypoint": "Native pt varbit metadata and original client.al index table; explicit all-zero varps, not observed account values."},
+    {"purpose": "viewport", "entrypoint": "Original ez.cc25 once for visibility allocation, rl.cu(0,0,1920,1080,true,317527437), native viewport zoom readback"},
+    {"purpose": "projection", "entrypoint": "Original fq.ab32768 explicit fixture far plane; culling and occlusion enabled"},
+    {"purpose": "camera", "entrypoint": "Original locked-camera globals ki.jl/nl.jr/ai.jo and client.jj/jt up controls; scene angles16384/turn"},
+    {"purpose": "render", "entrypoint": "Original ez.dh; source ground-relative height and exact native camera readback are recorded."}
+  ],
+  "diagnosed_and_repaired": [
+    "Unused va.cc index-decoder alias allocated nonsensical sizes; replaced with the actual live native entrypoint, not a rewritten decoder.",
+    "Missing matching /runelite/index resources prevented native archive API loading; acquired the hash-pinned matching official client resource JAR.",
+    "Missing native client singleton/texture bindings caused swallowed model failures and misleading partial pixels; repaired and added native exception audits.",
+    "Wrong object-definition/model archive ordering produced terrain without genuine scenery; repaired from live mu.ae references and added object/nonempty-scene checks.",
+    "Source scene initialization needs actual varbit tables, source varp storage, active-loader context, owner linkage and native visibility lifecycle.",
+    "Native scene cameras use16384 angle units and replace passed coordinates with their globals; binding/readback now follows those actual semantics.",
+    "A zero uninitialized far plane rejected all scene geometry; fixtures now record their explicit32768-unit projection setting.",
+    "Assuming zero terrain height placed a Tutorial camera below ground; height is now derived from native source terrain.",
+    "Missing native framebuffer made title flames throw inside swallowed handlers; genuine tg buffers and strict native error audits now cover complete drawing."
+  ],
+  "source_jar_modified": false,
+  "source_pack_approved": false
+}

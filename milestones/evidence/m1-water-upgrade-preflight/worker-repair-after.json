@@ -1,0 +1,22 @@
+{
+  "phase": "after",
+  "target": ".local/water-dispatch/persisted-repair/after-target",
+  "command": [
+    "cargo",
+    "test",
+    "--quiet",
+    "--locked",
+    "--offline",
+    "-p",
+    "clubscape-world-engine",
+    "--test",
+    "item_on_target",
+    "persisted::",
+    "--",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "log_sha256": "a832c88c4c782bd0373ea921cb8412f21dae19e7c774ab663381a1329352282c",
+  "tests_passed": 4,
+  "source_artifact_changed": false
+}

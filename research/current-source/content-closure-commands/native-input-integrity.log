@@ -1,0 +1,3 @@
+Actual original model container passes; corrupted bytes and wrong CRC both rejected.
+Actual full revisions: NPC archive=1788780609, item archive=1788780610, sequence archive=1788780611, interface index=1788780614; none is game build 240.
+Actual Cook 4626/model 13897 pass; missing group/file and duplicate source IDs fail explicitly.

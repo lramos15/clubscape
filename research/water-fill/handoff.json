@@ -1,0 +1,152 @@
+{
+  "approval": {
+    "owner_record": "approve_bounded_water_fill_upgrade",
+    "path": "milestones/approvals/m1-water-fill-upgrade-v1.json",
+    "sha256": "438ba1e44c35f3ad7ebbe8e4c099b02f594df851bd2092a7f767bc4928b4c9d1"
+  },
+  "broader_profile_differences": "research/water-fill/consumer-baseline-differences.json",
+  "contact_qualification": "Original1x2 footprint, source rotation/access masks and explicit walk/sight cells. Conservative cardinal one-tile item-on contact interpretation, not an observed arrival or accepted use.",
+  "dispatch_contract": {
+    "admission": "Start/projection/pending checks share single-mode and target admission; original recipes retain Production menu guards.",
+    "field": "RecipeDefinition.item_on_target: Option<SourceBinding<ItemOnTargetRule>>",
+    "implementation_hashes": {
+      "crates/game-types/src/content.rs": "fb336de624c862544287b36dc7888dd5b70a3ed0c0d4db770c3376bf4aa9802f",
+      "crates/world-engine/src/activities.rs": "ecb838dbec92197fd2ec0475c57f9f3aa2585aad5deb261733bfccd4a3bb5368",
+      "crates/world-engine/src/permissions.rs": "0e040338745033626c8b1e7febe3a71c181f1a9025d9cf182e18f9fe7835b148",
+      "crates/world-engine/src/validation.rs": "fc8552cafbf2c33f4d6f18a26c5a502da0113b3a4dc14757e9f0e51fc0de217e"
+    },
+    "menu": "Source sink14868 interactions remain empty. Mixed menu/item-on declarations are rejected.",
+    "rule": "Source reach and guard for exactly one inventory conversion, no object menu or automatic batch.",
+    "serialization": "Absent is omitted, preserving exact old5b and5e artifact bytes."
+  },
+  "driver": {
+    "actual_driver_or_network_pump_run": false,
+    "arbitrary_east_side_removed": true,
+    "existing_flour_and_bucket_are_reused": true,
+    "files": [
+      "tools/simulator/src/journey/plan.rs",
+      "tools/simulator/src/journey/source.rs"
+    ],
+    "preflight_refuses_missing_dispatch_before_inputs_or_reacquisition": true,
+    "source_clear_candidates": true
+  },
+  "gameplay_or_presentation_accepted": false,
+  "migration_admitted": false,
+  "native_evidence": [
+    "research/water-fill/current5b-water-native.json",
+    "research/water-fill/legacy5e-water-native.json"
+  ],
+  "old_source_profile_compatibility": "research/water-fill/item-on-compatibility.json",
+  "parent_action": "Director reviews the exact legacy5e+water versus current5b+water pins and conservation results, then separately tests/fences any authorized same-world upgrade. This implementation performs no migration. No prior progress, reward, acquisition or unknown operation may be repeated.",
+  "preserved_existing_unknowns": [
+    "normal_grave_bank_all",
+    "recipe.cooking.dough.motion",
+    "empty_container.motion"
+  ],
+  "private_state_read": false,
+  "profiles": [
+    {
+      "candidate_artifact": {
+        "artifact_version": 4,
+        "bytes": 528842,
+        "path": "content/m1/game-content.csc.gz",
+        "schema_version": 4,
+        "sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+        "uncompressed_bytes": 13222639,
+        "uncompressed_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc"
+      },
+      "changed_json_paths": [
+        "/recipes/recipe.water.bucket",
+        "/revision",
+        "/ui/actor_animations/recipes/recipe.water.bucket"
+      ],
+      "native_passed": true,
+      "profile": "current5b-water",
+      "source_baseline": {
+        "commit": "00229843ab08b724b33eae29e92917f12dc86a53",
+        "compressed_artifact_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+        "input": "research/water-fill/inputs/current5b-source.json.gz",
+        "raw_artifact_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+        "repository_path": "content/m1/game-content.json.gz",
+        "revision": "m1.source-backed.v4.bdbf8a3788b842be",
+        "semantic_sha256_without_revision": "fc0f4fb5e73c6d9800b88bb62001b3acfc058c8c37321947f58fc5058835fc74",
+        "source_sha256": "2782a2fbb164ca4c11a964778adf0ca544986f6b2e17aa9bb9bd55f730092ed2"
+      },
+      "unchanged_remainder_sha256": "fc0f4fb5e73c6d9800b88bb62001b3acfc058c8c37321947f58fc5058835fc74"
+    },
+    {
+      "candidate_artifact": {
+        "artifact_version": 4,
+        "bytes": 521255,
+        "path": "content/m1/legacy5e-water/game-content.csc.gz",
+        "schema_version": 4,
+        "sha256": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+        "uncompressed_bytes": 13125018,
+        "uncompressed_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650"
+      },
+      "changed_json_paths": [
+        "/recipes/recipe.water.bucket",
+        "/revision"
+      ],
+      "native_passed": true,
+      "profile": "legacy5e-water",
+      "source_baseline": {
+        "compressed_artifact_sha256": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f",
+        "input": "research/water-fill/inputs/legacy5e-source.json.gz",
+        "public_supplied_copy": ".local/source5e-input/game-content.json.gz",
+        "raw_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+        "revision": "m1.source-backed.v4.3ff4292b311453cc",
+        "semantic_sha256_without_revision": "00f994caf1320993c69d96b833254a5684dbf235cf3bb71f812cff3ad72671a5",
+        "source_sha256": "294ede7e3d8e08633051338385f189c0d420000e74cd2344ce54b13bbfa28706"
+      },
+      "unchanged_remainder_sha256": "00f994caf1320993c69d96b833254a5684dbf235cf3bb71f812cff3ad72671a5"
+    }
+  ],
+  "remaining_seam": null,
+  "schema_version": 1,
+  "source_behavior": {
+    "actor_motion": {
+      "classification": "unresolved_source",
+      "no_animation_verified": false,
+      "reason": "Scenery animationID=-1 is not actor dispatch evidence. No filling sequence or deliberate absence was verified; do not use a similarly named vial, fountain or construction sequence.",
+      "sequence": null
+    },
+    "byproducts": [],
+    "cadence_qualification": "The source explicitly declares1 tick per action/output. Single uses that value directly; first/repeat reuse the same per-conversion duration as a source-supported interpretation. This does not establish automatic batching, Make-X availability or a separately captured startup/animation phase.",
+    "first_ticks": 1,
+    "input": {
+      "item": "item.bucket",
+      "quantity": 1,
+      "source_id": 1925
+    },
+    "menu_delay": 0,
+    "object_menu_operations": [],
+    "output": {
+      "item": "item.water.bucket",
+      "quantity": 1,
+      "source_id": 1929
+    },
+    "repeat_ticks": 1,
+    "single_ticks": 1,
+    "xp_rewards": []
+  },
+  "source_contact_candidates": [
+    {
+      "plane": 0,
+      "x": 3205,
+      "y": 3214
+    },
+    {
+      "plane": 0,
+      "x": 3205,
+      "y": 3217
+    },
+    {
+      "plane": 0,
+      "x": 3206,
+      "y": 3216
+    }
+  ],
+  "status": "ready_for_separate_review",
+  "task": "M1-WATER-ITEM-ON-DISPATCH"
+}

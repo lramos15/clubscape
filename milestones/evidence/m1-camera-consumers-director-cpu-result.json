@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "kind": "strict_streamed_camera_cpu_failure",
+  "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION",
+  "status": "blocked_unloaded_height_marked_present",
+  "executor": "director",
+  "admission": "milestones/evidence/m1-camera-consumers-director-cpu-admission.json",
+  "admission_revision": "b886c666e51238513e60906ce1198c93a8007d1a",
+  "candidate_revision": "93979df1319ad6ab503b0292d553f8deb766ec63",
+  "worktree": ".worktrees/m1-camera-consumers-review",
+  "source_changed": false,
+  "materialized_public_gzip_twins": 2,
+  "compressed_and_decompressed_manifest_pins_verified": true,
+  "all_122_buffers_availability_claimed": false,
+  "command": "CARGO_BUILD_JOBS=4 CARGO_TARGET_DIR=$PWD/.local/director-cpu-target timeout 600s cargo test --locked --offline --quiet -p clubscape-renderer --no-default-features --test camera_source streamed_original_block_getters_preserve_real_cases_and_unloaded_boundaries -- --ignored --exact --nocapture",
+  "measurement_wrapper": "/usr/bin/time; stdout/stderr and actual exit retained separately",
+  "actual_exit_code": 101,
+  "elapsed_seconds_including_build": 8.30,
+  "runner_seconds": 1.98,
+  "tests_passed": 0,
+  "tests_failed": 1,
+  "tests_ignored": 0,
+  "tests_filtered": 5,
+  "consumed_invocations": 1,
+  "remaining_invocations_under_original_admission": 0,
+  "failure": {
+    "test": "streamed_original_block_getters_preserve_real_cases_and_unloaded_boundaries",
+    "file": "crates/renderer/tests/camera_source.rs",
+    "line": 92,
+    "assertion": "missing source block is not zero-height ground",
+    "observation": "With only exact square12850 loaded at scene base3168,3168, height_corner(0,0,0) returned a height instead of a missing-input error.",
+    "preceding_assertions_passed": "Actual source object941 surface-471; shaped surface-240 versus bilinear-238.",
+    "later_unloaded_settings_and_surface_assertions_reached": false
+  },
+  "root_cause": {
+    "finding": "camera-streamed-unloaded-height-presence",
+    "classification": "High-confidence camera input correctness blocker, not a security review.",
+    "paths": [
+      {"path": "crates/renderer/src/scene/terrain.rs", "lines": [915, 925], "role": "The live terrain pass copies every numerical corner, including zero-filled unloaded slots, through SceneData::set_height."},
+      {"path": "crates/renderer/src/scene/mod.rs", "lines": [270, 276], "role": "The new camera presence hook marks every set_height call as an observed source corner."}
+    ],
+    "required_repair": "Carry actual corner-write presence from SceneTerrain through apply while preserving the existing renderer's numerical heights, including its zero-filled unloaded/far-edge values. Genuine loaded zero and unobserved zero must remain distinguishable.",
+    "test_must_not_be_weakened": true
+  },
+  "evidence": [
+    {"path": "milestones/evidence/m1-camera-consumers-director-cpu/streamed-camera.log", "bytes": 661, "sha256": "d124d87aebe9d5e6974ec5ff4a5fa5b4d27b471152392bb21f5f9f9707a7afa6"},
+    {"path": "milestones/evidence/m1-camera-consumers-director-cpu/streamed-camera.time", "bytes": 114, "sha256": "cf614ba868fc5c6c5866b4351d69047ff9a780ae4bd64ca0485e330ae216ce38"},
+    {"path": "milestones/evidence/m1-camera-consumers-director-cpu/streamed-camera.exit", "bytes": 4, "sha256": "39b8dc3fc8b44765c8e6f1adee04c5b465e555ab791cc42d0d9e810d5b64297c"}
+  ],
+  "actual_test_executable": {
+    "path": ".worktrees/m1-camera-consumers-review/.local/director-cpu-target/debug/deps/camera_source-b82e2565ebdb3ab0",
+    "bytes": 26722072,
+    "sha256": "d1d1a874dc3744ffa59da3b3778d5ae9a4679ef778b4d202e93f6d07f2ce09bf",
+    "invoked_only_by_the_named_cargo_test": true
+  },
+  "host": "Linux aarch64; rustc/cargo1.98.1; four jobs; private target; no installations",
+  "gpu_browser_gear_source_generation_or_protected_operations": 0,
+  "main_integration": false,
+  "normal_entry_or_milestone_accepted": false,
+  "new_saved_or_exhausted_external_execution_authority": false
+}

@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "established_before_candidate_evaluation": true,
+  "candidate_evaluations_performed": 0,
+  "owner_approved": false,
+  "profiles": {
+    "native_sprite_font": {
+      "alignment_translation_px": 0,
+      "scale": 1,
+      "glyph_advance_error_px": 0,
+      "glyph_mask_different_pixels": 0,
+      "font_ascent_error_px": 0,
+      "sprite_opaque_different_pixels": 0,
+      "sprite_alpha_error": 0,
+      "palette_channel_error": 0,
+      "justification": "These are unchanged source bitmaps and 257-byte font metrics; resampling, substitute fonts, palette shifts or altered advances have no raster excuse."
+    },
+    "native_scene_model": {
+      "alignment_translation_px": 0,
+      "scale": 1,
+      "source_frame_index_error": 0,
+      "camera_input_error_source_units": 0,
+      "nonedge_max_channel_error_8bit": 2,
+      "nonedge_mean_abs_channel_error_8bit": 0.35,
+      "silhouette_hausdorff_px": 1,
+      "edge_band_radius_px": 1,
+      "edge_band_changed_fraction_of_full_image_max": 0.005,
+      "missing_geometry_pixels": 0,
+      "source_vertex_count_difference": 0,
+      "source_triangle_count_difference": 0,
+      "animation_phase_error_client_cycles_max": 1,
+      "justification": "Small integer/float raster-edge differences only. Compute the 1-pixel band from SOURCE edges before comparison. All geometry, textures, interior shading and background stay in the comparison; never mask a creature or scenery."
+    },
+    "public_lossless_ui": {
+      "alignment_translation_px": 0,
+      "scale": 1,
+      "matched_native_component_pixel_error": 0,
+      "text_advance_error_px": 0,
+      "layout_anchor_error_px": 1,
+      "flat_region_max_channel_error_8bit": 0,
+      "edge_band_radius_px": 1,
+      "edge_mean_abs_channel_error_8bit_max": 1,
+      "changed_pixel_fraction_max": 0.002,
+      "justification": "Only explicitly reconciled unchanged components are normative. The complete supplied panel remains checked. Dynamic text/values use independent pinned source oracles and native glyphs, not another screenshot or an exclusion mask. A historical crop does not establish a current full-frame layout."
+    },
+    "public_lossy_motion": {
+      "alignment_translation_px": 0,
+      "scale": 1,
+      "layout_anchor_error_px": 1,
+      "mean_abs_channel_error_8bit_max": 2,
+      "channel_error_p99_8bit_max": 12,
+      "silhouette_hausdorff_px_max": 1,
+      "source_recording_time_error_seconds_max": 0.02,
+      "current_native_sprite_font_error": 0,
+      "justification": "JPEG/H.264/GIF evidence has encoded raster/temporal limitations, not permission to redesign. These limits apply only to a matched, known-scale reference. Unknown camera, image scaling or build blocks calibrated acceptance; do not rescale a candidate to minimize its difference."
+    },
+    "owner_composition": {
+      "unchanged_source_region_different_pixels": 0,
+      "frame_size_error_px": 0,
+      "source_font_advance_error_px": 0,
+      "source_sprite_scale": 1,
+      "proposed_control_anchor_error_px": 0,
+      "glyph_clip_pixels": 0,
+      "text_or_control_overlap_pixels": 0,
+      "justification": "Only named text/branding/control additions are proposals. Reused source frames and all unchanged pixels must remain exact. The proposal is not an approved baseline, a source screenshot or a game client."
+    },
+    "audio_source": {
+      "source_file_hash_difference": 0,
+      "decoded_pcm_hash_difference": 0,
+      "browser_float_abs_error_max": 2.3e-05,
+      "additional_clip_samples": 0,
+      "proposed_gain_error_db_max": 0.25,
+      "proposed_known_frame_event_onset_error_ms_max": 20,
+      "proposed_channel_transition_overlap_error_ms_max": 20,
+      "duplicate_playing_sources": 0,
+      "unbound_trigger_timing_tolerance_ms": null,
+      "justification": "Lossless current native PCM is exact. The float allowance bounds the already measured Chrome positive-int16 mapping (0.00002282857894897461). 20 ms is one proposed client cycle, NOT an observed packet delay or music fade. Unknown trigger identities/timing must be resolved, not assigned zero or guessed."
+    },
+    "penguin_adaptation": {
+      "unchanged_source_frame_vertex_error": 0,
+      "unchanged_source_palette_error": 0,
+      "source_scale_numerator": 75,
+      "source_scale_denominator": 128,
+      "proposed_attachment_gap_source_units_max": 2,
+      "proposed_unintended_equipment_penetration_source_units_max": 1,
+      "missing_functional_equipment_slots": 0,
+      "animation_frame_omissions": 0,
+      "justification": "The original NPC is a reuse-first OWNER-REVIEW candidate, not an approved player. Attachment/contact thresholds are separate proposals and do not relax ordinary tree/goblin/scene fidelity or permit deleting functional equipment slots."
+    },
+    "dynamic_state_text": {
+      "text_codepoint_mismatches": 0,
+      "dynamic_value_mismatches": 0,
+      "glyph_advance_error_px": 0,
+      "glyph_mask_different_pixels": 0,
+      "source_font_id_mismatches": 0,
+      "source_colour_run_mismatches": 0,
+      "strikethrough_flag_mismatches": 0,
+      "required_panel_pixel_coverage": 1.0,
+      "unverified_font_or_background_substitutions": 0,
+      "justification": "Reuse source-backed panel geometry, source pixels/components and native fonts. Validate data-only changes from pinned transcripts/contracts, never from the candidate's first screenshot. Every dynamic rectangle includes checked source background; no entire text box, slot grid or panel is ignored."
+    },
+    "native_hud": {
+      "alignment_translation_px": 0,
+      "scale": 1,
+      "native_widget_bounds_error_px": 0,
+      "native_attachment_mismatches": 0,
+      "unchanged_ui_pixel_error": 0,
+      "glyph_advance_error_px": 0,
+      "source_sprite_or_font_substitutions": 0,
+      "unchecked_frame_pixel_fraction": 0,
+      "world_profile": "native_scene_model",
+      "dynamic_text_profile": "dynamic_state_text",
+      "justification": "Compare the full original frame at its declared controlled state. UI regions retain exact source pixels/geometry/attachments; scene rasterization uses the existing narrow native-scene profile, never a scenery mask. Synthetic fixture text is usable for that fixture's pixel replay only; journey dialogue comes from pinned transcript/native-font oracles."
+    }
+  },
+  "selection_vs_acceptance": "Source-to-source component checks do not evaluate any ClubScape candidate. Source reference approval, candidate fidelity, behavior, performance and RuneLite compatibility are separate gates.",
+  "mask_policy": "No whole-panel/creature/scenery masks; no post-hoc tolerances. Store full images and explicit source-derived edge bands. Data-only states use source-backed glyph/value checks with full panel pixel accounting, never a masked success.",
+  "factorization": {
+    "source_capture_count_rule": "One representative source image/component family may support many state projections. Every distinct layout, control mode, enabled/disabled/highlight signature and outcome remains explicitly required; data factoring does not truncate the71-state journey.",
+    "lane_1_whole_reference_state": "At least one candidate fixture per distinct family/style state reproduces the actual representative source input's declared state and uses full-panel comparison. Do not invent a value or camera and call it the photographed source state.",
+    "lane_2_dynamic_state_projection": "Keep the same frozen source frame/font/sprite/layout. Bind dialogue strings, quantities, choices, filters, statuses and unlock flags from pinned source transcripts/contracts. Compare glyph masks/advances, source styling and values separately.",
+    "pixel_accounting": "100% of each unchanged panel is checked, never masked. A partition may use source pixels, source background+native glyphs, source background+native item sprites or source widget primitives. Every partition has actual input IDs; union is the complete panel and intersections are empty.",
+    "dynamic_background": "A text/item rectangle includes its SOURCE background. Do not erase old lettering by cloning nearby pixels or excluding an entire text box. If the appropriate background/native widget geometry is unavailable, require the native-panel input rather than declaring that rectangle passed.",
+    "scene_accounting": "Compare complete unchanged scene regions with existing original scene fixtures at their exact recorded camera/lighting/texture settings. Unknown public cameras stay unknown; no whole scenery/creature masks or source-frame relabeling.",
+    "native_resolved_values": "Source widget files record static inputs, not every client-script result. Resolve dynamic widget size/font/color/visibility from actual native fixture metadata before pixel acceptance; do not choose a font/scale merely because it fits a candidate.",
+    "numeric": {
+      "unchecked_panel_pixel_fraction": 0,
+      "overlapping_partition_pixel_fraction": 0,
+      "text_codepoint_mismatches": 0,
+      "glyph_advance_error_px": 0,
+      "glyph_mask_different_pixels": 0,
+      "dynamic_value_mismatches": 0,
+      "source_colour_run_mismatches": 0,
+      "strikethrough_flag_mismatches": 0,
+      "missing_distinct_visual_variants": 0,
+      "missing_tutorial_states": 0,
+      "removed_or_hidden_required_controls": 0
+    }
+  }
+}

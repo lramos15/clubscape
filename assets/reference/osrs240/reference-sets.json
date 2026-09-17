@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "source_selection": "research/current-source/selection.json",
+  "sets": [
+    {
+      "id": "original-runtime-core",
+      "count": 93,
+      "manifest": {
+        "path": "assets/reference/osrs240/captures.json",
+        "size_bytes": 107327,
+        "sha256": "1ea61e13890747c29000ae778642337e101850472f12861c3ad9e49d71f8818e"
+      },
+      "scope": "Original93 model/animation/icon/font/title/scenery fixtures"
+    },
+    {
+      "id": "native-resizable-classic-hud",
+      "count": 16,
+      "manifest": {
+        "path": "assets/reference/osrs240/native-hud/captures.json",
+        "size_bytes": 923425,
+        "sha256": "f70232054d6e4213dcaf5d83bed667c0cd7771e6832993fbd7824dd3463b8218"
+      },
+      "scope": "Original native full-frame/panel and6 controlled interface availability-family fixtures"
+    }
+  ],
+  "total_native_images": 109,
+  "public_references": "Public/wiki/online evidence remains complementary; no blanket live-account prerequisite.",
+  "source_journey_observed": false,
+  "owner_reference_pack_approved": false,
+  "m1_accepted": false
+}

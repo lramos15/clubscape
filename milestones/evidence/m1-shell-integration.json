@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "browser_shell_foundation_integrated_production_ui_gate_still_blocked",
+  "code_revision": "ab6ce6e8aab372b87dfb037a329789a28ad34e17",
+  "isolated_candidate_revision": "d77ee887c60f4f7f3f53b5685b395801f028cb14",
+  "execution_root": ".worktrees/m1-shell-integration",
+  "shell_owned_commits": 27,
+  "director_owned_commits": 2,
+  "commit_mapping": {
+    "path": "milestones/evidence/m1-shell-integration/commits.json",
+    "sha256": "39c5bac48cadc46ad371922e29cc1908ff5e43fa46309ba43eae2bcf260f7e29"
+  },
+  "foreign_commits_repicked": false,
+  "tested_shell_subtrees_identical_to_root": true,
+  "implemented": [
+    "Actual generated client-core/Protobuf WASM bridge, binary same-origin transport and memory-only account credentials/tokens.",
+    "Complete current UI4 requests/projections, semantic All quantities, independent bank revisions and identity-bound recovery.",
+    "Actual scene/template identity and versioned source audio authority without invented legacy history or full native varp words.",
+    "Actor-scoped native preference storage, original renderer/audio/UI factories and explicit missing composition ports.",
+    "Source/compiler/public-asset delivery with exact artifact, approval, MIME, containment and buffer identity checks."
+  ],
+  "director_repairs": {
+    "lock": {
+      "owned": "15d35a54fc1765020d11a934f01150a33b2bdc81",
+      "integrated": "559e46b2448b205342b2ee42df6419228abd23d6",
+      "change": "Add the new clubscape-wasm member and its existing dependency edges.",
+      "existing_package_versions_changed": false
+    },
+    "subscriber_failure": {
+      "owned": "d77ee887c60f4f7f3f53b5685b395801f028cb14",
+      "integrated": "ab6ce6e8aab372b87dfb037a329789a28ad34e17",
+      "before": "A throwing UI subscriber was silently swallowed after acknowledgment, unsent queued input still dispatched, and an initially failed subscription stayed registered.",
+      "before_regressions_failed": 2,
+      "after_regressions_passed": 2,
+      "repair": "Remove failed subscribers and report a safe component error off the request promise through a required hook. Composition shows a terminal local correlation and cancels unsent work without retrying or disputing the acknowledged operation.",
+      "raw_subscriber_exception_published": false,
+      "before_log_sha256": "66334e74ad45505d623f2e139f22fafeb75ab8e7b63e70510233614de8ae4dae",
+      "after_log_sha256": "40c76344e1d2eff47b9df2cad1721f5deb3af33afd0176b40342a8da866ab118"
+    }
+  },
+  "validation": {
+    "isolated_web_tests_passed": 219,
+    "isolated_wasm_tests_passed": 40,
+    "root_web_tests_passed": 219,
+    "root_wasm_tests_passed": 40,
+    "root_checks_overlap_isolated_checks": true,
+    "root_web_command": "pnpm --dir web test",
+    "root_web_log_sha256": "98914bcf06b598024da51a1858748347f2208316cbad3157688c54c79f8098fe",
+    "root_wasm_command": "cargo test --locked -p clubscape-wasm",
+    "root_wasm_log_sha256": "ae5d60074add6d011b849c6506bed858cc487ee2fb1707153013906ec1a96967",
+    "native_and_wasm_bridge_clippy": "passed",
+    "formatting": "passed",
+    "actual_protocol_wasm_build": "passed",
+    "actual_renderer_wasm_build": "passed",
+    "renderer_wasm_sha256": "d06005a0d9c41ee3673257154193e0c4315375b7b36f80570f3d4609d140abf9",
+    "renderer_js_sha256": "e63a0c4ae2b9d061671b21f0d5379cacd275c3f96027a6a3d5417e61f2597f0f",
+    "frozen_reference_command": "pnpm --dir web reference:check",
+    "frozen_reference_hashes_checked": 1307,
+    "frozen_reference_cases_checked": 126,
+    "reference_inputs_or_approval_changed": false,
+    "initial_prerequisite_failures": [
+      "Locked Cargo validation correctly required the new WASM member entry; offline resolution changed no existing versions.",
+      "The initial viewport test module lacked generated renderer JS; building the actual protocol/renderer restored the prerequisite, without skipping the test.",
+      "render:inputs refused an outside-worktree package path; the identical package was copied into the owned tree and hash-verified rather than weakening containment."
+    ]
+  },
+  "production_build": {
+    "command": "pnpm --dir web build",
+    "result": "failed_at_existing_ui_typecheck",
+    "log_sha256": "1adb153a592994cce94e4b575f6459e8d2be92a33525beba6c3ff94bf4de5e28",
+    "protocol_and_renderer_build_steps_passed": true,
+    "vite_and_delivery_steps_reached": false,
+    "typecheck_bypassed": false,
+    "ui_owned_errors": [
+      "web/ui/gameplay-ui.ts:72 current request schemas incomplete",
+      "web/ui/gameplay-ui.ts:140 activeTab/document projection schemas missing",
+      "web/ui/gameplay-ui.ts:211 dispatcher not exhaustive",
+      "web/ui/tests/audio-fixture.ts:54 native preferences absent",
+      "web/ui/tests/component-fixture.ts:57 activeTab/document absent"
+    ],
+    "unbound_actual_ui_ports": ["bindUiAudioPreferences", "setUiMinimap", "setUiMapIconSprites", "bindUiMinimapProjection"]
+  },
+  "new_source_bundle": {
+    "path": ".worktrees/m1-shell-integration/.local/source-shell-integration-5b3-78fed",
+    "world_id": "3518088e-e00e-451f-86d7-e538bd6ae6e0",
+    "gameplay_raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "content_revision": "m1.source-backed.v4.bdbf8a3788b842be",
+    "content_manifest_sha256": "025c18232e15f074a44e42569ef5065aea39af285986882e58701f7801dd9b7f",
+    "public_assets": 7711,
+    "public_bytes_including_manifest": 212473305,
+    "server_descriptor_bytes": 406966,
+    "server_descriptor_limit": 524288,
+    "renderer_manifest_sha256": "78fed3ca6b1549b329d6a48a47b35b68e912303b7d4698bb4cc0a8bdd2c34455",
+    "renderer_manifest_file_pins": 975,
+    "renderer_exporter_verified_present_files": 920,
+    "renderer_selected_runtime_buffers": 785,
+    "these_inventory_counts_are_not_interchangeable": true,
+    "block_package_sha256": "880924edb755f3613a58d60b62d91c7507da968071998d2aaef91b77d7739b49",
+    "block_package_members": 183,
+    "block_squares": 61,
+    "historical_world_or_bundle_repinned": false,
+    "accounts_characters_or_gameplay_seeded": false,
+    "game_server_or_database_started_for_this_checkpoint": false,
+    "source_delivery_is_not_runtime_gameplay_acceptance": true
+  },
+  "still_unverified": [
+    "Complete current UI schema/dispatch/fixtures and actual native preference/minimap ports.",
+    "Source-bound live camera/control metadata; normal entry still reports the actual absence rather than using a diagnostic camera.",
+    "Production preview/spatial-audio metadata producers; the shell owner has the bounded follow-up.",
+    "Exact restored dying observation, then separately authorized Office/grave/Cook/post-quest continuation.",
+    "Normal-grave Bank-All and dough/seven Empty motion or verified-absence source facts.",
+    "New unintegrated renderer mesh/metric candidate, deformation style, turned chunks/shared-normal edges and source widget icon capture.",
+    "Complete composed browser journey/fidelity/audio, frozen performance, Mac/Edge and owner acceptance."
+  ],
+  "whole_production_client_verified": false,
+  "full_m1_journey_verified": false,
+  "presentation_accepted": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

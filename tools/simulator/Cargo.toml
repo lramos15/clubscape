@@ -1,0 +1,35 @@
+[package]
+name = "clubscape-sim"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+default-run = "clubscape-sim"
+
+[features]
+journey-server = ["dep:clubscape-content", "dep:clubscape-server", "dep:tracing-subscriber"]
+
+[[bin]]
+name = "clubscape-journey-server"
+path = "src/bin/journey_server.rs"
+required-features = ["journey-server"]
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+clubscape-protocol.workspace = true
+clubscape-content = { path = "../../crates/content", optional = true }
+clubscape-server = { path = "../../crates/server", optional = true }
+flate2 = "1.1"
+prost.workspace = true
+prost-reflect = { version = "0.16", features = ["serde"] }
+reqwest.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+tokio.workspace = true
+tracing-subscriber = { workspace = true, optional = true }
+uuid = { workspace = true, features = ["v4"] }
+
+[lints]
+workspace = true

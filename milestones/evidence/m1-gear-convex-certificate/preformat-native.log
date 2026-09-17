@@ -1,0 +1,18 @@
+
+running 5 tests
+.closed=true parity_safe=false witness=[13.090169906616211, 9.510564804077148, 10.0] signed_depth=6.909829737218426 interval=[0.000000000000003972054645195637,0.000000000000003972054645195637] resolved=true evaluations=1
+
+thread 'self_crossing_coplanar_patch_cannot_certify_below_its_own_signed_distance' (4125515) panicked at crates/renderer/tests/gear_geometry.rs:167:5:
+certified upper 0.000000000000003972054645195637 is below the same solid's depth 6.909829737218426 at an actual surface-edge midpoint
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+ 1/5
+self_crossing_coplanar_patch_cannot_certify_below_its_own_signed_distance --- FAILED
+...
+failures:
+
+failures:
+    self_crossing_coplanar_patch_cannot_certify_below_its_own_signed_distance
+
+test result: FAILED. 4 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p clubscape-renderer --test gear_geometry`

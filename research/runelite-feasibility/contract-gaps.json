@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "Reproduced: documented environment launch reached account-only Hello; public-API strict launch rejected full source descriptor",
+  "base_commit": "3fc927788a69fed2aa4d7b77b317ef64acb90be0",
+  "gaps": [
+    {
+      "id": "game-root-environment-nesting",
+      "owner": "Director/shared authoritative service",
+      "surface": "crates/server/src/config.rs::Config::from_env",
+      "evidence": "The CLUBSCAPE_GAME_ROOT lookup is accidentally nested within the CLUBSCAPE_WEB_ROOT branch. Live attempt 2 supplied only the documented game root, started the real PostgreSQL-backed service, then received a genuine Hello with gameplay unavailable. The native client rejected this rather than pretending that account-only readiness was a game connection.",
+      "required_extension": "Read and validate CLUBSCAPE_GAME_ROOT independently of optional CLUBSCAPE_WEB_ROOT. Test game-only, absent, blank, invalid and combined environment configurations in subprocesses. Keep the fail-closed contract.",
+      "diagnostic_alternative": "The owned service-probe binary calls the already-public Config::with_game_root constructor and unchanged Service::bind. It contains no game/storage rules and does not weaken any engine/readiness/file guard."
+    },
+    {
+      "id": "strict-game-descriptor-capacity",
+      "owner": "Director/shared authoritative service",
+      "surface": "crates/server/src/game_service/content.rs::load reads clubscape-game.json with a 256*1024 byte bound",
+      "evidence": "The actual strict compiler reports 5010 referenced asset IDs (strict-compiler-capacity.json). Their map alone needs 267049 bytes even if every ID shared the shortest legal /assets/ URL, exceeding 262144 before metadata. The real descriptor is 283075 bytes. Live attempt 3 called unchanged Service::bind via the public configuration constructor and exited 1 with game_content/game_file_size.",
+      "required_extension": "Raise the bounded descriptor read limit enough for the actual frozen source pack (for example 1 MiB), retaining identity/hash/file/asset-membership/readiness/loopback guards. Add a real full-source descriptor-capacity test. No game rule or protocol tag change is needed.",
+      "workaround_used": false,
+      "not_authorized": [
+        "Removing scenery or content assets",
+        "Coercing strict server readiness into fixture/account-only mode",
+        "Editing authority from this reserved adapter task"
+      ]
+    }
+  ],
+  "compatibility_verified": false,
+  "desktop_deferral_approved": false
+}

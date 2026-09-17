@@ -1,0 +1,3254 @@
+{
+  "clock": "performance.now",
+  "start": {
+    "snapshot": {
+      "version": 1,
+      "clock": "performance.now",
+      "application": "harness-fixture",
+      "identity": {
+        "buildId": "harness-fixture/v1",
+        "sceneId": "tool-fixture-one-triangle",
+        "routeId": "no-gameplay-route",
+        "workloadId": "tool-fixture-colored-split",
+        "sourcePackSha256": null,
+        "benchmarkContractSha256": "4a4a25ba19d5c65ce22b725621804c6f22dbae4de133ca52af168b36c2e03c7f",
+        "assetManifestSha256": "6754fb4837812768eafc60a6946d19b99d62d81c2afc0b5db1b1f2e91b845384",
+        "settingsSha256": "d46b69dad523a26c7e50190d609e8c2b04c32f46e8fe95b3a43a7d86c99a0166"
+      },
+      "ready": true,
+      "backend": "webgpu",
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "assets": [
+        {
+          "id": "fixture-triangle.wgsl",
+          "sha256": "ca39137aa60de88329dea5d705e15de08fdb377cb21c015166d4324582a21fca",
+          "loaded": true
+        }
+      ],
+      "entities": {
+        "fixtureTriangles": 1
+      },
+      "deviceEpoch": "tool-fixture-device-1",
+      "renderedFrames": 52,
+      "lastSubmittedAtMs": 986.4349999427795,
+      "lastCompletedAtMs": 987.7400000095367,
+      "nowMs": 1005.7449998855591,
+      "frames": []
+    },
+    "observedAtMs": 1005.75,
+    "viewport": {
+      "width": 1920,
+      "height": 1080,
+      "deviceScaleFactor": 1
+    },
+    "gpu": {
+      "secureContext": true,
+      "webgpuAvailable": true,
+      "canvas": {
+        "width": 1920,
+        "height": 1048,
+        "cssWidth": 1920,
+        "cssHeight": 1048
+      },
+      "device": {
+        "id": 1,
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "",
+          "device": "",
+          "description": ""
+        },
+        "fallbackAdapter": false,
+        "features": [
+          "core-features-and-limits"
+        ],
+        "adapterFeatures": [
+          "bgra8unorm-storage",
+          "chromium-experimental-multi-draw-indirect",
+          "chromium-experimental-sampling-resource-table",
+          "chromium-experimental-subgroup-matrix",
+          "chromium-experimental-timestamp-query-inside-passes",
+          "clip-distances",
+          "core-features-and-limits",
+          "depth-clip-control",
+          "depth32float-stencil8",
+          "dual-source-blending",
+          "float32-blendable",
+          "float32-filterable",
+          "indirect-first-instance",
+          "primitive-index",
+          "rg11b10ufloat-renderable",
+          "subgroup-size-control",
+          "subgroups",
+          "texture-component-swizzle",
+          "texture-compression-astc",
+          "texture-compression-astc-sliced-3d",
+          "texture-compression-bc",
+          "texture-compression-bc-sliced-3d",
+          "texture-compression-etc2",
+          "texture-compression-unaligned",
+          "texture-formats-tier1",
+          "texture-formats-tier2",
+          "timestamp-query"
+        ],
+        "submissions": 53,
+        "completedSubmissions": 52,
+        "lastCompletedAtMs": 987.7349998950958,
+        "canvasAcquisitions": 53,
+        "canvasConfigurations": 1,
+        "lost": false
+      },
+      "errors": []
+    }
+  },
+  "end": {
+    "snapshot": {
+      "version": 1,
+      "clock": "performance.now",
+      "application": "harness-fixture",
+      "identity": {
+        "buildId": "harness-fixture/v1",
+        "sceneId": "tool-fixture-one-triangle",
+        "routeId": "no-gameplay-route",
+        "workloadId": "tool-fixture-colored-split",
+        "sourcePackSha256": null,
+        "benchmarkContractSha256": "4a4a25ba19d5c65ce22b725621804c6f22dbae4de133ca52af168b36c2e03c7f",
+        "assetManifestSha256": "6754fb4837812768eafc60a6946d19b99d62d81c2afc0b5db1b1f2e91b845384",
+        "settingsSha256": "d46b69dad523a26c7e50190d609e8c2b04c32f46e8fe95b3a43a7d86c99a0166"
+      },
+      "ready": true,
+      "backend": "webgpu",
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "assets": [
+        {
+          "id": "fixture-triangle.wgsl",
+          "sha256": "ca39137aa60de88329dea5d705e15de08fdb377cb21c015166d4324582a21fca",
+          "loaded": true
+        }
+      ],
+      "entities": {
+        "fixtureTriangles": 1
+      },
+      "deviceEpoch": "tool-fixture-device-1",
+      "renderedFrames": 203,
+      "lastSubmittedAtMs": 3504.7549998760223,
+      "lastCompletedAtMs": 3506.805000066757,
+      "nowMs": 3508.994999885559,
+      "frames": [
+        {
+          "sequence": 203,
+          "submittedAtMs": 3504.7549998760223,
+          "completedAtMs": 3506.805000066757,
+          "drawCalls": 1,
+          "primitives": 1,
+          "cpuEncodeMs": 0.1099998950958252
+        }
+      ]
+    },
+    "observedAtMs": 3509,
+    "viewport": {
+      "width": 1920,
+      "height": 1080,
+      "deviceScaleFactor": 1
+    },
+    "gpu": {
+      "secureContext": true,
+      "webgpuAvailable": true,
+      "canvas": {
+        "width": 1920,
+        "height": 1048,
+        "cssWidth": 1920,
+        "cssHeight": 1048
+      },
+      "device": {
+        "id": 1,
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "",
+          "device": "",
+          "description": ""
+        },
+        "fallbackAdapter": false,
+        "features": [
+          "core-features-and-limits"
+        ],
+        "adapterFeatures": [
+          "bgra8unorm-storage",
+          "chromium-experimental-multi-draw-indirect",
+          "chromium-experimental-sampling-resource-table",
+          "chromium-experimental-subgroup-matrix",
+          "chromium-experimental-timestamp-query-inside-passes",
+          "clip-distances",
+          "core-features-and-limits",
+          "depth-clip-control",
+          "depth32float-stencil8",
+          "dual-source-blending",
+          "float32-blendable",
+          "float32-filterable",
+          "indirect-first-instance",
+          "primitive-index",
+          "rg11b10ufloat-renderable",
+          "subgroup-size-control",
+          "subgroups",
+          "texture-component-swizzle",
+          "texture-compression-astc",
+          "texture-compression-astc-sliced-3d",
+          "texture-compression-bc",
+          "texture-compression-bc-sliced-3d",
+          "texture-compression-etc2",
+          "texture-compression-unaligned",
+          "texture-formats-tier1",
+          "texture-formats-tier2",
+          "timestamp-query"
+        ],
+        "submissions": 203,
+        "completedSubmissions": 203,
+        "lastCompletedAtMs": 3506.7999999523163,
+        "canvasAcquisitions": 203,
+        "canvasConfigurations": 1,
+        "lost": false
+      },
+      "errors": []
+    }
+  },
+  "sampleObservations": [
+    {
+      "observedAtMs": 1005.75,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 53,
+          "completedSubmissions": 52,
+          "lastCompletedAtMs": 987.7349998950958,
+          "canvasAcquisitions": 53,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 52,
+      "lastSubmittedAtMs": 986.4349999427795,
+      "lastCompletedAtMs": 987.7400000095367
+    },
+    {
+      "observedAtMs": 1108.9300000667572,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 59,
+          "completedSubmissions": 59,
+          "lastCompletedAtMs": 1105.7549998760223,
+          "canvasAcquisitions": 59,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 59,
+      "lastSubmittedAtMs": 1103.9449999332428,
+      "lastCompletedAtMs": 1105.7549998760223
+    },
+    {
+      "observedAtMs": 1213.1399998664856,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 65,
+          "completedSubmissions": 65,
+          "lastCompletedAtMs": 1205.2649998664856,
+          "canvasAcquisitions": 65,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 65,
+      "lastSubmittedAtMs": 1203.585000038147,
+      "lastCompletedAtMs": 1205.2699999809265
+    },
+    {
+      "observedAtMs": 1316.6050000190735,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 71,
+          "completedSubmissions": 71,
+          "lastCompletedAtMs": 1304.9349999427795,
+          "canvasAcquisitions": 71,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 71,
+      "lastSubmittedAtMs": 1303.2999999523163,
+      "lastCompletedAtMs": 1304.9349999427795
+    },
+    {
+      "observedAtMs": 1420.2649998664856,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 78,
+          "completedSubmissions": 77,
+          "lastCompletedAtMs": 1404.409999847412,
+          "canvasAcquisitions": 78,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 77,
+      "lastSubmittedAtMs": 1403.6050000190735,
+      "lastCompletedAtMs": 1404.409999847412
+    },
+    {
+      "observedAtMs": 1524.159999847412,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 84,
+          "completedSubmissions": 84,
+          "lastCompletedAtMs": 1522.914999961853,
+          "canvasAcquisitions": 84,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 84,
+      "lastSubmittedAtMs": 1521.2799999713898,
+      "lastCompletedAtMs": 1522.9199998378754
+    },
+    {
+      "observedAtMs": 1627.5699999332428,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 90,
+          "completedSubmissions": 90,
+          "lastCompletedAtMs": 1621.6349999904633,
+          "canvasAcquisitions": 90,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 90,
+      "lastSubmittedAtMs": 1620.204999923706,
+      "lastCompletedAtMs": 1621.6399998664856
+    },
+    {
+      "observedAtMs": 1731.2000000476837,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 96,
+          "completedSubmissions": 96,
+          "lastCompletedAtMs": 1722.284999847412,
+          "canvasAcquisitions": 96,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 96,
+      "lastSubmittedAtMs": 1720.835000038147,
+      "lastCompletedAtMs": 1722.289999961853
+    },
+    {
+      "observedAtMs": 1834.4849998950958,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 102,
+          "completedSubmissions": 102,
+          "lastCompletedAtMs": 1821.7699999809265,
+          "canvasAcquisitions": 102,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 102,
+      "lastSubmittedAtMs": 1820.5550000667572,
+      "lastCompletedAtMs": 1821.7699999809265
+    },
+    {
+      "observedAtMs": 1937.4849998950958,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 109,
+          "completedSubmissions": 108,
+          "lastCompletedAtMs": 1921.835000038147,
+          "canvasAcquisitions": 109,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 108,
+      "lastSubmittedAtMs": 1920.6299998760223,
+      "lastCompletedAtMs": 1921.835000038147
+    },
+    {
+      "observedAtMs": 2040.3199999332428,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 115,
+          "completedSubmissions": 115,
+          "lastCompletedAtMs": 2038.5550000667572,
+          "canvasAcquisitions": 115,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 115,
+      "lastSubmittedAtMs": 2036.8949999809265,
+      "lastCompletedAtMs": 2038.5599999427795
+    },
+    {
+      "observedAtMs": 2144.1749999523163,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 121,
+          "completedSubmissions": 121,
+          "lastCompletedAtMs": 2138.609999895096,
+          "canvasAcquisitions": 121,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 121,
+      "lastSubmittedAtMs": 2136.7200000286102,
+      "lastCompletedAtMs": 2138.609999895096
+    },
+    {
+      "observedAtMs": 2248.274999856949,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 127,
+          "completedSubmissions": 127,
+          "lastCompletedAtMs": 2237.899999856949,
+          "canvasAcquisitions": 127,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 127,
+      "lastSubmittedAtMs": 2236.7000000476837,
+      "lastCompletedAtMs": 2237.899999856949
+    },
+    {
+      "observedAtMs": 2352.1299998760223,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 133,
+          "completedSubmissions": 133,
+          "lastCompletedAtMs": 2338.5049998760223,
+          "canvasAcquisitions": 133,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 133,
+      "lastSubmittedAtMs": 2336.8949999809265,
+      "lastCompletedAtMs": 2338.5049998760223
+    },
+    {
+      "observedAtMs": 2455.284999847412,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 140,
+          "completedSubmissions": 140,
+          "lastCompletedAtMs": 2455.055000066757,
+          "canvasAcquisitions": 140,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 140,
+      "lastSubmittedAtMs": 2453.3250000476837,
+      "lastCompletedAtMs": 2455.055000066757
+    },
+    {
+      "observedAtMs": 2558.6299998760223,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 146,
+          "completedSubmissions": 146,
+          "lastCompletedAtMs": 2555.055000066757,
+          "canvasAcquisitions": 146,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 146,
+      "lastSubmittedAtMs": 2553.2549998760223,
+      "lastCompletedAtMs": 2555.055000066757
+    },
+    {
+      "observedAtMs": 2661.680000066757,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 152,
+          "completedSubmissions": 152,
+          "lastCompletedAtMs": 2654.75,
+          "canvasAcquisitions": 152,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 152,
+      "lastSubmittedAtMs": 2652.8450000286102,
+      "lastCompletedAtMs": 2654.75
+    },
+    {
+      "observedAtMs": 2765.4749999046326,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 158,
+          "completedSubmissions": 158,
+          "lastCompletedAtMs": 2754.9199998378754,
+          "canvasAcquisitions": 158,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 158,
+      "lastSubmittedAtMs": 2752.744999885559,
+      "lastCompletedAtMs": 2754.9199998378754
+    },
+    {
+      "observedAtMs": 2869.2599999904633,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 164,
+          "completedSubmissions": 164,
+          "lastCompletedAtMs": 2855.579999923706,
+          "canvasAcquisitions": 164,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 164,
+      "lastSubmittedAtMs": 2853.5899999141693,
+      "lastCompletedAtMs": 2855.585000038147
+    },
+    {
+      "observedAtMs": 2972.9400000572205,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 171,
+          "completedSubmissions": 171,
+          "lastCompletedAtMs": 2971.9400000572205,
+          "canvasAcquisitions": 171,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 171,
+      "lastSubmittedAtMs": 2969.8849999904633,
+      "lastCompletedAtMs": 2971.944999933243
+    },
+    {
+      "observedAtMs": 3076.744999885559,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 177,
+          "completedSubmissions": 177,
+          "lastCompletedAtMs": 3071.930000066757,
+          "canvasAcquisitions": 177,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 177,
+      "lastSubmittedAtMs": 3070.5499999523163,
+      "lastCompletedAtMs": 3071.9400000572205
+    },
+    {
+      "observedAtMs": 3179.524999856949,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 183,
+          "completedSubmissions": 183,
+          "lastCompletedAtMs": 3171.0899999141693,
+          "canvasAcquisitions": 183,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 183,
+      "lastSubmittedAtMs": 3169.5499999523163,
+      "lastCompletedAtMs": 3171.0899999141693
+    },
+    {
+      "observedAtMs": 3282.625,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 189,
+          "completedSubmissions": 189,
+          "lastCompletedAtMs": 3271.3550000190735,
+          "canvasAcquisitions": 189,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 189,
+      "lastSubmittedAtMs": 3269.9500000476837,
+      "lastCompletedAtMs": 3271.359999895096
+    },
+    {
+      "observedAtMs": 3386.284999847412,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 195,
+          "completedSubmissions": 195,
+          "lastCompletedAtMs": 3370.8849999904633,
+          "canvasAcquisitions": 195,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 195,
+      "lastSubmittedAtMs": 3369.625,
+      "lastCompletedAtMs": 3370.8849999904633
+    },
+    {
+      "observedAtMs": 3490.359999895096,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 202,
+          "completedSubmissions": 202,
+          "lastCompletedAtMs": 3489.319999933243,
+          "canvasAcquisitions": 202,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 202,
+      "lastSubmittedAtMs": 3487.25,
+      "lastCompletedAtMs": 3489.3250000476837
+    },
+    {
+      "observedAtMs": 3509,
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "gpu": {
+        "secureContext": true,
+        "webgpuAvailable": true,
+        "canvas": {
+          "width": 1920,
+          "height": 1048,
+          "cssWidth": 1920,
+          "cssHeight": 1048
+        },
+        "device": {
+          "id": 1,
+          "adapter": {
+            "vendor": "nvidia",
+            "architecture": "",
+            "device": "",
+            "description": ""
+          },
+          "fallbackAdapter": false,
+          "features": [
+            "core-features-and-limits"
+          ],
+          "adapterFeatures": [
+            "bgra8unorm-storage",
+            "chromium-experimental-multi-draw-indirect",
+            "chromium-experimental-sampling-resource-table",
+            "chromium-experimental-subgroup-matrix",
+            "chromium-experimental-timestamp-query-inside-passes",
+            "clip-distances",
+            "core-features-and-limits",
+            "depth-clip-control",
+            "depth32float-stencil8",
+            "dual-source-blending",
+            "float32-blendable",
+            "float32-filterable",
+            "indirect-first-instance",
+            "primitive-index",
+            "rg11b10ufloat-renderable",
+            "subgroup-size-control",
+            "subgroups",
+            "texture-component-swizzle",
+            "texture-compression-astc",
+            "texture-compression-astc-sliced-3d",
+            "texture-compression-bc",
+            "texture-compression-bc-sliced-3d",
+            "texture-compression-etc2",
+            "texture-compression-unaligned",
+            "texture-formats-tier1",
+            "texture-formats-tier2",
+            "timestamp-query"
+          ],
+          "submissions": 203,
+          "completedSubmissions": 203,
+          "lastCompletedAtMs": 3506.7999999523163,
+          "canvasAcquisitions": 203,
+          "canvasConfigurations": 1,
+          "lost": false
+        },
+        "errors": []
+      },
+      "renderedFrames": 203,
+      "lastSubmittedAtMs": 3504.7549998760223,
+      "lastCompletedAtMs": 3506.805000066757
+    }
+  ],
+  "frames": [
+    {
+      "sequence": 53,
+      "submittedAtMs": 1004.5149998664856,
+      "completedAtMs": 1006.204999923706,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.22499990463256836
+    },
+    {
+      "sequence": 54,
+      "submittedAtMs": 1020.5249998569489,
+      "completedAtMs": 1022.0999999046326,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 55,
+      "submittedAtMs": 1036.5199999809265,
+      "completedAtMs": 1038.3150000572205,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.12000012397766113
+    },
+    {
+      "sequence": 56,
+      "submittedAtMs": 1053.7999999523163,
+      "completedAtMs": 1055.1900000572205,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1400001049041748
+    },
+    {
+      "sequence": 57,
+      "submittedAtMs": 1070.9049999713898,
+      "completedAtMs": 1072.8599998950958,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.15000009536743164
+    },
+    {
+      "sequence": 58,
+      "submittedAtMs": 1086.5550000667572,
+      "completedAtMs": 1088.7000000476837,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 59,
+      "submittedAtMs": 1103.9449999332428,
+      "completedAtMs": 1105.7549998760223,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11999988555908203
+    },
+    {
+      "sequence": 60,
+      "submittedAtMs": 1120.9700000286102,
+      "completedAtMs": 1122.75,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 61,
+      "submittedAtMs": 1137.829999923706,
+      "completedAtMs": 1139.5599999427795,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1099998950958252
+    },
+    {
+      "sequence": 62,
+      "submittedAtMs": 1153.8099999427795,
+      "completedAtMs": 1155.5199999809265,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11999988555908203
+    },
+    {
+      "sequence": 63,
+      "submittedAtMs": 1170.8650000095367,
+      "completedAtMs": 1172.539999961853,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.13000011444091797
+    },
+    {
+      "sequence": 64,
+      "submittedAtMs": 1186.7999999523163,
+      "completedAtMs": 1188.4900000095367,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.19000005722045898
+    },
+    {
+      "sequence": 65,
+      "submittedAtMs": 1203.585000038147,
+      "completedAtMs": 1205.2699999809265,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 66,
+      "submittedAtMs": 1219.7549998760223,
+      "completedAtMs": 1221.3499999046326,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 67,
+      "submittedAtMs": 1236.9449999332428,
+      "completedAtMs": 1238.6800000667572,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.12999987602233887
+    },
+    {
+      "sequence": 68,
+      "submittedAtMs": 1253.6800000667572,
+      "completedAtMs": 1255.625,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 69,
+      "submittedAtMs": 1270.8250000476837,
+      "completedAtMs": 1272.6449999809265,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.21500015258789062
+    },
+    {
+      "sequence": 70,
+      "submittedAtMs": 1286.954999923706,
+      "completedAtMs": 1288.6549999713898,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 71,
+      "submittedAtMs": 1303.2999999523163,
+      "completedAtMs": 1304.9349999427795,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 72,
+      "submittedAtMs": 1320.6399998664856,
+      "completedAtMs": 1322.2300000190735,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 73,
+      "submittedAtMs": 1337.0499999523163,
+      "completedAtMs": 1338.909999847412,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 74,
+      "submittedAtMs": 1354.2200000286102,
+      "completedAtMs": 1355.2649998664856,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 75,
+      "submittedAtMs": 1370.6299998760223,
+      "completedAtMs": 1372.3250000476837,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1099998950958252
+    },
+    {
+      "sequence": 76,
+      "submittedAtMs": 1387.1949999332428,
+      "completedAtMs": 1393.1900000572205,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.13499999046325684
+    },
+    {
+      "sequence": 77,
+      "submittedAtMs": 1403.6050000190735,
+      "completedAtMs": 1404.409999847412,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.12000012397766113
+    },
+    {
+      "sequence": 78,
+      "submittedAtMs": 1419.9849998950958,
+      "completedAtMs": 1421.164999961853,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 79,
+      "submittedAtMs": 1437.8599998950958,
+      "completedAtMs": 1439.7749998569489,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 80,
+      "submittedAtMs": 1453.5149998664856,
+      "completedAtMs": 1454.744999885559,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 81,
+      "submittedAtMs": 1470.3450000286102,
+      "completedAtMs": 1471.7799999713898,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 82,
+      "submittedAtMs": 1487.2200000286102,
+      "completedAtMs": 1488.8099999427795,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.12000012397766113
+    },
+    {
+      "sequence": 83,
+      "submittedAtMs": 1503.5299999713898,
+      "completedAtMs": 1504.9649999141693,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 84,
+      "submittedAtMs": 1521.2799999713898,
+      "completedAtMs": 1522.9199998378754,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.21499991416931152
+    },
+    {
+      "sequence": 85,
+      "submittedAtMs": 1537.375,
+      "completedAtMs": 1538.5750000476837,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 86,
+      "submittedAtMs": 1554.0950000286102,
+      "completedAtMs": 1555.5299999713898,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.10500001907348633
+    },
+    {
+      "sequence": 87,
+      "submittedAtMs": 1570.4700000286102,
+      "completedAtMs": 1571.5999999046326,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.22500014305114746
+    },
+    {
+      "sequence": 88,
+      "submittedAtMs": 1586.6549999713898,
+      "completedAtMs": 1587.9749999046326,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1100001335144043
+    },
+    {
+      "sequence": 89,
+      "submittedAtMs": 1603.4500000476837,
+      "completedAtMs": 1604.6749999523163,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1100001335144043
+    },
+    {
+      "sequence": 90,
+      "submittedAtMs": 1620.204999923706,
+      "completedAtMs": 1621.6399998664856,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 91,
+      "submittedAtMs": 1637.0049998760223,
+      "completedAtMs": 1638.3250000476837,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11999988555908203
+    },
+    {
+      "sequence": 92,
+      "submittedAtMs": 1653.784999847412,
+      "completedAtMs": 1655.1099998950958,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1099998950958252
+    },
+    {
+      "sequence": 93,
+      "submittedAtMs": 1669.710000038147,
+      "completedAtMs": 1671.1299998760223,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.12000012397766113
+    },
+    {
+      "sequence": 94,
+      "submittedAtMs": 1687.664999961853,
+      "completedAtMs": 1688.994999885559,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1099998950958252
+    },
+    {
+      "sequence": 95,
+      "submittedAtMs": 1703.534999847412,
+      "completedAtMs": 1704.869999885559,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.13499999046325684
+    },
+    {
+      "sequence": 96,
+      "submittedAtMs": 1720.835000038147,
+      "completedAtMs": 1722.289999961853,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1100001335144043
+    },
+    {
+      "sequence": 97,
+      "submittedAtMs": 1736.9900000095367,
+      "completedAtMs": 1738.6099998950958,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.10500001907348633
+    },
+    {
+      "sequence": 98,
+      "submittedAtMs": 1754.0499999523163,
+      "completedAtMs": 1755.329999923706,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.10500001907348633
+    },
+    {
+      "sequence": 99,
+      "submittedAtMs": 1770.1800000667572,
+      "completedAtMs": 1771.8949999809265,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 100,
+      "submittedAtMs": 1786.9749999046326,
+      "completedAtMs": 1788.164999961853,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 101,
+      "submittedAtMs": 1803.7300000190735,
+      "completedAtMs": 1805.1050000190735,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1100001335144043
+    },
+    {
+      "sequence": 102,
+      "submittedAtMs": 1820.5550000667572,
+      "completedAtMs": 1821.7699999809265,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 103,
+      "submittedAtMs": 1836.9800000190735,
+      "completedAtMs": 1838.2349998950958,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1100001335144043
+    },
+    {
+      "sequence": 104,
+      "submittedAtMs": 1854.079999923706,
+      "completedAtMs": 1855.2300000190735,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.18000006675720215
+    },
+    {
+      "sequence": 105,
+      "submittedAtMs": 1870.2649998664856,
+      "completedAtMs": 1872.0950000286102,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1099998950958252
+    },
+    {
+      "sequence": 106,
+      "submittedAtMs": 1887.2349998950958,
+      "completedAtMs": 1888.6399998664856,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09999990463256836
+    },
+    {
+      "sequence": 107,
+      "submittedAtMs": 1903.9449999332428,
+      "completedAtMs": 1905.6150000095367,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 108,
+      "submittedAtMs": 1920.6299998760223,
+      "completedAtMs": 1921.835000038147,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.07499980926513672
+    },
+    {
+      "sequence": 109,
+      "submittedAtMs": 1936.5750000476837,
+      "completedAtMs": 1938.034999847412,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.06000018119812012
+    },
+    {
+      "sequence": 110,
+      "submittedAtMs": 1953.9400000572205,
+      "completedAtMs": 1959.3949999809265,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.06500005722045898
+    },
+    {
+      "sequence": 111,
+      "submittedAtMs": 1969.7249999046326,
+      "completedAtMs": 1975.409999847412,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.06500005722045898
+    },
+    {
+      "sequence": 112,
+      "submittedAtMs": 1987.0550000667572,
+      "completedAtMs": 1994.8199999332428,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.08000016212463379
+    },
+    {
+      "sequence": 113,
+      "submittedAtMs": 2003.3849999904633,
+      "completedAtMs": 2009.9249999523163,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.05500006675720215
+    },
+    {
+      "sequence": 114,
+      "submittedAtMs": 2021.3999998569489,
+      "completedAtMs": 2023.1900000572205,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.18999981880187988
+    },
+    {
+      "sequence": 115,
+      "submittedAtMs": 2036.8949999809265,
+      "completedAtMs": 2038.5599999427795,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09500002861022949
+    },
+    {
+      "sequence": 116,
+      "submittedAtMs": 2053.829999923706,
+      "completedAtMs": 2055.8450000286102,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 117,
+      "submittedAtMs": 2070.524999856949,
+      "completedAtMs": 2072.194999933243,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1399998664855957
+    },
+    {
+      "sequence": 118,
+      "submittedAtMs": 2087.034999847412,
+      "completedAtMs": 2088.6050000190735,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.13499999046325684
+    },
+    {
+      "sequence": 119,
+      "submittedAtMs": 2104.055000066757,
+      "completedAtMs": 2106.069999933243,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.14500021934509277
+    },
+    {
+      "sequence": 120,
+      "submittedAtMs": 2120.609999895096,
+      "completedAtMs": 2122.3150000572205,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.12999987602233887
+    },
+    {
+      "sequence": 121,
+      "submittedAtMs": 2136.7200000286102,
+      "completedAtMs": 2138.609999895096,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.15000009536743164
+    },
+    {
+      "sequence": 122,
+      "submittedAtMs": 2153.399999856949,
+      "completedAtMs": 2156.1299998760223,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1399998664855957
+    },
+    {
+      "sequence": 123,
+      "submittedAtMs": 2170.819999933243,
+      "completedAtMs": 2172.5149998664856,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.12999987602233887
+    },
+    {
+      "sequence": 124,
+      "submittedAtMs": 2186.2200000286102,
+      "completedAtMs": 2187.6699998378754,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1100001335144043
+    },
+    {
+      "sequence": 125,
+      "submittedAtMs": 2203.8250000476837,
+      "completedAtMs": 2205.664999961853,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1400001049041748
+    },
+    {
+      "sequence": 126,
+      "submittedAtMs": 2220.494999885559,
+      "completedAtMs": 2221.8099999427795,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.08999991416931152
+    },
+    {
+      "sequence": 127,
+      "submittedAtMs": 2236.7000000476837,
+      "completedAtMs": 2237.899999856949,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09500002861022949
+    },
+    {
+      "sequence": 128,
+      "submittedAtMs": 2253.869999885559,
+      "completedAtMs": 2255.3899998664856,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09999990463256836
+    },
+    {
+      "sequence": 129,
+      "submittedAtMs": 2270.444999933243,
+      "completedAtMs": 2271.659999847412,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.10500001907348633
+    },
+    {
+      "sequence": 130,
+      "submittedAtMs": 2287.109999895096,
+      "completedAtMs": 2288.375,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.10500001907348633
+    },
+    {
+      "sequence": 131,
+      "submittedAtMs": 2303.3849999904633,
+      "completedAtMs": 2304.5650000572205,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.10000014305114746
+    },
+    {
+      "sequence": 132,
+      "submittedAtMs": 2319.609999895096,
+      "completedAtMs": 2320.914999961853,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.07500004768371582
+    },
+    {
+      "sequence": 133,
+      "submittedAtMs": 2336.8949999809265,
+      "completedAtMs": 2338.5049998760223,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 134,
+      "submittedAtMs": 2353.6050000190735,
+      "completedAtMs": 2354.9900000095367,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.07000017166137695
+    },
+    {
+      "sequence": 135,
+      "submittedAtMs": 2370.2200000286102,
+      "completedAtMs": 2371.274999856949,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.07000017166137695
+    },
+    {
+      "sequence": 136,
+      "submittedAtMs": 2386.5299999713898,
+      "completedAtMs": 2387.9199998378754,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 137,
+      "submittedAtMs": 2403.7949998378754,
+      "completedAtMs": 2405.2699999809265,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.10499978065490723
+    },
+    {
+      "sequence": 138,
+      "submittedAtMs": 2420.5499999523163,
+      "completedAtMs": 2422.0999999046326,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.10500001907348633
+    },
+    {
+      "sequence": 139,
+      "submittedAtMs": 2436.5650000572205,
+      "completedAtMs": 2438.3450000286102,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 140,
+      "submittedAtMs": 2453.3250000476837,
+      "completedAtMs": 2455.055000066757,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1550002098083496
+    },
+    {
+      "sequence": 141,
+      "submittedAtMs": 2470.319999933243,
+      "completedAtMs": 2471.609999895096,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.15000009536743164
+    },
+    {
+      "sequence": 142,
+      "submittedAtMs": 2486.5650000572205,
+      "completedAtMs": 2487.7799999713898,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.13499999046325684
+    },
+    {
+      "sequence": 143,
+      "submittedAtMs": 2503.2799999713898,
+      "completedAtMs": 2504.960000038147,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 144,
+      "submittedAtMs": 2520.375,
+      "completedAtMs": 2522.5650000572205,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1549999713897705
+    },
+    {
+      "sequence": 145,
+      "submittedAtMs": 2537.0750000476837,
+      "completedAtMs": 2538.789999961853,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.12000012397766113
+    },
+    {
+      "sequence": 146,
+      "submittedAtMs": 2553.2549998760223,
+      "completedAtMs": 2555.055000066757,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.14999985694885254
+    },
+    {
+      "sequence": 147,
+      "submittedAtMs": 2569.8099999427795,
+      "completedAtMs": 2571.2699999809265,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09500002861022949
+    },
+    {
+      "sequence": 148,
+      "submittedAtMs": 2586.534999847412,
+      "completedAtMs": 2588.159999847412,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09499979019165039
+    },
+    {
+      "sequence": 149,
+      "submittedAtMs": 2603.3250000476837,
+      "completedAtMs": 2604.8799998760223,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.13000011444091797
+    },
+    {
+      "sequence": 150,
+      "submittedAtMs": 2619.994999885559,
+      "completedAtMs": 2621.2300000190735,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.04499983787536621
+    },
+    {
+      "sequence": 151,
+      "submittedAtMs": 2636.414999961853,
+      "completedAtMs": 2638.664999961853,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09999990463256836
+    },
+    {
+      "sequence": 152,
+      "submittedAtMs": 2652.8450000286102,
+      "completedAtMs": 2654.75,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.13499999046325684
+    },
+    {
+      "sequence": 153,
+      "submittedAtMs": 2669.819999933243,
+      "completedAtMs": 2671.944999933243,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.12999987602233887
+    },
+    {
+      "sequence": 154,
+      "submittedAtMs": 2687.034999847412,
+      "completedAtMs": 2688.4249999523163,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.10499978065490723
+    },
+    {
+      "sequence": 155,
+      "submittedAtMs": 2703.4349999427795,
+      "completedAtMs": 2705.734999895096,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11999988555908203
+    },
+    {
+      "sequence": 156,
+      "submittedAtMs": 2719.539999961853,
+      "completedAtMs": 2721.829999923706,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.07500004768371582
+    },
+    {
+      "sequence": 157,
+      "submittedAtMs": 2736.5,
+      "completedAtMs": 2737.8899998664856,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.07500004768371582
+    },
+    {
+      "sequence": 158,
+      "submittedAtMs": 2752.744999885559,
+      "completedAtMs": 2754.9199998378754,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.07500004768371582
+    },
+    {
+      "sequence": 159,
+      "submittedAtMs": 2769.5999999046326,
+      "completedAtMs": 2771.3650000095367,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.07999992370605469
+    },
+    {
+      "sequence": 160,
+      "submittedAtMs": 2786.3550000190735,
+      "completedAtMs": 2788.909999847412,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1100001335144043
+    },
+    {
+      "sequence": 161,
+      "submittedAtMs": 2802.9199998378754,
+      "completedAtMs": 2805.0499999523163,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09499979019165039
+    },
+    {
+      "sequence": 162,
+      "submittedAtMs": 2819.494999885559,
+      "completedAtMs": 2821.4749999046326,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.10500001907348633
+    },
+    {
+      "sequence": 163,
+      "submittedAtMs": 2836.369999885559,
+      "completedAtMs": 2838.5299999713898,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09999990463256836
+    },
+    {
+      "sequence": 164,
+      "submittedAtMs": 2853.5899999141693,
+      "completedAtMs": 2855.585000038147,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 165,
+      "submittedAtMs": 2869.875,
+      "completedAtMs": 2871.1549999713898,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.10500001907348633
+    },
+    {
+      "sequence": 166,
+      "submittedAtMs": 2887.0099999904633,
+      "completedAtMs": 2888.4900000095367,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.12000012397766113
+    },
+    {
+      "sequence": 167,
+      "submittedAtMs": 2902.7949998378754,
+      "completedAtMs": 2904.2649998664856,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 168,
+      "submittedAtMs": 2919.9199998378754,
+      "completedAtMs": 2922.5199999809265,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.08999991416931152
+    },
+    {
+      "sequence": 169,
+      "submittedAtMs": 2936.284999847412,
+      "completedAtMs": 2937.329999923706,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.06999993324279785
+    },
+    {
+      "sequence": 170,
+      "submittedAtMs": 2953.234999895096,
+      "completedAtMs": 2954.369999885559,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09500002861022949
+    },
+    {
+      "sequence": 171,
+      "submittedAtMs": 2969.8849999904633,
+      "completedAtMs": 2971.944999933243,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.13000011444091797
+    },
+    {
+      "sequence": 172,
+      "submittedAtMs": 2986.984999895096,
+      "completedAtMs": 2988.2799999713898,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09500002861022949
+    },
+    {
+      "sequence": 173,
+      "submittedAtMs": 3003.5999999046326,
+      "completedAtMs": 3005.2400000095367,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.08500003814697266
+    },
+    {
+      "sequence": 174,
+      "submittedAtMs": 3020.329999923706,
+      "completedAtMs": 3021.7400000095367,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 175,
+      "submittedAtMs": 3037.055000066757,
+      "completedAtMs": 3038.734999895096,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.13000011444091797
+    },
+    {
+      "sequence": 176,
+      "submittedAtMs": 3053.494999885559,
+      "completedAtMs": 3055.039999961853,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.125
+    },
+    {
+      "sequence": 177,
+      "submittedAtMs": 3070.5499999523163,
+      "completedAtMs": 3071.9400000572205,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11999988555908203
+    },
+    {
+      "sequence": 178,
+      "submittedAtMs": 3086.9900000095367,
+      "completedAtMs": 3088.3899998664856,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.13000011444091797
+    },
+    {
+      "sequence": 179,
+      "submittedAtMs": 3103.6699998378754,
+      "completedAtMs": 3105.1299998760223,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.13499999046325684
+    },
+    {
+      "sequence": 180,
+      "submittedAtMs": 3120.0099999904633,
+      "completedAtMs": 3121.6549999713898,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 181,
+      "submittedAtMs": 3136.2249999046326,
+      "completedAtMs": 3138.055000066757,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09999990463256836
+    },
+    {
+      "sequence": 182,
+      "submittedAtMs": 3153.6749999523163,
+      "completedAtMs": 3155.569999933243,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09999990463256836
+    },
+    {
+      "sequence": 183,
+      "submittedAtMs": 3169.5499999523163,
+      "completedAtMs": 3171.0899999141693,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.08999991416931152
+    },
+    {
+      "sequence": 184,
+      "submittedAtMs": 3186.5449998378754,
+      "completedAtMs": 3188.5449998378754,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.07999992370605469
+    },
+    {
+      "sequence": 185,
+      "submittedAtMs": 3202.805000066757,
+      "completedAtMs": 3204.3799998760223,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.10000014305114746
+    },
+    {
+      "sequence": 186,
+      "submittedAtMs": 3220.284999847412,
+      "completedAtMs": 3221.244999885559,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09499979019165039
+    },
+    {
+      "sequence": 187,
+      "submittedAtMs": 3236.369999885559,
+      "completedAtMs": 3237.409999847412,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09500002861022949
+    },
+    {
+      "sequence": 188,
+      "submittedAtMs": 3253.7300000190735,
+      "completedAtMs": 3255.5650000572205,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1700000762939453
+    },
+    {
+      "sequence": 189,
+      "submittedAtMs": 3269.9500000476837,
+      "completedAtMs": 3271.359999895096,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1100001335144043
+    },
+    {
+      "sequence": 190,
+      "submittedAtMs": 3286.5099999904633,
+      "completedAtMs": 3287.994999885559,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.18499994277954102
+    },
+    {
+      "sequence": 191,
+      "submittedAtMs": 3303.2549998760223,
+      "completedAtMs": 3304.789999961853,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09500002861022949
+    },
+    {
+      "sequence": 192,
+      "submittedAtMs": 3320.0299999713898,
+      "completedAtMs": 3321.369999885559,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 193,
+      "submittedAtMs": 3336.649999856949,
+      "completedAtMs": 3338.0950000286102,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1099998950958252
+    },
+    {
+      "sequence": 194,
+      "submittedAtMs": 3353.539999961853,
+      "completedAtMs": 3354.909999847412,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.11500000953674316
+    },
+    {
+      "sequence": 195,
+      "submittedAtMs": 3369.625,
+      "completedAtMs": 3370.8849999904633,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.09000015258789062
+    },
+    {
+      "sequence": 196,
+      "submittedAtMs": 3386.6749999523163,
+      "completedAtMs": 3389.034999847412,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.05500006675720215
+    },
+    {
+      "sequence": 197,
+      "submittedAtMs": 3404.609999895096,
+      "completedAtMs": 3406.7649998664856,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.10500001907348633
+    },
+    {
+      "sequence": 198,
+      "submittedAtMs": 3420.8849999904633,
+      "completedAtMs": 3422.774999856949,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.19499993324279785
+    },
+    {
+      "sequence": 199,
+      "submittedAtMs": 3438.0899999141693,
+      "completedAtMs": 3441.4649999141693,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.18000006675720215
+    },
+    {
+      "sequence": 200,
+      "submittedAtMs": 3455.2799999713898,
+      "completedAtMs": 3458.1299998760223,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.18000006675720215
+    },
+    {
+      "sequence": 201,
+      "submittedAtMs": 3470.2149999141693,
+      "completedAtMs": 3471.8150000572205,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.08999991416931152
+    },
+    {
+      "sequence": 202,
+      "submittedAtMs": 3487.25,
+      "completedAtMs": 3489.3250000476837,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.18000006675720215
+    },
+    {
+      "sequence": 203,
+      "submittedAtMs": 3504.7549998760223,
+      "completedAtMs": 3506.805000066757,
+      "drawCalls": 1,
+      "primitives": 1,
+      "cpuEncodeMs": 0.1099998950958252
+    }
+  ]
+}

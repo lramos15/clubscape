@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "initial_index": "index.json",
+  "initial_index_sha256": "affc93f4348f19b2a6be074061a0b74aae89ee4b19cc1475b0b9e5b5b47a380b",
+  "regression_commits": [
+    "d7706a37066825a02780c2a0261bd1397edf562c",
+    "5759399ba49b46a9c490df03a9202b401784c7d4"
+  ],
+  "files": [
+    {
+      "path": "actual-gate.json",
+      "source": ".worktrees/m1-gear-convex-patch/.local/gear-convex-review-01/actual-gate.json",
+      "bytes": 1044,
+      "sha256": "208f253a724327b89481cc5adced5c33dff1dd5285d45f9e0ad8c1f84552f3b1"
+    },
+    {
+      "path": "actual-gate.log",
+      "source": ".worktrees/m1-gear-convex-patch/.local/gear-convex-review-01/actual-gate.log",
+      "bytes": 1441,
+      "sha256": "93b29a060ca92238a97f095a95d3bdc9b08cd59d8739af853b8f3e35b4f3be86"
+    }
+  ],
+  "raw_evidence_preserved": true,
+  "source_poses_recomputed": 0,
+  "milestone_accepted": false
+}

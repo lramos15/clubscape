@@ -1,0 +1,43 @@
+{
+  "browser_decoded_files": 264,
+  "commands": [
+    {
+      "command": "python3 tools/audio-import/bindings.py audit",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 tools/audio-import/bindings.py publish-audio",
+      "exit_code": 0
+    },
+    {
+      "command": "PYTHONPATH=.local/audio-bindings/python AUDIO_IMPORT_INTEGRATION=1 python3 -m unittest discover -s tools/audio-import -p test_*.py -q",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 tools/audio-import/audio_import.py validate",
+      "exit_code": 0
+    },
+    {
+      "command": "node tools/audio-import/browser_check.mjs /path/to/verified/chrome",
+      "exit_code": 0
+    }
+  ],
+  "existing_sfx_file_hashes_preserved": 223,
+  "malformed_non_script_payloads_separately_rejected": 1,
+  "manifest_sha256": "8e6d1eca465f720829599cae0e1c11b7700a9c7162e53dd5ddec36ceb89787aa",
+  "native_queue_cases": 16,
+  "native_scripts_decoded": 9801,
+  "owner_reference_pack_approved": false,
+  "remaining_pack_gates": [
+    "input.required_effect_bindings",
+    "input.quest_jingle_binding"
+  ],
+  "runtime_browser_audio_accepted": false,
+  "schema_version": 1,
+  "silent_weighted_entries_preserved": true,
+  "source_selection_unchanged": true,
+  "task": "m1-audio-bindings",
+  "test_log_sha256": "cd2350b91e8fc96a077e10cd4f22bcb331b716ce69fd5ef7794d0447fc37ee65",
+  "unit_and_integration_tests": 39,
+  "whole_pack_gates_closed": []
+}

@@ -1,0 +1,80 @@
+{
+  "additive_capabilities": [
+    "game.ui.amounts.v1",
+    "game.ui.recovery.v1"
+  ],
+  "capability": "game.ui.v1",
+  "death_value_extension": {
+    "revision": "osrs240-guide-69ecf1c861f20f88.ui4.df3330b0232f1a7e",
+    "rows": [
+      {
+        "canonical_item": "item.beer_glass",
+        "effective_death_value": 22,
+        "guide_price": 22,
+        "high_alchemy": 1,
+        "item": "item.beer_glass",
+        "method": "maximum_guide_and_high_alchemy",
+        "policy": "research/runtime-bindings/death-values.json",
+        "source_item_id": 1919
+      },
+      {
+        "canonical_item": "item.beer_glass",
+        "effective_death_value": 22,
+        "guide_price": 22,
+        "high_alchemy": 1,
+        "item": "item.beer_glass.noted",
+        "method": "maximum_guide_and_high_alchemy",
+        "policy": "research/runtime-bindings/death-values.json",
+        "source_item_id": 1919
+      },
+      {
+        "canonical_item": "item.vial",
+        "effective_death_value": 3,
+        "guide_price": 3,
+        "high_alchemy": 1,
+        "item": "item.vial",
+        "method": "maximum_guide_and_high_alchemy",
+        "policy": "research/runtime-bindings/death-values.json",
+        "source_item_id": 229
+      },
+      {
+        "canonical_item": "item.vial",
+        "effective_death_value": 3,
+        "guide_price": 3,
+        "high_alchemy": 1,
+        "item": "item.vial.noted",
+        "method": "maximum_guide_and_high_alchemy",
+        "policy": "research/runtime-bindings/death-values.json",
+        "source_item_id": 229
+      }
+    ]
+  },
+  "introduced_containers": [
+    "item.vial",
+    "item.beer_glass"
+  ],
+  "native_control_bindings": "research/interface-contracts/control-bindings.json",
+  "native_level_associations": {
+    "interface.level_up": {
+      "body_widget": 15269890,
+      "continue_widget": 15269891,
+      "source_group": 233,
+      "style": "chatbox_level_up",
+      "title_widget": 15269889
+    },
+    "interface.level_up_notification": {
+      "body_widget": 43253768,
+      "source_group": 660,
+      "source_script": 3343,
+      "style": "notification_popup",
+      "title_widget": 43253764
+    }
+  },
+  "remaining_source_permissions": [
+    "normal_grave_bank_all"
+  ],
+  "schema_version": 1,
+  "scope": "Required consumption replacements only; no new acquisition family, source geometry or reward change.",
+  "semantic_states": 71,
+  "source_facts": "research/interface-contracts/sources.json"
+}

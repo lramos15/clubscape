@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "validation_kind": "source_contract_consistency_only",
+  "validated_at": "2026-09-14T00:08:26.616753+00:00",
+  "command": "python3 research/journey-rules/validate.py --snapshots --self-test --report",
+  "input_sha256": {
+    "sources.json": "bf919e5d46e1dab02d7719f8caee0c1353d56006ba096679bc56dfe4fcba574d",
+    "vocabulary.json": "590d12348952c41dbbf9772a08537926bb6dfcda3c2a29bd4e881265a2313a6b",
+    "decisions.json": "d5b77043a3d00d024231aca6fcc2360056a38d59718c281df173fdb09037553f",
+    "initial-state.json": "3f6cefa5f68f226878df5286d1689c1ebe5a2fa28b4d6c5d0fd34a7741447ad3",
+    "tutorial.json": "774789d1559f438f3db6036d831d4b341a093d77949d416ff9bc8bfe48d0087b",
+    "activities.json": "a0eb67f8615642161f7ba05ecfda99bd1ba62102f5fc23f335a340df4645f6f7",
+    "cooks-assistant.json": "ccb21048828e1d1a774f09c809d01aaf6900425bc52ea2e1bc471142ff4295cf",
+    "expected-scenarios.json": "c9dc703ab7ad139d6df90791d13bcb3cbfcdd518973517e3bdabcbc93ba29a68",
+    "author_contracts.py": "eb9cf0215aaa848ef9091735535e261304f4c76fc75a47f0d3357a81f7f68ed9",
+    "validate.py": "1ffb7a7c7c9ec22c596df92aed7da6a339ecc277bde361440f8ce70db35e1afe",
+    "fetch_sources.py": "adf261f42f2c6c95a2cc41cd77f811ae46b408700fa160ec2ccf4340368a0d39"
+  },
+  "result": {
+    "ids": 840,
+    "source_snapshots": 98,
+    "wiki_snapshots": 96,
+    "tutorial_states": 71,
+    "tutorial_transitions": 73,
+    "cooks_states": 10,
+    "cooks_transitions": 22,
+    "death_states": 4,
+    "death_transitions": 6,
+    "activity_rules": 44,
+    "quest_rules": 8,
+    "rule_families": 25,
+    "formula_vectors": 38,
+    "guard_vectors": 29,
+    "graph_vectors": 23,
+    "outcome_requirements": 53,
+    "delivery_orders": 6,
+    "checkpoint_requirements": 6,
+    "journey_requirements": 4,
+    "assumptions": 20,
+    "critical_assumption_ids": [
+      "assumption.departure_reconciliation",
+      "assumption.goblin_loot_variant"
+    ],
+    "snapshots_hash_checked": true,
+    "gameplay_executed": false,
+    "invalid_mutations_rejected": 6
+  },
+  "not_proven": [
+    "game implementation",
+    "executed starter journey",
+    "source-client binding",
+    "visual/audio fidelity",
+    "RuneLite compatibility",
+    "browser performance",
+    "owner approval"
+  ]
+}

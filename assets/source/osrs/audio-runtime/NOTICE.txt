@@ -1,0 +1,21 @@
+Original Old School RuneScape audio
+
+Copyright © 1999 - 2026 Jagex Ltd. All rights reserved.
+
+These are owner-authorized, mechanically decoded original source audio inputs.
+The selected original injected client and cache remain identified in
+research/current-source/selection.json. Original MIDI/sample/patch/SFX data
+were not replaced with a generic soundfont or newly composed effects.
+
+The source manifest is assets/manifests/osrs/audio-runtime.json. Conversion
+settings, exact source/output hashes, original sample relationships and signal
+measurements are recorded there and in research/audio-source/.
+
+Lossless FLAC packaging does not transfer ownership or create an open-source
+license for these sounds/music. RuneLite, codec and independent-reference code
+licenses do not apply to Jagex's game assets. See ../NOTICE.txt and
+tools/audio-import/THIRD_PARTY_NOTICES.txt.
+
+Source preparation is not a source-game recording, perceptual comparison,
+source-session trigger observation, accepted browser presentation, or owner
+reference-pack approval. No game terms were accepted or account login performed.

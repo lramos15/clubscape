@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "result": "actual_gear_gate_undercertification_confirmed",
+  "candidate": "9051712625f8cc2ead637b7ae4b90991ab578c7e",
+  "command": [
+    "cargo",
+    "test",
+    "--quiet",
+    "--locked",
+    "--offline",
+    "-p",
+    "clubscape-renderer",
+    "--test",
+    "gear_geometry",
+    "--",
+    "--nocapture"
+  ],
+  "test_exit_code": 101,
+  "tests_passed": 4,
+  "tests_failed": 2,
+  "elapsed_seconds": 0.515,
+  "metric_sha256": "2e13bbb90bc2a7e8aad6d13b4fd42546c07c14ccd63dda5595519599ba362330",
+  "test_source_sha256": "6cf6bc74bb2e9430adb59cd60b23001b7ebdf1b88840050b1f823fec541fd8c2",
+  "test_executable_sha256": "812d9487ea9e20e92d92d7f18e1a61c95f2dee07570dd6f480e725cec13ad989",
+  "test_executable": "target/debug/deps/gear_geometry-443709aaa26a0661",
+  "log_sha256": "93b29a060ca92238a97f095a95d3bdc9b08cd59d8739af853b8f3e35b4f3be86",
+  "actual_gate": 3.972054645195637e-15,
+  "actual_surface_point_depth": 6.909829737218426,
+  "source_pose_recomputations": 0,
+  "gpu_invocations": 0,
+  "protected_access": false
+}

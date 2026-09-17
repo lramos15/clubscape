@@ -1,0 +1,161 @@
+{
+  "status": "blocked",
+  "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "shared_contract_changed_by_ui": false,
+  "current_contract_status": {
+    "source_artifact_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "all24_current_ui_intents_validated_and_dispatched": true,
+    "semantic_all_bank_revision_and_partial_recovery_consumed": true,
+    "fees_and_nonadditive_capacities_not_recomputed": true,
+    "native_preference_controls_use_shell_manager_and_store": true,
+    "parallel_ui_persistence_queue_shipped": false,
+    "renderer_minimap_surface_sprite_and_projection_ports_bound": true,
+    "production_typescript_passed": true,
+    "source_only_unknowns": "research/interface-contracts/remaining-source-questions.json",
+    "source_camera_contract": "research/camera-source/contract.json",
+    "full_ui_or_m1_acceptance": false
+  },
+  "requests_below_are_historical_handoff_requirements": true,
+  "current_open_work": [
+    "Actual complete same-account browser/server journey and full composed source/fidelity/persistence checks.",
+    "Stateful source camera/display controls and justified initial source-session configuration; constructor or chosen-fixture values are not account defaults.",
+    "Remaining source233/660 level-up presentation variants and original newcomer-map646 visible-marker motion/placement.",
+    "Source-native presentation/selection across multiple simultaneously supplied recovery panels and storage-capacity information where required; no panel or fee aggregation is invented.",
+    "Ordinary-grave Bank-All permission and dough/seven Empty motion or verified-absence facts remain unverified, not source-disabled/no-animation claims.",
+    "Actual scene/spatial-audio/model-preview metadata composition, runtime source audio and final hardware/owner review."
+  ],
+  "published_contract": {
+    "capability": "game.ui.v1",
+    "upstream_commit": "d1532d6fc063d2a02383a7b4bb1ca3c449e214ce",
+    "authorized_cherry_pick": "5d56c93",
+    "typescript": "web/shared/contracts.ts",
+    "rust": "crates/game-types/src/gameplay_ui.rs",
+    "nullable_production_correction": {"upstream": "351847f3f5255f6de6e345d5217a7910eaa145a3", "authorized_pick": "ccbfbb0", "meaning": "Explicit null is legitimate inventory-only production; omitted/malformed target fields are invalid."},
+    "transport_handoff": {
+      "world_snapshot_ui_tag": 20,
+      "world_input_ui_tag": 41,
+      "expected_bank_revision_field": 21,
+      "expected_bank_revision_source": "Exact decimal ui.bank.revision at request creation, never world/character revision; retain on retries.",
+      "wire_implementation_in_ui": false,
+      "final_candidate": "78fcec42226e17d715f422f8e9cc2be8a1fb8762",
+      "authorized_picks": ["cd12063", "ccbfbb0", "e4c9669", "9973948", "3103033", "19c85d5", "30a8183", "70e4294", "087cfca", "85843a1"],
+      "bank_precondition_in_ui": "All eleven published bank requests capture the displayed bank revision in controls, held menus and drags. Missing/stale revisions reject explicitly; existing bound intents are never rebound.",
+      "raw_artifact_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3",
+      "compressed_artifact_sha256": "f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6",
+      "versions": {"content": 4, "artifact": 4, "state": 1, "runtime": 1, "ui_state": 1},
+      "cargo_lock_changed_by_ui": false,
+      "awaiting": "Real shell composition using a fresh normal candidate or explicit fenced migration; never silently repin an old world."
+    },
+    "status": "The authorized passed UI4 implementation, source publications and observer prerequisites are integrated. Exact final shared/proto files and raw/compressed artifact hashes match78fcec4. UI component evidence is not a live-server journey or whole-UI acceptance.",
+    "version_rule": "WorldView.ui.version must equal 1. Absent, unknown or malformed projections are explicit unsupported/error states, never fabricated empty views."
+  },
+  "published_audio_policy": {
+    "upstream_commits": ["888f9384e111b5f7fefeee36859bae4f873e5c95", "f74652a59834815b4e57e04366dc857681fd83c1", "f9e466d3feb6626785ae46b9d6549e4e7eb00443"],
+    "authorized_picks": ["b7cc380", "d2082e8", "7475596"],
+    "audio_handle_abi_changed": false,
+    "volume_argument": "Source normalized slider position; percent/100 is sent exactly once, never mixer/native asset gain.",
+    "current_values": "bindUiAudio uses actual observed percentages/mixers and per-voice renderedNativeLevel/appliedNativeLevel. sourceMixerToAssetGain uses the actual 128 or 255 denominator, never an assumed music-channel gain.",
+    "supplement": {"manifest": "assets/manifests/osrs/audio-m1-supplement.json", "sha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91", "assets": 9, "status": "published_consumed_and_routed_in_ui_component_host"},
+    "committed_gameplay_events_created_by_ui": false
+  },
+  "wired_versioned_controls": [
+    "Opaque inventory action IDs with canonical item and instance identity; declared permission rejection, local use selection and no optimistic ownership changes.",
+    "Production menu/recipe IDs, single versus make_x permission, 1/5/10/X requests, native one-through-eighteen-choice layouts and the source bronze smithing table. Unoffered source rows remain present with explicit feedback.",
+    "Quest reward title, narrative/item/XP/quest-point fields, native source 9..15 text slots, exact continuation request and stable presentation identity.",
+    "Opaque confirmations with real title/lines/items/u64 credit, pagination, accept/cancel and Escape.",
+    "Selected/visible/permitted abilities and interface states; combat style association retains identity even if view row ordering changes.",
+    "Equipment bonuses/weight and exact native equipment-preview request geometry; no missing-stat zero defaults.",
+    "Stable bank entries/tabs, drag/move/new-tab/collapse, placeholders, original placeholder sprites, note/amount/insert preferences and deposit-equipment permissions.",
+    "Death-preview kept/lost rows, exact fee strings and value revision. Unsupported alternate scopes retain their source controls and feedback.",
+    "Recovery coffer balance, discard permission/request and inventory coffer offering, with confirmation identity retained and no local credit/item changes.",
+    "Public chat permission, declared channel and UTF-8 byte limit; rejected drafts retained, no optimistic echo or clearing before the authoritative own-message update.",
+    "Declared body_type 0/1 permissions and confirmation, with local appearance/equipment preview descriptors. Human kit/colour/pronoun controls do not create new penguin variants.",
+    "All shop buys still send displayed canonical expected_item; held menus/amounts never retarget a reused row.",
+    "Native master/music/effects/area sliders and per-channel mute controls consume actual audio observations, preserve remembered in-session positions and source integer/nonlinear semantics; title audio uses explicit global mute rather than resetting all channel positions.",
+    "Player-scoped setUiMusicState delegates the exact published state to the audio engine. Native modes, canonical manual tracks, actual unlock coloring/counts, current playlist, loop flags, scrollbar and source dropdown cancellation are wired without fabricated music events or caller-selected next songs.",
+    "Stock All Settings group134 opens as a real local interface with original category/search/info/locked-filter/scroll/choice controls and live audio/music/death plus existing UI input behavior. Missing required display/camera values remain explicit unknowns, not fixture defaults.",
+    "Native bank main-tab/section ordering, tab graphics, placeholder opacity120/quantity glyphs and true insert icon projection; original HUD hidden/locked states and two-border highlight styling.",
+    "Authoritative activeTab is separate from activeInterface. Acknowledgement/rejection does not optimistically select a tab; explicit null renders no selected side content.",
+    "Identity-bound bank_placeholder plus decimal expected_bank_revision on every current UI-bank mutation. Ordinary deposits retain the actual WorldView.bank.banker.",
+    "Original BOOK392 facing pages, source font497/line slots/colour markup, overflow navigation, ui_document_page and identity-bound document dismissal; original AIDE_MAP615 models/tutor toggles and native-size mapAsset consumption.",
+    "Canonical interface.level_up now binds source233 with supplied text and continuation; no XP, level or committed-close event is inferred.",
+    "setUiMinimap/getUiMinimapStatus consume the exact renderer surface fields, copy pixel/mask data per revision, retain source qualifications, resolve original map-element sprites and clear stale owner/instance/plane data. Live rendering has no static-PNG fallback."
+  ],
+  "requests": [
+    {
+      "scope": "Real UI4 shell/server composition",
+      "extension": "Compose the integrated current game.ui.v1/observer candidate through AppServices with real source assets and renderer/audio inputs, using a fresh normal world or explicit fenced migration.",
+      "reason": "The backend implementation and exact candidate hashes are no longer missing. The UI cannot edit the shell or silently repin existing persisted worlds; component replies do not prove a real-server journey."
+    },
+    {
+      "scope": "Source Make-All and persistent bank All defaults",
+      "extension": "Publish the exact bank_set_options.amount All encoding, and either an authoritative production all-quantity value or an explicit All request mode.",
+      "reason": "The current u32 fields do not define either sentinel. The original All controls remain visible and report required integration. Withdraw-All already uses the current authoritative bank entry quantity; it is not blocked by this question."
+    },
+    {
+      "scope": "Complete recovery fee/quantity/bank controls",
+      "extension": "Publish RecoveryView.items.cost unit-versus-stack semantics, effective unit fee/capacity/per-row UiPermission/bank-all permission, and identity-bound partial-quantity retrieval and bank-all requests.",
+      "reason": "reclaim currently accepts whole recovery item IDs only. Partial 1/5/X cannot become a full-stack reclaim; fee units and capacity cannot be inferred. Null per-row display permission stays unknown, while existing whole-item requests remain server-validated. Coffer, discard and coffer-offer fields are now wired and no longer requested as missing."
+    },
+    {
+      "scope": "Canonical level-up chat/popup source association",
+      "extension": "Publish canonical reward.interface IDs and corresponding current source widget/style bindings for each required level-up chat/popup variant; use the existing kind/interface fields, not a second reward contract.",
+      "reason": "The current interface.level_up ->233 popup is now wired. Complete chat-only/other native style and event associations remain explicitly pending in the backend handoff metadata; unknown interfaces still receive ui.source.reward.layout instead of a fabricated substitute."
+    },
+    {
+      "scope": "Contextual ordinary bank deposits",
+      "extension": "Continue supplying WorldView.bank.banker alongside an open GameplayUiView.bank, or publish the replacement identity-bound ordinary-deposit request.",
+      "reason": "The v1 bank projection itself contains no banker identity. Existing bank_deposit still requires it. The UI explicitly reports contextual_banker_identity if a v1-only bank omits that required legacy context."
+    },
+    {
+      "scope": "Actual renderer surface/observer composition",
+      "extension": "Feed renderer.minimapSurface() to setUiMinimap(handle,surface) once per revision and consume getUiPreviewRequest/setUiPreview. Preserve game.observer.v1 null/absence/stable action IDs and decimal timestamps, and dynamicObjects field13 with validated sourceId.",
+      "reason": "The UI-side minimap setter/consumption and original icon assets now exist. Renderer edge-five-tile/instance completeness remains qualified; sourceMask/complete/notes/stats are exposed, not promoted to fidelity acceptance. Original full-HUD zoom410 at1080 is not the viewport-only662 calibration."
+    },
+    {
+      "scope": "Real source audio listener/object/varp and music-state app composition",
+      "extension": "Use setSourceAudioScene with real 128-unit listener, plane/instance/owner, placed emitters/orientations and original varps; call setUiMusicState(ui, playerId, actual SourceMusicState) after audio.update(world, events).",
+      "reason": "UI/state integration and native internal continuation are implemented. Actual shell/renderer inputs remain outside UI ownership. No caller-guessed gain, empty scene or next-song callback is required or supplied."
+    },
+    {
+      "scope": "Direct skip request and numbered playlist slots",
+      "extension": "Expose a direct Skip Track request into the audio engine's existing native next-track policy; supply saved Playlist1/2/3 identities/contents for the original numbered-slot controls.",
+      "reason": "SourceMusicState and UI controls now cover actual modes/unlocks/manual selection/current playlist/loop flags. It does not identify three saved slots, and identical-state idempotence is not a skip API. No mode-flipping workaround or caller-guessed next track is used."
+    },
+    {
+      "scope": "Native remembered mute and versioned saved client preferences",
+      "extension": "Consume the audio owner's forthcoming typed preference helpers for remembered mute varbits14817/12426/12427/12428, direct Skip and saved Playlist1/2/3.",
+      "reason": "The All Settings window and available bindings are now implemented. In-session Mute/Unmute preserves its observed value. Unprovided saved values remain unknown; this UI does not fork the audio preference contract or invent defaults."
+    },
+    {
+      "scope": "Actual source display/camera preferences",
+      "extension": "Renderer/shell must expose the real camera FOV/follow-height preference state and limits, brightness and view distance through its approved adapter.",
+      "reason": "Native setting2734/operation14 uses varcs73/74,1338–1341 and source42 VIEWPORT_SETFOV plus CAM_SETFOLLOWHEIGHT; RenderCamera.zoom is not a safe substitute. Brightness2736/operation15 and distance3656/operation168 retain source placement and required feedback. No display values are copied from comparison fixtures."
+    },
+    {
+      "scope": "Committed Cook reward/Widget153 close audio batches",
+      "extension": "Shell must forward coherent before/after skill observations and committed level_up events with skillId, preserved sourceId and matching completion attribution; forward actual committed Widget153 close with questId/completionId.",
+      "reason": "The authorized audio gate handles pre-trained/multi-level gains and suppresses no-level-gain rewards. UI continuation remains a request, not proof of close, XP delta or permission to create a level-up event."
+    }
+  ],
+  "implementation_gaps_without_contract_extension": [
+    "Complete source-selected/highlight/hidden/disabled projection coverage for every required current-source signature and live 71-state route. The existing 71 states/29 families/11 signatures are preserved, not reduced or declared accepted.",
+    "Apply additional backend-declared level-up chat/style variants when published; the current canonical source233 popup is now wired.",
+    "Match final canonical/live bank data to the now-calibrated main-tab/section/placeholder/selection layouts, and cover any additional required variants. The three bounded bank cases and their data projections already pass at zero tolerance.",
+    "The newcomer-map marker uses the original isolated model3062 at source frame0 and source2043 placement arithmetic. Native animation646 and visible-marker placement need further source/runtime comparison; the four document fixtures certify text/models/tutor controls with their genuinely hidden native marker, not those missing gates.",
+    "Real-server startup-to-quest-completion journey, reconnect/restart/concurrent-state behavior and final visual/audio/hardware acceptance remain separate gates."
+  ],
+  "source_comparison_scope": {
+    "preserved_native_and_owner_composition_checks": { "passed": 87, "total": 87, "tolerance": 0 },
+    "preserved_native_mode_and_effect_checks": { "passed": 106, "total": 106, "tolerance": 0 },
+    "additional_production_death_reward_checks": { "passed": 45, "total": 45, "tolerance": 0 },
+    "additional_audio_control_checks": { "passed": 18, "total": 18, "tolerance": 0 },
+    "additional_music_control_checks": { "passed": 8, "total": 8, "tolerance": 0 },
+    "bounded_independent_states": { "total": 18, "maximum": 18, "source_and_projection_checks": 36, "passed": 36, "tolerance": 0 },
+    "ui4_document_states": { "total": 4, "source_and_projection_checks": 8, "passed": 8, "tolerance": 0, "visible_marker_animation_acceptance": false },
+    "full_panels_excluded": 0,
+    "source_fixture_balances_are_production_values": false,
+    "component_double_is_live_gameplay": false
+  },
+  "final_m1_acceptance": false
+}
