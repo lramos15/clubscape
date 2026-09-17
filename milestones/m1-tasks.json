@@ -10,7 +10,9 @@
       {"id": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "task": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW"}
     ],
     "reserved": [],
-    "queued": [],
+    "queued": [
+      {"id": "saved-water-binding-02-review", "task": "M1-SAVED-WATER-BINDING-02-REVIEW", "worker": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "after": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW", "uses_same_existing_slot": true}
+    ],
     "parked": [
       {"id": "22b898a4-8850-4fc0-be15-af0b7440e32a", "reason": "Completed the independent4526 deadline delta review. Runtime rejected the separately admitted769 bootstrap follow-up before processing because this worker was retired; no bootstrap assessment/tests/private operation occurred. One replacement slot is reserved for the unexecuted append only."},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "reason": "Collected turns28-30 and verified0665f94 plus retained Cargo.lock. Both full2034-pose runs consumed (498/451seconds);3/2034 was measured under the retired certificate. e001b66/0665f94 report repaired focused6/6 cases, not a corrected whole-table result or independent review. No third run or automatic resumption; receipt m1-renderer-handoff-0665f94.json."},
@@ -40,9 +42,27 @@
   },
   "tasks": [
     {
+      "id": "M1-SAVED-WATER-BINDING-02-REVIEW",
+      "goal": "Independently assess the fixed owner-approved successor binding without actual execution.",
+      "status": "READY",
+      "specs": ["milestones/evidence/m1-saved-water-binding-02-review-admission.json", "milestones/evidence/m1-saved-water-binding-02-candidate.json"],
+      "dependencies": ["M1-SAVED-WATER-BINDING-02"],
+      "allowed_paths": [],
+      "forbidden_paths": ["**"],
+      "outputs": ["Actionable correctness findings or a qualified exact binding-delta assessment"],
+      "validation_commands": [],
+      "test_requirements": ["Read-only exact0b versus769 and necessary public caller/owner context", "No tests/builds/private state/native/service or source/GPU/operator work", "Assess fixed paths/owner pin, unchanged canonical authority/deadline/native claims and synthetic no-retry/old-journal isolation"],
+      "acceptance": ["A different reviewer assesses the Director-authored successor before exact executable admission or protected access"],
+      "reserved_namespaces": [],
+      "source_notes": ["Queued serially to the same existing reviewer after the camera delta; no extra or nested agent slot."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-saved-water-binding-02-review-admission.json", "milestones/evidence/m1-saved-water-binding-02-candidate.json"]
+    },
+    {
       "id": "M1-SAVED-WATER-BINDING-02",
       "goal": "Prepare only the fixed owner-approved successor binding without accessing or executing saved state.",
-      "status": "IMPLEMENTING",
+      "status": "REVIEW",
       "specs": ["milestones/approvals/m1-saved-water-continuation-02.json", "milestones/evidence/m1-saved-water-binding-02-implementation.json"],
       "dependencies": ["M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION", "M1-SAVED-WATER-BOOTSTRAP-REVIEW"],
       "allowed_paths": ["tools/journey-tests/saved_water_gate.py", "tools/journey-tests/saved_water_runtime.py", "tools/journey-tests/test_saved_water.py", "tools/journey-tests/test_saved_water_runtime.py", "tools/journey-tests/SAVED_WATER.md"],

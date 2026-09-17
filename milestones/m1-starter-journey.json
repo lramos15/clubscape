@@ -26,6 +26,8 @@
     "saved_water_separate_authority_proposal": "milestones/evidence/m1-saved-water-second-attempt-proposal.json",
     "saved_water_successor_owner_approval": "milestones/approvals/m1-saved-water-continuation-02.json",
     "saved_water_successor_binding": "milestones/evidence/m1-saved-water-binding-02-implementation.json",
+    "saved_water_successor_candidate": "milestones/evidence/m1-saved-water-binding-02-candidate.json",
+    "saved_water_successor_review_admission": "milestones/evidence/m1-saved-water-binding-02-review-admission.json",
     "camera_consumer_handoff": "milestones/evidence/m1-camera-consumers-implementation.json",
     "camera_consumer_strict_cpu_admission": "milestones/evidence/m1-camera-consumers-director-cpu-admission.json",
     "camera_consumer_strict_cpu_result": "milestones/evidence/m1-camera-consumers-director-cpu-result.json",

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "task": "M1-SAVED-WATER-BINDING-02-REVIEW",
+  "status": "admitted_same_reviewer_queue",
+  "authority": "director",
+  "reviewer": "ce4d0723-ee8e-45fa-8219-94a7210fa308",
+  "implementation_author": "director",
+  "after_current_assignment": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW",
+  "dispatch": "May queue to the same existing reviewer after its current camera assessment. One agent/slot, no parallel or nested reviewer and no repeated bootstrap or full continuation assessment.",
+  "base_revision": "76971ee95040130ddd2084f7fa7c9fd275982e2c",
+  "candidate_revision": "0b6105d66a615fcaf47886cc97f094d6063320e8",
+  "worktree": ".worktrees/m1-saved-water-continuation",
+  "candidate": "milestones/evidence/m1-saved-water-binding-02-candidate.json",
+  "owner_approval": "milestones/approvals/m1-saved-water-continuation-02.json",
+  "scope": "Exact three-path fixed successor binding and directly necessary public gate/runtime/native-claim callers and owner/proposal receipts.",
+  "required_checks": [
+    "Only the exact02 admission/output/journal and independently pinned owner approval are added; no old attempt refund, generic selector or authority/equality/deadline weakening.",
+    "Canonical types and the native saved_water.py claim caller continue to share the selected gate. Preserve original52,5e-to-b2, all bounds and conservation/preservation semantics.",
+    "Assess owner-pin refusals, old-hash/aliased-old-output refusal and actual-script successor one-shot isolation with an unchanged synthetic old journal.",
+    "Verify qualification/provenance and final executable-admission prerequisites without treating owner approval or the supplied98 precommit tests as actual saved execution."
+  ],
+  "read_only": true,
+  "edits_tests_builds_imports_cli_probes_or_native_invocations": 0,
+  "actual_checkpoint_control_old_journal_or_report_stat_read_hashes": 0,
+  "source_materialization_generation_operator_browser_gpu_or_runelite": 0,
+  "databases_services_accounts_restores_migrations_or_gameplay": 0,
+  "new_agents_nested_agents_or_factories": 0,
+  "actual_successor_execution_admitted_by_this_record": false,
+  "milestone_accepted": false,
+  "automatic_continuation": false
+}
