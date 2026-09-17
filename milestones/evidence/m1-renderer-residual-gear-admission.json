@@ -6,6 +6,8 @@
   "worktree": ".worktrees/m1-renderer",
   "base": "9051712625f8cc2ead637b7ae4b90991ab578c7e",
   "handoff": "milestones/evidence/m1-renderer-handoff-9051712.json",
+  "blocking_metric_review": "milestones/evidence/m1-gear-convex-certificate-review.json",
+  "metric_repair_requirement": "The new coplanar convexity counterexample must be resolved before claiming a trusted gate. Preserve current residual-fit work and all consumed recomputation counts; this finding does not renew the two-run allowance.",
   "objective": "Repair the eight remaining legal gear-pose failures through the existing permitted fitting, then measure the entire unchanged2034-pose denominator. Deliver owned code and actual results, or a precise bounded blocker.",
   "remaining_poses": [
     {"item": "necklace", "sequence": 4847, "frames": [18, 21, 24]},

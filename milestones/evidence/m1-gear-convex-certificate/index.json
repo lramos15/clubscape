@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "candidate": "9051712625f8cc2ead637b7ae4b90991ab578c7e",
+  "regression_commit": "d7706a37066825a02780c2a0261bd1397edf562c",
+  "files": [
+    {
+      "path": "initial-lock-failure.json",
+      "source": ".worktrees/m1-gear-convex-patch/.local/gear-convex-review-01/report.json",
+      "bytes": 606,
+      "sha256": "226278307ad1861088cf6f59a5d840be9f74015c2b8058cd96e52103d9a9d4eb"
+    },
+    {
+      "path": "initial-lock-failure.log",
+      "source": ".worktrees/m1-gear-convex-patch/.local/gear-convex-review-01/native.log",
+      "bytes": 262,
+      "sha256": "ab9d9e1593a609188a394923e255f41ffc6ec92f901921d431433ac1838054e8"
+    },
+    {
+      "path": "lock-input.json",
+      "source": ".worktrees/m1-gear-convex-patch/.local/gear-convex-review-01/lock-input.json",
+      "bytes": 5548,
+      "sha256": "1f2c159fea023dd84a7346848fbc1dac2791912741cf8d971e07b0bd5cca2527"
+    },
+    {
+      "path": "preformat-execution.json",
+      "source": ".worktrees/m1-gear-convex-patch/.local/gear-convex-review-01/execution.json",
+      "bytes": 6621,
+      "sha256": "ae711aefb7c956a4569da65962036ae4ba1463531ae9e933d67a8b0b7424e5e4"
+    },
+    {
+      "path": "preformat-native.log",
+      "source": ".worktrees/m1-gear-convex-patch/.local/gear-convex-review-01/native-with-renderer-lock.log",
+      "bytes": 974,
+      "sha256": "806015f6d41cbf94490e875f83bd55f2f539a3bf69b87a9d2974c517b2b1d020"
+    },
+    {
+      "path": "native.log",
+      "source": ".worktrees/m1-gear-convex-patch/.local/gear-convex-review-01/native-formatted.log",
+      "bytes": 974,
+      "sha256": "880137a7bfbcd3bfd397edcff2cd1c59155c008504cde2e3a2adbd361194ba45"
+    },
+    {
+      "path": "reproduction.json",
+      "source": ".worktrees/m1-gear-convex-patch/.local/gear-convex-review-01/reproduction.json",
+      "bytes": 1223,
+      "sha256": "9ed5adeaefb5dba1a8ab38ac0c00b563f13386b7860cef86ffea0b3af89dfc97"
+    },
+    {
+      "path": "supplied-Cargo.lock",
+      "source": ".worktrees/m1-gear-convex-patch/Cargo.lock",
+      "bytes": 93135,
+      "sha256": "18938a1036be0d43a78b502737eefcd287dd9f73f04c730b5e2ad90743b11ee5"
+    }
+  ],
+  "raw_evidence_preserved": true,
+  "source_poses_recomputed": 0,
+  "milestone_accepted": false
+}

@@ -2,6 +2,8 @@
   "schema_version": 1,
   "task": "M1-BROWSER-RENDERER",
   "status": "published_candidate_not_integrated_or_accepted",
+  "numeric_gate_review": "milestones/evidence/m1-gear-convex-certificate-review.json",
+  "numeric_certification_status": "Blocked by an executable upper-bound and actual-gate counterexample; reported8/2034 remains historical worker output, not a certified source-pose result.",
   "worker": "bb7f85f7-096a-4377-80cb-3e7eae196c6b",
   "worker_read_through_turn": 27,
   "worktree": ".worktrees/m1-renderer",

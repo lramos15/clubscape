@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "task": "M1-BROWSER-RENDERER",
+  "status": "blocking_numeric_gate_defect_reproduced",
+  "reviewer": "director",
+  "candidate": "9051712625f8cc2ead637b7ae4b90991ab578c7e",
+  "metric_source_sha256": "2e13bbb90bc2a7e8aad6d13b4fd42546c07c14ccd63dda5595519599ba362330",
+  "finding": {
+    "title": "A self-crossing coplanar boundary is falsely certified convex, allowing the actual gear gate to understate penetration.",
+    "severity": "high_correctness",
+    "confidence": "Executable contract violation on the unchanged published implementation and real Model type.",
+    "classification": "Numeric correctness and acceptance-gate failure, not a security vulnerability assessment.",
+    "paths": [
+      {"path": "crates/renderer/src/penetration.rs", "lines": [632, 693], "role": "convex_patch accepts one boundary loop with same-sign local turns without proving simplicity or convexity."},
+      {"path": "crates/renderer/src/penetration.rs", "lines": [764, 778], "role": "evaluate assumes convex patch distance and bounds the whole triangle by distances at its vertices."},
+      {"path": "crates/renderer/src/actor.rs", "lines": [1693, 1705], "role": "Penetration::value consumes the claimed upper bound as the actual gate."},
+      {"path": "crates/renderer/src/actor.rs", "lines": [1716, 1759], "role": "certified_penetration requires a closed body, calls surface_depth and exposes exact_penetration."}
+    ],
+    "fixture": "An outer closed cuboid contains a closed pentagram prism. Its top fan is connected and coplanar; the pentagram boundary turns all have the same sign but its union is not convex. The actual closure census accepts the complete body. parity_safe=false uses generalized winding, not a parity shortcut.",
+    "surface": "One triangle joins three adjacent geometric star tips on the prism top. Its vertices and centroid are on the coplanar fan, but part of an edge crosses a gap in that nonconvex patch inside the outer solid.",
+    "actual_surface_edge_midpoint": [13.090169906616211, 9.510564804077148, 10.0],
+    "same_solid_signed_distance": 6.909829737218426,
+    "reported_lower": 3.972054645195637e-15,
+    "reported_upper": 3.972054645195637e-15,
+    "reported_resolved": true,
+    "evaluations": 1,
+    "actual_exact_penetration_gate": 3.972054645195637e-15,
+    "why_conclusive": "The purported upper bound and public gear gate are below the same implementation's own depth at a real point on the measured surface. This does not depend on another renderer, a dense-sampling approximation or a disputed external body-volume convention."
+  },
+  "regressions": {
+    "worktree": ".worktrees/m1-gear-convex-patch",
+    "branch": "review/m1-gear-convex-patch",
+    "first_commit": "d7706a37066825a02780c2a0261bd1397edf562c",
+    "direct_gate_commit": "5759399ba49b46a9c490df03a9202b401784c7d4",
+    "only_committed_path": "crates/renderer/tests/gear_geometry.rs",
+    "original_controls_preserved": 3,
+    "new_convex_control_passed": 1,
+    "new_failing_contract_cases": 2,
+    "final_tests_passed": 4,
+    "final_tests_failed": 2,
+    "test_exit_code": 101,
+    "command": ["cargo", "test", "--quiet", "--locked", "--offline", "-p", "clubscape-renderer", "--test", "gear_geometry", "--", "--nocapture"],
+    "actual_test_executable_sha256": "812d9487ea9e20e92d92d7f18e1a61c95f2dee07570dd6f480e725cec13ad989",
+    "final_test_source_sha256": "6cf6bc74bb2e9430adb59cd60b23001b7ebdf1b88840050b1f823fec541fd8c2",
+    "qualification": "Synthetic geometry regression, not a remeasurement or failure count for the2034 source poses."
+  },
+  "retained_build_qualification": {
+    "initial_failure": "The published candidate lock refused --locked before any tests ran.",
+    "resolution": "Copied only the implementer's exact pre-existing uncommitted lock read-only into the isolated review worktree; no packages were installed and no implementer file changed.",
+    "original_lock_sha256": "cb2aed73414ea9d8c35f988a8dc7cef08cf7a95d8a094861fa1e56de7a1583a3",
+    "supplied_lock_sha256": "18938a1036be0d43a78b502737eefcd287dd9f73f04c730b5e2ad90743b11ee5",
+    "supplied_lock_committed_as_root_lock": false
+  },
+  "evidence": {
+    "initial_index": "milestones/evidence/m1-gear-convex-certificate/index.json",
+    "initial_index_sha256": "affc93f4348f19b2a6be074061a0b74aae89ee4b19cc1475b0b9e5b5b47a380b",
+    "direct_gate_index": "milestones/evidence/m1-gear-convex-certificate/actual-gate-index.json",
+    "direct_gate_index_sha256": "db3ee5e74de334895e62734992404de5361e833056ff3e11218ba53f46bd5dd1",
+    "leaf_files": 10
+  },
+  "required_resolution": "Prove a genuinely convex/simple coplanar union or keep separate convex triangles/conservative unresolved bounds. Do not fix by adding only this sample, pruning cases or relaxing thresholds. Repair must precede a trusted whole-denominator result.",
+  "worker_notified": true,
+  "existing_full_pose_recomputation_budget_increased": false,
+  "actual_source_poses_recomputed": 0,
+  "source_artifacts_or_metric_implementation_changed_by_director": false,
+  "gpu_invocations": 0,
+  "protected_state_accessed": false,
+  "main_renderer_changed": false,
+  "milestone_accepted": false
+}

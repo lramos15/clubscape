@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "candidate": "9051712625f8cc2ead637b7ae4b90991ab578c7e",
+  "source_sha256": "2e13bbb90bc2a7e8aad6d13b4fd42546c07c14ccd63dda5595519599ba362330",
+  "command": [
+    "cargo",
+    "test",
+    "--quiet",
+    "--locked",
+    "--offline",
+    "-p",
+    "clubscape-renderer",
+    "--test",
+    "gear_geometry",
+    "--",
+    "--nocapture"
+  ],
+  "timeout_seconds": 600,
+  "exit_code": 101,
+  "elapsed_seconds": 0.214,
+  "log_sha256": "ab9d9e1593a609188a394923e255f41ffc6ec92f901921d431433ac1838054e8",
+  "gpu_or_pose_recomputation": false,
+  "source_or_protected_state_changed": false
+}

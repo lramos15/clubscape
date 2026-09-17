@@ -1,0 +1,24 @@
+
+running 6 tests
+.closed=true parity_safe=false witness=[13.090169906616211, 9.510564804077148, 10.0] signed_depth=6.909829737218426 interval=[0.000000000000003972054645195637,0.000000000000003972054645195637] resolved=true evaluations=1
+
+thread 'self_crossing_coplanar_patch_cannot_certify_below_its_own_signed_distance' (4144949) panicked at crates/renderer/tests/gear_geometry.rs:173:5:
+certified upper 0.000000000000003972054645195637 is below the same solid's depth 6.909829737218426 at an actual surface-edge midpoint
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+actual_gate=0.000000000000003972054645195637 witnessed_signed_depth=6.909829737218426
+
+thread 'gate_reading_inherits_the_nonconvex_patch_undercertification' (4144947) panicked at crates/renderer/tests/gear_geometry.rs:201:5:
+the actual gear gate 0.000000000000003972054645195637 is below its own witnessed depth 6.909829737218426
+ 1/6
+gate_reading_inherits_the_nonconvex_patch_undercertification --- FAILED
+self_crossing_coplanar_patch_cannot_certify_below_its_own_signed_distance --- FAILED
+...
+failures:
+
+failures:
+    gate_reading_inherits_the_nonconvex_patch_undercertification
+    self_crossing_coplanar_patch_cannot_certify_below_its_own_signed_distance
+
+test result: FAILED. 4 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p clubscape-renderer --test gear_geometry`
