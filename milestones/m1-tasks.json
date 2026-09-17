@@ -6,12 +6,14 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
-      {"id": "22b898a4-8850-4fc0-be15-af0b7440e32a", "task": "M1-SAVED-WATER-BOOTSTRAP-REVIEW"}
+      {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"}
     ],
-    "reserved": [],
+    "reserved": [
+      {"id": "saved-water-bootstrap-review-replacement", "task": "M1-SAVED-WATER-BOOTSTRAP-REVIEW", "replaces_retired": "22b898a4-8850-4fc0-be15-af0b7440e32a"}
+    ],
     "queued": [],
     "parked": [
+      {"id": "22b898a4-8850-4fc0-be15-af0b7440e32a", "reason": "Completed the independent4526 deadline delta review. Runtime rejected the separately admitted769 bootstrap follow-up before processing because this worker was retired; no bootstrap assessment/tests/private operation occurred. One replacement slot is reserved for the unexecuted append only."},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "reason": "Collected turns28-30 and verified0665f94 plus retained Cargo.lock. Both full2034-pose runs consumed (498/451seconds);3/2034 was measured under the retired certificate. e001b66/0665f94 report repaired focused6/6 cases, not a corrected whole-table result or independent review. No third run or automatic resumption; receipt m1-renderer-handoff-0665f94.json."},
       {"id": "115554cb-8e25-40c8-854a-4f9dc8936166", "reason": "Delivered2fbf5afa/b958cc44 code-only continuation;15 owned paths integrateddd043bce with existing83Python/53native main regressions passing. Director's additional actual-process deadline regression fails. Runtime retired the worker and rejected its first repair follow-up before processing; Director owns that code-only append, with no saved execution or new allowance."},
       {"id": "23749cd0-cc24-4565-9b37-e057b4823867", "reason": "Delivered53f478d7/93979df1 bounded camera consumers and stopped without automatic resumption. Reported59native/5actual-WASM/289Node passes retain original conformance; one streamed-buffer case is blocked and real fine focus/footprint/effect producers are absent. Candidate is unintegrated and awaits Director review; normal entry and all browser/GPU/presentation gates remain closed."},
@@ -41,7 +43,7 @@
     {
       "id": "M1-SAVED-WATER-BOOTSTRAP-REVIEW",
       "goal": "Independently assess the Director-authored canonical CLI bootstrap repair without renewing saved execution.",
-      "status": "CLAIMED",
+      "status": "READY",
       "specs": ["milestones/evidence/m1-saved-water-bootstrap-review-admission.json", "milestones/evidence/m1-saved-water-bootstrap-candidate.json"],
       "dependencies": ["M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"],
       "allowed_paths": [],
