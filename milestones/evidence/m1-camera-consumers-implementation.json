@@ -1,7 +1,8 @@
 {
   "schema_version": 1,
   "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION",
-  "status": "height_presence_repair_reviewed_integration_pending",
+  "status": "reviewed_exact_root_integration_admitted",
+  "director_integration_admission": "milestones/evidence/m1-camera-consumers-integration-admission.json",
   "worker": "23749cd0-cc24-4565-9b37-e057b4823867",
   "retired_predecessor": "ac0f0856-44af-445b-bd90-6db7a1f4fc74",
   "assignment": "One bounded replacement received the previously unexecuted consumer task after reservation in2b90e30. The retired predecessor's completed native controller evidence remains valid, not new consumer validation.",

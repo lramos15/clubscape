@@ -6,7 +6,7 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-SAVED-WATER-EXECUTION-02"}
+      {"id": "director", "task": "M1-CAMERA-CONSUMER-INTEGRATION"}
     ],
     "reserved": [],
     "queued": [],
@@ -39,6 +39,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-CAMERA-CONSUMER-INTEGRATION",
+      "goal": "Integrate exact reviewed camera consumers plus the independently resolved height-presence repair and qualify committed root code without opening normal entry.",
+      "status": "INTEGRATION",
+      "specs": ["milestones/evidence/m1-camera-consumers-integration-admission.json", "milestones/evidence/m1-camera-consumers-implementation.json", "milestones/evidence/m1-camera-height-presence-review.json"],
+      "dependencies": ["M1-CAMERA-CONSUMER-IMPLEMENTATION", "M1-CAMERA-HEIGHT-PRESENCE-REVIEW"],
+      "allowed_paths": ["Only the34 exact source paths and16 supplied-evidence paths listed or pinned by the integration admission", "The eight existing generated protocol/renderer binding leaves", ".local/camera-consumer-root-01/**", ".local/web-builds/camera-consumer-root-01/**", "milestones/**"],
+      "forbidden_paths": ["Saved checkpoints/control/journals and native game binaries", "Source generation/download/capture or all122-buffer materialization", "Renderer actor/fitting/penetration or gear recomputation", "web/dist/**", "Unrelated user data"],
+      "outputs": ["Committed exact53/939/44 integration without inherited metadata", "Bounded root native/actual-WASM/web checks with preserved source/output/command identities"],
+      "validation_commands": ["Exact commands and per-command600/180-second limits in the integration admission; four Cargo jobs and distinct native/WASM profile targets"],
+      "test_requirements": ["Keep original strict source assertions and all44100-corner regression checks", "Preserve32native controller cases and14/354 conformance; verify source getters, actual WASM and existing browserless web suite", "No native GPU/browser/server/database/saved-state operation or normal-entry claim"],
+      "acceptance": ["Exact reviewed source integrates and code-only root qualification passes; missing live focus/footprint/effects and presentation remain explicit gates"],
+      "reserved_namespaces": [],
+      "source_notes": ["Root paths match their actual53 parent or939 terrain base with no conflicts. All33 original reads and independent44 delta assessment are complete; do not repeat those reviews."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-camera-consumers-integration-admission.json", "milestones/evidence/m1-camera-height-presence-review.json"]
+    },
     {
       "id": "M1-SAVED-WATER-EXECUTION-02",
       "goal": "Prepare exact successor admission, then consume only the owner's one separately journaled saved52 water/range/postquest attempt.",
@@ -204,7 +222,7 @@
     {
       "id": "M1-CAMERA-CONSUMER-IMPLEMENTATION",
       "goal": "Implement native-camera WASM/source-data/input consumers independently of still-open full renderer and browser acceptance.",
-      "status": "REVIEW",
+      "status": "INTEGRATION",
       "specs": ["milestones/evidence/m1-camera-consumers-implementation.json", "milestones/evidence/m1-native-camera-candidate.json", "research/camera-source/contract.json"],
       "dependencies": ["M1-NATIVE-CAMERA-CONTROLLER", "M1-NATIVE-CAMERA-REVIEW", "M1-SHELL-METADATA-INTEGRATION"],
       "allowed_paths": ["crates/camera/**", "crates/wasm/**", "crates/renderer/Cargo.toml", "crates/renderer/README.md", "crates/renderer/src/**", "crates/renderer/tests/camera*.rs", "web/renderer/README.md", "web/renderer/src/**", "web/renderer/pkg/*.d.ts", "web/app/**", "web/generated/protocol/*.d.ts", "Cargo.lock"],
