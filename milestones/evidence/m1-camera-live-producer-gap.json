@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "kind": "camera_live_producer_contract_gap",
+  "status": "source_contract_work_required_before_implementation",
+  "observed_code_revision": "3eff49c2d6d6de129acb7a4102c6cc6eb2765278",
+  "qualified_consumers": "milestones/evidence/m1-camera-consumers-root-qualification.json",
+  "source_contract": "research/camera-source/contract.json",
+  "source_contract_sha256": "745dda42fcd53d3225b9f2714e2ebbad7dbf60a76c070da1438a7289e5e0a602",
+  "supplemental_source_readbacks": "crates/camera/source-readbacks.json",
+  "observed_gaps": [
+    {
+      "path": "crates/renderer/src/core.rs",
+      "lines": [627, 657],
+      "observation": "EntityState stores ID, NPC, tile, orientation, sequence/timing, player flag and definition size. Its placement derives local coordinates as tile_delta*128 + size*64 and clamps the draw plane. This is a draw placement, not an observed native logical/render focus or camera-query footprint."
+    },
+    {
+      "path": "crates/renderer/src/core.rs",
+      "lines": [1825, 1848],
+      "observation": "camera_source returns coherent actor/world/scene context and rendered placement, but deliberately leaves focus/effects absent with explicit reasons. Root code qualification did not invent those producers or remove the normal-entry fence."
+    },
+    {
+      "path": "research/camera-source/contract.json",
+      "fields": ["timing.probe_boundary", "follow.height_qualification"],
+      "observation": "The original camera probes supplied controlled logical/render coordinates and a zero-footprint player. They explicitly did not measure actor movement interpolation. Those fixture values cannot become production tile-centre, render-position or zero-footprint defaults."
+    },
+    {
+      "path": "crates/camera/source-readbacks.json",
+      "field": "additional_boundary_semantics.render_effects",
+      "observation": "Source effect channel fields and arithmetic are identified, but active-effect native trace scenarios are zero. Explicit phase and source-compatible random samples are required when active; neither render-time-derived phases nor an unproved inactive fallback is allowed."
+    }
+  ],
+  "next_task": "M1-CAMERA-PRODUCER-CONTRACTS",
+  "next_scope": "Read only existing frozen source/method evidence and directly necessary native actor/camera callers to establish live identity, logical/render motion, footprint and effect producer contracts. Report exact supported mappings or concrete missing evidence before a separately bounded implementation.",
+  "no_new_original_runtime_or_source_capture_admitted": true,
+  "no_implementation_or_new_fixture_default_admitted": true,
+  "no_normal_entry_fence_relaxation": true,
+  "saved_checkpoint_or_consumed_authority_access": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

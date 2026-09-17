@@ -6,7 +6,7 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-CAMERA-CONSUMER-INTEGRATION"}
+      {"id": "director", "task": "M1-CAMERA-PRODUCER-CONTRACTS"}
     ],
     "reserved": [],
     "queued": [],
@@ -39,6 +39,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-CAMERA-PRODUCER-CONTRACTS",
+      "goal": "Resolve the source-grounded live actor/focus/footprint/effect contracts required by the now-qualified camera consumers.",
+      "status": "READY",
+      "specs": ["milestones/evidence/m1-camera-live-producer-gap.json", "research/camera-source/contract.json", "crates/camera/source-readbacks.json", "milestones/evidence/m1-camera-consumers-root-qualification.json"],
+      "dependencies": ["M1-CAMERA-CONSUMER-INTEGRATION"],
+      "allowed_paths": ["milestones/evidence/m1-camera-live-producer-contracts.json", "milestones/m1-tasks.json", "milestones/m1-starter-journey.json"],
+      "forbidden_paths": ["Implementation edits during this contract assessment", "Frozen reference/source writes", "Saved checkpoint/control/journal access", "Unrelated user data"],
+      "outputs": ["Exact source/native producer mappings or specific missing source evidence, with a bounded implementation handoff"],
+      "validation_commands": [],
+      "test_requirements": ["Read existing frozen source/method records and directly necessary native actor/camera callers only", "Distinguish logical20ms actor movement from rendered interpolation and source footprint from draw span", "Require explicit effect activation/suppression/phase/random provenance; do not promote fixture0/None into production evidence", "No original runtime, native/GPU/browser program, source capture/generation, service/database or new agent"],
+      "acceptance": ["Each proposed producer has source-grounded semantics and an actual ownership/lifecycle path, or its precise blocker is retained before any implementation"],
+      "reserved_namespaces": [],
+      "source_notes": ["Original camera probes explicitly did not measure actor interpolation and used a controlled zero footprint; current native EntityState supplies tile-derived draw placement only."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-camera-live-producer-gap.json", "milestones/evidence/m1-camera-consumers-root-qualification.json"]
+    },
     {
       "id": "M1-CAMERA-CONSUMER-INTEGRATION",
       "goal": "Integrate exact reviewed camera consumers plus the independently resolved height-presence repair and qualify committed root code without opening normal entry.",
