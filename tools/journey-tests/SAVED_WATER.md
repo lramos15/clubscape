@@ -9,6 +9,9 @@ Saved-execution and acceptance flags remain false.
 ## Separate execution gate
 
 `saved_water.py` does not call `resume.verify_checkpoint` or `resume.execute`.
+It is a thin launcher for `saved_water_gate.py`; the runtime imports that same
+canonical module so the admission/reservation dataclasses have one identity.
+Synthetic actual-script tests cover this handoff, not just imported helpers.
 Their old tutorial/dying/mainland/accepted-Cook guards and same-source behavior
 are unchanged. There is no generic cross-worktree selector, alternate output
 directory, `--skip-build`, fixture-execution switch or actual-checkpoint

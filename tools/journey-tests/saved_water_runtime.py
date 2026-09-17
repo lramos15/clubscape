@@ -15,7 +15,7 @@ import time
 
 import private_checkpoint as PRIVATE
 import run as JOURNEY
-import saved_water as GATE
+import saved_water_gate as GATE
 
 
 ERRORS = (PRIVATE.CheckpointError, JOURNEY.JourneyError, OSError, ValueError,

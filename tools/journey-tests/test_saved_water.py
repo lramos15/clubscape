@@ -1,15 +1,19 @@
 """Synthetic private files and public authority doubles only; no saved account is accessed."""
 
 import copy
+import contextlib
 import gzip
+import io
 import json
 from pathlib import Path
+import runpy
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
 
 import private_checkpoint as PRIVATE
-import saved_water as WATER
+import saved_water_gate as WATER
 
 
 REAL_ROOT = Path(__file__).resolve().parents[2]
@@ -214,6 +218,34 @@ class SyntheticFixture(unittest.TestCase):
 
 
 class AdmissionTests(SyntheticFixture):
+    def test_actual_script_bootstrap_shares_runtime_authority_types_and_cannot_retry(self):
+        import saved_water_runtime as runtime
+        original_verify = WATER.verify_admission
+        def verify(revision, digest, executor, *, root=None):
+            self.assertIn(root, (None, self.root))
+            return original_verify(revision, digest, executor, root=self.root)
+        def execute(reservation, *, started_at):
+            self.assertIs(type(reservation), WATER.Reservation)
+            self.assertIs(type(reservation.admission), WATER.Admission)
+            self.assertGreater(started_at, 0)
+            saved = runtime.GATE.read_saved52(reservation)
+            self.assertEqual(saved.directory, self.checkpoint)
+            self.assertEqual(saved.scenario, self.scenario)
+            return 0
+        script = REAL_ROOT / "tools/journey-tests/saved_water.py"
+        arguments = [str(script), "--admission-revision", ADMISSION_REVISION,
+                     "--admission-sha256", self.admission_hash, "--executor-id", "synthetic-executor"]
+        with patch.object(WATER, "verify_admission", side_effect=verify), \
+                patch.object(runtime, "execute", side_effect=execute) as execution, \
+                patch.object(WATER.signal, "signal"), \
+                patch.object(sys, "argv", arguments), contextlib.redirect_stdout(io.StringIO()):
+            for expected in (0, 1):
+                with self.assertRaises(SystemExit) as stopped:
+                    runpy.run_path(str(script), run_name="__main__")
+                self.assertEqual(stopped.exception.code, expected)
+        execution.assert_called_once()
+        self.assertTrue((self.root / WATER.JOURNAL).is_file())
+
     def test_valid_public_gate_never_touches_the_checkpoint_until_exclusive_reservation(self):
         original = PRIVATE.project_path
         protected_calls = []

@@ -12,7 +12,7 @@ import unittest
 from unittest.mock import patch
 
 import private_checkpoint as PRIVATE
-import saved_water as WATER
+import saved_water_gate as WATER
 import saved_water_runtime as RUNTIME
 from test_saved_water import SyntheticFixture, store
 
