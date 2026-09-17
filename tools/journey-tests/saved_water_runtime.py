@@ -10,6 +10,7 @@ import shutil
 import signal
 import stat
 import subprocess
+import threading
 import time
 
 import private_checkpoint as PRIVATE
@@ -233,8 +234,58 @@ def verify_trace_prefix(original, continuation):
     return size
 
 
+class NativeDeadline:
+    def __init__(self, process, deadline):
+        self.process = process
+        self.deadline = deadline
+        self.expired = threading.Event()
+        self.signal_error = None
+        self.timer = threading.Timer(max(0, deadline - time.monotonic()), self.expire)
+
+    def expire(self):
+        if self.process.poll() is not None:
+            return
+        self.expired.set()
+        self.kill()
+
+    def kill(self):
+        try:
+            os.killpg(self.process.pid, signal.SIGKILL)
+        except ProcessLookupError as error:
+            if self.process.poll() is None:
+                self.signal_error = error
+        except OSError as error:
+            self.signal_error = error
+
+    def __enter__(self):
+        try:
+            self.timer.start()
+        except RuntimeError as error:
+            self.kill()
+            if self.signal_error is not None:
+                raise PRIVATE.CheckpointError(
+                    "saved_water", f"native_deadline_signal_failed_{self.signal_error.errno}",
+                ) from self.signal_error
+            raise PRIVATE.CheckpointError("saved_water", "native_deadline_watchdog_unavailable") from error
+        return self
+
+    def __exit__(self, _kind, _error, _traceback):
+        self.timer.cancel()
+        self.timer.join()
+        if self.process.poll() is None:
+            if time.monotonic() >= self.deadline:
+                self.expire()
+            elif _kind is not None:
+                self.kill()
+        if self.signal_error is not None:
+            raise PRIVATE.CheckpointError(
+                "saved_water", f"native_deadline_signal_failed_{self.signal_error.errno}",
+            ) from self.signal_error
+        GATE.require(not self.expired.is_set(), "native_gameplay_deadline")
+
+
 class Execution:
-    def __init__(self, reservation):
+    def __init__(self, reservation, *, started_at=None):
         reservation.verify()
         self.reservation = reservation
         self.root = reservation.root
@@ -251,7 +302,8 @@ class Execution:
         self.env["CLUBSCAPE_BIND"] = "127.0.0.1:0"
         self.env["CLUBSCAPE_BUILD_REVISION"] = reservation.admission.record["executor"]["code_revision"]
         self.env["CLUBSCAPE_GAME_ROOT"] = str(self.directory / "game-root")
-        self.overall_deadline = time.monotonic() + GATE.BOUNDS["total_seconds"]
+        self.started_at = time.monotonic() if started_at is None else started_at
+        self.overall_deadline = self.started_at + GATE.BOUNDS["total_seconds"]
         self.deadline = self.overall_deadline - GATE.BOUNDS["preservation_cleanup_seconds"]
         self.server = None
         self.native = None
@@ -277,14 +329,16 @@ class Execution:
         self.save()
 
     def save(self):
+        self.report["elapsed_seconds"] = time.monotonic() - self.started_at
         JOURNEY.write_json(self.report_path, self.report)
 
     def timeout(self, seconds):
-        remaining = int(self.deadline - time.monotonic())
+        remaining = self.deadline - time.monotonic()
         GATE.require(remaining > 0, "total_execution_deadline")
         return min(seconds, remaining)
 
     def phase(self, name):
+        self.timeout(1)
         self.reservation.verify()
         self.report["current_phase"] = name
         self.save()
@@ -372,7 +426,10 @@ class Execution:
     def restore(self):
         self.phase("owned_empty_database_restore")
         self.database_attempted = True
-        self.env["DATABASE_URL"] = JOURNEY.start_database(self.directory, self.owner, self.report)
+        self.env["DATABASE_URL"] = JOURNEY.start_database(
+            self.directory, self.owner, self.report, deadline=self.deadline,
+            command_timeout=GATE.BOUNDS["database_command_seconds"],
+        )
         self.save()
         self.owner_identity(self.directory, "restore_owner")
         empty = self.sql(self.directory, "empty_database", EMPTY_SQL)
@@ -391,6 +448,7 @@ class Execution:
         restored = PRIVATE.database_identity(
             self.root, self.directory, self.report["owned_container_id"], self.saved.capsule,
             GATE.WORLD, "restored_identity",
+            timeout=self.timeout(GATE.BOUNDS["database_command_seconds"]),
         )
         GATE.require(restored == self.saved.identity["database"], "complete_restored_private_identity_not_equal")
         self.restored_view = self.sql(self.directory, "restored_world", MIGRATION_SQL)
@@ -431,6 +489,7 @@ class Execution:
                      "owned_b2_delivery_changed")
 
     def start_server(self):
+        self.timeout(35)
         self.check_target()
         GATE.require(self.report["server_starts"] < GATE.BOUNDS["server_starts"],
                      "server_start_allowance_exhausted")
@@ -440,10 +499,11 @@ class Execution:
         log_path = self.directory / f"server-{self.report['server_starts']}.jsonl"
         with PRIVATE.private_file(log_path):
             pass
+        self.timeout(35)
         self.server = JOURNEY.OwnedServer(
             binary, self.env.copy(), log_path,
         )
-        self.server.ready()
+        self.server.ready(deadline=self.deadline)
         self.save()
 
     def restart_if_requested(self):
@@ -459,7 +519,7 @@ class Execution:
                      and 499 <= request["next_sequence"] <= 499 + GATE.BOUNDS["new_world_inputs_including_duplicates"],
                      "restart_request_identity_changed")
         old = self.server.process.pid
-        GATE.require(self.server.stop() == 0, "restart_shutdown_not_clean")
+        GATE.require(self.server.stop(deadline=self.deadline) == 0, "restart_shutdown_not_clean")
         stopped = self.sql(self.directory, "before_restart", MIGRATION_SQL)
         GATE.require(stopped["worlds"][0]["lease_owner"] is None
                      and stopped["worlds"][0]["lease_expires_at"] is None,
@@ -483,19 +543,30 @@ class Execution:
         self.start_native_phase("gameplay")
         arguments = self.native_arguments()
         log_path = self.directory / "native-gameplay.log"
-        with PRIVATE.private_file(log_path) as log:
-            self.native = subprocess.Popen(
-                [str(value) for value in arguments], cwd=self.root, env=self.env,
-                stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT,
-                start_new_session=True,
-            )
-            deadline = time.monotonic() + self.timeout(GATE.BOUNDS["scenario_seconds"])
-            while self.native.poll() is None:
-                GATE.require(time.monotonic() < deadline, "native_gameplay_deadline")
-                GATE.require(log_path.stat().st_size <= PRIVATE.MAX_METADATA, "native_log_limit")
-                self.restart_if_requested()
-                time.sleep(0.05)
-            code = self.native.wait(timeout=5)
+        execution_deadline = self.deadline
+        deadline = time.monotonic() + self.timeout(GATE.BOUNDS["scenario_seconds"])
+        self.deadline = min(execution_deadline, deadline)
+        watchdog = None
+        try:
+            with PRIVATE.private_file(log_path) as log:
+                self.native = subprocess.Popen(
+                    [str(value) for value in arguments], cwd=self.root, env=self.env,
+                    stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT,
+                    start_new_session=True,
+                )
+                # Restart handling blocks this thread; the process cap must not depend on it.
+                watchdog = NativeDeadline(self.native, self.deadline)
+                with watchdog:
+                    while self.native.poll() is None:
+                        GATE.require(time.monotonic() < deadline, "native_gameplay_deadline")
+                        GATE.require(log_path.stat().st_size <= PRIVATE.MAX_METADATA, "native_log_limit")
+                        self.restart_if_requested()
+                        time.sleep(min(0.05, max(0, deadline - time.monotonic())))
+                    code = self.native.wait(timeout=0)
+        finally:
+            self.deadline = execution_deadline
+            if watchdog is not None:
+                self.report["native_gameplay_deadline_reached"] = watchdog.expired.is_set()
         GATE.require(code == 0, "native_remaining_scenario_failed")
         scenario = PRIVATE.read_json(self.directory / "scenario.json", MAX_VIEW, private=True)
         verify_native_report(self.saved, scenario, self.directory / "scenario.trace.jsonl")
@@ -511,22 +582,25 @@ class Execution:
             try:
                 os.killpg(self.native.pid, signal.SIGTERM)
                 try:
-                    self.native.wait(timeout=10)
+                    self.native.wait(timeout=max(0, min(10, self.deadline - time.monotonic())))
                 except subprocess.TimeoutExpired:
                     os.killpg(self.native.pid, signal.SIGKILL)
-                    self.native.wait(timeout=10)
+                    self.native.wait(timeout=max(0, min(10, self.deadline - time.monotonic())))
                     errors.append({"phase": "native_stop", "reason": "forced_termination"})
             except ERRORS as error:
                 errors.append(failure(error, "native_stop"))
+        if self.native is not None:
+            self.report["native_gameplay_exit_code"] = self.native.poll()
         if self.server is not None:
             try:
-                code = self.server.stop()
+                code = self.server.stop(deadline=self.deadline)
                 GATE.require(code == 0, "owned_server_exit_not_clean")
             except ERRORS as error:
                 errors.append(failure(error, "server_stop"))
         return errors
 
     def capture(self):
+        self.timeout(1)
         self.reservation.verify()
         GATE.require(self.native is None or self.native.poll() is not None, "native_not_reaped")
         GATE.require(self.server is None or self.server.process.poll() is not None, "server_not_reaped")
@@ -568,6 +642,7 @@ class Execution:
                 {"path": "private-inventory.json", "sha256": GATE.INVENTORY},
                 {"path": "availability.json", "sha256": PRIVATE.digest(self.saved.directory / "availability.json")},
             ]:
+                self.timeout(1)
                 target = PRIVATE.project_path(lineage, GATE.relative(row["path"]))
                 parent = lineage
                 for part in Path(row["path"]).parts[:-1]:
@@ -581,7 +656,8 @@ class Execution:
                 "original_config_do_not_publish": {
                     key: self.env[key] for key in PRIVATE.CONFIG_KEYS if key in self.env
                 },
-                "server_started": self.report["server_starts"] > 0,
+                "server_started": self.server is not None,
+                "server_start_attempts": self.report["server_starts"],
                 "game_root_identity": GATE.TARGET_IDENTITY,
                 "migration_outcome": self.report["migration_outcome"],
                 "resume_authorized": False, "automatic_restore": False,
@@ -636,6 +712,7 @@ class Execution:
         destination = directory / "evidence"
         PRIVATE.private_directory(destination, new=True)
         for path in sorted(self.directory.iterdir()):
+            self.timeout(1)
             metadata = path.lstat()
             GATE.require(not stat.S_ISLNK(metadata.st_mode), "symlink_in_owned_run")
             if stat.S_ISREG(metadata.st_mode) and path.name != "postgres-password":
@@ -666,6 +743,7 @@ class Execution:
         return capsule["last_observation_origin"]
 
     def cleanup(self):
+        self.timeout(1)
         checkpoint = self.report.get("private_checkpoint", {})
         GATE.require(checkpoint.get("status") == "available" and checkpoint.get("snapshot_available") is True,
                      "cleanup_forbidden_without_fresh_durable_checkpoint")
@@ -709,8 +787,8 @@ class Execution:
         except ERRORS as error:
             self.report["first_failure"] = failure(error, self.report.get("current_phase", "setup"))
         finally:
-            errors = self.quiesce()
             self.deadline = self.overall_deadline
+            errors = self.quiesce()
             if "owned_container_id" in self.report:
                 try:
                     self.report["private_checkpoint"] = self.capture()
@@ -731,14 +809,16 @@ class Execution:
                     "reason": "no_database_or_restore_started_original_unchanged",
                 }
             self.report["cleanup_errors"] = errors
+            if time.monotonic() >= self.overall_deadline:
+                errors.append({"phase": "execution", "reason": "total_execution_deadline"})
             if errors or not self.report["cleanup_passed"]:
                 self.report["status"] = "blocked"
             self.save()
         return self.report
 
 
-def execute(reservation):
-    report = Execution(reservation).run()
+def execute(reservation, *, started_at=None):
+    report = Execution(reservation, started_at=started_at).run()
     print(json.dumps({
         "status": report["status"], "report": GATE.OUTPUT + "/report.json",
         "migration_outcome": report["migration_outcome"],

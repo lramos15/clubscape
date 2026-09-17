@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "M1-SAVED-WATER-DEADLINE-REVIEW",
-  "status": "in_progress_read_only_independent_delta_review",
+  "status": "completed_read_only_delta_review",
   "authority": "director",
   "reviewer": "22b898a4-8850-4fc0-be15-af0b7440e32a",
   "implementation_author": "director",
@@ -25,5 +25,6 @@
   "nested_agents_or_factories": 0,
   "saved_execution_admitted": false,
   "milestone_accepted": false,
-  "automatic_continuation": false
+  "automatic_continuation": false,
+  "result": "milestones/evidence/m1-saved-water-deadline-review.json"
 }

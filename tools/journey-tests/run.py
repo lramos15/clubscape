@@ -129,6 +129,12 @@ def bounded(arguments, *, env=None, timeout=600, allow_failure=False):
     return result
 
 
+def remaining_seconds(deadline, maximum):
+    remaining = maximum if deadline is None else min(maximum, deadline - time.monotonic())
+    require(remaining > 0, "Owned-operation deadline exhausted.")
+    return remaining
+
+
 def redact(text, env=None):
     for name in ("DATABASE_URL", "CLUBSCAPE_TEST_DATABASE_URL"):
         value = (env or {}).get(name)
@@ -235,8 +241,8 @@ class OwnedServer:
         )
         self.origin = None
 
-    def ready(self):
-        deadline = time.monotonic() + 35
+    def ready(self, *, deadline=None):
+        deadline = time.monotonic() + remaining_seconds(deadline, 35)
         opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
         with self.log_path.open(encoding="utf-8") as log:
             while time.monotonic() < deadline:
@@ -255,14 +261,15 @@ class OwnedServer:
                     continue
                 if event.get("event") == "listening":
                     self.origin = origin("http://" + event.get("address", ""))
-                    with opener.open(self.origin + "/healthz", timeout=5) as response:
+                    with opener.open(self.origin + "/healthz",
+                                     timeout=remaining_seconds(deadline, 5)) as response:
                         require(response.status == 200, "Real database readiness endpoint failed.")
                         response.read(65536)
                     require(self.process.poll() is None, "Owned process died after health readiness.")
                     return self.origin
-        raise JourneyError("Real server did not become loopback/database-ready in 35 seconds.")
+        raise JourneyError("Real server did not become loopback/database-ready before its bounded deadline.")
 
-    def stop(self, *, crash=False):
+    def stop(self, *, crash=False, deadline=None):
         process = self.process
         forced = False
         if process.poll() is None:
@@ -271,10 +278,12 @@ class OwnedServer:
             else:
                 process.terminate()
             try:
-                process.wait(timeout=20)
+                process.wait(timeout=20 if deadline is None else max(
+                    0, min(20, deadline - time.monotonic())))
             except subprocess.TimeoutExpired:
                 process.kill()
-                process.wait(timeout=10)
+                process.wait(timeout=10 if deadline is None else max(
+                    0, min(10, deadline - time.monotonic())))
                 forced = True
         self.log.close()
         require(not forced, "Owned server required unexpected forced termination.")
@@ -473,7 +482,8 @@ def game_identity(game_root):
     }
 
 
-def start_database(directory, name, report):
+def start_database(directory, name, report, *, deadline=None, command_timeout=120):
+    remaining_seconds(deadline, command_timeout)
     password = secrets.token_urlsafe(32)
     secret = directory / "postgres-password"
     descriptor = os.open(secret, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
@@ -489,21 +499,22 @@ def start_database(directory, name, report):
         "--env", "POSTGRES_USER=clubscape", "--env", "POSTGRES_DB=clubscape_journey",
         "--env", "POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password",
         "--publish", "127.0.0.1::5432", POSTGRES_IMAGE,
-    ], timeout=120).stdout.strip()
+    ], timeout=remaining_seconds(deadline, command_timeout)).stdout.strip()
     require(re.fullmatch(r"[0-9a-f]{64}", container), "Docker did not return an owned container identity.")
     report["owned_container_id"] = container
-    deadline = time.monotonic() + 75
-    while time.monotonic() < deadline:
+    ready_deadline = time.monotonic() + remaining_seconds(deadline, 75)
+    while time.monotonic() < ready_deadline:
         ready = bounded([
             "docker", "exec", container, "pg_isready", "-h", "127.0.0.1",
             "-U", "clubscape", "-d", "clubscape_journey",
-        ], timeout=10, allow_failure=True)
+        ], timeout=remaining_seconds(ready_deadline, min(10, command_timeout)), allow_failure=True)
         if ready.returncode == 0:
             break
-        time.sleep(0.5)
+        time.sleep(min(0.5, max(0, ready_deadline - time.monotonic())))
     else:
-        raise JourneyError("Owned PostgreSQL did not become ready in 75 seconds.")
-    binding = bounded(["docker", "port", container, "5432/tcp"], timeout=10).stdout.strip()
+        raise JourneyError("Owned PostgreSQL did not become ready before its bounded deadline.")
+    binding = bounded(["docker", "port", container, "5432/tcp"],
+                      timeout=remaining_seconds(deadline, min(10, command_timeout))).stdout.strip()
     match = re.fullmatch(r"127\.0\.0\.1:(\d+)", binding)
     require(match is not None, "Owned database did not bind one random literal loopback port.")
     return f"postgresql://clubscape:{urllib.parse.quote(password, safe='')}@127.0.0.1:{match[1]}/clubscape_journey"

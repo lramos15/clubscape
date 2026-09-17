@@ -7,12 +7,12 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
-      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
-      {"id": "22b898a4-8850-4fc0-be15-af0b7440e32a", "task": "M1-SAVED-WATER-DEADLINE-REVIEW"}
+      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "22b898a4-8850-4fc0-be15-af0b7440e32a", "reason": "Completed the reserved independent read-only4526d0d deadline delta review. The reproduced native-lifetime defect is resolved by static inspection; no significant new issue found. No tests/builds/protected data or execution. No automatic continuation."},
       {"id": "115554cb-8e25-40c8-854a-4f9dc8936166", "reason": "Delivered2fbf5afa/b958cc44 code-only continuation;15 owned paths integrateddd043bce with existing83Python/53native main regressions passing. Director's additional actual-process deadline regression fails. Runtime retired the worker and rejected its first repair follow-up before processing; Director owns that code-only append, with no saved execution or new allowance."},
       {"id": "23749cd0-cc24-4565-9b37-e057b4823867", "reason": "Delivered53f478d7/93979df1 bounded camera consumers and stopped without automatic resumption. Reported59native/5actual-WASM/289Node passes retain original conformance; one streamed-buffer case is blocked and real fine focus/footprint/effect producers are absent. Candidate is unintegrated and awaits Director review; normal entry and all browser/GPU/presentation gates remain closed."},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Runtime retired the completed native water implementer. The fresh code-only saved52-continuation request was rejected before processing; no implementation/test/protected operation occurred. Preserve its completed04a40ee repair; one replacement is reserved for the new, unexecuted task only."},
@@ -41,7 +41,7 @@
     {
       "id": "M1-SAVED-WATER-DEADLINE-REVIEW",
       "goal": "Independently review the exact Director-authored deadline repair before integration or any saved52 execution admission.",
-      "status": "REVIEW",
+      "status": "VERIFIED",
       "specs": ["milestones/evidence/m1-saved-water-deadline-review-admission.json", "milestones/evidence/m1-saved-water-deadline-repair-candidate.json"],
       "dependencies": ["M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"],
       "allowed_paths": [],
@@ -54,7 +54,7 @@
       "source_notes": ["Initial83/53 suites did not expose the native deadline overrun. Director preserved the actual-process counterexample e526781 and authored4526d0d, with95 code-only Python passes."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-saved-water-deadline-review-admission.json", "milestones/evidence/m1-saved-water-deadline-repair-candidate.json"]
+      "evidence": ["milestones/evidence/m1-saved-water-deadline-review-admission.json", "milestones/evidence/m1-saved-water-deadline-repair-candidate.json", "milestones/evidence/m1-saved-water-deadline-review.json"]
     },
     {
       "id": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",

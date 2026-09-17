@@ -299,7 +299,7 @@ def copy_game_root(root, source, destination, identity):
     require(total <= MAX_GAME_ROOT, "game_root", "byte_limit")
 
 
-def database_identity(root, directory, owner, capsule, world_id, phase):
+def database_identity(root, directory, owner, capsule, world_id, phase, *, timeout=90):
     account = capsule["private_authentication_do_not_publish"]["account_id"]
     expected_world = str(uuid.UUID(world_id))
     expected_account = str(uuid.UUID(account))
@@ -321,7 +321,7 @@ def database_identity(root, directory, owner, capsule, world_id, phase):
         "--set=operation_ids=" + ",".join(operation_ids),
     ]
     private_command(root, directory, phase, command, output=f"{phase}.json",
-                    stdin=directory / "identity.sql")
+                    stdin=directory / "identity.sql", timeout=timeout)
     value = read_json(directory / f"{phase}.json", private=True)
     require(value["database"] == "clubscape_journey" and value["other_clients"] == 0
             and value["world_count"] == 1 and value["character_count"] == 1,

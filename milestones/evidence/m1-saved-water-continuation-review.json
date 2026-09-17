@@ -2,16 +2,24 @@
   "schema_version": 1,
   "kind": "m1_saved_water_continuation_code_review",
   "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
-  "status": "blocked_native_deadline",
-  "reviewer": "director",
+  "status": "passed",
+  "reviewer": "22b898a4-8850-4fc0-be15-af0b7440e32a",
+  "reviewer_role": "independent_director_authored_deadline_delta",
+  "baseline_reviewer": "director",
   "implementer": "115554cb-8e25-40c8-854a-4f9dc8936166",
-  "reviewed_at": "2026-09-17T03:29:05.131437+00:00",
-  "code_revision": "b958cc44425804dd56ef4a940a416588f23b059b",
+  "deadline_repair_author": "director",
+  "baseline_reviewed_at": "2026-09-17T03:29:05.131437+00:00",
+  "reviewed_at": "2026-09-17T04:38:48.218556+00:00",
+  "baseline_candidate_revision": "b958cc44425804dd56ef4a940a416588f23b059b",
+  "code_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
+  "deadline_repair_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
   "implementation_revision": "2fbf5afae6c548981dafd660c523d0ead758de81",
   "implementation_admission": "milestones/evidence/m1-saved-water-continuation-implementation.json",
   "candidate_qualification": "tools/journey-tests/evidence/saved-water-continuation-code.json",
-  "owned_candidate_paths": 15,
-  "owned_implementation_files_verified": 14,
+  "baseline_owned_candidate_paths": 15,
+  "baseline_owned_implementation_files_verified": 14,
+  "deadline_append_paths": 7,
+  "combined_candidate_paths": 17,
   "review_scope": [
     "All new Python admission, reservation, reader, execution, preservation and fixture code; all native remaining-only and recovery changes.",
     "Existing checkpoint writers, source selection, typed operation/control decoding, source contact/production helpers and public report schema consumed by the new path.",
@@ -29,7 +37,9 @@
       "evidence": "milestones/evidence/m1-saved-water-continuation-review/deadline-index.json",
       "reproduced": "With a one-second synthetic cap, the no-block control is stopped at the1.5-second sample; a two-second restart block leaves the actual harmless process alive at1.500441687 seconds. Parent enforcement occurs only at2.051394044 seconds.",
       "required_repair": "Enforce the native process cap independently of blocking restart work, keep explicit deadline outcomes and owned reaping, and propagate the remaining phase/overall budget through blocking helpers without consuming the reserved preservation window.",
-      "status": "open"
+      "status": "resolved",
+      "resolved_by_code_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
+      "independent_resolution": "milestones/evidence/m1-saved-water-deadline-review.json"
     }
   ],
   "superseding_review": {
@@ -39,8 +49,13 @@
     "additional_test_commit": "e5267810c0c271e513c282697e3819ead8c35ac1",
     "saved_execution_ever_admitted": false
   },
-  "qualification": "The initial review and existing83 Python/53 native regressions passed, including main qualification, but the additional actual-process deadline regression fails. That finding supersedes the initial passed review and blocks saved execution. No actual checkpoint, service or journey was used to discover it.",
-  "independent_checks": {
+  "review_chain": [
+    {"reviewer": "director", "scope": "Complete originalb958 continuation implementation and public callers; original83/53 regressions", "historical_review_revision": "dd043bce998e3253f45de9542e6576fa3b77db88"},
+    {"reviewer": "director", "scope": "Additional actual-process deadline counterexample, preserving and superseding the initial passed review", "evidence": "milestones/evidence/m1-saved-water-continuation-review/deadline-index.json"},
+    {"reviewer": "22b898a4-8850-4fc0-be15-af0b7440e32a", "scope": "Independent exact seven-file Director-authored4526 deadline append, not a repeated full baseline review", "evidence": "milestones/evidence/m1-saved-water-deadline-review.json"}
+  ],
+  "qualification": "Composed code review: Director reviewed the original implementation; the subsequently reproduced deadline finding was repaired by Director and independently resolved by22b898a4 through static delta review, with no new blocking findings. Director95 committed Python checks are supplied execution evidence, not tests rerun by that reviewer. This neither reads nor authorizes the actual saved checkpoint, services, migration or gameplay.",
+  "baseline_independent_checks": {
     "worktree": ".worktrees/m1-saved-water-review",
     "index": "milestones/evidence/m1-saved-water-continuation-review/index.json",
     "python": {
@@ -88,12 +103,13 @@
     "preparation_or_inspection_repeated": false
   },
   "remaining_execution_gates": [
-    "Repair the reproduced native deadline defect and obtain independent review of the complete repaired candidate; do not increase the600/2400-second bounds or take time from the960-second preservation reservation.",
-    "Existing main83 Python/53 native, Clippy, formatting and two non-test builds pass and are retained at milestones/evidence/m1-saved-water-continuation-review/main/index.json; they do not close the newly reproduced deadline defect.",
+    "Persist main repair integration and its focused root regressions. The original failure and83/53 qualification remain historical evidence, not erased by the repair.",
     "A new exact committed execution admission must bind this executor HEAD, these reviewed binaries, current public prerequisite hashes, the fixed journal and all proposed bounds before any protected filesystem operation.",
     "Actual original identity, target service readiness, restore, fenced migration, remaining gameplay and fresh protected capture are unexecuted and may still fail their strict runtime guards.",
     "No old operator, preparation, restore, browser, audio or RuneLite allowance is renewed."
   ],
+  "deadline_repair_qualification": "milestones/evidence/m1-saved-water-deadline-repair-candidate.json",
+  "independent_deadline_review": "milestones/evidence/m1-saved-water-deadline-review.json",
   "protected_checkpoint_accesses": 0,
   "actual_databases_services_restores_migrations_or_gameplay": 0,
   "gpu_browser_source_capture_generation_or_runelite_invocations": 0,

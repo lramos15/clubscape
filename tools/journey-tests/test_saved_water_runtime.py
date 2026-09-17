@@ -1,8 +1,12 @@
 """Synthetic migration/orchestration/capture fixtures. Every subprocess is replaced."""
 
 import copy
+import errno
 import json
 from pathlib import Path
+import sys
+import threading
+import time
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
@@ -134,11 +138,14 @@ class RuntimeTests(SyntheticFixture):
         execution = self.execution()
         events = []
         command, sql = self.synthetic_commands(execution, events)
-        def start_database(directory, owner, report):
+        def start_database(directory, owner, report, **kwargs):
+            self.assertEqual(kwargs, {"deadline": execution.deadline, "command_timeout": 90})
             events.append(("owned_database", owner))
             report["owned_container_id"] = "a" * 64
             return "postgresql://synthetic-only"
-        def identity(*args):
+        def identity(*args, **kwargs):
+            self.assertGreater(kwargs["timeout"], 0)
+            self.assertLessEqual(kwargs["timeout"], 90)
             events.append(("complete_identity_equality", None))
             return copy.deepcopy(self.database)
         with patch.object(RUNTIME.JOURNEY, "start_database", side_effect=start_database), \
@@ -522,6 +529,141 @@ class RuntimeTests(SyntheticFixture):
         saved = PRIVATE.read_json(self.root / result["directory"] / "private-client.json", private=True)
         self.assertEqual(saved["latest_attempt"]["observed_response"], {"kind": "unresolved"})
         self.assertFalse(result["resume_authorized"])
+
+    def test_blocking_restart_cannot_extend_the_native_gameplay_deadline(self):
+        execution = self.execution()
+        observations = []
+        for restart_delay in (0.0, 2.0):
+            execution.native = None
+            if (execution.directory / "native-gameplay.log").exists():
+                (execution.directory / "native-gameplay.log").unlink()
+            with patch.dict(WATER.BOUNDS, {"scenario_seconds": 1}), \
+                    patch.object(execution, "phase"), \
+                    patch.object(execution, "start_server"), \
+                    patch.object(execution, "start_native_phase"), \
+                    patch.object(execution, "native_arguments", return_value=[
+                        sys.executable, "-c", "import time; time.sleep(30)",
+                    ]), \
+                    patch.object(execution, "restart_if_requested",
+                                 side_effect=lambda: time.sleep(restart_delay)):
+                started = time.monotonic()
+                observation = {
+                    "scenario_budget_seconds": 1,
+                    "blocking_restart_seconds": restart_delay,
+                    "sample_after_seconds": 1.5,
+                }
+                def sample_native():
+                    observation["sample_elapsed_seconds"] = time.monotonic() - started
+                    observation["native_still_running_after_deadline"] = (
+                        execution.native is not None and execution.native.poll() is None
+                    )
+                sampler = threading.Timer(1.5, sample_native)
+                sampler.start()
+                try:
+                    with self.assertRaises(PRIVATE.CheckpointError) as caught:
+                        execution.gameplay()
+                    self.assertEqual(caught.exception.code, "native_gameplay_deadline")
+                    observation["gameplay_elapsed_seconds"] = time.monotonic() - started
+                finally:
+                    execution.quiesce()
+                    sampler.join()
+                observations.append(observation)
+        print(json.dumps({"synthetic_deadline_observations": observations}), flush=True)
+        for observation in observations:
+            self.assertLess(observation["sample_elapsed_seconds"], 1.9, observation)
+            self.assertFalse(observation["native_still_running_after_deadline"], observation)
+
+    def test_expired_execution_refuses_phase_and_server_launch_without_taking_preservation_time(self):
+        execution = self.execution()
+        overall = execution.overall_deadline
+        execution.deadline = time.monotonic() - 1
+        with patch.object(execution.reservation.__class__, "verify") as verify, \
+                self.assertRaises(PRIVATE.CheckpointError):
+            execution.phase("synthetic_expired")
+        verify.assert_not_called()
+        with patch.object(execution, "check_target") as target, \
+                patch.object(RUNTIME.JOURNEY, "OwnedServer") as server, \
+                self.assertRaises(PRIVATE.CheckpointError):
+            execution.start_server()
+        target.assert_not_called()
+        server.assert_not_called()
+        self.assertEqual(execution.overall_deadline, overall)
+        self.assertEqual(execution.report["server_starts"], 0)
+
+    def test_public_gate_time_is_charged_and_cleanup_uses_only_the_original_overall_deadline(self):
+        reservation = self.reservation()
+        started = time.monotonic() - 30
+        with patch.object(RUNTIME.JOURNEY, "ROOT", self.root):
+            execution = RUNTIME.Execution(reservation, started_at=started)
+            self.assertEqual(execution.overall_deadline, started + WATER.BOUNDS["total_seconds"])
+            self.assertEqual(execution.deadline, execution.overall_deadline - 960)
+            def quiesce():
+                self.assertEqual(execution.deadline, execution.overall_deadline)
+                return []
+            with patch.object(execution, "phase", side_effect=PRIVATE.CheckpointError(
+                    "saved_water", "synthetic_pre_restore_failure")), \
+                    patch.object(execution, "quiesce", side_effect=quiesce):
+                report = execution.run()
+        self.assertEqual(report["status"], "blocked")
+        self.assertGreaterEqual(report["elapsed_seconds"], 30)
+        self.assertEqual(execution.overall_deadline, started + 2400)
+
+    def test_expired_preservation_cannot_start_a_snapshot_or_cleanup(self):
+        execution = self.execution()
+        execution.deadline = time.monotonic() - 1
+        with patch.object(PRIVATE, "private_directory") as directory, \
+                self.assertRaises(PRIVATE.CheckpointError):
+            execution.capture()
+        directory.assert_not_called()
+        with patch.object(execution, "owner_identity") as owner, \
+                patch.object(execution, "command") as command, \
+                self.assertRaises(PRIVATE.CheckpointError):
+            execution.cleanup()
+        owner.assert_not_called()
+        command.assert_not_called()
+
+
+class NativeDeadlineTests(unittest.TestCase):
+    def test_unavailable_watchdog_stops_the_owned_native_before_reporting_failure(self):
+        process = unittest.mock.Mock(pid=123456, **{"poll.return_value": None})
+        watchdog = RUNTIME.NativeDeadline(process, time.monotonic() + 60)
+        with patch.object(watchdog.timer, "start", side_effect=RuntimeError("synthetic")), \
+                patch.object(RUNTIME.os, "killpg") as kill, \
+                self.assertRaises(PRIVATE.CheckpointError) as caught:
+            with watchdog:
+                self.fail("Unavailable watchdog must not enter gameplay monitoring")
+        self.assertEqual(caught.exception.code, "native_deadline_watchdog_unavailable")
+        kill.assert_called_once_with(process.pid, RUNTIME.signal.SIGKILL)
+        self.assertFalse(watchdog.timer.is_alive())
+
+    def test_signal_failure_is_explicit_not_a_successful_timeout_claim(self):
+        process = unittest.mock.Mock(pid=123456, **{"poll.return_value": None})
+        with patch.object(RUNTIME.os, "killpg", side_effect=PermissionError(errno.EPERM, "synthetic")), \
+                self.assertRaises(PRIVATE.CheckpointError) as caught:
+            with RUNTIME.NativeDeadline(process, time.monotonic() + 60) as watchdog:
+                watchdog.expire()
+        self.assertEqual(caught.exception.code, f"native_deadline_signal_failed_{errno.EPERM}")
+        self.assertFalse(watchdog.timer.is_alive())
+
+    def test_monitor_failure_kills_only_the_owned_group_and_keeps_the_original_error(self):
+        process = unittest.mock.Mock(pid=123456, **{"poll.return_value": None})
+        with patch.object(RUNTIME.os, "killpg") as kill:
+            with self.assertRaises(PRIVATE.CheckpointError) as caught:
+                with RUNTIME.NativeDeadline(process, time.monotonic() + 60) as watchdog:
+                    raise PRIVATE.CheckpointError("synthetic_monitor", "original_failure")
+        self.assertEqual(caught.exception.code, "original_failure")
+        kill.assert_called_once_with(process.pid, RUNTIME.signal.SIGKILL)
+        self.assertFalse(watchdog.timer.is_alive())
+
+    def test_context_exit_enforces_expiry_even_if_the_timer_has_not_run(self):
+        process = unittest.mock.Mock(pid=123456, **{"poll.return_value": None})
+        with patch.object(RUNTIME.os, "killpg") as kill, \
+                self.assertRaises(PRIVATE.CheckpointError) as caught:
+            with RUNTIME.NativeDeadline(process, time.monotonic() + 60) as watchdog:
+                watchdog.deadline = time.monotonic() - 1
+        self.assertEqual(caught.exception.code, "native_gameplay_deadline")
+        kill.assert_called_once_with(process.pid, RUNTIME.signal.SIGKILL)
+        self.assertFalse(watchdog.timer.is_alive())
 
 
 if __name__ == "__main__":

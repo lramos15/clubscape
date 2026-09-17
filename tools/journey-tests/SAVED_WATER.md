@@ -134,6 +134,21 @@ owned container ID, never a supplied database URL. Missing tools do not authoriz
 installation or lock changes. Builds, generation, operator preflights,
 browser/GPU and RuneLite invocations have zero execution allowance.
 
+The overall clock begins before public admission verification. Setup and native
+work use the original deadline minus the 960-second preservation reservation;
+shutdown, capture and cleanup use the original overall deadline, never a fresh
+window. Database creation, readiness, identity reads, server readiness and
+shutdown inherit the remaining phase budget. Legacy helper callers retain their
+previous default limits.
+
+A separate watchdog caps the owned native process group even while the parent
+is blocked handling a restart. It kills that group at the native deadline and
+reports an explicit timeout; leaving the monitor on an error also stops the
+owned group. A missing new capsule after forced termination is a capture failure
+that retains the database, not permission to substitute historical client state.
+The failing pre-repair deadline evidence and its actual-process regression are
+preserved separately from the original passing code-only suites.
+
 The oracle compares the complete persisted world/actor fields, owned items,
 bank/equipment, RNG-key digest, last tick receipt, UI/audio history, account/auth/
 game sessions, complete command/lifecycle journal hashes and schema migrations.

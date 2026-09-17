@@ -6,6 +6,7 @@ from pathlib import Path
 import shutil
 import signal
 import sys
+import tempfile
 import unittest
 from unittest.mock import Mock, patch
 import uuid
@@ -121,6 +122,51 @@ class OrchestratorTests(unittest.TestCase):
         self.assertEqual(server.stop(crash=True), -signal.SIGKILL)
         server.process.kill.assert_called_once()
         server.process.terminate.assert_not_called()
+
+    def test_owned_shutdown_caps_both_waits_at_the_callers_remaining_deadline(self):
+        server = RUN.OwnedServer.__new__(RUN.OwnedServer)
+        server.process = Mock(**{"poll.return_value": None, "returncode": -signal.SIGKILL})
+        server.process.wait.side_effect = [RUN.subprocess.TimeoutExpired("synthetic", 2), -signal.SIGKILL]
+        server.log = Mock()
+        with patch.object(RUN.time, "monotonic", side_effect=[100, 101.5]), \
+                self.assertRaises(RUN.JourneyError):
+            server.stop(deadline=102)
+        self.assertEqual([call.kwargs["timeout"] for call in server.process.wait.call_args_list], [2, 0.5])
+        server.process.kill.assert_called_once()
+
+    def test_database_setup_propagates_absolute_budget_without_extending_old_defaults(self):
+        for remaining, expected in ((None, [120, 10, 10]), (1, [1, 1, 1])):
+            with tempfile.TemporaryDirectory(prefix="synthetic-database-deadline-", dir=RUN.ROOT / ".local") as name:
+                report = {}
+                outputs = [Mock(stdout="a" * 64, returncode=0), Mock(returncode=0),
+                           Mock(stdout="127.0.0.1:43210", returncode=0)]
+                with patch.object(RUN, "bounded", side_effect=outputs) as command, \
+                        patch.object(RUN.time, "monotonic", return_value=100):
+                    RUN.start_database(
+                        Path(name), "synthetic-owner", report,
+                        **({} if remaining is None else {"deadline": 100 + remaining, "command_timeout": 90}),
+                    )
+                self.assertEqual([call.kwargs["timeout"] for call in command.call_args_list], expected)
+                self.assertEqual(report["owned_container_id"], "a" * 64)
+
+    def test_expired_database_budget_is_refused_before_credentials_or_container_creation(self):
+        with tempfile.TemporaryDirectory(prefix="synthetic-database-deadline-", dir=RUN.ROOT / ".local") as name:
+            with patch.object(RUN, "bounded") as command, \
+                    patch.object(RUN.time, "monotonic", return_value=100), \
+                    self.assertRaises(RUN.JourneyError):
+                RUN.start_database(Path(name), "synthetic-owner", {}, deadline=99, command_timeout=90)
+            command.assert_not_called()
+            self.assertEqual(list(Path(name).iterdir()), [])
+
+    def test_expired_readiness_budget_does_not_open_logs_or_issue_health_requests(self):
+        server = RUN.OwnedServer.__new__(RUN.OwnedServer)
+        server.log_path = Mock()
+        with patch.object(RUN.time, "monotonic", return_value=100), \
+                patch.object(RUN.urllib.request, "build_opener") as opener, \
+                self.assertRaises(RUN.JourneyError):
+            server.ready(deadline=99)
+        server.log_path.open.assert_not_called()
+        opener.assert_not_called()
 
     def test_atomic_evidence_and_symlink_rejection_stay_in_project(self):
         relative = Path(".local/journey-machinery-tests") / uuid.uuid4().hex

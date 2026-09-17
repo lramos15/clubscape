@@ -13,6 +13,7 @@ import re
 import signal
 import stat
 import subprocess
+import time
 import uuid
 
 import private_checkpoint as PRIVATE
@@ -476,6 +477,7 @@ def read_saved52(reservation):
 
 
 def main():
+    started_at = time.monotonic()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--admission-revision", required=True)
     parser.add_argument("--admission-sha256", required=True)
@@ -492,7 +494,7 @@ def main():
     import saved_water_runtime
     signal.signal(signal.SIGTERM, JOURNEY.interrupted)
     signal.signal(signal.SIGINT, JOURNEY.interrupted)
-    return saved_water_runtime.execute(reservation)
+    return saved_water_runtime.execute(reservation, started_at=started_at)
 
 
 if __name__ == "__main__":
