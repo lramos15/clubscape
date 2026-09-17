@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION",
-  "status": "admitted_native_wasm_and_cpu_consumer_work_only",
+  "status": "reported_candidate_pending_director_review",
   "worker": "23749cd0-cc24-4565-9b37-e057b4823867",
   "retired_predecessor": "ac0f0856-44af-445b-bd90-6db7a1f4fc74",
   "assignment": "One bounded replacement received the previously unexecuted consumer task after reservation in2b90e30. The retired predecessor's completed native controller evidence remains valid, not new consumer validation.",
@@ -42,6 +42,26 @@
     "source_captures_or_generation": 0,
     "protected_state_access": 0,
     "nested_agents_or_factories": 0
+  },
+  "reported_candidate": {
+    "implementation_revision": "53f478d7dae383492e1bd89d3724fed54371d498",
+    "evidence_revision": "93979df1319ad6ab503b0292d553f8deb766ec63",
+    "qualification_in_candidate": "crates/wasm/camera-consumer-validation.json",
+    "implementation_owned_files": 33,
+    "worker_reported_native_passes": 59,
+    "worker_reported_actual_wasm_passes": 5,
+    "worker_reported_node_passes": 289,
+    "worker_reported_original_conformance": "14scenarios/354rows/336readbacks;39438integer and6210float-bit comparisons,0differences",
+    "worker_reported_streamed_case": "One strict case failed before assembly because all122 declared streamed buffers are absent from the reserved worktree. Preserved as blocked, not passed.",
+    "reported_missing_producers": [
+      "Native CameraFocusableEntity identity bound to the actual logical/rendered actor",
+      "Fine logical and render-focus coordinates and source-unit camera-query footprint",
+      "Explicit source effect activation/suppression and active-channel phase/frequency/amplitude/random sample"
+    ],
+    "normal_entry": "Still explicitly fenced; no guessed focus, tile centre, footprint or inactive effects",
+    "director_review": "pending",
+    "main_integration": false,
+    "automatic_resumption": false
   },
   "parent_camera_integration_gate_remains_closed": true,
   "independent_review_required": true,

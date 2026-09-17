@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "kind": "saved_water_main_code_only_qualification",
+  "code_revision": "dd043bce998e3253f45de9542e6576fa3b77db88",
+  "status": "existing_regressions_passed_new_deadline_regression_blocks_execution",
+  "cargo_build_jobs": 4,
+  "cargo_target_directory": ".local/saved-water-main-target",
+  "checks": [
+    {"name": "python", "exit_code": 0, "tests_passed": 83, "elapsed_seconds": 3.14, "timeout_seconds": 120},
+    {"name": "native", "exit_code": 0, "tests_passed": 53, "elapsed_seconds": 25.69, "timeout_seconds": 600},
+    {"name": "strict_simulator_clippy_all_targets_with_journey_server", "exit_code": 0, "elapsed_seconds": 20.08, "timeout_seconds": 600},
+    {"name": "simulator_formatting", "exit_code": 0, "elapsed_seconds": 0.14, "timeout_seconds": 120},
+    {"name": "simulator_and_journey_server_non_test_build", "exit_code": 0, "elapsed_seconds": 30.16, "timeout_seconds": 600}
+  ],
+  "files": [
+    {"path": "python.log", "bytes": 211, "sha256": "5d924b40178c805577dfe8573f3a0aa2e9d314376aa94bcd7309cd7a2e5c0775"},
+    {"path": "native.log", "bytes": 200, "sha256": "ec613991f51c0b04d0a609c7a94767d52432ed0b71d8072c3e4c5c35913a8562"},
+    {"path": "clippy.log", "bytes": 32, "sha256": "996da3aec785df58cdf5ab0a1d45a38677f73fc5c9c79494b13c007d29a403a4"},
+    {"path": "format.log", "bytes": 29, "sha256": "21a34358dd8f2a7e81d543ddbb9e70a485af362f9b7e7954959c04355cb43efb"},
+    {"path": "build.jsonl", "bytes": 249880, "sha256": "4d6ec5aa430072d2337fc4e96e2c6af9d29ccfb08c35c54354626d0ac9f16d11"},
+    {"path": "build.stderr", "bytes": 32, "sha256": "905ef7f069e48e2adb11547023c3a0010914614151ce58554e33cfe18b08b522"}
+  ],
+  "actual_non_test_executables": [
+    {"path": ".local/saved-water-main-target/debug/clubscape-sim", "sha256": "6add18a18d63fc118d2617e5bd6dafde1d2b5ca52a0750ee591cc90665a9b467", "test": false, "cargo_fresh": false},
+    {"path": ".local/saved-water-main-target/debug/clubscape-journey-server", "sha256": "d5b5f9e7c4a6983756c1f2fc7f7703877f52ffb57335d311850e2fc8748399f5", "test": false, "cargo_fresh": false}
+  ],
+  "separate_blocker": "../deadline-index.json",
+  "non_test_executables_invoked": 0,
+  "protected_checkpoint_accesses": 0,
+  "actual_databases_services_restores_migrations_or_gameplay": 0,
+  "saved_execution_admitted": false,
+  "milestone_accepted": false
+}

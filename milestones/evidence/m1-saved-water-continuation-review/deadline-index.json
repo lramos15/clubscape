@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "kind": "saved_water_native_deadline_counterexample",
+  "status": "blocking_actual_subprocess_liveness_failure_reproduced",
+  "recorded_at": "2026-09-17T03:52:25.999118+00:00",
+  "candidate_revision": "b958cc44425804dd56ef4a940a416588f23b059b",
+  "main_integration_revision": "dd043bce998e3253f45de9542e6576fa3b77db88",
+  "test_only_commit": "e5267810c0c271e513c282697e3819ead8c35ac1",
+  "test_file": "tools/journey-tests/test_saved_water_runtime.py",
+  "test_file_sha256": "883ea51bcb52a20e6eb36f6754b1ba39a3da06db558a53a3b7a8c4a04c442dbc",
+  "implementation_file": "tools/journey-tests/saved_water_runtime.py",
+  "implementation_file_sha256": "b6c8f325b7e4b7a45d99ac970a601b157ab3cc24061d79992acb8b8b2bdc7ca7",
+  "test": "test_saved_water_runtime.RuntimeTests.test_blocking_restart_cannot_extend_the_native_gameplay_deadline",
+  "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/journey-tests timeout 120 python3 -m unittest test_saved_water_runtime.RuntimeTests.test_blocking_restart_cannot_extend_the_native_gameplay_deadline",
+  "files": [
+    {
+      "path": "deadline-initial.log",
+      "bytes": 1324,
+      "sha256": "122e4ca2722057b52b19fda12df49e78512afd69d65898ccf2402ca0d5bea5bb",
+      "exit_code": 1,
+      "tests_failed": 1,
+      "elapsed_seconds": 3.19,
+      "qualification": "Initial parent-elapsed fixture, retained rather than overwritten; superseded by independent actual-process sampling below."
+    },
+    {
+      "path": "deadline-process.log",
+      "bytes": 1546,
+      "sha256": "f08a43bacdcc1ca2c7eb2a3009fed14f6437b492d4ef586b6f5c601db9414238",
+      "exit_code": 1,
+      "tests_failed": 1,
+      "elapsed_seconds": 3.67,
+      "qualification": "Final test samples the actual harmless Popen process independently while restart handling blocks the parent."
+    }
+  ],
+  "final_control": {
+    "scenario_budget_seconds": 1,
+    "blocking_restart_seconds": 0,
+    "sample_elapsed_seconds": 1.500685544218868,
+    "native_still_running_after_deadline": false,
+    "gameplay_elapsed_seconds": 1.0075335991568863
+  },
+  "final_counterexample": {
+    "scenario_budget_seconds": 1,
+    "blocking_restart_seconds": 2,
+    "sample_elapsed_seconds": 1.500441687181592,
+    "native_still_running_after_deadline": true,
+    "gameplay_elapsed_seconds": 2.051394043955952
+  },
+  "scope": "Actual local Python sleep processes with synthetic admission/control fixtures. The one-second test cap substitutes for the same production600-second path. No claim that saved52 or a production native journey was executed.",
+  "harmless_python_sleep_processes_across_both_reproductions": 4,
+  "all_owned_fixture_processes_reaped": true,
+  "production_budgets_increased": false,
+  "protected_checkpoint_accesses": 0,
+  "actual_game_executables_services_databases_restores_migrations_or_gameplay": 0,
+  "saved_execution_admitted": false,
+  "milestone_accepted": false
+}

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "m1_saved_water_continuation_code_review",
   "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
-  "status": "passed",
+  "status": "blocked_native_deadline",
   "reviewer": "director",
   "implementer": "115554cb-8e25-40c8-854a-4f9dc8936166",
   "reviewed_at": "2026-09-17T03:29:05.131437+00:00",
@@ -19,8 +19,27 @@
     "Owned empty restore and original private identity comparison before the existing production migrate-ui call, exact migration conservation oracle, lifecycle-only entry and new-operation-only duplicate proof.",
     "Source success or burn, additional-input accounting, bounded owned lifecycle and fresh checkpoint before cleanup, with unknown outcomes and capture failures retained."
   ],
-  "findings": [],
-  "qualification": "No blocking correctness finding in this candidate after direct independent inspection and isolated synthetic/native regressions. This reviews code, not the actual saved checkpoint, source-service readiness, migration or remaining gameplay. The production migration implementation is the separately reviewed and qualified water dependency, not a replacement implemented by this candidate.",
+  "findings": [
+    {
+      "id": "saved-water-native-deadline",
+      "severity": "HIGH",
+      "file": "tools/journey-tests/saved_water_runtime.py",
+      "lines": "480-500",
+      "problem": "The native subprocess deadline is checked only between parent-loop iterations. Blocking owned restart handling can leave the subprocess running beyond the admitted cap.",
+      "evidence": "milestones/evidence/m1-saved-water-continuation-review/deadline-index.json",
+      "reproduced": "With a one-second synthetic cap, the no-block control is stopped at the1.5-second sample; a two-second restart block leaves the actual harmless process alive at1.500441687 seconds. Parent enforcement occurs only at2.051394044 seconds.",
+      "required_repair": "Enforce the native process cap independently of blocking restart work, keep explicit deadline outcomes and owned reaping, and propagate the remaining phase/overall budget through blocking helpers without consuming the reserved preservation window.",
+      "status": "open"
+    }
+  ],
+  "superseding_review": {
+    "recorded_at": "2026-09-17T03:52:25.999118+00:00",
+    "initial_passed_review_revision": "dd043bce998e3253f45de9542e6576fa3b77db88",
+    "initial_regression_results_preserved": true,
+    "additional_test_commit": "e5267810c0c271e513c282697e3819ead8c35ac1",
+    "saved_execution_ever_admitted": false
+  },
+  "qualification": "The initial review and existing83 Python/53 native regressions passed, including main qualification, but the additional actual-process deadline regression fails. That finding supersedes the initial passed review and blocks saved execution. No actual checkpoint, service or journey was used to discover it.",
   "independent_checks": {
     "worktree": ".worktrees/m1-saved-water-review",
     "index": "milestones/evidence/m1-saved-water-continuation-review/index.json",
@@ -69,7 +88,8 @@
     "preparation_or_inspection_repeated": false
   },
   "remaining_execution_gates": [
-    "Main integration and focused regression qualification must be persisted separately.",
+    "Repair the reproduced native deadline defect and obtain independent review of the complete repaired candidate; do not increase the600/2400-second bounds or take time from the960-second preservation reservation.",
+    "Existing main83 Python/53 native, Clippy, formatting and two non-test builds pass and are retained at milestones/evidence/m1-saved-water-continuation-review/main/index.json; they do not close the newly reproduced deadline defect.",
     "A new exact committed execution admission must bind this executor HEAD, these reviewed binaries, current public prerequisite hashes, the fixed journal and all proposed bounds before any protected filesystem operation.",
     "Actual original identity, target service readiness, restore, fenced migration, remaining gameplay and fresh protected capture are unexecuted and may still fail their strict runtime guards.",
     "No old operator, preparation, restore, browser, audio or RuneLite allowance is renewed."
@@ -77,7 +97,7 @@
   "protected_checkpoint_accesses": 0,
   "actual_databases_services_restores_migrations_or_gameplay": 0,
   "gpu_browser_source_capture_generation_or_runelite_invocations": 0,
-  "main_qualification_in_this_record": false,
+  "main_qualification": "milestones/evidence/m1-saved-water-continuation-review/main/index.json",
   "saved_execution_admitted": false,
   "saved_execution_performed": false,
   "automatic_resume": false,
