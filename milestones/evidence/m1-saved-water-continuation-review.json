@@ -64,7 +64,8 @@
     {"reviewer": "director", "scope": "Additional actual-process deadline counterexample, preserving and superseding the initial passed review", "evidence": "milestones/evidence/m1-saved-water-continuation-review/deadline-index.json"},
     {"reviewer": "22b898a4-8850-4fc0-be15-af0b7440e32a", "scope": "Independent exact seven-file Director-authored4526 deadline append, not a repeated full baseline review", "evidence": "milestones/evidence/m1-saved-water-deadline-review.json"}
   ],
-  "qualification": "Composed code review: Director reviewed the original implementation; the subsequently reproduced deadline finding was repaired by Director and independently resolved by22b898a4 through static delta review, with no new blocking findings. Director95 committed Python checks are supplied execution evidence, not tests rerun by that reviewer. This neither reads nor authorizes the actual saved checkpoint, services, migration or gameplay.",
+  "qualification": "The deadline review chain remains valid, but the subsequent actual CLI attempt exposed a separate nominal-module identity defect before protected access. That bootstrap finding now blocks this candidate despite the previously passing import-based suites. A76971ee thin-launcher repair passes96 synthetic checks including the actual script/runtime boundary, but is not independently reviewed or integrated and grants no retry.",
+  "bootstrap_candidate": "milestones/evidence/m1-saved-water-bootstrap-candidate.json",
   "baseline_independent_checks": {
     "worktree": ".worktrees/m1-saved-water-review",
     "index": "milestones/evidence/m1-saved-water-continuation-review/index.json",
