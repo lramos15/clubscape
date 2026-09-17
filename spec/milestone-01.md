@@ -2,6 +2,10 @@
 
 Status: **in progress, not accepted**.
 
+The **[M1 delivery checklist](../milestones/m1-checklist.md)** tracks current
+completed checkpoints and remaining work. Requirements below remain binding;
+the historical execution notes at the end are not the current blocker list.
+
 ## Fleet continuation
 
 The owner's 2026-09-13T23:30:04.367Z request reopens M1 execution in fleet mode
@@ -97,6 +101,16 @@ hardware, or external execution limits prevent completion, continue independent
 unblocked milestone work where possible, then report the milestone as
 incomplete with a durable checkpoint. Never relabel that checkpoint as an
 accepted slice.
+
+## Historical execution checkpoints
+
+These notes describe earlier states at their cited revisions. The later
+[saved continuation](../milestones/evidence/m1-saved-water-execution-02-result.json)
+completed the remaining cooking/recovery flow, and
+[camera root qualification](../milestones/evidence/m1-camera-consumers-root-qualification.json)
+supersedes the old camera-height and five-TypeScript-error blockers.
+Use the checklist and current acceptance gates for present status; none of
+these component checkpoints establishes full browser or M1 acceptance.
 
 The [recovery/audio checkpoint](../milestones/evidence/m1-dying-audio-repairs.json)
 preserves the distinction between native repairs and the actual normal-account

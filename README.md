@@ -2,11 +2,15 @@
 
 **M1 is in progress, not accepted.** The approved scope is the complete
 Tutorial Island-to-Lumbridge/Cook's Assistant journey in
-[`prompt.md` Section 30](prompt.md). There is no playable browser client or
-accepted visual/audio slice yet. Account infrastructure is not a reduced
-vertical slice.
+[`prompt.md` Section 30](prompt.md). Normal browser gameplay entry is still
+blocked, and there is no accepted visual/audio slice yet. Account infrastructure
+is not a reduced vertical slice.
 
-The current [native runtime checkpoint](milestones/evidence/m1-engine-review-repairs.json)
+Use the **[M1 delivery checklist](milestones/m1-checklist.md)** to track completed
+checkpoints and remaining browser, presentation, deployment and acceptance work.
+Keep it updated alongside the machine-readable milestone/task records.
+
+The [native runtime checkpoint](milestones/evidence/m1-engine-review-repairs.json)
 records the strictly compiled source content, authoritative backend and
 persistence results. The [task ledger](milestones/m1-tasks.json) tracks active
 browser/journey integration; all four reported engine review findings are
