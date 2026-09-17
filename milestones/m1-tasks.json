@@ -6,11 +6,10 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"}
+      {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
+      {"id": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "task": "M1-SAVED-WATER-BOOTSTRAP-REVIEW"}
     ],
-    "reserved": [
-      {"id": "saved-water-bootstrap-review-replacement", "task": "M1-SAVED-WATER-BOOTSTRAP-REVIEW", "replaces_retired": "22b898a4-8850-4fc0-be15-af0b7440e32a"}
-    ],
+    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "22b898a4-8850-4fc0-be15-af0b7440e32a", "reason": "Completed the independent4526 deadline delta review. Runtime rejected the separately admitted769 bootstrap follow-up before processing because this worker was retired; no bootstrap assessment/tests/private operation occurred. One replacement slot is reserved for the unexecuted append only."},
@@ -43,7 +42,7 @@
     {
       "id": "M1-SAVED-WATER-BOOTSTRAP-REVIEW",
       "goal": "Independently assess the Director-authored canonical CLI bootstrap repair without renewing saved execution.",
-      "status": "READY",
+      "status": "REVIEW",
       "specs": ["milestones/evidence/m1-saved-water-bootstrap-review-admission.json", "milestones/evidence/m1-saved-water-bootstrap-candidate.json"],
       "dependencies": ["M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"],
       "allowed_paths": [],
