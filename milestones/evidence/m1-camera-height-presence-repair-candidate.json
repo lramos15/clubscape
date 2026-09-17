@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "kind": "camera_height_presence_repair_candidate",
+  "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION",
+  "status": "code_qualified_independent_review_pending",
+  "author": "director",
+  "admission": "milestones/evidence/m1-camera-height-presence-repair-admission.json",
+  "admission_revision": "0a853602744cadc640027b35d3e6339197df7877",
+  "original_failure": "milestones/evidence/m1-camera-consumers-director-cpu-result.json",
+  "base_revision": "93979df1319ad6ab503b0292d553f8deb766ec63",
+  "code_revision": "44b3324d810375653e9157d0faa5caeebc1f827a",
+  "worktree": ".worktrees/m1-camera-consumers-review",
+  "branch": "fix/m1-camera-height-presence",
+  "repair": "SceneTerrain records each genuine corner write separately from its numeric height. terrain::apply transfers that presence to SceneData while retaining the same numeric height assignments. Loaded zero stays valid; default/unloaded/far-edge zeros and stale prior presence do not become observed source data.",
+  "source_files": [
+    {"path": "crates/renderer/src/scene/mod.rs", "bytes": 23118, "sha256": "19104be94323abf0b19b96920cc5e0239b93b2f19767a52aab2256358592a63f"},
+    {"path": "crates/renderer/src/scene/terrain.rs", "bytes": 35968, "sha256": "47d6c26f48dab975522665ab28b4a048281a53ec5acb12e9fd9eaeff1ca77a06"},
+    {"path": "crates/renderer/tests/camera_source.rs", "bytes": 11088, "sha256": "c25d14e02a6d1ee694880d82541668ae6969209749182b46093060a7bdd467e4"},
+    {"path": "crates/renderer/README.md", "bytes": 54374, "sha256": "65cb57a6274e76ba114b1210c7dee28900e7afd25b260b99fa8def945943a23e"}
+  ],
+  "source_input_or_dependency_changes": false,
+  "cargo_lock_sha256_unchanged": "ad2472dde30feae608d83d53469d976c4503c6fc40f7506ffe803311ca11b853",
+  "qualification_stage": "Precommit runs on the exact subsequently committed four-file edits; no separate clean44 or root rerun is claimed.",
+  "camera_source": {
+    "command": "CARGO_BUILD_JOBS=4 CARGO_TARGET_DIR=$PWD/.local/director-height-repair-target timeout 600s cargo test --locked --offline --quiet -p clubscape-renderer --no-default-features --test camera_source -- --include-ignored --nocapture",
+    "tests_passed": 7,
+    "tests_failed": 0,
+    "tests_ignored": 0,
+    "actual_exit_code": 0,
+    "elapsed_seconds_including_build": 8.44,
+    "runner_seconds": 1.99,
+    "original_strict_case_unchanged_and_included": true,
+    "new_regression": "terrain_rebuild_preserves_observed_zero_and_clears_unloaded_height_presence: all44100 main-area/far-edge corners retain exact numerical renderer heights while only the two genuine controlled writes are available, including loaded0 and-700. Stale prior and far-edge presence is cleared.",
+    "source_case": "Real object941-471 and shaped-240 versus bilinear-238 pass, together with the previously failing unloaded-height assertion and previously unreached unloaded settings/surface assertions."
+  },
+  "clippy": {
+    "command": "CARGO_BUILD_JOBS=4 CARGO_TARGET_DIR=$PWD/.local/director-height-repair-target timeout 600s cargo clippy --locked --offline --quiet -p clubscape-renderer --no-default-features --lib --test camera_source -- -D warnings",
+    "actual_exit_code": 0,
+    "elapsed_seconds": 2.26,
+    "empty_diagnostic_output": true
+  },
+  "formatting": "Explicit changed Rust files formatted and rustfmt --check passed; git diff --check passed.",
+  "raw_log_preservation": "The exact Cargo camera-source.log ends with a terminal blank line, so whole-staged git diff --check reports that evidence-only line. Its bytes/hash are retained unchanged; source and other metadata are checked separately.",
+  "evidence": [
+    {"path": "milestones/evidence/m1-camera-height-presence-repair/camera-source.log", "bytes": 120, "sha256": "095d554fe288f24d743aa33ae48aebce55ec485e54863b20f31523bcf4c2a08f"},
+    {"path": "milestones/evidence/m1-camera-height-presence-repair/camera-source.time", "bytes": 72, "sha256": "34a83e2ad2c3995b0e93becbda90d625d1f10ef560002960b2044237d21b3184"},
+    {"path": "milestones/evidence/m1-camera-height-presence-repair/camera-source.exit", "bytes": 2, "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"},
+    {"path": "milestones/evidence/m1-camera-height-presence-repair/clippy.log", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path": "milestones/evidence/m1-camera-height-presence-repair/clippy.time", "bytes": 71, "sha256": "ca59c37d767e73721a1d2db3f6f8ac71ed93114255430406d0b7d77a84dbb1c6"},
+    {"path": "milestones/evidence/m1-camera-height-presence-repair/clippy.exit", "bytes": 2, "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"}
+  ],
+  "actual_test_executable": {
+    "path": ".local/director-height-repair-target/debug/deps/camera_source-b82e2565ebdb3ab0",
+    "bytes": 26800048,
+    "sha256": "327b29ede09032b810c318fb05283fc78af7f596a208a64308251d369df62dbc"
+  },
+  "original_failed_executable_retained_byte_identically": "d1d1a874dc3744ffa59da3b3778d5ae9a4679ef778b4d202e93f6d07f2ce09bf",
+  "original_strict_cpu_admission_consumed": 1,
+  "original_strict_cpu_admission_remaining": 0,
+  "independent_review": "pending",
+  "main_integration": false,
+  "live_focus_footprint_effects_or_normal_entry_supplied": false,
+  "browser_gpu_gear_source_generation_or_protected_operations": 0,
+  "saved_execution_attempts_remaining": 0,
+  "renderer_full_pose_recomputations_remaining": 0,
+  "milestone_accepted": false
+}

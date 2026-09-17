@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION",
-  "status": "blocked_director_streamed_height_presence_regression",
+  "status": "height_presence_repair_qualified_independent_review_pending",
   "worker": "23749cd0-cc24-4565-9b37-e057b4823867",
   "retired_predecessor": "ac0f0856-44af-445b-bd90-6db7a1f4fc74",
   "assignment": "One bounded replacement received the previously unexecuted consumer task after reservation in2b90e30. The retired predecessor's completed native controller evidence remains valid, not new consumer validation.",
@@ -74,7 +74,8 @@
     "director_cpu_admission": "milestones/evidence/m1-camera-consumers-director-cpu-admission.json",
     "director_cpu_result": "milestones/evidence/m1-camera-consumers-director-cpu-result.json",
     "height_presence_repair_admission": "milestones/evidence/m1-camera-height-presence-repair-admission.json",
-    "new_director_native_build_test_commands": 1,
+    "height_presence_repair_candidate": "milestones/evidence/m1-camera-height-presence-repair-candidate.json",
+    "new_director_native_build_test_commands": 3,
     "new_browser_or_source_capture_invocations": 0,
     "main_integration": false
   },
