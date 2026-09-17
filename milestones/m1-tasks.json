@@ -42,8 +42,8 @@
     {
       "id": "M1-SAVED-WATER-EXECUTION-02",
       "goal": "Prepare exact successor admission, then consume only the owner's one separately journaled saved52 water/range/postquest attempt.",
-      "status": "READY",
-      "specs": ["milestones/approvals/m1-saved-water-continuation-02.json", "milestones/evidence/m1-saved-water-second-attempt-proposal.json", "milestones/evidence/m1-saved-water-continuation-review.json", "milestones/evidence/m1-saved-water-binding-02-root-qualification.json"],
+      "status": "CLAIMED",
+      "specs": ["milestones/approvals/m1-saved-water-continuation-02.json", "milestones/evidence/m1-saved-water-execution-02.json", "milestones/evidence/m1-saved-water-second-attempt-proposal.json", "milestones/evidence/m1-saved-water-continuation-review.json", "milestones/evidence/m1-saved-water-binding-02-root-qualification.json"],
       "dependencies": ["M1-SAVED-WATER-BINDING-02-INTEGRATION", "M1-SAVED-WATER-BINDING-02-REVIEW", "M1-SAVED-WATER-DELIVERY-PREPARATION", "M1-WATER-MAIN-INTEGRATION", "M1-WATER-UPGRADE-PREFLIGHT"],
       "allowed_paths": ["milestones/**", ".local/saved-water-execution-02-controller/**", ".worktrees/m1-saved-water-continuation/.local/saved-water-continuation-02/**", ".worktrees/m1-saved-water-continuation/.local/journey-runs/**", ".worktrees/m1-saved-water-continuation/.local/journey-checkpoints/**"],
       "forbidden_paths": ["Original52 writes or any access before exact admission/reservation/protected-read marker", "Other original checkpoints or real01 journal/report access", "Source/native/dependency edits or new builds", "Alternative authority/output/journal and automatic retries", "Unrelated user data"],
@@ -52,10 +52,10 @@
       "test_requirements": ["Same original52 account/world/owned flour-pot and bucket; exact existing minimalb2 delivery", "One restore/migration/database, two server starts, one60-second native preflight and one600-second/128-input native remainder;960-second preservation reserve inside2400total", "No old reward replay, reacquisition, new world/account, source/operator/browser/GPU/RuneLite work", "Entry failure consumes the new attempt; capture before eligible cleanup and retain unknown outcomes"],
       "acceptance": ["Record actual remaining-only result without claiming full browser, presentation, performance or M1 acceptance"],
       "reserved_namespaces": [],
-      "source_notes": ["Owner grantfacac6a3 is conditional, not executable. Exact0b review and3c9c43d/98-case root qualification are complete; a committed executable02 record is still required. Originalce09 is never refunded."],
+      "source_notes": ["Owner grantfacac6a3, exact0b review and3c9c43d/98-case root qualification are complete. Exact executable02 record is prepared for commit before invocation; all old authority remains immutable and exhausted."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/approvals/m1-saved-water-continuation-02.json", "milestones/evidence/m1-saved-water-binding-02-review.json", "milestones/evidence/m1-saved-water-binding-02-root-qualification.json"]
+      "evidence": ["milestones/approvals/m1-saved-water-continuation-02.json", "milestones/evidence/m1-saved-water-binding-02-review.json", "milestones/evidence/m1-saved-water-binding-02-root-qualification.json", "milestones/evidence/m1-saved-water-execution-02.json"]
     },
     {
       "id": "M1-SAVED-WATER-BINDING-02-INTEGRATION",
