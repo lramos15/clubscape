@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "milestone": "m1-starter-journey",
-  "status": "isolated_producers_passed_source_browser_waiting_for_quiet_gpu_window",
+  "status": "isolated_producers_passed_source_browser_quiet_window_confirmed",
   "worker": "78d01af9-70a4-4b02-8339-6a61eb377374",
   "worker_read_through_turn": 39,
   "worker_worktree": ".worktrees/m1-browser-shell",
@@ -32,6 +32,7 @@
     "qualification": "Metadata-only source transport and controlled geometry, not actual audio playback. Browser expectations are strengthened in b4f6304 without new timing waits or threshold changes."
   },
   "source_browser_admission": "milestones/evidence/m1-shell-metadata-browser-authorization.json",
+  "quiet_window_confirmation": "milestones/evidence/m1-shell-metadata-quiet-window.json",
   "durable_candidate_evidence": [
     {"path":"milestones/evidence/m1-shell-metadata/normal-build.log.gz","sha256":"7a9f67ca30e6cfef7930671c010b4f693e94ae39843d8ac21c62fa8988d2f18a"},
     {"path":"milestones/evidence/m1-shell-metadata/web-tests.log.gz","sha256":"11e0f01aa0ca59a68d658285d0e115ef3e58ff68b2c50946b2962e2d28a31135"},

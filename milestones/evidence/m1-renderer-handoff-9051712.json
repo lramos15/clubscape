@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "task": "M1-BROWSER-RENDERER",
+  "status": "published_candidate_not_integrated_or_accepted",
+  "worker": "bb7f85f7-096a-4377-80cb-3e7eae196c6b",
+  "worker_read_through_turn": 27,
+  "worktree": ".worktrees/m1-renderer",
+  "revision": "9051712625f8cc2ead637b7ae4b90991ab578c7e",
+  "preserved_uncommitted_path": "Cargo.lock",
+  "new_owned_commits": [
+    "1e612e13f244a3494d75b101aa0628cbf21bff8f",
+    "55594c533f47145c0d90072d3a29cef0a573ab5a",
+    "015fd2c22b5be6f3e451a9a84be60e2eabe596a1",
+    "60eb5838e214ac85742d19b9dd1e8f55e513c979",
+    "8cf09bfc7c940e920b650e1f41c9079f90895e88",
+    "a82e84e4f596b61468780c3f604e0d7342cb4d6e",
+    "7119b4a941627ed0860a570e88e9cd898d884d21",
+    "a51c749745b1d5a0906addc8916a3f5877ff71bf",
+    "b9077be1dd5923d925d4407759c6eefef580dfc0",
+    "9051712625f8cc2ead637b7ae4b90991ab578c7e"
+  ],
+  "regression_pick_not_a_new_implementation": {
+    "worker": "ac54f52f6c3443c551140422ca20669b6d9ff93d",
+    "original": "f1d50abda8c6aaeb7c435d0363c1af9abd757add"
+  },
+  "evidence_qualification": "The following results are the worker's newly collected reports, not a fresh Director rerun, independent review, main integration or acceptance.",
+  "worker_reported_gear": {
+    "legal_poses": 2034,
+    "over_target_progression": [548, 139, 53, 8],
+    "current_over_target": 8,
+    "bind_over_target": 0,
+    "bind_denominator": 10,
+    "remaining": [
+      {"item": "necklace", "sequence": 4847, "frames": [18, 21, 24]},
+      {"item": "tinderbox", "sequence": 733, "frames": [7, 9]},
+      {"item": "hat", "sequence": 625, "frames": [8]},
+      {"item": "spear", "sequence": 429, "frames": [5]},
+      {"item": "spear", "sequence": 440, "frames": [4]}
+    ],
+    "corrected_metric": "Surface-interior Lipschitz branch-and-bound uses the upper bound, not the old vertex-only zero. The report still identifies a vertex heuristic for12 open item meshes; its qualification and whole-denominator soundness require review.",
+    "ranking_not_the_gate": "Sampled face/edge depth only ranks the unchanged rigid candidates; selected candidates still use the corrected gate.",
+    "deformation": "Net vertex displacement, collapsed/flipped faces and total displacement from the source design are now reported.1104 frames remain in the reported >3-unit/folded-face concern set; this is not an invented acceptance threshold or an owner waiver.",
+    "whole_denominator_gate": "UNMET; explicit ignored failure-count gate is not a pass",
+    "main_last_verified_over_target": 931
+  },
+  "worker_reported_scene_and_widgets": {
+    "raw_placement_oracle_records": 166848,
+    "instance_original_loader_oracle_differences": 0,
+    "mapped_chunk_pixel_case": "NOT PASSED.43 animated placements lack recorded original start phases; no broad mask or candidate reference is admitted.",
+    "browser_evidence": ".worktrees/m1-renderer/.local/render-assets/browser/widgets1",
+    "browser_widget_states_times_backgrounds": 80,
+    "browser_widget_differences": 0,
+    "source_scene_model_tutorial_comparisons": "5 scenes,58 models and5 Tutorial dynamic source frames reported exact under the existing scene/HUD policy.",
+    "widget_sources": "233 skill models and615:0 model3062/animation646 from original script2039; translucent models require the real backdrop.",
+    "newest_preview_browser_check": "NOT RUN.9051712 adds84:4 and draftGear after widgets1; neither the new module nor those paths inherit the earlier browser receipt."
+  },
+  "preview_qualification": {
+    "widget": 5505028,
+    "model_zoom": 550,
+    "current_ui_template_content_type": 0,
+    "worker_reported_archive_content_type": 328,
+    "decision": "Keep both source contexts explicit. No substitution or UI integration is authorized by this handoff; the archive/template discrepancy and hook behavior require review.",
+    "draft_gear": "Worker reports independent assembly/fit state. This alone does not prove the complete uncreated/draft appearance/reset contract."
+  },
+  "quiet_window": "milestones/evidence/m1-shell-metadata-quiet-window.json",
+  "worker_parked_without_automatic_resumption": true,
+  "main_code_or_asset_imported": false,
+  "frozen_performance_passed": false,
+  "owner_mac_edge_speaker_acceptance": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}
