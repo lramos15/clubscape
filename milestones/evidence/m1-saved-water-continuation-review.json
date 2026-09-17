@@ -69,7 +69,7 @@
     {"reviewer": "22b898a4-8850-4fc0-be15-af0b7440e32a", "scope": "Independent exact seven-file Director-authored4526 deadline append, not a repeated full baseline review", "evidence": "milestones/evidence/m1-saved-water-deadline-review.json"},
     {"reviewer": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "scope": "Independent exact six-path Director-authored769 canonical-module bootstrap append and public callers; static assessment, not an independent test rerun or repeated full baseline review", "evidence": "milestones/evidence/m1-saved-water-bootstrap-review.json"}
   ],
-  "qualification": "The actualce09 CLI failure remains preserved and its one-shot authority consumed. Independent reviewerce4 statically resolved the nominal-module defect in769, confirming preserved gate/main logic, shared authority types, exit behavior and synthetic actual-script/no-retry coverage. Supplied96-test evidence remains precommit qualification, not the reviewer's rerun. Exact main integration and committed-root qualification follow separately; neither renews saved execution.",
+  "qualification": "The actualce09 CLI failure remains preserved and its one-shot authority consumed. Independent reviewerce4 statically resolved the nominal-module defect in769, confirming preserved gate/main logic, shared authority types, exit behavior and synthetic actual-script/no-retry coverage. Candidate96-test evidence remains precommit qualification, not the reviewer's rerun. The exact six paths are integrated2ed5b9c and96 code-only tests passed on that committed root. None of these stages renews saved execution.",
   "bootstrap_candidate": "milestones/evidence/m1-saved-water-bootstrap-candidate.json",
   "baseline_independent_checks": {
     "worktree": ".worktrees/m1-saved-water-review",
@@ -119,7 +119,7 @@
     "preparation_or_inspection_repeated": false
   },
   "remaining_execution_gates": [
-    "Integrate only the six reviewed769 paths and qualify the exact committed root with the96-case code-only Python selector. No native rebuild or saved entrypoint is part of that check.",
+    "The six reviewed769 paths are integrated2ed5b9c with96 committed-root Python passes. This code qualification neither executes saved state nor proves actual service/migration/gameplay outcomes.",
     "The solece09 saved entrypoint is consumed1/remaining0. No further protected stat/read/hash, retry, alternate journal/output or automatic replacement authority is permitted. Any future execution requires separate explicit authority after applicable qualification.",
     "Actual original identity, target service readiness, restore, fenced migration, remaining gameplay and fresh protected capture are unexecuted and may still fail their strict runtime guards.",
     "No old operator, preparation, restore, browser, audio or RuneLite allowance is renewed."
@@ -127,6 +127,7 @@
   "deadline_repair_qualification": "milestones/evidence/m1-saved-water-deadline-repair-candidate.json",
   "independent_deadline_review": "milestones/evidence/m1-saved-water-deadline-review.json",
   "independent_bootstrap_review": "milestones/evidence/m1-saved-water-bootstrap-review.json",
+  "bootstrap_main_qualification": "milestones/evidence/m1-saved-water-bootstrap-root-qualification.json",
   "protected_checkpoint_accesses": 0,
   "actual_databases_services_restores_migrations_or_gameplay": 0,
   "gpu_browser_source_capture_generation_or_runelite_invocations": 0,

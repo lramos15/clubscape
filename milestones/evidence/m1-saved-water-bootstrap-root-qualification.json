@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "kind": "saved_water_bootstrap_committed_root_qualification",
+  "status": "passed_code_only",
+  "executor": "director",
+  "recorded_at": "2026-09-17T06:05:10.547755+00:00",
+  "root_revision": "2ed5b9c062242229594773951de99676e1fc75da",
+  "candidate_revision": "76971ee95040130ddd2084f7fa7c9fd275982e2c",
+  "review_publication_revision": "430fa63480273693de49a9a78d93b18ccfaac591",
+  "review": "milestones/evidence/m1-saved-water-bootstrap-review.json",
+  "review_sha256_at_publication": "4342f22ad30ecc07ee6beb1039ab9170f6f05d5e84313e3aedb995d82e65b05d",
+  "integration": "Only the six independently reviewed769 source paths were imported byte-identically and committed before this root run. Existing root files matched4526 before import. No unrelated source, native input, dependency or lock changes.",
+  "source_files": [
+    {"path": "tools/journey-tests/SAVED_WATER.md", "bytes": 13768, "sha256": "0f27a164e52ec7f93f313ede523c38d3597f7f283197481825da16c4dbc68b38"},
+    {"path": "tools/journey-tests/saved_water.py", "bytes": 191, "sha256": "02d6f64595dfe51cad8a909afa208146f618115130862f5288694eab57244582"},
+    {"path": "tools/journey-tests/saved_water_gate.py", "bytes": 25516, "sha256": "2f1a7a956cb54ecd50d0b1801de138a1eb4c673b85141cabb7521fe7d6b44ced"},
+    {"path": "tools/journey-tests/saved_water_runtime.py", "bytes": 45569, "sha256": "41df821036cf9045868e4d29c2aac5e96d8c9f299ff5189bdc858ef6596a3e27"},
+    {"path": "tools/journey-tests/test_saved_water.py", "bytes": 23495, "sha256": "4b27900f95376650ee4914af12cb3ef13e5e6a2aa2a02060ada91d703072ec5d"},
+    {"path": "tools/journey-tests/test_saved_water_runtime.py", "bytes": 38618, "sha256": "5bab5496862d160fc2d0624c96e3f378092e36da7801c67a6aeb871f57accab1"}
+  ],
+  "python": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/journey-tests timeout 120 python3 -m unittest test_saved_water test_saved_water_runtime test_private_checkpoint test_resume test_run test_cook_continue test_mainland_continue test_dying_observe",
+    "qualification_stage": "Exact committed root2ed5b9c, not the candidate's earlier precommit run.",
+    "tests_passed": 96,
+    "actual_exit_code": 0,
+    "runner_seconds": 6.957,
+    "elapsed_seconds": 7.07,
+    "measurement_wrapper": "/usr/bin/time with separate actual exit and stdout/stderr leaves",
+    "actual_script_case": "The synthetic __main__ launcher/runtime handoff and same-fixture-journal refusal passed. No real saved admission or checkpoint was executed.",
+    "deadline_cases": "Harmless Python process fixtures remain stopped at both1.5-second observations, including the two-second blocking parent restart case. These are not native game executables or gameplay."
+  },
+  "evidence": [
+    {"path": "milestones/evidence/m1-saved-water-bootstrap-root/python.log", "bytes": 699, "sha256": "ebb784a44d1f1095ce093d2feafbb82f32aaae6a96272cff3cef9764f94599e0"},
+    {"path": "milestones/evidence/m1-saved-water-bootstrap-root/python.time", "bytes": 71, "sha256": "ff299269141cb4f31398503c4274f2970c0cd0797b1698df5d1f9c82c573ea14"},
+    {"path": "milestones/evidence/m1-saved-water-bootstrap-root/python.exit", "bytes": 2, "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"}
+  ],
+  "candidate_precommit_evidence_preserved": "milestones/evidence/m1-saved-water-execution/bootstrap-python.log",
+  "independent_static_review_and_root_tests_are_separate": true,
+  "rust_native_builds_or_game_binary_invocations": 0,
+  "previous_native_elf_hash_verification_repeated": false,
+  "actual_saved_entrypoint_invocations": 0,
+  "actual_protected_checkpoint_stat_read_hashes": 0,
+  "actual_databases_services_restores_migrations_or_gameplay": 0,
+  "browser_gpu_source_capture_generation_or_runelite": 0,
+  "original_consumed_authority_sha256_unchanged": "228dfd7e5af154f45f87b85f9b76f56e25602ea2c041ab112f1cad39ada37ea1",
+  "original_consumed_attempt": "ce09f751c0814633",
+  "remaining_saved_entrypoint_attempts": 0,
+  "new_execution_authority_granted": false,
+  "milestone_accepted": false
+}

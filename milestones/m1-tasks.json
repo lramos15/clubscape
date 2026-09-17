@@ -6,7 +6,7 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
+      {"id": "director", "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION"},
       {"id": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "task": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW"}
     ],
     "reserved": [],
@@ -42,7 +42,7 @@
     {
       "id": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW",
       "goal": "Independently assess the Director-authored source-height availability repair before camera integration.",
-      "status": "CLAIMED",
+      "status": "REVIEW",
       "specs": ["milestones/evidence/m1-camera-height-presence-review-admission.json", "milestones/evidence/m1-camera-height-presence-repair-candidate.json"],
       "dependencies": ["M1-CAMERA-CONSUMER-IMPLEMENTATION"],
       "allowed_paths": [],
@@ -114,7 +114,7 @@
     {
       "id": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
       "goal": "Implement and test the exact migration-aware saved52 continuation without reading or executing protected state.",
-      "status": "INTEGRATION",
+      "status": "VERIFIED",
       "specs": ["milestones/evidence/m1-saved-water-continuation-implementation.json", "milestones/evidence/m1-saved-water-delivery-preparation.json", "milestones/approvals/m1-water-fill-upgrade-v1.json"],
       "dependencies": ["M1-SAVED-WATER-DELIVERY-PREPARATION", "M1-WATER-MAIN-INTEGRATION"],
       "allowed_paths": ["tools/journey-tests/**", "tools/simulator/src/journey/**", "tools/simulator/src/main.rs", "tools/simulator/tests/**"],
@@ -127,7 +127,7 @@
       "source_notes": ["Current generic resume checks the root manifest and only old tutorial/mainland/Cook frontiers. Source-only delivery preparation does not make that reader migration-aware."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-saved-water-continuation-implementation.json", "milestones/evidence/m1-saved-water-continuation-review.json", "tools/journey-tests/evidence/saved-water-continuation-code.json"]
+      "evidence": ["milestones/evidence/m1-saved-water-continuation-implementation.json", "milestones/evidence/m1-saved-water-continuation-review.json", "tools/journey-tests/evidence/saved-water-continuation-code.json", "milestones/evidence/m1-saved-water-bootstrap-root-qualification.json"]
     },
     {
       "id": "M1-CAMERA-CONSUMER-IMPLEMENTATION",

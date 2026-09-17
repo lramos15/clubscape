@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "kind": "saved_water_cli_bootstrap_repair_candidate",
-  "status": "independently_reviewed_main_integration_pending",
+  "status": "reviewed_integrated_and_root_python_qualified",
   "author": "director",
   "recorded_at": "2026-09-17T05:07:51.005646+00:00",
   "worktree": ".worktrees/m1-saved-water-continuation",
@@ -19,7 +19,7 @@
     "tools/journey-tests/SAVED_WATER.md"
   ],
   "python": {
-    "qualification_stage": "Precommit run on the exact subsequently committed edits; no separate clean769 or root bootstrap rerun yet.",
+    "qualification_stage": "Precommit candidate run on the exact subsequently committed edits, not a separate clean769 run or the later committed-root qualification linked below.",
     "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/journey-tests timeout 120 python3 -m unittest test_saved_water test_saved_water_runtime test_private_checkpoint test_resume test_run test_cook_continue test_mainland_continue test_dying_observe",
     "tests_passed": 96,
     "exit_code": 0,
@@ -34,7 +34,9 @@
   "native_builds_or_executions_repeated": false,
   "real_consumed_journal_sha256_unchanged": "55724000212b8ee79bae8451017d98732b01991b70107dc93d71856e7d6e6edb",
   "real_failed_report_sha256_unchanged": "ee0b31a6431f10831df979e483028bcfaf81046971eb7071c177096ade52689b",
-  "main_integration": false,
+  "main_integration": true,
+  "main_integration_revision": "2ed5b9c062242229594773951de99676e1fc75da",
+  "root_qualification": "milestones/evidence/m1-saved-water-bootstrap-root-qualification.json",
   "independent_review": "passed_read_only_static_delta",
   "independent_review_admission": "milestones/evidence/m1-saved-water-bootstrap-review-admission.json",
   "initial_independent_assessment": "milestones/evidence/m1-saved-water-bootstrap-review.json",

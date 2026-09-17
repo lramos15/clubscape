@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW",
-  "status": "admitted_read_only_delta_resume_pending",
+  "status": "in_progress_read_only_delta",
   "authority": "director",
   "reviewer": "ce4d0723-ee8e-45fa-8219-94a7210fa308",
   "implementation_author": "director",
