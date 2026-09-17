@@ -276,11 +276,11 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert.deepEqual(preview?.nativeSize, { width: 480, height: 315 });
     assert.equal(preview?.purpose, "appearance");
     assert.equal(preview?.sourceWidget, 44499017);
-    assert.match(preview?.problem ?? "", /base\/equipment metadata is unavailable/);
+    assert.match(preview?.problem ?? "", /No current accepted actor/);
     assert.equal(preview?.publishedImages, 0);
     assert.equal(await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null).renderedFrames), 0);
     await page.screenshot({ path: resolve(evidence, "source-character-preview-contract-gap.png") });
-    checks.push("complete native preview request retains unavailable base/equipment; no dummy loadout or preview substitution");
+    checks.push("complete native preview request requires an accepted actor; no dummy world, loadout or preview substitution");
     await dismissNotices(page);
     await page.getByRole("button", { name: "Confirm appearance", exact: true }).click();
     if (earlyScene === null && recordedCamera === null) {
@@ -396,7 +396,7 @@ export async function sourceBrowserCheck(): Promise<void> {
       assert.equal(audioControls.channels[channel].percent, sourceAudioDefaults().sliders[channel]);
       assert.equal(audioControls.channels[channel].nativeMixer, sourceAudioDefaults().mixer[channel]);
     }
-    assert.equal(audioControls.sourceSceneSupplied, false);
+    assert.equal(audioControls.sourceSceneSupplied, true);
     assert.equal(audioControls.sourceMusicStateSupplied, true);
     assert(audioControls.providedMusicState);
     assert.equal(audioControls.musicContinuation, "native-bound");
@@ -418,7 +418,7 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert.deepEqual(audioPreferenceStatus.appliedWorld, audioObservation.world);
     assert.deepEqual(audioPreferenceStatus.issues, []);
     assert.equal(audioObservation.soundEnabled, false, "The earlier title mute remains active independently of stored native slider preferences.");
-    checks.push("real source unlocks, native UI preferences and actor-scoped storage bind to the exact applied world; missing spatial scene and physical output remain separate gates");
+    checks.push("real source spatial metadata, unlocks, native UI preferences and actor-scoped storage bind to the exact applied world; source playback fidelity and physical output remain separate gates");
     let renderPixels: unknown = null;
     if (earlyScene !== null || recordedCamera !== null) {
       await page.waitForFunction(() => (window.__clubscapeBenchmarkV1?.read(null).renderedFrames ?? 0) >= 8, undefined, { timeout: 30_000 });

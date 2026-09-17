@@ -16,6 +16,9 @@ export interface SourceInstanceLayout {
   chunks: SourceInstanceChunk[];
 }
 export type SourceInstanceLayouts = Record<string, SourceInstanceLayout>;
+export interface InstanceWorld {
+  player: Pick<WorldView["player"], "region" | "instance" | "tile">;
+}
 
 export function validateInstanceLayouts(value: SourceInstanceLayouts, regions: ReadonlySet<string>): void {
   invariant(value !== null && typeof value === "object" && !Array.isArray(value)
@@ -42,7 +45,7 @@ export function validateInstanceLayouts(value: SourceInstanceLayouts, regions: R
 }
 
 /** The opaque instance ID proves presence only; its template must be separately supplied by authority. */
-export function rendererInstanceLayout(world: WorldView, layouts: SourceInstanceLayouts | undefined,
+export function rendererInstanceLayout(world: InstanceWorld, layouts: SourceInstanceLayouts | undefined,
   actualTemplate: string | null | undefined): RendererInstanceLayout | null {
   const unavailable = (message: string) => new AppError(message, {
     kind: "instance_unavailable", errorId: "renderer.instance_layout_required",

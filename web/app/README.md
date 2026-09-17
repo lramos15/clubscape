@@ -35,7 +35,7 @@ cannot enable it. `BrowserApp.gameplayUi()` and the observation-only
 wire unavailable and missing versioned view; legacy world state never receives
 a fabricated empty UI object.
 
-All24 current `GameplayUiIntent` variants go through the shared Rust request
+All25 current `GameplayUiIntent` variants go through the shared Rust request
 enum, generated Protobuf and protocol validators. Document pages, placeholders,
 stable entry/menu/reward/confirmation identities and exact bank preconditions
 are not approximated with legacy quantity/index operations.
@@ -62,16 +62,14 @@ remain unchanged; the backend performs mutable bank checks after durable
 deduplication. No character revision, hand-written wire or progression bypass
 substitutes for this contract.
 
-The backend contracts above are implemented, not pending field/API handoffs.
-The actual UI module's schema/dispatch/fixture implementations still need to
-consume that complete contract; the corresponding parent UI files at `664dde0`
-match this worktree. Normal `pnpm build` remains gated by those UI-owned
-implementations, not by missing backend APIs. `Components` also has explicit
-native preference/minimap binding ports for the real UI owner; unbound ports
-are not replaced with a parallel UI or source-variable guesses.
-Diagnostic Vite bundling is explicitly separate from a passing production
-typecheck. Real UI4 entry/experience/source-lock/reconnect checks can run, but
-do not prove complete UI consumption or final acceptance.
+The current backend and UI adapter contracts are integrated, including native
+recovery and all four real preference/minimap ports. Normal `pnpm build` now
+includes the actual protocol/renderer WASM, production typecheck and delivery;
+the old five UI compiler errors are not current blockers. Missing source models,
+independent preview-actor contracts and normal camera consumers remain explicit
+separate gaps. Diagnostic Vite bundling is not substituted for a passing
+production build, and component/startup checks do not certify the full journey
+or presentation.
 
 The current authoritative handoff through `3609a511` adds
 `game.ui.amounts.v1`, `game.ui.recovery.v1` and `game.audio.authority.v1`.
@@ -90,6 +88,9 @@ not multiplied, and a visible Bank-All button does not grant permission.
 Recovery Bank-All captures `ui.recovery.management.bankRevision`; other bank
 mutations capture `ui.bank.revision`. Explicit retry preconditions remain
 unchanged for backend validation after durable deduplication.
+The optional native context adds complete slots, source selected-type captions
+and a combined executable plan. `recovery_take_all` echoes its exact observation
+selection once, with no inventory bank precondition or per-record request loop.
 
 `WorldSnapshot.scene21` now supplies the actual region/opaque-instance/template
 pair. The bridge checks it against the player and passes that template to the
@@ -104,8 +105,10 @@ Native varp491 value0 with `knownBits:20` means only bits2/4 are known.
 varbit metadata. `sourceSceneAuthority` supplies only those required by actual
 calibrated emitters; client-supplied full words never replace authority.
 The original partial word/mask remains in immutable `WorldView.audioAuthority`.
-Source listener/owner/placed-emitter inputs still require real scene data.
-The UI-owned native preference/surface adapters remain separate dependencies.
+`SourceSpatialMetadata` now supplies listener/owner/placed-emitter inputs from
+the actual root renderer context and existing original region data, as described
+below. The native preference/surface adapters are bound to the actual UI;
+metadata availability does not establish source playback or presentation acceptance.
 
 Actor animation strings/numeric bindings and `ActorActionView` clock identities
 are forwarded unchanged. All39 required source sequences and the twelve
@@ -141,6 +144,72 @@ is known but motion is unbound; it does not prove deliberate no-animation.
 Bridge fixtures cover null motion for dough/seven Empty variants and preserve
 the unverified Bank-All reason without executing or claiming those journeys.
 Actual UI/renderer/audio composition remains separate implementation work.
+
+## Production metadata producers
+
+`PlayerModelPreviewProducer` snapshots only the actor identity, world revision/
+tick, region/instance, appearance, equipment and `WorldView.ui.appearance.base`
+needed by the preview. Its metadata commit follows a successful native renderer
+update. A rejected update cannot make a different actor's metadata current.
+Missing UI base/equipment bindings are filled from that actual applied snapshot,
+not an empty loadout. Supplied conflicting metadata still rejects. Body,
+reference-model, equipment-model and pose-table pins come from the existing
+renderer manifest; widget projection parameters are not copied from screenshots.
+Logout/disconnect clears the producer, and open/close or actor/base changes
+invalidate pending images and errors. Scene-only UI notices do not advance state.
+Readbacks are fenced again when they complete, including same-actor re-entry
+and changes accepted before the next UI animation frame. Passive revision/tick
+updates do not invalidate an unchanged model. Superseded readbacks are retried
+under current metadata rather than reported as an unavailable model; genuine
+current readback failures still surface. The current UI request is re-read before
+publication so a closed or replaced window cannot receive an old image or error.
+
+Two preview paths remain explicitly unsupported, not missing backend APIs.
+`PlayerPreviewRequest` contains projection/sequence fields but no independent
+actor/base/appearance/equipment input or actor-reset contract. Consequently a
+pre-character or changed local draft cannot be bound to a native player without
+inventing a world/actor update. The source base2063/model21547 facts are available;
+the absent contract is independent preview-actor selection. The current UI
+catalogue6601 now contains type6 equipment widget84:4 (`5505028`), so the older
+missing-UI-widget diagnosis no longer applies. Renderer78fed3ca still publishes
+native model-widget projection metadata only for679:73 (`44499017`). Equipment
+needs its own source-qualified projection binding. Its current template has
+modelZoom550 and contentType0; raw-cache contentType328 is not substituted for
+that controlled template. The shell does not inject a widget or assume cache
+defaults are live script values.
+
+`SourceSpatialMetadata.load()` reads only assets already declared in the current
+ContentManifest. It validates the exact `AUDIO_INPUTS.map` pin, renderer128-unit/
+one-tile-player metadata, original region identities and their explicit
+`[object_id,world_x,world_y,plane,type,orientation]` rows. Those rows include
+invisible/non-interactable sound locations absent from gameplay entities.
+Original ambient catalogue membership selects calibrated roots. For supported
+non-audible dynamic objects, the producer verifies explicit no-stream fields
+across every original transform target; it never chooses a guessed varp value.
+The current source bundle provides all65 required metadata inputs. No new world,
+source bundle or cache extraction is needed for this producer.
+
+At runtime the source world coordinates are selected against the actual renderer
+scene bounds/loaded squares. The existing compiler-validated instance-layout
+adapter supplies declared chunk mappings; turns unsupported by that adapter still
+reject. Placement IDs retain source asset/row/chunk identity. Dynamic source IDs
+must match canonical catalogue metadata, and ambiguous placement associations or
+missing real orientations remain explicit errors. Root-view ownership is supplied
+by this single-root host independently of the opaque gameplay instance ID.
+Another host must supply its actual `SourceWorldOwner`, never an implicit null.
+The listener uses the renderer's documented tile-centred one-tile coordinate ABI,
+via the native audio bounds helper, not a fallback point for unavailable metadata.
+`sourceSceneAuthority` supplies only actual calibrated variable bits; all gain,
+distance, morph selection, visibility and fades stay in the audio component.
+
+`SourceAudioSession.refreshScene()` routes a scene rebuild without repeating
+`audio.update(world, committedEvents)` or disturbing Cook's before/after batch.
+It accepts only the currently applied world object and is cleared on disconnect,
+logout, disposal and failed native world updates. Renderer-frame refreshes use
+current metadata only after genuine player preferences/world inputs were applied;
+they cannot bypass the separate UI binding gate. Missing original region coverage,
+source calibration, owner metadata or dynamic association fails explicitly.
+Producer/routing fixtures are not a complete UI, world journey or timing pass.
 
 The retained initial5e candidate `.local/source-ui4-5e0aa8a2` uses raw artifact
 `5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f`,
@@ -314,9 +383,10 @@ for this boundary; it exposes no credential, mutation or outcome setter.
 The source title and actual streamed starting region are visibly rendered;
 logical/backing resize boundaries are tested. Earlier native-size penguin
 preview receipts predate the richer UI request contract and are historical.
-The current UI preview request leaves its base/equipment binding unresolved;
-that composition gap is explicit rather than an invented base/loadout or a
-claim that the published backend UI contract is still awaiting implementation.
+The preview producer supplies base/equipment from an actual accepted world even
+when the UI's binding is unresolved. A pre-character request still has no accepted
+actor context; this is not a missing backend UI contract or permission to invent
+a base/loadout.
 The current real run receives ten dynamic object records through WASM.
 Their `object_id` must be a valid canonical ObjectId with source metadata in
 the validated content catalog. `sourceId` is never parsed from an ID suffix or
@@ -437,10 +507,10 @@ parameters to `framePlayerPreview`. It does not change the world-camera zoom
 or rescale UI geometry. Authoritative base/equipment must be available and
 match the renderer's actual actor; unsupported widgets or local appearance
 edits that the current renderer cannot apply independently fail explicitly.
-No world snapshot is rewritten to render a tentative UI selection. Null
-equipment/base is unavailable, never a dummy empty loadout or guessed base.
-The retained initial UI request is 480x315/widget679:73 with unavailable
-base/equipment, so it is reported unavailable and publishes no substitute.
+No world snapshot is rewritten to render a tentative UI selection. A null UI
+binding can use real applied-world metadata; absent authoritative metadata cannot
+be replaced with an empty loadout. The retained pre-character480x315/widget679:73
+request is explicitly unavailable because no actor context has been accepted.
 
 Successful RGBA readbacks still use a same-sized canvas/`putImageData` followed
 by `setUiPreview`, with one pending preview independent of two world frames.
@@ -628,7 +698,8 @@ low-to-high jingle replacement cannot be mislabeled as already at full gain.
 The native music mode IDs remain
 area0/shuffle1/single2. Old `native_midi_end` directives are not emitted.
 
-`mountApplication` accepts optional `sourceAudio.scene(world)` and
+`mountApplication` now supplies the production `SourceSpatialMetadata` scene
+producer by default, while accepting optional `sourceAudio.scene(world)` and
 `sourceAudio.unlockedGroups(world)` producers returning real `SourceAudioScene`
 and authoritative published source groups. The older `sourceAudio.music(world)`
 producer is accepted only for its actual `unlockedGroups` when no explicit
@@ -652,16 +723,16 @@ not proof that every emitter/asset is ready. `providedMusicState` is an immutabl
 last accepted input, not an unlock grant or an echo of guessed source defaults.
 The player coordinator retains only the same actor's genuine loaded record;
 title/actor changes clear it and different actors never inherit it.
-Current scene composition still lacks the complete real listener/scenery/owner
-input. Backend unlocks and partial varp observations are now mapped. Internal
-native selection does not establish missing scene facts or authorize playback
-with unbound constructor preferences. No caller selector is required.
+The default scene producer uses the existing original placements, current
+root-view metadata and authoritative instance/variable inputs. Metadata readiness
+does not establish UI routing or authorize playback with unbound constructor
+preferences. No caller selector is required.
 
 Native policies are now calibrated, not the earlier generic gain/distance/fade
 placeholders. The authorized `f9e466d3` publication closes the nine native255
-input gaps. Actual source-scene/event/manual-state wiring remains separate.
-Do not convert tiles to guessed
-listener centres, use only interactable entities as all audible scenery, or
+input gaps. Event timing and manual-state UI routing remain separate.
+Do not use a guessed listener point when renderer metadata is unavailable,
+use only interactable entities as all audible scenery, or
 derive varps from quest-stage names.
 
 `AssetLoader` supports an explicit `aliases` table for the original

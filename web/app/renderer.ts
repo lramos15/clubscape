@@ -10,7 +10,7 @@ import { publicPath } from "./identity.ts";
 import { canonicalPick } from "./picking.ts";
 import { RENDER_MANIFEST_SHA256 } from "./render-identity.ts";
 import { residentRendererAssets, sourceScenePlacement } from "./render-state.ts";
-import { nativeUiPreviewRequest } from "./ui-preview-request.ts";
+import { PlayerModelPreviewProducer } from "./ui-preview-request.ts";
 import type { UiPreviewRequest } from "../ui/index.ts";
 
 export { fullHudViewport, fullHudZoomForViewport, regionSceneId, sourceZoomForViewportHeight };
@@ -20,7 +20,8 @@ export interface ShellRenderer extends RendererHandle {
   diagnostics(): RendererDiagnostics;
   supportsScene(id: string): boolean;
   framePlayerPreview(request: PlayerPreviewRequest): Promise<ImageData | null>;
-  frameUiPreview(request: Readonly<UiPreviewRequest>): Promise<ImageData | null>;
+  frameUiPreview(request: Readonly<UiPreviewRequest>, world: WorldView | null): Promise<ImageData | null>;
+  clearPreviewMetadata(): void;
   playerFitReport(): PlayerFitReport[];
   scenePlacement(): ScenePlacement | null;
   minimapSurface(): MinimapSurface;
@@ -62,6 +63,7 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
   let instanceTemplate: string | null = null;
   let disposed = false;
   let lastFrame: RenderFrame | null = null;
+  const preview = new PlayerModelPreviewProducer(manifest, (request) => native.framePlayerPreview(request));
   const placement = (state: RendererDiagnostics) => {
     const raw = native.scenePlacement();
     const value = sourceScenePlacement(state, raw, instanceTemplate);
@@ -77,10 +79,10 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
       await native.loadScene(id);
     },
     update(value: WorldView & RendererWorldExtensions) {
+      // Extra validated fields (including dynamicObjects) survive the shared type boundary.
+      preview.accept(value, () => native.update(value));
       world = value;
       instanceTemplate = value.instanceLayout?.template ?? null;
-      // Extra validated fields (including dynamicObjects) survive the shared type boundary.
-      native.update(value);
       if (value.player.running === undefined || value.player.action === undefined) report("The authoritative movement/action observer is unavailable. The shell does not infer it from settings or nearby objects.");
     },
     camera(value) {
@@ -109,7 +111,8 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
       return { ...state, assets: residentRendererAssets(manifest, state), lastFrame };
     },
     framePlayerPreview(request) { return native.framePlayerPreview(request); },
-    async frameUiPreview(request) { return native.framePlayerPreview(nativeUiPreviewRequest(request, world, manifest)); },
+    frameUiPreview(request, expected) { return preview.frame(request, expected); },
+    clearPreviewMetadata() { preview.clear(); },
     playerFitReport() { return native.playerFitReport(); },
     playerPoseFits() { return native.playerPoseFits(); },
     observerV1() { return native.observerV1(); },
@@ -137,6 +140,6 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
           attachmentGapAccepted: false } : null,
       };
     },
-    dispose() { if (!disposed) { disposed = true; native.dispose(); clock.dispose(); } },
+    dispose() { if (!disposed) { disposed = true; preview.clear(); native.dispose(); clock.dispose(); } },
   };
 }

@@ -1,6 +1,7 @@
 import { AppError, deepFreeze, invariant } from "./errors.ts";
 import type { UiPreviewRequest } from "../ui/index.ts";
 import { canonicalJson } from "./identity.ts";
+import { PREVIEW_READBACK_SUPERSEDED } from "./ui-preview-request.ts";
 
 export interface PreviewBounds { x: number; y: number; width: number; height: number }
 export interface PreviewObservation {
@@ -60,7 +61,7 @@ export class ModelPreview {
     const generation = this.#generation;
     void this.#hooks.frame(deepFreeze(structuredClone(request))).then((image) => {
       if (image !== null) this.#completed++;
-      if (this.#disposed || generation !== this.#generation) return;
+      if (!this.#current(owner, generation)) return;
       if (image === null) {
         this.#state = "unavailable";
         this.#problem = "The actual renderer has no loaded player body for this native-size preview.";
@@ -81,15 +82,27 @@ export class ModelPreview {
       this.#published++;
       this.#state = "ready";
     }).catch((error: unknown) => {
-      if (this.#disposed) return;
-      if (generation === this.#generation) {
-        this.#state = error instanceof AppError && error.kind === "renderer_preview_unavailable" ? "unavailable" : "failed";
-        this.#problem = error instanceof AppError ? error.message : "The actual renderer failed its model-only preview GPU readback.";
+      if (!this.#current(owner, generation)) return;
+      if (error instanceof AppError && error.kind === "cancelled" && error.errorId === PREVIEW_READBACK_SUPERSEDED) {
+        this.#state = "pending";
+        this.#problem = null;
+        this.#surface = null;
         this.#hooks.publish(null);
+        return;
       }
+      this.#state = error instanceof AppError && error.kind === "renderer_preview_unavailable" ? "unavailable" : "failed";
+      this.#problem = error instanceof AppError ? error.message : "The actual renderer failed its model-only preview GPU readback.";
+      this.#hooks.publish(null);
       this.#hooks.report(error instanceof AppError ? error
         : new AppError("The actual renderer failed its model-only preview GPU readback.", { kind: "renderer_preview" }));
     }).finally(() => { this.#inFlight = false; });
+  }
+
+  #current(owner: string | null, generation: number): boolean {
+    if (this.#disposed || generation !== this.#generation) return false;
+    // A UI close or replacement can precede the next animation frame.
+    this.update(owner);
+    return generation === this.#generation;
   }
 
   observe(): Readonly<PreviewObservation> {

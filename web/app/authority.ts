@@ -6,7 +6,7 @@ import type { SourceAudioScene } from "../audio/index.ts";
 import { AppError, invariant } from "./errors.ts";
 import { decimal } from "./gameplay-ui.ts";
 
-export function validateScene(scene: CurrentSceneView, world: WorldView): void {
+export function validateScene(scene: CurrentSceneView, world: { player: Pick<WorldView["player"], "region" | "instance"> }): void {
   invariant(scene && typeof scene.region === "string" && scene.region === world.player.region
     && Object.hasOwn(scene, "instance") && Object.hasOwn(scene, "instanceTemplate")
     && scene.instance === world.player.instance
@@ -113,7 +113,7 @@ export function calibratedNativeVarpBits(authority: AudioAuthorityView, id: numb
 }
 
 /** Only the calibrated consumers in this actual scene may read the projected bit subset. */
-export function sourceSceneAuthority(world: WorldView, scene: SourceAudioScene): SourceAudioScene {
+export function sourceSceneAuthority(world: Pick<WorldView, "audioAuthority">, scene: SourceAudioScene): SourceAudioScene {
   if (!world.audioAuthority) throw new AppError("The native scene cannot use client-guessed variable words without audio authority.",
     { kind: "audio_authority", errorId: "audio.authority.scene_variables_required" });
   validateAudioAuthority(world.audioAuthority);

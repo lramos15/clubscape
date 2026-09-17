@@ -7,6 +7,7 @@ import type { AudioEvent, AudioHandle, ClientAssets, WorldView } from "../../sha
 import { SourceAudioSession, audioProblem, playbackEnabled, sourceControlState } from "../audio.ts";
 import type { AudioAdapter } from "../audio.ts";
 import { Settings } from "../settings.ts";
+import { audioFixtureWorld } from "./player-audio-fixture.ts";
 
 function snapshot(): AudioSnapshot {
   return {
@@ -20,6 +21,50 @@ function snapshot(): AudioSnapshot {
     voices: [], cache: { decodedBytes: 0, cached: 0, pending: 0 }, policyLimits: [], traces: [],
   };
 }
+
+test("spatial metadata refresh preserves committed batches and is fenced by world/entry lifecycle", async () => {
+  const updates: Array<{ world: WorldView | null; events: readonly AudioEvent[] }> = [];
+  const scenes: Array<SourceAudioScene | null> = [];
+  const handle: AudioHandle = {
+    unlock: async () => {}, mute() {}, volume() {}, disconnected() {}, dispose: async () => {},
+    update(world, events) {
+      if (world?.player.id === "actor.rejected") throw new Error("Rejected native world");
+      updates.push({ world, events });
+    },
+  };
+  const api: AudioAdapter = {
+    create: async () => handle, read: snapshot, observe: () => () => {},
+    scene: (_handle, scene) => scenes.push(scene), musicState() {},
+  };
+  const assets: ClientAssets = { baseUrl: "/", url: () => { throw new Error("No asset fetch in the routing fixture"); },
+    image: async () => { throw new Error("No image fetch in the routing fixture"); },
+    json: async () => { throw new Error("No JSON fetch in the routing fixture"); } };
+  const audio = await SourceAudioSession.create(assets, [], () => {}, () => {}, api);
+  const first = audioFixtureWorld("actor.current");
+  const scene: SourceAudioScene = { listener: { x: 396096, y: 397760 }, plane: 0,
+    instance: null, owner: null, emitters: [], varps: new Map() };
+  assert.equal(audio.refreshScene(first, scene), false);
+  const events: readonly AudioEvent[] = Object.freeze([]);
+  audio.update(first, events, scene);
+  const changed = { ...scene, emitters: [...scene.emitters] };
+  assert.equal(audio.refreshScene(first, changed), true);
+  assert.equal(updates.length, 1);
+  assert.equal(updates[0]!.events, events);
+  assert.equal(scenes.at(-1), changed);
+  audio.disconnected();
+  assert.equal(audio.refreshScene(first, scene), false);
+  const reentered = audioFixtureWorld("actor.current");
+  audio.update(reentered, events, scene);
+  assert.equal(audio.refreshScene(first, changed), false);
+  assert.equal(audio.refreshScene(reentered, changed), true);
+  assert.throws(() => audio.refreshScene(reentered, { ...scene, instance: "instance.other" }), /applied world context/);
+  assert.throws(() => audio.update(audioFixtureWorld("actor.rejected"), events, scene), /source audio adapter failed/);
+  assert.equal(scenes.at(-1), null);
+  assert.equal(audio.refreshScene(reentered, changed), false);
+  audio.update(null, []);
+  assert.equal(audio.refreshScene(reentered, changed), false);
+  await audio.dispose();
+});
 
 test("audio permission is recoverable and enabled state describes real output, not factory resolution", () => {
   const error = audioProblem(new AudioFailure("AUDIO_GESTURE_REQUIRED", "Trusted gesture required.", false));

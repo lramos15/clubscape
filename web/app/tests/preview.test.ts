@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { ModelPreview } from "../preview.ts";
 import type { PreviewBounds } from "../preview.ts";
-import type { AppError } from "../errors.ts";
+import { AppError } from "../errors.ts";
 import type { UiPreviewRequest } from "../../ui/index.ts";
 
 const settle = () => new Promise<void>((resolve) => setImmediate(resolve));
@@ -70,28 +70,6 @@ test("wrong-size, absent and rejected preview output is explicit, never resized 
       report: (error) => errors.push(error),
     });
 
-    test("local appearance and native widget changes invalidate stale preview readbacks at the same size", async () => {
-      let request = descriptor({ x: 0, y: 0, width: 480, height: 315 });
-      const pending: Array<(image: ImageData) => void> = [];
-      const received: Readonly<UiPreviewRequest>[] = [];
-      const preview = new ModelPreview({
-        request: () => request,
-        frame: (value) => { received.push(value); return new Promise((resolve) => pending.push(resolve)); },
-        publish: (image) => assert.equal(image, null), report: () => {},
-      });
-      preview.update("actor.fixture");
-      request = { ...request, appearance: { body_type: 1 }, modelZoom: 550 };
-      preview.update("actor.fixture");
-      pending[0]!(pixels(480, 315));
-      await settle();
-      assert.equal(preview.observe().publishedImages, 0);
-      preview.update("actor.fixture");
-      assert.deepEqual(received[1], request);
-      preview.dispose();
-      pending[1]!(pixels(480, 315));
-      await settle();
-      assert.equal(preview.observe().publishedImages, 0);
-    });
     preview.update("owner");
     await settle();
     preview.update("owner");
@@ -101,4 +79,125 @@ test("wrong-size, absent and rejected preview output is explicit, never resized 
     assert.equal(preview.observe().publishedImages, 0);
     preview.dispose();
   }
+});
+
+test("local appearance and native widget changes invalidate stale preview readbacks at the same size", async () => {
+  let request = descriptor({ x: 0, y: 0, width: 480, height: 315 });
+  const pending: Array<(image: ImageData) => void> = [];
+  const received: Readonly<UiPreviewRequest>[] = [];
+  const preview = new ModelPreview({
+    request: () => request,
+    frame: (value) => { received.push(value); return new Promise((resolve) => pending.push(resolve)); },
+    publish: (image) => assert.equal(image, null), report: () => {},
+  });
+  preview.update("actor.fixture");
+  request = { ...request, appearance: { body_type: 1 }, modelZoom: 550 };
+  preview.update("actor.fixture");
+  pending[0]!(pixels(480, 315));
+  await settle();
+  assert.equal(preview.observe().publishedImages, 0);
+  preview.update("actor.fixture");
+  assert.deepEqual(received[1], request);
+  preview.dispose();
+  pending[1]!(pixels(480, 315));
+  await settle();
+  assert.equal(preview.observe().publishedImages, 0);
+});
+
+test("closed or superseded previews cannot report old failures into a new actor entry", async () => {
+  let open = true;
+  let reject: (error: Error) => void = () => {};
+  const errors: AppError[] = [];
+  const preview = new ModelPreview({
+    request: () => open ? descriptor({ x: 0, y: 0, width: 480, height: 315 }) : null,
+    frame: () => new Promise((_resolve, failure) => { reject = failure; }),
+    publish: image => assert.equal(image, null),
+    report: error => errors.push(error),
+  });
+  preview.update("actor.first");
+  open = false;
+  preview.update(null);
+  reject(new AppError("Old actor metadata failed.", { kind: "renderer_preview_unavailable" }));
+  await settle();
+  assert.equal(preview.observe().state, "closed");
+  assert.equal(errors.length, 0);
+  open = true;
+  preview.update("actor.second");
+  preview.dispose();
+  reject(new Error("Old GPU failure after dispose"));
+  await settle();
+  assert.equal(errors.length, 0);
+});
+
+test("new real base metadata retries an unavailable request without a per-frame failure loop", async () => {
+  let ready = false, calls = 0;
+  const errors: AppError[] = [];
+  const preview = new ModelPreview({
+    request: () => descriptor({ x: 0, y: 0, width: 480, height: 315 }),
+    async frame() {
+      calls++;
+      if (!ready) throw new AppError("Base not available.", { kind: "renderer_preview_unavailable" });
+      return null;
+    },
+    publish: image => assert.equal(image, null), report: error => errors.push(error),
+  });
+  preview.update("actor.fixture:base-unavailable");
+  await settle();
+  preview.update("actor.fixture:base-unavailable");
+  assert.equal(calls, 1);
+  ready = true;
+  preview.update("actor.fixture:actual-new-base");
+  await settle();
+  assert.equal(calls, 2);
+  preview.dispose();
+});
+
+test("a UI close before the next animation frame prevents publication of a completed readback", async () => {
+  let open = true;
+  let complete: (image: ImageData | null) => void = () => {};
+  const errors: AppError[] = [];
+  const preview = new ModelPreview({
+    request: () => open ? descriptor({ x: 0, y: 0, width: 480, height: 315 }) : null,
+    frame: () => new Promise(resolve => { complete = resolve; }),
+    publish: image => assert.equal(image, null),
+    report: error => errors.push(error),
+  });
+  preview.update("actor.fixture");
+  open = false;
+  complete(pixels(480, 315));
+  await settle();
+  assert.equal(preview.observe().state, "closed");
+  assert.equal(preview.observe().completedReadbacks, 1);
+  assert.equal(preview.observe().publishedImages, 0);
+  assert.equal(errors.length, 0);
+  preview.dispose();
+});
+
+test("producer invalidation is retriable, not a missing-metadata error for the current preview", async () => {
+  let reject: (error: Error) => void = () => {};
+  let calls = 0;
+  const errors: AppError[] = [];
+  const preview = new ModelPreview({
+    request: () => descriptor({ x: 0, y: 0, width: 480, height: 315 }),
+    frame: () => {
+      calls++;
+      return new Promise((_resolve, failure) => { reject = failure; });
+    },
+    publish: image => assert.equal(image, null),
+    report: error => errors.push(error),
+  });
+  preview.update("actor.fixture");
+  reject(new AppError("Preview metadata changed during the readback.",
+    { kind: "cancelled", errorId: "preview.readback_superseded" }));
+  await settle();
+  assert.equal(preview.observe().state, "pending");
+  assert.equal(preview.observe().problem, null);
+  assert.equal(errors.length, 0);
+  preview.update("actor.fixture");
+  assert.equal(calls, 2);
+  reject(new AppError("Current source metadata is unavailable.", { kind: "renderer_preview_unavailable" }));
+  await settle();
+  assert.equal(preview.observe().state, "unavailable");
+  assert.equal(errors.length, 1, "Genuine current metadata failures still surface.");
+  preview.dispose();
 });

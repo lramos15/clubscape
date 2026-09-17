@@ -31,12 +31,15 @@ import type { PlayerAudioStorage } from "./player-audio-store.ts";
 import { rendererWorldView } from "./instance-layout.ts";
 import { resizeFullHud } from "./viewport.ts";
 import type { FullHudSurface } from "./viewport.ts";
+import { SourceSpatialMetadata } from "./spatial-metadata.ts";
+import type { SpatialGeometry } from "./spatial-metadata.ts";
 
 export interface ObservedRenderer extends RendererHandle {
   /** Observation only; all values must come from the real decoder/render path. */
   observe?(): RendererObservation;
   supportsScene?(id: string): boolean;
-  frameUiPreview?(request: Readonly<UiPreviewRequest>): Promise<ImageData | null>;
+  frameUiPreview?(request: Readonly<UiPreviewRequest>, world: WorldView | null): Promise<ImageData | null>;
+  clearPreviewMetadata?(): void;
   minimapSurface?(): MinimapSurface;
   mapIconSprites?(): Map<number, MapIconSprite>;
   minimapIconPlacements?(playerTileX: number, playerTileY: number, scale: number, width: number, height: number): MinimapIconPlacements;
@@ -64,6 +67,9 @@ export async function mountApplication(options: {
   let ui: UiHandle | null = null;
   let audio: SourceAudioSession | null = null;
   let playerAudio: PlayerAudioComposition | null = null;
+  let spatialMetadata: SourceSpatialMetadata | null = null;
+  let spatialError: AppError | null = null;
+  let spatialKey = "";
   let renderer: ObservedRenderer | null = null;
   let preview: ModelPreview | null = null;
   let appliedWorld: WorldView | null = null;
@@ -103,6 +109,20 @@ export async function mountApplication(options: {
   const observeAssets = (): void => {
     const observed = new Map([...(assets?.observe() ?? []), ...(audio?.observations() ?? [])].map((asset) => [asset.id, asset]));
     benchmark.assets([...observed.values()]);
+  };
+  const spatialGeometry = (observation = renderer?.observe?.()): SpatialGeometry => ({
+    sceneId: observation?.sceneId ?? null,
+    placement: observation?.scenePlacement ?? null,
+    loadedSquares: observation?.loadedSquares ?? null,
+    // This host mounts one root renderer. Gameplay instances replace its chunks, not its owner.
+    owner: null,
+  });
+  const sourceScene = (world: WorldView) => {
+    if (!spatialMetadata) throw spatialError ?? new AppError("Original spatial metadata is not loaded.",
+      { kind: "source_spatial_metadata", errorId: "audio.source.metadata_unavailable" });
+    const geometry = spatialGeometry();
+    spatialKey = spatialMetadata.identity(world, geometry);
+    return spatialMetadata.scene(world, geometry);
   };
 
   async function settingsHash(): Promise<void> {
@@ -162,6 +182,7 @@ export async function mountApplication(options: {
       }
       required = Array.from(new Set([...assets.manifest.bootstrap, ...(earlyScene !== null ? fixture!.requiredAssets : region.requiredAssets),
         ...(assets.manifest.renderer?.coverage === "source_world_blocks" ? assets.manifest.renderer.commonAssets : []),
+        ...(spatialMetadata?.requiredAssets ?? []),
         ...(assets.manifest.rendererManifest ? [assets.manifest.rendererManifest] : [])]));
       requiredPins = new Map(required.map((id) => [id, assetPins.get(id)!]));
       const uiAssets = Object.entries(assets.manifest.aliases ?? {}).filter(([id]) => id.startsWith("ui/")).map(([, id]) => id);
@@ -190,6 +211,10 @@ export async function mountApplication(options: {
     },
     events(world, events) {
       if (world === null) {
+        spatialKey = "";
+        renderer?.clearPreviewMetadata?.();
+        preview?.update(null);
+        appliedWorld = null;
         void playerAudio?.title().catch((error: unknown) => {
           const problem = audioProblem(error);
           if (problem.kind !== "cancelled") app.report(problem);
@@ -216,6 +241,10 @@ export async function mountApplication(options: {
     },
     disconnected() {
       benchmark.worldReady(false);
+      spatialKey = "";
+      renderer?.clearPreviewMetadata?.();
+      preview?.update(null);
+      appliedWorld = null;
       if (playerAudio) playerAudio.disconnected();
       else audio?.disconnected();
     },
@@ -345,7 +374,7 @@ export async function mountApplication(options: {
       if (previewRenderer.frameUiPreview) {
         preview = new ModelPreview({
           request: () => sourceUiPreviewAdapter.request(ui!),
-          frame: (request) => previewRenderer.frameUiPreview!(request),
+          frame: (request) => previewRenderer.frameUiPreview!(request, app.state().world),
           publish: (surface) => sourceUiPreviewAdapter.publish(ui!, surface),
           report: (error) => app.report(error),
         });
@@ -368,6 +397,19 @@ export async function mountApplication(options: {
       });
     const nativeAudio = audio;
     const nativeUi = ui;
+    if (!options.sourceAudio?.scene) {
+      try {
+        spatialMetadata = await SourceSpatialMetadata.load(assets, (id) => {
+          if (!required.includes(id)) required.push(id);
+        });
+      } catch (error) {
+        if (!(error instanceof AppError)) throw error;
+        spatialError = error.kind === "source_spatial_metadata" ? error
+          : new AppError(`Original spatial metadata could not be loaded: ${error.message}`,
+            { kind: "source_spatial_metadata", errorId: "audio.source.metadata_asset" });
+        app.report(spatialError);
+      }
+    }
     const bindPreferences = components.bindUiAudioPreferences;
     playerAudio = new PlayerAudioComposition(
       new PlayerAudioPreferenceStore(options.playerAudioStorage ?? browserPlayerAudioStorage()),
@@ -391,7 +433,7 @@ export async function mountApplication(options: {
           sourceUiAudioAdapter.music(nativeUi, binding.playerId, binding.musicState);
           void settingsHash().catch(() => app.report(new AppError("Applied music preferences could not be hashed.", { kind: "benchmark" })));
         },
-      }, options.sourceAudio ?? {}, (error) => app.report(error));
+      }, { ...options.sourceAudio, scene: options.sourceAudio?.scene ?? sourceScene }, (error) => app.report(error));
     const overrides = settings.audioOverrides();
     for (const channel of ["music", "effects", "area"] as const) {
       if (overrides[channel] !== undefined) audio.volume(channel, overrides[channel]);
@@ -406,6 +448,8 @@ export async function mountApplication(options: {
         const state = app.state();
         const previewOwner = state.world ? canonicalJson({
           actor: state.world.player.id, appearance: state.world.player.appearance, equipment: state.world.player.equipment,
+          base: state.world.ui?.appearance.base ?? null,
+          region: state.world.player.region, instance: state.world.player.instance,
         }) : state.phase === "character" && !rendererHadWorld ? "uncreated-source-body" : null;
         preview?.update(previewOwner);
         if (preview) benchmark.preview(preview.observe());
@@ -423,6 +467,19 @@ export async function mountApplication(options: {
           if (completed !== null) benchmark.completed(completed);
           const observation = renderer?.observe?.() ?? null;
           const worldView = app.state().world;
+          if (worldView && spatialMetadata && audio?.hasAppliedWorld(worldView) && observation) {
+            const geometry = spatialGeometry(observation);
+            const key = spatialMetadata.identity(worldView, geometry);
+            if (key !== spatialKey) {
+              spatialKey = key;
+              try { audio.refreshScene(worldView, spatialMetadata.scene(worldView, geometry)); }
+              catch (error) {
+                if (!(error instanceof AppError)) throw error;
+                audio.refreshScene(worldView, undefined);
+                app.report(error);
+              }
+            }
+          }
           if (worldView && observation && renderer?.minimapSurface && observation.scenePlacement?.blocks) {
             const key = canonicalJson({ revision: worldView.revision, scene: observation.scenePlacement });
             if (key !== minimapInput) {

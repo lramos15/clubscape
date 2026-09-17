@@ -75,6 +75,7 @@ export class SourceAudioSession {
   #hasScene = false;
   #sceneUnavailableReported = false;
   #actor: string | null = null;
+  #world: WorldView | null = null;
   #musicState: Readonly<SourceMusicState> | null = null;
 
   private constructor(handle: AudioHandle, api: AudioAdapter, records: readonly AssetRecord[],
@@ -162,7 +163,7 @@ export class SourceAudioSession {
     }
   }
 
-  #applyScene(world: WorldView | null, scene: SourceAudioScene | null | undefined): void {
+  #applyScene(world: WorldView | null, scene: SourceAudioScene | null | undefined): boolean {
     try {
       if (world === null) {
         if (this.#hasScene) this.#api.scene(this.#handle, null);
@@ -180,12 +181,15 @@ export class SourceAudioSession {
           this.#report(audioProblem(new AudioFailure("AUDIO_SOURCE_SCENE_REQUIRED",
             "Native audio scene input is unavailable: provide the real 128-unit listener, plane/instance/owner, placed emitters and bound original varps. No tile-centre, empty-scene or gain/distance substitute was made.")));
         }
+        return false;
       }
+      return true;
     } catch (error) {
       this.#report(audioProblem(error));
       this.#hasScene = false;
       try { this.#api.scene(this.#handle, null); }
       catch (error) { this.#report(audioProblem(error)); }
+      return false;
     }
   }
 
@@ -197,7 +201,12 @@ export class SourceAudioSession {
     // One coherent batch preserves the audio-owned before/after Cook delta. A new
     // actor resets native scene/music inputs, so bind those after that first update.
     try { this.#handle.update(world, events); }
-    catch (error) { throw audioProblem(error); }
+    catch (error) {
+      this.#world = null;
+      this.#applyScene(null, null);
+      throw audioProblem(error);
+    }
+    this.#world = world;
     this.#actor = actor;
     if (changedActor || world === null) this.#applyScene(world, scene);
     if (world !== null && musicState !== undefined) {
@@ -205,9 +214,21 @@ export class SourceAudioSession {
       catch (error) { this.#report(audioProblem(error)); }
     }
   }
-  disconnected(): void { this.#handle.disconnected(); }
+  hasAppliedWorld(world: WorldView): boolean { return this.#world === world; }
+
+  /** Scene streaming changes metadata, not the committed world/event or reward batch. */
+  refreshScene(world: WorldView, scene: SourceAudioScene | null | undefined): boolean {
+    if (!this.hasAppliedWorld(world)) return false;
+    if (scene && (scene.instance !== world.player.instance || scene.plane !== world.player.tile.plane)) {
+      throw new AppError("Spatial metadata does not belong to the applied world context.",
+        { kind: "source_spatial_metadata", errorId: "audio.source.world_mismatch" });
+    }
+    return this.#applyScene(world, scene);
+  }
+
+  disconnected(): void { this.#world = null; this.#handle.disconnected(); }
   async dispose(): Promise<void> {
     try { await this.#handle.dispose(); }
-    finally { this.#stop(); this.#observations.clear(); this.#musicState = null; this.#hasScene = false; }
+    finally { this.#stop(); this.#observations.clear(); this.#musicState = null; this.#hasScene = false; this.#world = null; }
   }
 }
