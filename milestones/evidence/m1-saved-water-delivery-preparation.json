@@ -1,7 +1,8 @@
 {
   "schema_version": 1,
   "task": "M1-SAVED-WATER-DELIVERY-PREPARATION",
-  "status": "admitted_source_only_preparation",
+  "status": "prepared_and_pinned_no_saved_execution",
+  "preparation_allowance_remaining": 0,
   "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
   "prerequisites": [
     "milestones/evidence/m1-water-main-integration.json",
@@ -51,6 +52,30 @@
     "Reserve the fixed unused output and retain failures; do not rebuild the four consumed preflight deliveries or reuse their UUIDs/allowances.",
     "Publish exact descriptor, artifact, manifest, asset and whole-file inventory hashes before preparing any separate saved52 execution admission."
   ],
+  "prepared_result": {
+    "executed_code_revision": "f9860450457cc11b580c037b6793836091473165",
+    "original_admission_sha256": "3f924d34925c2a8f4b504d0cef32e2978ecaf2eb8d03b47aaa2a4dbfc4f8bb9d",
+    "game_root": ".local/saved-water-delivery-01/game-root",
+    "descriptor_sha256": "24fec6e152cf5e5a899248bfe302fc12f6f080b71d43f9c0052264f1d9fcbc6e",
+    "game_assets_manifest_sha256": "95d7afc9d2740299c6e5091b547dbcfbc1b7b2c6f5614eca0b2251adc60abf08",
+    "content_manifest_sha256": "718d50eb2134f76b9bb2d34ba2b99f162cb2ec6666b392aba52ce2a03477cdf4",
+    "files": 40,
+    "total_bytes": 14296055,
+    "asset_mappings": 5015,
+    "genuine_collection_deliveries": 4986,
+    "distinct_source_payloads": 36,
+    "missing_assets": 0,
+    "native_inspections": 1,
+    "native_inspection_seconds": 3.593,
+    "descriptor_bytes": 272691,
+    "current_descriptor_limit_bytes": 524288,
+    "historical_limit_qualification": "The unchanged packager also reports the old bcc0de9 limit262144. It is historical, not the current server limit or a failed current admission.",
+    "delivery_inventory_sha256": "b4eeee21e9bf45db2a104ca1110305155069632bb371c8a563d9cb7ee7b75cb8",
+    "index": "milestones/evidence/m1-saved-water-delivery/index.json",
+    "index_sha256": "a7b09591841ecda261b76d5ab4612d3ad1c15ea649da02bb39506513e07f898b",
+    "evidence_files": 4,
+    "qualification": "Strict Runtime artifact and genuine source-asset preparation only. No saved file was read, no service/database/world was started, and the server's actual F2P readiness and migration still require separate execution."
+  },
   "saved_execution_admitted": false,
   "milestone_accepted": false,
   "later_milestone_authorized": false

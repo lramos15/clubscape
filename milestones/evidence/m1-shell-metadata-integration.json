@@ -65,7 +65,7 @@
     "model_zoom": 550,
     "template_content_type": 0,
     "renderer_model_widget_ids": [44499017],
-    "result": "The old missing-UI-widget claim is obsolete. The current UI has84:4, but its matching native renderer projection is still unpublished. Cache default328 is not substituted for the current template's0."
+    "result": "The old missing-UI-widget claim is obsolete. Current UI has84:4, but the selected main renderer still lacks that projection. Worker9051712 has a separate unreviewed archive328 candidate; it does not authorize replacing this template's0."
   },
   "source_raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
   "root_code_integrated": true,

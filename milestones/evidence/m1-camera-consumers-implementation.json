@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION",
+  "status": "admitted_native_wasm_and_cpu_consumer_work_only",
+  "worker": "ac0f0856-44af-445b-bd90-6db7a1f4fc74",
+  "worktree": ".worktrees/m1-camera-consumers",
+  "branch": "task/m1-camera-consumers",
+  "code_base": "f9860450457cc11b580c037b6793836091473165",
+  "native_candidate": "milestones/evidence/m1-native-camera-candidate.json",
+  "owner_approval": "milestones/approvals/m1-camera-initialization-v1.json",
+  "goal": "Wire the reviewed native controller through real WASM, source renderer data and browser input/lifecycle consumers. Deliver working code with bounded CPU/native/WASM evidence, or a precise newly demonstrated missing source input. Normal-browser and full renderer acceptance remain separately gated.",
+  "allowed_paths": ["crates/camera/**", "crates/wasm/**", "crates/renderer/Cargo.toml", "crates/renderer/README.md", "crates/renderer/src/**", "crates/renderer/tests/camera*.rs", "web/renderer/README.md", "web/renderer/src/**", "web/renderer/pkg/*.d.ts", "web/app/**", "web/generated/protocol/*.d.ts", "Cargo.lock"],
+  "forbidden_paths": [
+    "Root or peer worktree edits",
+    "crates/renderer/src/actor.rs", "crates/renderer/src/penetration.rs", "crates/renderer/tests/gear*.rs",
+    "crates/server/**", "crates/world-engine/**", "crates/game-types/**", "crates/protocol/**",
+    "content/**", "assets/**", "research/**", "spec/**", "milestones/**", "web/ui/**", "web/audio/**",
+    "web/app/spatial-metadata.ts", "web/app/ui-preview-request.ts", "web/app/tests/source-browser.ts", "web/app/tests/real-player-audio.ts",
+    "Every protected checkpoint directory"
+  ],
+  "requirements": [
+    "Use the existing clubscape-camera implementation, not TypeScript camera math. Preserve32 native tests and exact14-scenario/354-row conformance; do not edit source traces or initialization policy.",
+    "Renderer changes are source-data getters/integration only, never fitting, placement, geometry, shading or asset-export changes. If an essential private actor getter is missing, report the exact needed contract instead of conflicting with the residual-gear owner.",
+    "Supply actual logical/rendered focus identity, coordinates, footprint and plane; original height corners/settings/bridge semantics, rendered triangles and ground-decoration raises. Do not replace required inputs with tile-centre guesses, bilinear approximations, zeros or a fixture camera.",
+    "Cover object941 at3215,3218 raising7 and the3223,3218 triangle/bilinear discrepancy from existing source evidence where applicable.",
+    "Keep20ms logical input ticks separate from elapsed-nanosecond rendering. Handle real key/mouse/wheel ownership, resize, scene rebasing, streaming, actor change, disconnect and teardown without replayed input or stale camera state.",
+    "Initialize only from the approved constructor policy and real focus/terrain. Native angles use16384 units/turn, initially yaw0/pitch2048. Constructor FOV256/205 and the controlled127/127 full-HUD helper are not interchangeable.",
+    "Source effect inputs must be explicit if active; do not invent randomness, active effects or unproved inactive defaults.",
+    "Do not populate canonical camera:null with a scalar fixture or relabel the recorded-camera path as normal entry. Preserve existing diagnostics and all benchmark acceptance flags until their actual gates pass.",
+    "Any local crate dependency edges may be updated with Cargo; keep existing dependency versions and the worktree-private target. Generated declarations must come from the actual tools, not handwritten substitutes.",
+    "Run only focused CPU/native/actual-WASM checks. Exclude the native gpu test binary and do not launch Chrome, Xvfb, a server/database, RuneLite or a source-capture/export process.",
+    "Publish exact code/output identities, complete validation and remaining source/browser/fidelity limitations, then stop without automatic resumption."
+  ],
+  "validation_limits": {
+    "cargo_build_jobs": 4,
+    "seconds_per_build_or_native_suite": 600,
+    "seconds_per_node_suite": 180,
+    "browser_gpu_or_native_wgpu_invocations": 0,
+    "servers_databases_accounts_or_gameplay": 0,
+    "source_captures_or_generation": 0,
+    "protected_state_access": 0,
+    "nested_agents_or_factories": 0
+  },
+  "parent_camera_integration_gate_remains_closed": true,
+  "independent_review_required": true,
+  "normal_browser_entry_verified": false,
+  "milestone_accepted": false
+}
