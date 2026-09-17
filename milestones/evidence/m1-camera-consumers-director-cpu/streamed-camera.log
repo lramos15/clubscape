@@ -1,0 +1,16 @@
+
+running 1 test
+
+thread 'streamed_original_block_getters_preserve_real_cases_and_unloaded_boundaries' (193034) panicked at crates/renderer/tests/camera_source.rs:92:5:
+missing source block is not zero-height ground
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+streamed_original_block_getters_preserve_real_cases_and_unloaded_boundaries --- FAILED
+
+failures:
+
+failures:
+    streamed_original_block_getters_preserve_real_cases_and_unloaded_boundaries
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.98s
+
+error: test failed, to rerun pass `-p clubscape-renderer --test camera_source`

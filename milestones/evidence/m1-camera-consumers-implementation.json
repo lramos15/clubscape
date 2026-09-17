@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION",
-  "status": "reported_candidate_pending_director_review",
+  "status": "blocked_director_streamed_height_presence_regression",
   "worker": "23749cd0-cc24-4565-9b37-e057b4823867",
   "retired_predecessor": "ac0f0856-44af-445b-bd90-6db7a1f4fc74",
   "assignment": "One bounded replacement received the previously unexecuted consumer task after reservation in2b90e30. The retired predecessor's completed native controller evidence remains valid, not new consumer validation.",
@@ -59,7 +59,7 @@
       "Explicit source effect activation/suppression and active-channel phase/frequency/amplitude/random sample"
     ],
     "normal_entry": "Still explicitly fenced; no guessed focus, tile centre, footprint or inactive effects",
-    "director_review": "pending",
+    "director_review": "Blocked by actual strict streamed-case failure on unchanged939: the terrain rebuild marks unloaded numerical zero heights as observed source corners.",
     "main_integration": false,
     "automatic_resumption": false
   },
@@ -68,11 +68,14 @@
     "candidate_evidence_archives_verified": 15,
     "generated_output_files_verified": 17,
     "initialization_approval_sha256": "f7f1ce92826fb1bafc1e17ecbbaace34e0851c4e5044cbcfafa86817ac3539e1",
-    "required_streamed_case_inputs_on_main": "Both12850.bin.gz and12850.models.bin.gz exist on main with the exact candidate-declared hashes. They have not been copied into a review worktree or used to rerun the blocked case.",
-    "code_review": "All33 source-delta files read by Director; remaining generated exports/docs/lifecycle-input-resize test deltas read without a new high-confidence defect. Strict streamed CPU qualification remains separately pending.",
+    "required_streamed_case_inputs_on_main": "Both12850gzip twins were compressed/raw hash-verified and copied under the separateb886c66 admission into an isolated exact939 worktree. No claim about all122 buffers; no source generation.",
+    "code_review": "All33 source-delta files read. The actual strict streamed case then exposed camera-streamed-unloaded-height-presence; source integration is blocked pending a narrowly scoped repair and independent review.",
     "evidence_semantics": "Read supplied logs and recursively compared replay JSON: only Cargo.lock hash/size metadata differ from original conformance. No scenario or result fields differ.",
     "director_cpu_admission": "milestones/evidence/m1-camera-consumers-director-cpu-admission.json",
-    "new_build_test_browser_or_source_capture_invocations": 0,
+    "director_cpu_result": "milestones/evidence/m1-camera-consumers-director-cpu-result.json",
+    "height_presence_repair_admission": "milestones/evidence/m1-camera-height-presence-repair-admission.json",
+    "new_director_native_build_test_commands": 1,
+    "new_browser_or_source_capture_invocations": 0,
     "main_integration": false
   },
   "independent_review_required": true,
