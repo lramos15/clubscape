@@ -1,8 +1,9 @@
 {
   "schema_version": 1,
   "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION",
-  "status": "reviewed_exact_root_integration_admitted",
+  "status": "code_integrated_root_qualified_live_source_gate_closed",
   "director_integration_admission": "milestones/evidence/m1-camera-consumers-integration-admission.json",
+  "director_root_qualification": "milestones/evidence/m1-camera-consumers-root-qualification.json",
   "worker": "23749cd0-cc24-4565-9b37-e057b4823867",
   "retired_predecessor": "ac0f0856-44af-445b-bd90-6db7a1f4fc74",
   "assignment": "One bounded replacement received the previously unexecuted consumer task after reservation in2b90e30. The retired predecessor's completed native controller evidence remains valid, not new consumer validation.",
@@ -60,29 +61,35 @@
       "Explicit source effect activation/suppression and active-channel phase/frequency/amplitude/random sample"
     ],
     "normal_entry": "Still explicitly fenced; no guessed focus, tile centre, footprint or inactive effects",
-    "director_review": "Original939 strict streamed-case failure is preserved. Director repair44 transfers genuine height presence without numeric rendering changes and passes7 precommit source cases; independentce4 delta assessment statically resolves the defect. Integration and committed-root qualification remain pending.",
-    "main_integration": false,
+    "director_review": "Original33-path assessment is complete; independentce4 statically resolves the four-path44 height-presence append. Exact53/939/44 import3eff49c now passes61native/5actual-WASM/289web cases, strict Clippy, actual bindings/typecheck and isolated code build on committed root. Live producers and normal entry remain separate.",
+    "main_integration": true,
+    "main_revision": "3eff49c2d6d6de129acb7a4102c6cc6eb2765278",
     "automatic_resumption": false
   },
   "parent_camera_integration_gate_remains_closed": true,
+  "parent_gate_scope": "The normal-source-camera acceptance gate remains closed; exact consumer code integration and root qualification are complete.",
   "director_receipt_verification": {
     "candidate_evidence_archives_verified": 15,
     "generated_output_files_verified": 17,
     "initialization_approval_sha256": "f7f1ce92826fb1bafc1e17ecbbaace34e0851c4e5044cbcfafa86817ac3539e1",
     "required_streamed_case_inputs_on_main": "Both12850gzip twins were compressed/raw hash-verified and copied under the separateb886c66 admission into an isolated exact939 worktree. No claim about all122 buffers; no source generation.",
-    "code_review": "All33 source-delta files were read before the strict source failure. The independently assessed four-path44 repair statically resolves camera-streamed-unloaded-height-presence. No repeated33-file review or integrated-root qualification is claimed.",
+    "code_review": "All33 source-delta files were read before the strict source failure. The independently assessed four-path44 repair statically resolves camera-streamed-unloaded-height-presence. No33-file review was repeated; the later committed-root qualification is linked separately.",
     "evidence_semantics": "Read supplied logs and recursively compared replay JSON: only Cargo.lock hash/size metadata differ from original conformance. No scenario or result fields differ.",
     "director_cpu_admission": "milestones/evidence/m1-camera-consumers-director-cpu-admission.json",
     "director_cpu_result": "milestones/evidence/m1-camera-consumers-director-cpu-result.json",
     "height_presence_repair_admission": "milestones/evidence/m1-camera-height-presence-repair-admission.json",
     "height_presence_repair_candidate": "milestones/evidence/m1-camera-height-presence-repair-candidate.json",
     "height_presence_independent_review": "milestones/evidence/m1-camera-height-presence-review.json",
-    "new_director_native_build_test_commands": 3,
+    "preintegration_director_native_build_test_commands": 3,
+    "committed_root_qualification_commands": 16,
     "new_browser_or_source_capture_invocations": 0,
-    "main_integration": false
+    "main_integration": true,
+    "main_revision": "3eff49c2d6d6de129acb7a4102c6cc6eb2765278",
+    "committed_root_qualification": "milestones/evidence/m1-camera-consumers-root-qualification.json"
   },
   "independent_review_required": true,
   "height_presence_independent_review_completed": true,
+  "consumer_source_review_and_root_qualification_completed": true,
   "normal_browser_entry_verified": false,
   "milestone_accepted": false
 }

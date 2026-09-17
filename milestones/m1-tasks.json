@@ -42,7 +42,7 @@
     {
       "id": "M1-CAMERA-CONSUMER-INTEGRATION",
       "goal": "Integrate exact reviewed camera consumers plus the independently resolved height-presence repair and qualify committed root code without opening normal entry.",
-      "status": "INTEGRATION",
+      "status": "VERIFIED",
       "specs": ["milestones/evidence/m1-camera-consumers-integration-admission.json", "milestones/evidence/m1-camera-consumers-implementation.json", "milestones/evidence/m1-camera-height-presence-review.json"],
       "dependencies": ["M1-CAMERA-CONSUMER-IMPLEMENTATION", "M1-CAMERA-HEIGHT-PRESENCE-REVIEW"],
       "allowed_paths": ["Only the34 exact source paths and16 supplied-evidence paths listed or pinned by the integration admission", "The eight existing generated protocol/renderer binding leaves", ".local/camera-consumer-root-01/**", ".local/web-builds/camera-consumer-root-01/**", "milestones/**"],
@@ -55,7 +55,7 @@
       "source_notes": ["Root paths match their actual53 parent or939 terrain base with no conflicts. All33 original reads and independent44 delta assessment are complete; do not repeat those reviews."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-camera-consumers-integration-admission.json", "milestones/evidence/m1-camera-height-presence-review.json"]
+      "evidence": ["milestones/evidence/m1-camera-consumers-integration-admission.json", "milestones/evidence/m1-camera-height-presence-review.json", "milestones/evidence/m1-camera-consumers-root-qualification.json"]
     },
     {
       "id": "M1-SAVED-WATER-EXECUTION-02",
@@ -222,7 +222,7 @@
     {
       "id": "M1-CAMERA-CONSUMER-IMPLEMENTATION",
       "goal": "Implement native-camera WASM/source-data/input consumers independently of still-open full renderer and browser acceptance.",
-      "status": "INTEGRATION",
+      "status": "VERIFIED",
       "specs": ["milestones/evidence/m1-camera-consumers-implementation.json", "milestones/evidence/m1-native-camera-candidate.json", "research/camera-source/contract.json"],
       "dependencies": ["M1-NATIVE-CAMERA-CONTROLLER", "M1-NATIVE-CAMERA-REVIEW", "M1-SHELL-METADATA-INTEGRATION"],
       "allowed_paths": ["crates/camera/**", "crates/wasm/**", "crates/renderer/Cargo.toml", "crates/renderer/README.md", "crates/renderer/src/**", "crates/renderer/tests/camera*.rs", "web/renderer/README.md", "web/renderer/src/**", "web/renderer/pkg/*.d.ts", "web/app/**", "web/generated/protocol/*.d.ts", "Cargo.lock"],

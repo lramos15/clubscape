@@ -1,7 +1,9 @@
 {
   "schema_version": 1,
   "task": "M1-CAMERA-CONSUMER-INTEGRATION",
-  "status": "admitted_code_only",
+  "status": "completed_code_only",
+  "result": "milestones/evidence/m1-camera-consumers-root-qualification.json",
+  "integrated_root_revision": "3eff49c2d6d6de129acb7a4102c6cc6eb2765278",
   "authority": "director",
   "executor": "director",
   "root_before_admission": "c48ae03395521ff5a28d1b9266bcea10212a387a",
