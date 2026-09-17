@@ -75,7 +75,7 @@
     {"reviewer": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "scope": "Independent exact six-path Director-authored769 canonical-module bootstrap append and public callers; static assessment, not an independent test rerun or repeated full baseline review", "evidence": "milestones/evidence/m1-saved-water-bootstrap-review.json"},
     {"reviewer": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "scope": "Independent exact three-path Director-authored0b fixed successor binding and necessary public/runtime/native callers; full normalized gate text identical to769, exact owner/proposal pins verified, no new findings or test/private execution", "evidence": "milestones/evidence/m1-saved-water-binding-02-review.json"}
   ],
-  "qualification": "The actualce09 failure and consumed authority remain preserved. Completed769 review and2ed5b9c/96-case root qualification are unchanged historical stages. Independentce4 has now assessed the exact0b successor append with no significant findings, confirming fixed02 selection, independent owner pin and complete normalized gate text identity with769. Supplied98-case evidence is precommit only; exact successor root integration/qualification is separately admitted and pending. Review does not grant executable authority.",
+  "qualification": "The actualce09 failure and consumed authority remain preserved. Completed769 review and2ed5b9c/96-case root qualification are unchanged historical stages. Independentce4 assessed the exact0b successor append with no significant findings, confirming fixed02 selection, independent owner pin and complete normalized gate text identity with769. The exact three paths are now integrated3c9c43d; all tracked journey Python source matches0b and the existing98-case selector passes on that committed root in6.62seconds. This is distinct from the earlier98-case precommit result and read-only review. No executable successor authority is granted by this review.",
   "bootstrap_candidate": "milestones/evidence/m1-saved-water-bootstrap-candidate.json",
   "baseline_independent_checks": {
     "worktree": ".worktrees/m1-saved-water-review",
@@ -125,7 +125,7 @@
     "preparation_or_inspection_repeated": false
   },
   "remaining_execution_gates": [
-    "The six reviewed769 paths are integrated2ed5b9c with96 committed-root Python passes. Successor0b has independent static review and98 precommit passes; exact three-path integration and committed-root qualification remain pending.",
+    "Successor0b is independently reviewed and its exact three-path import3c9c43d passes98 synthetic tests on committed root code. All tracked journey Python source matches0b; the earlier769/2ed qualification is preserved, not repeated.",
     "The solece09 saved entrypoint remains consumed1/remaining0. Owner approvalfacac6a3 conditionally grants one separate fixed02 attempt, not a refund. A new exact committed admission after successor qualification is required before reservation/protected access; no old journal reuse or automatic retry.",
     "Actual original identity, target service readiness, restore, fenced migration, remaining gameplay and fresh protected capture are unexecuted and may still fail their strict runtime guards.",
     "No old operator, preparation, restore, browser, audio or RuneLite allowance is renewed."
@@ -135,6 +135,7 @@
   "independent_bootstrap_review": "milestones/evidence/m1-saved-water-bootstrap-review.json",
   "independent_successor_binding_review": "milestones/evidence/m1-saved-water-binding-02-review.json",
   "successor_integration_admission": "milestones/evidence/m1-saved-water-binding-02-integration-admission.json",
+  "successor_main_qualification": "milestones/evidence/m1-saved-water-binding-02-root-qualification.json",
   "bootstrap_main_qualification": "milestones/evidence/m1-saved-water-bootstrap-root-qualification.json",
   "protected_checkpoint_accesses": 0,
   "actual_databases_services_restores_migrations_or_gameplay": 0,

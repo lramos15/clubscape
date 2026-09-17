@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "saved52_fixed_successor_binding_candidate",
   "task": "M1-SAVED-WATER-BINDING-02",
-  "status": "code_qualified_independently_reviewed_integration_pending",
+  "status": "independently_reviewed_integrated_root_qualified",
   "author": "director",
   "recorded_at": "2026-09-17T11:13:36.578113+00:00",
   "implementation_admission": "milestones/evidence/m1-saved-water-binding-02-implementation.json",
@@ -48,10 +48,12 @@
   "source_generation_operator_browser_gpu_or_runelite": 0,
   "independent_review": "milestones/evidence/m1-saved-water-binding-02-review.json",
   "director_integration_admission": "milestones/evidence/m1-saved-water-binding-02-integration-admission.json",
-  "main_integration": false,
+  "main_integration": true,
+  "director_integration_revision": "3c9c43d66e3839d9b4aef66913f4d966d494fefa",
+  "director_root_qualification": "milestones/evidence/m1-saved-water-binding-02-root-qualification.json",
   "executable_admission_created": false,
   "owner_conditionally_authorized_new_attempts_unconsumed": 1,
   "prior_attempts_remaining": 0,
-  "pre_execution_requirement": "Publish the independent successor review with the existing gate schema status=passed, kind=m1_saved_water_continuation_code_review and exact0b-or-reviewed-successor code_revision, then qualify/integrate and commit an exact executable admission. No protected access before those conditions.",
+  "pre_execution_requirement": "Independent0b review and exact3c9c43d root integration/98-case qualification are complete. Commit an exact executable02 admission binding the reviewed0b executor, current public review/prerequisite hashes and unchanged binaries/limits. No protected access before admission and exclusive reservation/marker.",
   "milestone_accepted": false
 }

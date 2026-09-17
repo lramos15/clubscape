@@ -6,7 +6,7 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-SAVED-WATER-BINDING-02-INTEGRATION"}
+      {"id": "director", "task": "M1-SAVED-WATER-EXECUTION-02"}
     ],
     "reserved": [],
     "queued": [],
@@ -40,9 +40,27 @@
   },
   "tasks": [
     {
+      "id": "M1-SAVED-WATER-EXECUTION-02",
+      "goal": "Prepare exact successor admission, then consume only the owner's one separately journaled saved52 water/range/postquest attempt.",
+      "status": "READY",
+      "specs": ["milestones/approvals/m1-saved-water-continuation-02.json", "milestones/evidence/m1-saved-water-second-attempt-proposal.json", "milestones/evidence/m1-saved-water-continuation-review.json", "milestones/evidence/m1-saved-water-binding-02-root-qualification.json"],
+      "dependencies": ["M1-SAVED-WATER-BINDING-02-INTEGRATION", "M1-SAVED-WATER-BINDING-02-REVIEW", "M1-SAVED-WATER-DELIVERY-PREPARATION", "M1-WATER-MAIN-INTEGRATION", "M1-WATER-UPGRADE-PREFLIGHT"],
+      "allowed_paths": ["milestones/**", ".local/saved-water-execution-02-controller/**", ".worktrees/m1-saved-water-continuation/.local/saved-water-continuation-02/**", ".worktrees/m1-saved-water-continuation/.local/journey-runs/**", ".worktrees/m1-saved-water-continuation/.local/journey-checkpoints/**"],
+      "forbidden_paths": ["Original52 writes or any access before exact admission/reservation/protected-read marker", "Other original checkpoints or real01 journal/report access", "Source/native/dependency edits or new builds", "Alternative authority/output/journal and automatic retries", "Unrelated user data"],
+      "outputs": ["Exact committed executable02 admission and one exclusive journal", "Actual result with fresh protected success/failure preservation before eligible cleanup, or explicit retained unknown outcome"],
+      "validation_commands": ["At most one saved_water.py invocation in exact clean0b worker with committed admission revision/hash, director identity and external2400-second KILL cap"],
+      "test_requirements": ["Same original52 account/world/owned flour-pot and bucket; exact existing minimalb2 delivery", "One restore/migration/database, two server starts, one60-second native preflight and one600-second/128-input native remainder;960-second preservation reserve inside2400total", "No old reward replay, reacquisition, new world/account, source/operator/browser/GPU/RuneLite work", "Entry failure consumes the new attempt; capture before eligible cleanup and retain unknown outcomes"],
+      "acceptance": ["Record actual remaining-only result without claiming full browser, presentation, performance or M1 acceptance"],
+      "reserved_namespaces": [],
+      "source_notes": ["Owner grantfacac6a3 is conditional, not executable. Exact0b review and3c9c43d/98-case root qualification are complete; a committed executable02 record is still required. Originalce09 is never refunded."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/approvals/m1-saved-water-continuation-02.json", "milestones/evidence/m1-saved-water-binding-02-review.json", "milestones/evidence/m1-saved-water-binding-02-root-qualification.json"]
+    },
+    {
       "id": "M1-SAVED-WATER-BINDING-02-INTEGRATION",
       "goal": "Integrate only the independently reviewed fixed successor source and qualify the exact committed root without saved execution.",
-      "status": "INTEGRATION",
+      "status": "VERIFIED",
       "specs": ["milestones/evidence/m1-saved-water-binding-02-integration-admission.json", "milestones/evidence/m1-saved-water-binding-02-review.json"],
       "dependencies": ["M1-SAVED-WATER-BINDING-02-REVIEW"],
       "allowed_paths": ["tools/journey-tests/saved_water_gate.py", "tools/journey-tests/test_saved_water.py", "tools/journey-tests/SAVED_WATER.md", "milestones/**"],
@@ -55,7 +73,7 @@
       "source_notes": ["Separate Director integration scope under the existing conditional owner grant; independent review itself grants no execution authority."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-saved-water-binding-02-integration-admission.json", "milestones/evidence/m1-saved-water-binding-02-review.json"]
+      "evidence": ["milestones/evidence/m1-saved-water-binding-02-integration-admission.json", "milestones/evidence/m1-saved-water-binding-02-review.json", "milestones/evidence/m1-saved-water-binding-02-root-qualification.json"]
     },
     {
       "id": "M1-SAVED-WATER-BINDING-02-REVIEW",
@@ -78,7 +96,7 @@
     {
       "id": "M1-SAVED-WATER-BINDING-02",
       "goal": "Prepare only the fixed owner-approved successor binding without accessing or executing saved state.",
-      "status": "INTEGRATION",
+      "status": "VERIFIED",
       "specs": ["milestones/approvals/m1-saved-water-continuation-02.json", "milestones/evidence/m1-saved-water-binding-02-implementation.json"],
       "dependencies": ["M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION", "M1-SAVED-WATER-BOOTSTRAP-REVIEW"],
       "allowed_paths": ["tools/journey-tests/saved_water_gate.py", "tools/journey-tests/saved_water_runtime.py", "tools/journey-tests/test_saved_water.py", "tools/journey-tests/test_saved_water_runtime.py", "tools/journey-tests/SAVED_WATER.md"],
@@ -91,7 +109,7 @@
       "source_notes": ["Owner explicitly approved one new conditional attempt via the pinned proposal; this is not a refund or renewal ofce09 or any unrelated allowance."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/approvals/m1-saved-water-continuation-02.json", "milestones/evidence/m1-saved-water-binding-02-implementation.json"]
+      "evidence": ["milestones/approvals/m1-saved-water-continuation-02.json", "milestones/evidence/m1-saved-water-binding-02-implementation.json", "milestones/evidence/m1-saved-water-binding-02-root-qualification.json"]
     },
     {
       "id": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW",

@@ -1,11 +1,12 @@
 {
   "schema_version": 1,
   "task": "M1-SAVED-WATER-BINDING-02",
-  "status": "reviewed_candidate_pending_root_integration_qualification",
+  "status": "reviewed_integrated_root_qualified",
   "candidate": "milestones/evidence/m1-saved-water-binding-02-candidate.json",
   "review_admission": "milestones/evidence/m1-saved-water-binding-02-review-admission.json",
   "review": "milestones/evidence/m1-saved-water-binding-02-review.json",
   "integration_admission": "milestones/evidence/m1-saved-water-binding-02-integration-admission.json",
+  "root_qualification": "milestones/evidence/m1-saved-water-binding-02-root-qualification.json",
   "executor": "director",
   "owner_approval": "milestones/approvals/m1-saved-water-continuation-02.json",
   "proposal": "milestones/evidence/m1-saved-water-second-attempt-proposal.json",
