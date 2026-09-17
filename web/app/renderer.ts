@@ -12,10 +12,11 @@ import { RENDER_MANIFEST_SHA256 } from "./render-identity.ts";
 import { residentRendererAssets, sourceScenePlacement } from "./render-state.ts";
 import { PlayerModelPreviewProducer } from "./ui-preview-request.ts";
 import type { UiPreviewRequest } from "../ui/index.ts";
+import type { NativeCameraRenderer } from "../renderer/src/camera.ts";
 
 export { fullHudViewport, fullHudZoomForViewport, regionSceneId, sourceZoomForViewportHeight };
 
-export interface ShellRenderer extends RendererHandle {
+export interface ShellRenderer extends RendererHandle, NativeCameraRenderer {
   observe(): RendererObservation;
   diagnostics(): RendererDiagnostics;
   supportsScene(id: string): boolean;
@@ -63,6 +64,16 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
   let instanceTemplate: string | null = null;
   let disposed = false;
   let lastFrame: RenderFrame | null = null;
+  let nativeCameraMode = false;
+  let nativeCameraCurrent = false;
+  const cameraCall = <T>(call: () => T): T => {
+    try { return call(); }
+    catch (error) {
+      if (error instanceof AppError) throw error;
+      const detail = typeof error === "string" ? error : error instanceof Error ? error.message : "No native diagnostic.";
+      throw new AppError(`Source camera provider failed: ${detail.slice(0, 2048)}`, { kind: "camera_unavailable" });
+    }
+  };
   const preview = new PlayerModelPreviewProducer(manifest, (request) => native.framePlayerPreview(request));
   const placement = (state: RendererDiagnostics) => {
     const raw = native.scenePlacement();
@@ -75,6 +86,7 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
   return {
     resize(width, height) { native.resize(width, height); },
     async loadScene(id) {
+      nativeCameraCurrent = false;
       invariant(sceneIds.has(id), `The actual renderer has no exported scene for ${id}. No fixture was selected as a fallback.`, "region_unavailable");
       await native.loadScene(id);
     },
@@ -82,13 +94,25 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
       // Extra validated fields (including dynamicObjects) survive the shared type boundary.
       preview.accept(value, () => native.update(value));
       world = value;
+      nativeCameraCurrent = false;
       instanceTemplate = value.instanceLayout?.template ?? null;
       if (value.player.running === undefined || value.player.action === undefined) report("The authoritative movement/action observer is unavailable. The shell does not infer it from settings or nearby objects.");
     },
     camera(value) {
       invariant(value.near === 50 && value.unitsPerTurn === 16384, "Renderer camera must use its actual near50/16384-unit ABI.", "renderer");
       native.camera(value);
+      nativeCameraMode = false;
       camera = { ...value, zoom: Math.trunc(value.zoom), far: Math.trunc(value.far) };
+    },
+    cameraSceneReady() { return cameraCall(() => native.cameraSceneReady()); },
+    cameraSource() { return cameraCall(() => native.cameraSource()); },
+    cameraScene() { return cameraCall(() => native.cameraScene()); },
+    applyNativeCamera(delivery) {
+      const value = cameraCall(() => native.applyNativeCamera(delivery));
+      camera = { ...value };
+      nativeCameraMode = true;
+      nativeCameraCurrent = true;
+      return value;
     },
     async frame(now) {
       if (disposed) return null;
@@ -127,7 +151,8 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
       const state = native.diagnostics();
       const scene = placement(state);
       return {
-        ready: state.sceneId !== null && state.deviceLostReason === null,
+        ready: state.sceneId !== null && state.deviceLostReason === null
+          && (!nativeCameraMode || nativeCameraCurrent && cameraCall(() => native.cameraSceneReady())),
         sceneId: state.sceneId ?? "unloaded", assets: residentRendererAssets(manifest, state),
         scenePlacement: scene.value, nativeScenePlacement: scene.raw, loadedSquares: state.loadedSquares,
         actorObserver: { observerV1: native.observerV1(), running: native.playerRunning(),
@@ -136,7 +161,8 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
         entities: {}, gpuTimestampPassScope: state.timestampsSupported ? "original integer fill compute pass" : null,
         settings: camera ? { backend: "webgpu", sourceManifestSha256: state.manifestSha256, brightness: manifest.brightness,
           near: 50, far: camera.far, zoom: camera.zoom, angleUnitsPerTurn: 16384,
-          projection: "renderer-native-full-hud-helper", fullHudProjectionMatched: false,
+          projection: nativeCameraMode ? "native-camera-integer-source-lane" : "renderer-native-full-hud-helper", fullHudProjectionMatched: false,
+          normalCameraBrowserVerified: false,
           attachmentGapAccepted: false } : null,
       };
     },

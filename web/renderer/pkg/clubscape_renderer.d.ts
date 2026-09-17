@@ -31,6 +31,7 @@ export class WasmRenderer {
     [Symbol.dispose](): void;
     adapter_info(): string;
     add_texture(bytes: Uint8Array): number;
+    apply_native_camera(json: string): string;
     /**
      * Assembles the scene around `base` from loaded blocks; returns the missing squares.
      */
@@ -39,6 +40,8 @@ export class WasmRenderer {
      * Original scene base for a player tile (`((tile >> 3) - 6) * 8`).
      */
     static base_for_tile(x: number, y: number): Int32Array;
+    camera_scene(): string;
+    camera_source(): string;
     device_epoch(): number;
     /**
      * Non-null once the WebGPU device reported loss; frames then fail explicitly.
@@ -384,8 +387,11 @@ export interface InitOutput {
     readonly framerecordjs_skipped: (a: number) => [number, number];
     readonly wasmrenderer_adapter_info: (a: number) => [number, number];
     readonly wasmrenderer_add_texture: (a: number, b: number, c: number) => [number, number, number];
+    readonly wasmrenderer_apply_native_camera: (a: number, b: number, c: number) => [number, number, number, number];
     readonly wasmrenderer_assemble_scene: (a: number, b: number, c: number, d: number) => [number, number, number, number];
     readonly wasmrenderer_base_for_tile: (a: number, b: number) => [number, number];
+    readonly wasmrenderer_camera_scene: (a: number) => [number, number, number, number];
+    readonly wasmrenderer_camera_source: (a: number) => [number, number, number, number];
     readonly wasmrenderer_device_epoch: (a: number) => number;
     readonly wasmrenderer_device_lost_reason: (a: number) => [number, number];
     readonly wasmrenderer_frame: (a: number, b: number) => any;
@@ -451,11 +457,11 @@ export interface InitOutput {
     readonly wasmrenderer_update_world: (a: number, b: number, c: number, d: number) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined_______true_: (a: number, b: number, c: any, d: any) => void;
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___JsValue__core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__101: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__102: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true_: (a: number, b: number, c: any) => void;
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__100: (a: number, b: number, c: any) => void;
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_e80dab64ff4a2d4d___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_e80dab64ff4a2d4d___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__104: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_e80dab64ff4a2d4d___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__105: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_e80dab64ff4a2d4d___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true_: (a: number, b: number, c: any) => void;
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_e80dab64ff4a2d4d___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__103: (a: number, b: number, c: any) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
     readonly __wbindgen_exn_store: (a: number) => void;

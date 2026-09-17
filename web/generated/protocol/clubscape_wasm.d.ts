@@ -26,11 +26,31 @@ export class BrowserClient {
     transport_lost(): void;
 }
 
+export class NativeCamera {
+    free(): void;
+    [Symbol.dispose](): void;
+    bind(scene: string, sample: string, definitions: string, reference: string, width: number, height: number, now_ns: bigint): string;
+    /**
+     * CPU-only decoder of the same original scene data exposed by the live renderer getter.
+     */
+    static decode_scene(bytes: Uint8Array, generation: bigint): string;
+    face_yaw(yaw: number): void;
+    frame(now_ns: bigint, sample: string): string;
+    input(at_ns: bigint, input: string): void;
+    constructor();
+    resize(width: number, height: number): void;
+    set_middle_mouse_enabled(enabled: boolean): void;
+    set_wheel_gates(disabled: boolean, override_512: boolean): void;
+    state(): string;
+    suspend(): void;
+}
+
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
     readonly memory: WebAssembly.Memory;
     readonly __wbg_browserclient_free: (a: number, b: number) => void;
+    readonly __wbg_nativecamera_free: (a: number, b: number) => void;
     readonly browserclient_authorization: (a: number) => [number, number];
     readonly browserclient_new: () => number;
     readonly browserclient_prepare: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number, number, number];
@@ -45,6 +65,17 @@ export interface InitOutput {
     readonly browserclient_submit: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
     readonly browserclient_submit_selected: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number, number, number];
     readonly browserclient_transport_lost: (a: number) => void;
+    readonly nativecamera_bind: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number, l: bigint) => [number, number, number, number];
+    readonly nativecamera_decode_scene: (a: number, b: number, c: bigint) => [number, number, number, number];
+    readonly nativecamera_face_yaw: (a: number, b: number) => [number, number];
+    readonly nativecamera_frame: (a: number, b: bigint, c: number, d: number) => [number, number, number, number];
+    readonly nativecamera_input: (a: number, b: bigint, c: number, d: number) => [number, number];
+    readonly nativecamera_new: () => number;
+    readonly nativecamera_resize: (a: number, b: number, c: number) => [number, number];
+    readonly nativecamera_set_middle_mouse_enabled: (a: number, b: number) => [number, number];
+    readonly nativecamera_set_wheel_gates: (a: number, b: number, c: number) => [number, number];
+    readonly nativecamera_state: (a: number) => [number, number, number, number];
+    readonly nativecamera_suspend: (a: number) => void;
     readonly __wbindgen_externrefs: WebAssembly.Table;
     readonly __wbindgen_free: (a: number, b: number, c: number) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;

@@ -1,4 +1,5 @@
 mod audio_authority;
+pub mod camera;
 pub mod catalog;
 mod context;
 pub mod gameplay_ui;

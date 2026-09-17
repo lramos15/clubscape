@@ -146,6 +146,7 @@ test("world audio waits for genuine preference preparation; requested logout can
 test("requested logout during scene loading does not re-enable audio when that old scene finishes", async () => {
   const bridge = new FixtureBridge(), started = Promise.withResolvers<void>(), release = Promise.withResolvers<void>();
   const calls: string[] = [];
+  const phases: string[] = [];
   const app = new BrowserApp(bridge, new RpcTransport((async () =>
     new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } })) as Fetch), {
     ...hooks(),
@@ -154,14 +155,30 @@ test("requested logout during scene loading does not re-enable audio when that o
     events: (world) => calls.push(world ? "world" : "title"),
     disconnected: () => { calls.push("disconnect"); },
   });
+  app.subscribe((state) => { phases.push(state.phase); });
   const entering = app.enterWorld();
   await started.promise;
   const leaving = app.logout();
   release.resolve();
   await Promise.all([entering, leaving]);
   assert(!calls.includes("audio prepared") && !calls.includes("world"));
+  assert(!phases.includes("world"), "cancelled camera/scene preparation cannot briefly publish world-ready");
   assert(calls.includes("title"));
   await app.dispose();
+});
+
+test("explicit re-entry prepares a fresh coherent source camera even for the same actor and region", async () => {
+  const bridge = new FixtureBridge();
+  const prepared: string[] = [];
+  const app = new BrowserApp(bridge, new RpcTransport((async () =>
+    new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } })) as Fetch), {
+    ...hooks(), prepareWorld: async (world) => { prepared.push(world.player.id); },
+  });
+  try {
+    await app.enterWorld();
+    await app.enterWorld();
+    assert.deepEqual(prepared, ["actor.client_fixture", "actor.client_fixture"]);
+  } finally { await app.dispose(); }
 });
 
 test("actual UI appearance submission keeps source creation empty and confirms only after joining", async () => {

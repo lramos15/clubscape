@@ -17,7 +17,24 @@ test("composed HUD projection matches every original viewport sample, without re
   assert.equal(fullHudViewport(1920, 1080).zoom, 410);
   assert.equal(fullHudViewport(1024, 768).zoom, 292);
   assert.equal(fullHudViewport(2560, 1440).zoom, 547);
-  assert.equal(sourceZoomForViewportHeight(1080), 662, "Only standalone viewport fixtures retain the older native parameter set.");
+  assert.equal(sourceZoomForViewportHeight(1080), 662, "The diagnostic helper is not the normal controller, even when its constructor FOV has the same numerical result.");
+});
+
+test("normal resize sends actual backing dimensions to Rust without running the controlled full-HUD FOV helper", () => {
+  const calls: Array<[string, ...number[]]> = [];
+  const apply = {
+    nativeCamera: (width: number, height: number) => { calls.push(["native", width, height]); },
+    world: (width: number, height: number) => { calls.push(["world", width, height]); },
+    camera: (_zoom: number) => { throw new Error("fixture zoom must never reach normal entry"); },
+    ui: (width: number, height: number) => { calls.push(["ui", width, height]); },
+    observe: (width: number, height: number, scale: number) => { calls.push(["observe", width, height, scale]); },
+  };
+  const first = resizeFullHud(null, 1920, 1080, 2, apply, "native-controller");
+  assert.deepEqual(calls, [["native", 3840, 2160], ["world", 3840, 2160], ["ui", 1920, 1080], ["observe", 1920, 1080, 2]]);
+  assert.equal(first.zoom, null, "only an actual native frame supplies its projection");
+  assert.equal(resizeFullHud(first, 1920, 1080, 2, apply, "native-controller"), first);
+  assert.equal(calls.length, 4);
+  assert.throws(() => resizeFullHud(first, 32768, 1080, 1, apply, "native-controller"), /unsupported/);
 });
 
 test("duplicate ResizeObserver/window notifications send each actual resize and camera update once", () => {

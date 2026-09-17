@@ -2,6 +2,7 @@
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
 export const __wbg_browserclient_free: (a: number, b: number) => void;
+export const __wbg_nativecamera_free: (a: number, b: number) => void;
 export const browserclient_authorization: (a: number) => [number, number];
 export const browserclient_new: () => number;
 export const browserclient_prepare: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number, number, number];
@@ -16,6 +17,17 @@ export const browserclient_state: (a: number) => [number, number, number, number
 export const browserclient_submit: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
 export const browserclient_submit_selected: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number, number, number];
 export const browserclient_transport_lost: (a: number) => void;
+export const nativecamera_bind: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number, l: bigint) => [number, number, number, number];
+export const nativecamera_decode_scene: (a: number, b: number, c: bigint) => [number, number, number, number];
+export const nativecamera_face_yaw: (a: number, b: number) => [number, number];
+export const nativecamera_frame: (a: number, b: bigint, c: number, d: number) => [number, number, number, number];
+export const nativecamera_input: (a: number, b: bigint, c: number, d: number) => [number, number];
+export const nativecamera_new: () => number;
+export const nativecamera_resize: (a: number, b: number, c: number) => [number, number];
+export const nativecamera_set_middle_mouse_enabled: (a: number, b: number) => [number, number];
+export const nativecamera_set_wheel_gates: (a: number, b: number, c: number) => [number, number];
+export const nativecamera_state: (a: number) => [number, number, number, number];
+export const nativecamera_suspend: (a: number) => void;
 export const __wbindgen_externrefs: WebAssembly.Table;
 export const __wbindgen_free: (a: number, b: number, c: number) => void;
 export const __wbindgen_malloc: (a: number, b: number) => number;

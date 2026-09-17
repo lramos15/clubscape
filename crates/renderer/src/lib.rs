@@ -14,6 +14,7 @@
 
 pub mod actor;
 pub mod anim;
+pub mod camera;
 pub mod chunk;
 pub mod core;
 pub mod error;

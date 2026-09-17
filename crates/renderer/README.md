@@ -10,6 +10,62 @@ the native wgpu backend (NVIDIA GB10 / Vulkan) and inside windowed Chrome 153 vi
 This is a renderer only: it draws the supplied scene buffers and the authoritative `WorldView`
 handed over by the shell. It contains no game rules, no hit points, no interaction results.
 
+## Bounded native-camera consumers
+
+`camera` adds source-data getters and an integer projection ABI adapter, not another camera
+motor or renderer. `clubscape-wasm::camera::CameraConsumer` owns the existing `NormalCamera`.
+`RendererCore::camera_scene` serializes original height corners, tile settings and the current
+paint/model triangles in source order. Assembly height/settings writes now retain presence
+bits: an unloaded slot is unavailable, not an observed zero. Geometry, placement, shading and
+fitting are unchanged; drawing and the rendered-actor getter share the existing placement
+calculation without allocating an extra actor identity per draw.
+
+`CameraTerrain` samples those triangles with `clubscape_camera::SurfaceTriangle::height_at`.
+Floor-decoration tags select **existing decoded object `id`/`raise` metadata**, never model
+bounds. The original scene buffers verify object941 at3215,3218: -464 minus7 = -471;
+3223,3218: triangle -240 versus bilinear -238. Frame following still uses the native crate's
+separate bilinear/footprint algorithm. Missing corners/settings/raises/surfaces fail explicitly.
+This bounded adapter also rejects absent-triangle queries and plane3 bridge slots (which hold
+below-bridge geometry); it does not invent a bilinear or zero fallback for them.
+
+`camera_source` exposes the actual applied actor ID, revision/tick, region/instance, scene
+generation and rendered placement. It **does not** relabel that placement as a source
+`CameraFocusableEntity`. The current `WorldView`/`EntityState` retain tiles and draw spans,
+not the native focus identity, fine logical position, render-focus position or camera-query
+footprint. Source effect activation/phase/random inputs are also absent. Accordingly `focus`
+and `effects` remain null with precise missing-contract messages. No private actor/fitting
+implementation or shared protocol has been changed to guess these inputs.
+
+`apply_native_camera` requires a current context and the approved initialization provenance.
+It maps the paired **native/table** eye and16384-unit angles to the renderer's integer ABI:
+absolute X = baseX*128 + eye[0], height = eye[1], absolute Y = baseY*128 + eye[2].
+Near remains50 and the current renderer far clip is retained. The injected float eye/radian
+lane is not mixed into this ABI. Unsupported subviewport/letterboxing rejects before applying
+a camera. Browser and float-lane fidelity remain separate gates.
+
+The bounded CPU command explicitly excludes the native `gpu` binary:
+
+```sh
+env -u CARGO_TARGET_DIR CARGO_BUILD_JOBS=4 timeout 600s \
+  cargo test --locked -p clubscape-renderer --no-default-features --test camera_source
+```
+
+The new streamed-block case follows the repository's ignored-unpublished-input convention,
+not a passing result. Its attempted execution failed because this reserved checkout has
+**0/122** declared block/model buffers; notably `blocks/12850.bin.gz` and
+`blocks/12850.models.bin.gz` are absent. No source export, peer copy or replacement was made.
+With separately supplied exact manifest-pinned buffers, run that case explicitly with
+`--test camera_source streamed_original_block_getters_preserve_real_cases_and_unloaded_boundaries -- --ignored --exact`.
+The five published-scene CPU cases and actual-WASM source-height checks are not proof of
+streamed-block, normal-browser, full renderer, presentation or performance acceptance.
+
+An isolated Director check with the two exact existing buffers reached the streamed case
+and exposed lost availability during terrain rebuilding: copying numerical zero heights
+had marked unloaded corners as observed. `SceneTerrain` now carries genuine corner-write
+presence through that copy, without changing any rendered height. Loaded zero remains valid;
+unloaded and far-edge corners remain unavailable, and a rebuild clears stale presence.
+The original streamed assertions are retained alongside an all-corner controlled regression.
+
 ## Layout
 
 | Module | Original | Purpose |

@@ -13,6 +13,9 @@ import type {
   ScenePick, WorldView,
 } from "../../shared/contracts.ts";
 import init, { WasmRenderer } from "../pkg/clubscape_renderer.js";
+import { SourceSceneStream } from "./camera.ts";
+import type { CameraSourceSample, NativeCameraRenderer } from "./camera.ts";
+export type { CameraContext, CameraSourceSample, NativeCameraRenderer } from "./camera.ts";
 
 export interface RenderAssetManifest {
   schema_version: number;
@@ -406,7 +409,7 @@ export interface ModelFixtureRequest {
   cameraZ: number;
 }
 
-export interface ClubscapeRendererHandle extends RendererHandle {
+export interface ClubscapeRendererHandle extends RendererHandle, NativeCameraRenderer {
   diagnostics(): RendererDiagnostics;
   /** Developer-only replay of an approved model/animation capture on the canvas. */
   frameModelFixture(request: ModelFixtureRequest): Promise<RenderFrame>;
@@ -539,7 +542,8 @@ function toInt(value: number, name: string): number {
 export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig, options?: RendererAdapterOptions) => Promise<ClubscapeRendererHandle> =
   async (canvas, config, options = {}) => {
     if (!("gpu" in navigator) || !navigator.gpu) throw new Error("WebGPU is not available in this browser (navigator.gpu missing)");
-    const manifestResponse = await fetch(config.manifestUrl);
+    const assetLoads = new AbortController();
+    const manifestResponse = await fetch(config.manifestUrl, { signal: assetLoads.signal });
     if (!manifestResponse.ok) throw new Error(`manifest fetch failed: ${manifestResponse.status} ${config.manifestUrl}`);
     const manifestBytes = new Uint8Array(await manifestResponse.arrayBuffer());
     const manifestSha256 = await sha256Hex(manifestBytes);
@@ -554,7 +558,7 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
     const fetchAsset = async (id: string): Promise<Uint8Array> => {
       const entry = manifest.files[id];
       if (!entry) throw new Error(`asset ${id} is not listed in the render manifest`);
-      const response = await fetch(joinUrl(config.assetBaseUrl, id));
+      const response = await fetch(joinUrl(config.assetBaseUrl, id), { signal: assetLoads.signal });
       if (!response.ok) throw new Error(`asset fetch failed: ${response.status} ${id}`);
       let bytes = new Uint8Array(await response.arrayBuffer());
       const actual = await sha256Hex(bytes);
@@ -657,7 +661,9 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
     let sceneBase: { x: number; y: number } | null = null;
     const loadedSquares = new Set<number>();
     const blockFetches = new Map<number, Promise<boolean>>();
-    let assembling: Promise<void> | null = null;
+    let sceneLoadEpoch = 0;
+    let sceneLoadPending = false;
+    let layoutKey = "null";
     const blocksBySquare = new Map<number, NonNullable<RenderAssetManifest["blocks"]>[number]>();
     for (const block of manifest.blocks ?? []) blocksBySquare.set(block.square, block);
     const minimapBySquare = new Map<number, NonNullable<RenderAssetManifest["minimap_blocks"]>[number]>();
@@ -714,13 +720,15 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       }
       return pending;
     };
-    /** Rebuilds the scene around `base` once every exported square it needs is loaded. */
-    const assembleAround = (baseX: number, baseY: number): Promise<void> => {
-      if (assembling) return assembling;
-      assembling = (async () => {
+    const sceneStream = new SourceSceneStream(
+      (target: { baseX: number; baseY: number; layout: string }) => JSON.stringify(target),
+      async ({ baseX, baseY }) => {
         // Inside an instance only the declared source squares are fetched and assembled.
         const squares = Array.from(renderer.squares_needed(baseX, baseY));
         await Promise.all(squares.map((s) => ensureBlock(s)));
+        return squares;
+      },
+      ({ baseX, baseY }, squares) => {
         if (disposed) return;
         const missing = Array.from(renderer.assemble_scene(baseX, baseY, performance.now()));
         const unexported = missing.filter((s) => blocksBySquare.has(s));
@@ -732,17 +740,10 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
         for (const square of Array.from(loadedSquares)) {
           if (!squares.includes(square)) { renderer.unload_block(square); loadedSquares.delete(square); }
         }
-      })().finally(() => {
-        assembling = null;
-        // A layout change that arrived while this assembly ran is applied now, not on the next
-        // world update.
-        if (!disposed && lastPlayerTile && renderer.instance_layout_changed()) {
-          const base = WasmRenderer.base_for_tile(lastPlayerTile.x, lastPlayerTile.y);
-          void assembleAround(base[0]!, base[1]!).catch((error) => diagnostic(`scene assembly failed: ${String(error)}`));
-        }
-      });
-      return assembling;
-    };
+      },
+    );
+    const assembleAround = (baseX: number, baseY: number): Promise<void> =>
+      sceneStream.request({ baseX, baseY, layout: layoutKey });
     let lastPlayerTile: { x: number; y: number } | null = null;
     const REGION_ID = /^(?:region[.:]osrs[.:]|region[.:]|square[.:]|blocks?[.:])?(\d{4,5})$/;
     const diagnostic = (message: string) => options.onDiagnostic?.(message);
@@ -763,15 +764,23 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       },
       async loadScene(id) {
         requireLive();
+        const epoch = ++sceneLoadEpoch;
         const scene = manifest.scenes.find((entry) => entry.name === id);
         if (scene) {
-          const [sceneBytes, packBytes] = await Promise.all([fetchAsset(scene.file_gz ?? scene.file), fetchAsset(scene.models_file_gz ?? scene.models_file)]);
-          renderer.load_scene(id, sceneBytes, packBytes);
-          // Fixture scenes reproduce the approved captures: original `dh` plane argument 0.
-          renderer.set_top_plane_override(0);
-          sceneId = id;
+          sceneStream.cancel();
           blockMode = false;
-          sceneBase = null;
+          sceneLoadPending = true;
+          try {
+            const [sceneBytes, packBytes] = await Promise.all([fetchAsset(scene.file_gz ?? scene.file), fetchAsset(scene.models_file_gz ?? scene.models_file)]);
+            if (disposed || epoch !== sceneLoadEpoch) throw new Error("Source scene load was superseded.");
+            renderer.load_scene(id, sceneBytes, packBytes);
+            // Fixture scenes reproduce the approved captures: original `dh` plane argument 0.
+            renderer.set_top_plane_override(0);
+            sceneId = id;
+            sceneBase = null;
+          } finally {
+            if (epoch === sceneLoadEpoch) sceneLoadPending = false;
+          }
           return;
         }
         // Region scene: `region.osrs.12850` (content region ids), a bare map square id, or
@@ -792,19 +801,22 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
           if (!blocksBySquare.has(square)) throw new Error(`map square ${square} is not part of the exported world`);
           const originX = (square >> 8) * 64;
           const originY = (square & 0xff) * 64;
-          const base = WasmRenderer.base_for_tile(originX + 32, originY + 32);
+          const base = WasmRenderer.base_for_tile(lastPlayerTile?.x ?? originX + 32, lastPlayerTile?.y ?? originY + 32);
           baseX = base[0]!;
           baseY = base[1]!;
         }
+        sceneLoadPending = false;
         blockMode = true;
         renderer.set_top_plane_override(undefined);
         await assembleAround(baseX, baseY);
+        if (disposed || epoch !== sceneLoadEpoch) throw new Error("Source scene load was superseded.");
       },
       update(world: WorldView & RendererWorldExtensions) {
         requireLive();
         renderer.update_world(JSON.stringify(world), performance.now());
+        layoutKey = JSON.stringify(world.instanceLayout ?? null);
         lastPlayerTile = { x: world.player.tile.x, y: world.player.tile.y };
-        if (blockMode && !assembling) {
+        if (blockMode) {
           const { x, y } = world.player.tile;
           // A changed instance layout rebuilds the scene from the declared chunks (or back to
           // the ordinary world); otherwise the original 16-tile edge rule recentres it.
@@ -822,9 +834,35 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
           toInt(value.pitch, "pitch"), toInt(value.yaw, "yaw"), toInt(value.zoom, "zoom"), toInt(value.far, "far"),
         );
       },
+      cameraSceneReady() {
+        requireLive();
+        if (sceneLoadPending || sceneStream.busy) return false;
+        sceneStream.requireReady();
+        return blockMode && sceneId !== null;
+      },
+      cameraSource() {
+        requireLive();
+        sceneStream.requireReady();
+        if (!blockMode || sceneLoadPending) throw new Error("Normal camera requires a completed real source-block scene, not a diagnostic fixture.");
+        return JSON.parse(renderer.camera_source()) as CameraSourceSample;
+      },
+      cameraScene() {
+        requireLive();
+        sceneStream.requireReady();
+        if (!blockMode || sceneLoadPending) throw new Error("Normal camera terrain is not ready.");
+        return renderer.camera_scene();
+      },
+      applyNativeCamera(delivery) {
+        requireLive();
+        sceneStream.requireReady();
+        if (!blockMode || sceneLoadPending) throw new Error("Native camera delivery cannot target a stale/diagnostic scene.");
+        return JSON.parse(renderer.apply_native_camera(delivery)) as RenderCamera;
+      },
       async frame(nowMs) {
         requireLive();
-        if (exclusive || inFlight >= MAX_IN_FLIGHT || sceneId === null) return null;
+        if (sceneStream.busy) return null;
+        sceneStream.requireReady();
+        if (exclusive || inFlight >= MAX_IN_FLIGHT || sceneId === null || sceneLoadPending) return null;
         inFlight += 1;
         try {
           const record = await renderer.frame(nowMs);
@@ -1013,6 +1051,9 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       dispose() {
         if (disposed) return;
         disposed = true;
+        assetLoads.abort();
+        sceneLoadEpoch++;
+        sceneStream.cancel();
         renderer.free();
       },
       diagnostics() {

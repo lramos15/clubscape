@@ -11,6 +11,9 @@ use crate::actor::{
     PlayerBody, PoseFit, PoseFitTable, player_sequence_for,
 };
 use crate::anim::Sequence;
+use crate::camera::{
+    CameraContext, CameraDelivery, CameraScene, CameraSourceSample, RenderedActorPlacement,
+};
 use crate::chunk::Chunks;
 use crate::error::RenderError;
 use crate::model::{Bounds, Model, parse_model_pack};
@@ -219,6 +222,7 @@ pub struct WorldEquipment {
 #[serde(default, rename_all = "camelCase")]
 pub struct WorldPlayer {
     pub id: String,
+    pub region: String,
     pub tile: WorldTile,
     pub animation: String,
     pub activity: String,
@@ -632,6 +636,28 @@ struct EntityState {
     size: i32,
 }
 
+struct EntityPlacement {
+    local: [i32; 2],
+    plane: i32,
+    size_tiles: i32,
+}
+
+impl EntityState {
+    fn placement(&self, scene: &SceneData) -> Option<EntityPlacement> {
+        let local_x = self.tile.x - scene.base_x;
+        let local_y = self.tile.y - scene.base_y;
+        if local_x < 0 || local_y < 0 || local_x >= scene.max_x || local_y >= scene.max_y {
+            return None;
+        }
+        let size = self.size.max(1);
+        Some(EntityPlacement {
+            local: [local_x * 128 + size * 64, local_y * 128 + size * 64],
+            plane: self.tile.plane.clamp(0, scene.planes - 1),
+            size_tiles: size,
+        })
+    }
+}
+
 /// Camera in world units (tile * 128) matching `RenderCamera` from the shared contract.
 #[derive(Clone, Copy, Debug)]
 pub struct Camera {
@@ -808,6 +834,10 @@ pub struct RendererCore {
     scene: Option<SceneData>,
     scene_models: Vec<Option<Model>>,
     scene_id: Option<String>,
+    scene_generation: u64,
+    camera_world_revision: String,
+    camera_world_tick: String,
+    camera_world_region: String,
     drawer: Option<SceneDrawer>,
     npc_packs: HashMap<i32, NpcPack>,
     /// Original sequences (`anim/seq-<id>.bin`) for the skeletal animation port.
@@ -921,6 +951,10 @@ impl RendererCore {
             scene: None,
             scene_models: Vec::new(),
             scene_id: None,
+            scene_generation: 0,
+            camera_world_revision: String::new(),
+            camera_world_tick: String::new(),
+            camera_world_region: String::new(),
             drawer: None,
             npc_packs: HashMap::new(),
             sequences: HashMap::new(),
@@ -1218,6 +1252,10 @@ impl RendererCore {
                 "scene {id} needs textures {missing_textures:?} that are not loaded"
             )));
         }
+        let generation = self
+            .scene_generation
+            .checked_add(1)
+            .ok_or_else(|| RenderError::Scene("camera scene generation overflow".into()))?;
         self.drawer = Some(SceneDrawer::new(
             &scene,
             self.state,
@@ -1227,6 +1265,7 @@ impl RendererCore {
         self.scene = Some(scene);
         self.scene_models = models;
         self.scene_id = Some(id.to_string());
+        self.scene_generation = generation;
         self.pick_buffer = None;
         Ok(())
     }
@@ -1751,6 +1790,109 @@ impl RendererCore {
 
     pub fn scene_base(&self) -> Option<(i32, i32)> {
         self.scene.as_ref().map(|s| (s.base_x, s.base_y))
+    }
+
+    pub fn camera_context(&self) -> Result<CameraContext, RenderError> {
+        let player = self
+            .entities
+            .first()
+            .filter(|e| e.is_player)
+            .ok_or_else(|| RenderError::Scene("camera has no current local actor".into()))?;
+        if player.id.is_empty()
+            || self.camera_world_region.is_empty()
+            || !crate::camera::decimal(&self.camera_world_revision)
+            || !crate::camera::decimal(&self.camera_world_tick)
+            || self.instance_layout_changed
+        {
+            return Err(RenderError::Scene(
+                "camera actor/world metadata is absent or its scene is not assembled".into(),
+            ));
+        }
+        Ok(CameraContext {
+            actor_id: player.id.clone(),
+            region: self.camera_world_region.clone(),
+            instance: self.player_instance.clone(),
+            revision: self.camera_world_revision.clone(),
+            tick: self.camera_world_tick.clone(),
+            scene_id: self
+                .scene_id
+                .clone()
+                .ok_or_else(|| RenderError::Scene("camera scene is not loaded".into()))?,
+            scene_generation: self.scene_generation.to_string(),
+        })
+    }
+
+    pub fn camera_source(&self) -> Result<CameraSourceSample, RenderError> {
+        let context = self.camera_context()?;
+        let scene = self
+            .scene
+            .as_ref()
+            .ok_or_else(|| RenderError::Scene("camera scene is not loaded".into()))?;
+        let rendered_actor = self.entities.first().and_then(|e| {
+            e.placement(scene).map(|p| RenderedActorPlacement {
+                actor_id: e.id.clone(),
+                local: p.local,
+                plane: p.plane,
+                size_tiles: p.size_tiles,
+            })
+        });
+        Ok(CameraSourceSample {
+            context,
+            rendered_actor,
+            focus: None,
+            effects: None,
+            missing: vec![
+                "CameraFocusableEntity native identity and fine logical X/Y are not produced by WorldView or EntityState; tile placement is not that observation".into(),
+                "CameraFocusableEntity render X/Y and camera footprint are absent; the renderer's sizeTiles is a draw span, not the native focus footprint".into(),
+                "source camera effect activation/suppression and active channel phase/random samples are not produced; inactive effects are not assumed".into(),
+            ],
+        })
+    }
+
+    pub fn camera_scene(&self) -> Result<CameraScene, RenderError> {
+        if self.instance_layout_changed {
+            return Err(RenderError::Scene(
+                "camera terrain is awaiting the current instance assembly".into(),
+            ));
+        }
+        let scene = self
+            .scene
+            .as_ref()
+            .ok_or_else(|| RenderError::Scene("camera terrain is not loaded".into()))?;
+        CameraScene::from_scene(
+            scene,
+            self.scene_id
+                .as_deref()
+                .ok_or_else(|| RenderError::Scene("camera scene identity is missing".into()))?,
+            self.scene_generation,
+        )
+    }
+
+    pub fn apply_native_camera(
+        &mut self,
+        delivery: &CameraDelivery,
+    ) -> Result<Camera, RenderError> {
+        if delivery.context != self.camera_context()?
+            || self.scene_base()
+                != Some((delivery.output.world_base.x, delivery.output.world_base.y))
+            || delivery.initialization.approval_sha256 != clubscape_camera::APPROVAL_SHA256
+            || delivery.initialization.observed_osrs_account_defaults
+        {
+            return Err(RenderError::Scene(
+                "stale or unapproved native camera delivery for this actor/scene".into(),
+            ));
+        }
+        let viewport = clubscape_camera::Viewport::new(
+            0,
+            0,
+            self.state.width as u32,
+            self.state.height as u32,
+        )
+        .map_err(|e| RenderError::Scene(e.to_string()))?;
+        let camera = crate::camera::renderer_camera(delivery.output, viewport, self.camera.far)
+            .map_err(RenderError::Scene)?;
+        self.set_camera(camera)?;
+        Ok(camera)
     }
 
     pub fn resize(&mut self, width: i32, height: i32) {
@@ -2323,6 +2465,9 @@ impl RendererCore {
             ));
         }
         self.plane = view.player.tile.plane;
+        self.camera_world_revision = view.revision;
+        self.camera_world_tick = view.tick;
+        self.camera_world_region = view.player.region;
         self.entities = next;
         Ok(())
     }
@@ -3220,15 +3365,13 @@ impl RendererCore {
         for (entity_index, entity, model) in resolved {
             let local_x = entity.tile.x - base_x;
             let local_y = entity.tile.y - base_y;
-            if local_x < 0 || local_y < 0 || local_x >= scene.max_x || local_y >= scene.max_y {
+            let Some(placement) = entity.placement(scene) else {
                 skipped.push(format!("{}: tile outside loaded scene", entity.id));
                 continue;
-            }
-            let plane = entity.tile.plane.clamp(0, scene.planes - 1);
-            let size = entity.size.max(1);
-            // Multi-tile NPCs stand on the centre of their footprint (original actor placement).
-            let x = local_x * 128 + size * 64;
-            let z = local_y * 128 + size * 64;
+            };
+            let plane = placement.plane;
+            let size = placement.size_tiles;
+            let [x, z] = placement.local;
             let height = tile_height(scene, plane, x, z);
             let model_index = temp_models.len();
             temp_models.push(model);

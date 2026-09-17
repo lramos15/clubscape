@@ -176,6 +176,8 @@ pub struct SceneData {
     roofs: Vec<i32>,
     /// Original tile settings (`vs`): bit 1 blocked, bit 2 bridge, bit 4 roof, bit 8 lowest.
     settings: Vec<i8>,
+    camera_height_present: Vec<bool>,
+    camera_setting_present: Vec<bool>,
     pub paints: HashMap<usize, TilePaint>,
     pub tile_models: HashMap<usize, TileModel>,
     pub walls: HashMap<usize, Wall>,
@@ -246,6 +248,8 @@ impl SceneData {
             heights: vec![0; (planes * (grid + 1) * (grid + 1)) as usize],
             roofs: vec![0; (planes * grid * grid) as usize],
             settings: vec![0; (planes * grid * grid) as usize],
+            camera_height_present: vec![false; (planes * (grid + 1) * (grid + 1)) as usize],
+            camera_setting_present: vec![false; (planes * grid * grid) as usize],
             paints: HashMap::new(),
             tile_models: HashMap::new(),
             walls: HashMap::new(),
@@ -265,9 +269,16 @@ impl SceneData {
 
     #[inline]
     pub fn set_height(&mut self, plane: i32, x: i32, y: i32, value: i32) {
+        self.set_height_with_presence(plane, x, y, value, true);
+    }
+
+    #[inline]
+    fn set_height_with_presence(&mut self, plane: i32, x: i32, y: i32, value: i32, present: bool) {
         let w = (self.width + 1) as usize;
         let h = (self.height + 1) as usize;
-        self.heights[plane as usize * w * h + x as usize * h + y as usize] = value;
+        let index = plane as usize * w * h + x as usize * h + y as usize;
+        self.heights[index] = value;
+        self.camera_height_present[index] = present;
     }
 
     #[inline]
@@ -292,7 +303,40 @@ impl SceneData {
     pub fn set_setting(&mut self, plane: i32, x: i32, y: i32, value: i8) {
         let w = self.width as usize;
         let h = self.height as usize;
-        self.settings[plane as usize * w * h + x as usize * h + y as usize] = value;
+        let index = plane as usize * w * h + x as usize * h + y as usize;
+        self.settings[index] = value;
+        self.camera_setting_present[index] = true;
+    }
+
+    /// Checked original inputs: an empty assembly slot is not an observed zero.
+    pub fn camera_height(&self, plane: i32, x: i32, y: i32) -> Option<i32> {
+        if !(0..self.planes).contains(&plane)
+            || !(0..=self.width).contains(&x)
+            || !(0..=self.height).contains(&y)
+        {
+            return None;
+        }
+        let index = ((plane * (self.width + 1) + x) * (self.height + 1) + y) as usize;
+        self.camera_height_present
+            .get(index)
+            .copied()
+            .filter(|v| *v)
+            .and_then(|_| self.heights.get(index).copied())
+    }
+
+    pub fn camera_setting(&self, plane: i32, x: i32, y: i32) -> Option<u8> {
+        if !(0..self.planes).contains(&plane)
+            || !(0..self.width).contains(&x)
+            || !(0..self.height).contains(&y)
+        {
+            return None;
+        }
+        let index = ((plane * self.width + x) * self.height + y) as usize;
+        self.camera_setting_present
+            .get(index)
+            .copied()
+            .filter(|v| *v)
+            .and_then(|_| self.settings.get(index).map(|v| *v as u8))
     }
 
     /// `ez.ff`: whether the tile carries the roof setting bit.
@@ -374,6 +418,8 @@ impl SceneData {
             link: chunks.bytes("LINK")?,
             object_count: chunks.bytes("OBJC")?,
             object_flags: chunks.bytes("OBJF")?,
+            camera_height_present: vec![true; heights.len()],
+            camera_setting_present: vec![true; settings.len()],
             heights,
             roofs,
             settings,

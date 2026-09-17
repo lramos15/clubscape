@@ -5,6 +5,62 @@ This crate composes `clubscape-client-core`, generated
 not another game engine, renderer, seeded world, or M1 acceptance record.
 The exact `wasm-bindgen` crate **and CLI** version is **0.2.128**.
 
+## Native camera consumer ABI
+
+`NativeCamera` is an additional real wasm-bindgen export. Its `CameraConsumer` owns one
+persistent `clubscape_camera::NormalCamera`; `clubscape-renderer` is a CPU data/ABI dependency,
+not a second controller or a new protocol/world engine. Native camera sources, the32 original
+tests,14 scenarios/354 rows/336 intervening readbacks, initialization policy and approval remain
+unchanged. The immutable conformance report stays pinned to
+`0fc3e1a4f3d8d8a21980bc35f1b031a6bdac9f0170a8c5fd65e9c6230ef53609`.
+Current replay metadata additionally records the three admitted local Cargo.lock dependency
+edges; no existing dependency version changes.
+
+| Method | Consumer contract |
+| --- | --- |
+| `bind(sceneJson, sampleJson, definitionsJson, reference, width, height, now_ns)` | Require coherent real renderer terrain and actual logical/rendered focus/effects before initialization. Return native output plus exact provenance/context. Same actor rebinds preserve camera state and rebase through the native operation; another actor starts the approved policy. |
+| `input(at_ns, inputJson)` | Timestamped held arrows, absolute logical-pixel mouse/button and routed integer wheel input. No TypeScript acceleration, smoothing or FOV calculation. |
+| `frame(now_ns, sampleJson)` | Consume each due20ms input tick, preserving the remainder, then render with independently elapsed nanoseconds and explicit effects. No synthetic server ticks. |
+| `resize(width, height)` | Native FOV/projection, not the controlled full-HUD helper. Unsupported renderer letterboxing fails transactionally. |
+| `face_yaw`, `set_middle_mouse_enabled`, `set_wheel_gates` | Explicit native source controls. Constructor middle-camera remains false; no account preference is inferred. |
+| `suspend()` | Drop undelivered keys/buttons/wheels and wall-clock backlog, retain yaw, inertia, preferences and the last actual mouse sample. A coherent `bind` resumes. |
+| `state()`, `free()` | Inspect actual native state; release this consumer on teardown. No account credentials or authoritative state setters. |
+| `decode_scene(bytes, generation)` | Bounded CPU reader of verified original scene buffers using the same renderer source getter; used by the actual-WASM checks without creating a GPU device. |
+
+Nanoseconds cross the generated ABI as **BigInt/u64**, never a lossy JS number. Regressing
+timestamps/revisions,4096 queued-input overflow and more than500 catch-up ticks reject explicitly;
+these are consumer safety bounds, not silently clamped source rates. Wheel events accumulate
+once per native logical tick and cannot replay over later catch-up ticks. Missing active-effect
+phase/random draws reject; absent effect state never means inactive.
+
+The selected approved `TutorialStartingHouse` view supplies yaw0/pitch2048 angles only.
+Actual focus/terrain determine the eye. Constructor FOV256/205 produces662 at1080;
+the controlled full-HUD127/127 produces410 and is never substituted. No fixture eye is installed.
+
+The current renderer demonstrates a precise **producer blocker**: it has no native focus
+identity/fine logical/render-focus/camera-footprint observation or source effect-state producer.
+Its tile-based rendered placement is not that contract. Normal entry remains fenced rather
+than fabricating these fields. Original ground-decoration metadata is read only when its exact
+asset is already declared publicly; missing delivery is an explicit error, not a new export.
+See the renderer and browser READMEs and `camera-consumer-validation.json`.
+
+Bounded checks (four Cargo jobs, this worktree's target; never a generic renderer test run):
+
+```sh
+env -u CARGO_TARGET_DIR CARGO_BUILD_JOBS=4 timeout 600s \
+  cargo test --locked -p clubscape-camera --lib --test boundaries --test conformance
+env -u CARGO_TARGET_DIR CARGO_BUILD_JOBS=4 timeout 600s \
+  cargo test --locked -p clubscape-wasm --lib --test camera
+# After the actual wasm-bindgen0.2.128 build of clubscape-wasm:
+timeout 180s node --test crates/wasm/tests/camera-wasm.mjs
+```
+
+Actual-WASM source-scene height/projection checks use pinned real buffers and explicitly
+controlled focus inputs; they are not production actor, normal-browser or visual proof.
+No Chrome/Xvfb/GPU/RuneLite invocation, server/database/account, source capture/export,
+protected checkpoint access, peer edit, nested agent or factory is needed by these checks.
+M1-CAMERA-INTEGRATION and all normal-browser/renderer/presentation/performance gates stay closed.
+
 ## Browser ABI
 
 `web/app/bridge.ts` is bundled as `/client/bridge.js`. Its

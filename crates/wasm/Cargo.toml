@@ -9,7 +9,9 @@ publish.workspace = true
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+clubscape-camera = { path = "../camera" }
 clubscape-client-core = { path = "../client-core" }
+clubscape-renderer = { path = "../renderer" }
 clubscape-game-types.workspace = true
 clubscape-protocol.workspace = true
 prost.workspace = true

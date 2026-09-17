@@ -423,6 +423,7 @@ name = "clubscape-renderer"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
+ "clubscape-camera",
  "flate2",
  "js-sys",
  "png",
@@ -500,10 +501,12 @@ dependencies = [
 name = "clubscape-wasm"
 version = "0.1.0"
 dependencies = [
+ "clubscape-camera",
  "clubscape-client-core",
  "clubscape-content",
  "clubscape-game-types",
  "clubscape-protocol",
+ "clubscape-renderer",
  "prost",
  "serde",
  "serde_json",

@@ -3,6 +3,13 @@
 TypeScript adapter exposing the Rust/WASM WebGPU renderer (`crates/renderer`, feature `web`)
 through the shared contracts in `web/shared/contracts.ts`.
 
+The example below is an **explicit recorded-camera diagnostic**, not normal entry.
+Normal entry uses `NativeCamera` from the actual protocol/WASM module and the
+`cameraSceneReady`, `cameraSource`, `cameraScene` and `applyNativeCamera` extensions.
+The canonical region `camera:null`/`controls:null` records remain unchanged.
+The source getter currently reports missing native focus and effect inputs rather
+than turning rendered tile centres into a fabricated focus.
+
 ```ts
 import { createRenderer, sourceZoomForViewportHeight } from "../renderer/src/index.ts";
 
@@ -32,6 +39,10 @@ plus:
 | `playerFitReport()` | Per worn item: bound human label, penguin label, `penetration` (≤ 1), `gap` (≤ 2), `anchorShift`, `designPenetration` (same measure on the human body), retarget scale — source units. |
 | `scenePlacement()` | `{ baseX, baseY, sizeTiles: 104, blocks }` — the source scene placement for a dynamic minimap (the UI's minimap raster is keyed by base/plane). |
 | `frameModelFixture()` | Developer-only replay of an approved model capture. |
+| `cameraSceneReady()` | False during source loading; retained assembly errors throw. Does not assert that native focus/effects exist. |
+| `cameraSource()` | Actual actor/world/scene-generation context and rendered placement, plus explicit nullable native focus/effect contracts and missing-input reasons. |
+| `cameraScene()` | Original checked corners/settings and rendered paint/model triangles, with source floor-decoration IDs. No guessed heights, geometry generation or camera mechanics. |
+| `applyNativeCamera(delivery)` | Rust validates current actor/revision/scene/base and approved provenance, then applies the paired integer native eye/angles and projection. Returns the exact renderer camera for the UI. |
 
 `createRendererContract` is the plain `CreateRenderer` signature. Adapter options:
 `wasmUrl`, `onFrame`, `onDiagnostic`, `maxFramesInFlight` (default 2).
@@ -118,13 +129,15 @@ plus:
   `fullHudZoomForViewport(width, height)` / `fullHudViewport()` port `rl.cu` and give
   ⌊height·127/334⌋ — 410 at 1920×1080, 292 at 1024×768, 273 at 1280×720, 547 at 2560×1440 —
   pinned to the original's own value at 16 canvas sizes (`crates/renderer/tests/hud_zoom.rs`).
-  The shell passes the zoom of the composition it is reproducing (`fullHudZoomForViewport` for
-  the live HUD); the renderer applies exactly the zoom it is given.
+  These are diagnostic helper paths. The approved normal controller instead computes projection
+  from its own constructor FOV256/205 (662 at1080) and later native wheel state; its initial
+  numeric result does not make the viewport-only fixture eye a normal-entry camera.
 * `pick(x, y)` replays the last frame's exact fill coverage and returns the topmost tile or
   entity; scenery carries `scenery.objectId`/`type` (placement type), item piles resolve to
   their tile (the WorldView lists the items there). It never mutates state.
-* `resize(w, h)` resizes the canvas, surface and projection; call `camera()` again with the new
-  zoom.
+* `resize(w, h)` resizes the canvas and surface. Diagnostics supply their matching camera zoom;
+  normal entry resizes `NativeCamera` and applies its next native output. Unsupported native
+  letterboxing is an explicit integration error, not a scalar zoom approximation.
 * Region scenes: `loadScene("region.osrs.12850")` (content region id) or a bare map square id
   assembles the world from the manifest's blocks around that square, exactly as the original
   builds a 104×104 scene around the player's chunk. Afterwards `update(world)` recenters when the
@@ -135,6 +148,9 @@ plus:
   scene report `entities skipped` rather than drawing a substitute. Each streamed square also
   fetches its minimap sidecar (`minimap/blocks/<square>.bin`) and, once, the map-scene sprite
   asset (`minimap/mapscenes.bin`).
+  Source loads are coalesced by base and actual instance-layout identity. A superseded load
+  cannot install geometry for a newer actor/world; frames wait while loading, and source
+  errors remain errors. Teardown aborts asset requests and invalidates pending scene publication.
 * `minimapSurface()` returns the **source minimap** of the current scene on the player's
   plane: the original `client.bm(world, 512×512, 4.0, plane, 0, 0, 48, 48)` sweep ported to
   Rust and drawn over the streamed blocks with the current door states (`dynamicObjects`) —

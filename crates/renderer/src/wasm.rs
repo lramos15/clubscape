@@ -282,6 +282,27 @@ impl WasmRenderer {
         self.inner.borrow().core.scene_id().map(|s| s.to_string())
     }
 
+    pub fn camera_source(&self) -> Result<String, JsValue> {
+        let sample = self.inner.borrow().core.camera_source().map_err(js_err)?;
+        serde_json::to_string(&sample).map_err(js_err)
+    }
+
+    pub fn camera_scene(&self) -> Result<String, JsValue> {
+        let scene = self.inner.borrow().core.camera_scene().map_err(js_err)?;
+        serde_json::to_string(&scene).map_err(js_err)
+    }
+
+    pub fn apply_native_camera(&self, json: &str) -> Result<String, JsValue> {
+        let delivery = serde_json::from_str(json).map_err(js_err)?;
+        let camera = self
+            .inner
+            .borrow_mut()
+            .core
+            .apply_native_camera(&delivery)
+            .map_err(js_err)?;
+        Ok(crate::camera::camera_json(camera).to_string())
+    }
+
     pub fn resize(&self, width: u32, height: u32) {
         let mut inner = self.inner.borrow_mut();
         if width == 0 || height == 0 {

@@ -23,7 +23,7 @@ import type { UiPreviewRequest } from "../ui/index.ts";
 import type { MapIconSprite, MinimapIconPlacements, MinimapSurface } from "../renderer/src/index.ts";
 import { ModelPreview } from "./preview.ts";
 import { MinimapRelay } from "./minimap.ts";
-import { sourceUiAudioAdapter, sourceUiPreviewAdapter } from "./ui-adapter.ts";
+import { sourceUiAdapter, sourceUiAudioAdapter, sourceUiPreviewAdapter } from "./ui-adapter.ts";
 import { PlayerAudioComposition } from "./player-audio-composition.ts";
 import type { PlayerAudioSources } from "./player-audio-composition.ts";
 import { browserPlayerAudioStorage, PlayerAudioPreferenceStore } from "./player-audio-store.ts";
@@ -33,8 +33,11 @@ import { resizeFullHud } from "./viewport.ts";
 import type { FullHudSurface } from "./viewport.ts";
 import { SourceSpatialMetadata } from "./spatial-metadata.ts";
 import type { SpatialGeometry } from "./spatial-metadata.ts";
+import { NativeCamera as WasmNativeCamera } from "../generated/protocol/clubscape_wasm.js";
+import { CameraSourceMetadata, NativeCameraSession } from "./camera.ts";
+import type { NativeCameraRenderer } from "../renderer/src/camera.ts";
 
-export interface ObservedRenderer extends RendererHandle {
+export interface ObservedRenderer extends RendererHandle, Partial<NativeCameraRenderer> {
   /** Observation only; all values must come from the real decoder/render path. */
   observe?(): RendererObservation;
   supportsScene?(id: string): boolean;
@@ -79,6 +82,10 @@ export async function mountApplication(options: {
   let minimapInput = "";
   let deviceEpoch = "device-not-created";
   let input: InputController | null = null;
+  let nativeCamera: NativeCameraSession | null = null;
+  let cameraMetadata: CameraSourceMetadata | null = null;
+  let nativePreparation: Promise<void> | null = null;
+  let worldPreparation = 0;
   let assets: AssetLoader | null = null;
   let required: string[] = [];
   let assetPins = new Map<string, string>();
@@ -145,10 +152,27 @@ export async function mountApplication(options: {
     if (disposed || componentFailed) return;
     componentFailed = true;
     sceneLoaded = false;
+    worldPreparation++;
+    input?.dispose();
+    input = null;
+    nativeCamera?.suspend();
     benchmark.worldReady(false);
     status.hidden = false;
     status.textContent = `${error.message} Reload after checking its build and source assets. Error ID: ${error.errorId}`;
     app.report(error);
+  }
+
+  async function prepareNativeCamera(world: WorldView): Promise<void> {
+    invariant(nativeCamera && renderer && ui, "The real native camera consumer is not available.", "camera_unavailable");
+    const epoch = worldPreparation;
+    const camera = await nativeCamera.prepare(world);
+    if (disposed || epoch !== worldPreparation || app.state().world !== world) {
+      if (!disposed && epoch === worldPreparation) nativeCamera.suspend();
+      throw new AppError("Native camera preparation was superseded by another actor/world.", { kind: "cancelled" });
+    }
+    input?.dispose();
+    input = new InputController(uiCanvas, ui, renderer, app, camera, null, world.player.tile,
+      () => ({ width: worldCanvas.width, height: worldCanvas.height }), sourceUiAdapter, nativeCamera);
   }
 
   const app = new BrowserApp(bridge, transport, {
@@ -164,7 +188,16 @@ export async function mountApplication(options: {
       const region = assets.manifest.regions[world.player.region];
       invariant(region, `No compiled source presentation exists for ${world.player.region}.`, "integration");
       sceneLoaded = false;
+      const epoch = ++worldPreparation;
+      input?.dispose();
+      input = null;
+      nativeCamera?.suspend();
       benchmark.worldReady(false);
+      const current = (): void => {
+        if (disposed || epoch !== worldPreparation || app.state().world !== world) {
+          throw new AppError("Source world preparation was cancelled after its actor/scene changed.", { kind: "cancelled" });
+        }
+      };
       const renderWorld = rendererWorldView(world, assets.manifest.instanceLayouts);
       const fixture = presentationCamera === null ? null : assets.manifest.renderer?.fixtures[presentationCamera];
       if (presentationCamera !== null && !fixture) throw new AppError("The explicitly requested source fixture/camera is not exported.", { kind: "region_unavailable" });
@@ -173,16 +206,19 @@ export async function mountApplication(options: {
       if (!renderer || !renderer.supportsScene?.(sceneId)) {
         throw new AppError(`The actual renderer has no published block coverage for authoritative region ${world.player.region}. No arbitrary scene or blank fallback was selected.`, { kind: "region_unavailable" });
       }
-      if (camera === null) throw new AppError(`Published renderer blocks cover ${world.player.region}, but a source-bound live camera is not supplied. Explicit recorded-camera presentation is separate; no spawn-camera defaults were invented.`, { kind: "camera_unavailable" });
+      if (presentationCamera !== null && camera === null) {
+        throw new AppError("The explicitly requested recorded camera is absent.", { kind: "camera_unavailable" });
+      }
       if (recordedCamera !== null) {
         const coverage = assets.manifest.renderer;
-        const square = Math.floor(camera.x / (64 * 128)) * 256 + Math.floor(camera.y / (64 * 128));
+        const square = Math.floor(camera!.x / (64 * 128)) * 256 + Math.floor(camera!.y / (64 * 128));
         invariant(coverage?.coverage === "source_world_blocks" && coverage.regions[world.player.region]?.square === square,
           "The explicitly recorded camera is not in this authoritative source region.", "camera_unavailable");
       }
       required = Array.from(new Set([...assets.manifest.bootstrap, ...(earlyScene !== null ? fixture!.requiredAssets : region.requiredAssets),
         ...(assets.manifest.renderer?.coverage === "source_world_blocks" ? assets.manifest.renderer.commonAssets : []),
         ...(spatialMetadata?.requiredAssets ?? []),
+        ...(cameraMetadata?.requiredAssets ?? []),
         ...(assets.manifest.rendererManifest ? [assets.manifest.rendererManifest] : [])]));
       requiredPins = new Map(required.map((id) => [id, assetPins.get(id)!]));
       const uiAssets = Object.entries(assets.manifest.aliases ?? {}).filter(([id]) => id.startsWith("ui/")).map(([, id]) => id);
@@ -192,17 +228,23 @@ export async function mountApplication(options: {
         assets.manifest.renderer?.manifestSha256 ?? assets.manifestSha256,
         requiredPins);
       await assets.preload(required);
+      current();
       // Prime the declared layout before loadScene asks which source squares to load.
       renderer.update(renderWorld);
       await renderer.loadScene(sceneId);
+      current();
       appliedWorld = world;
       rendererHadWorld = true;
-      input?.dispose();
-      input = new InputController(uiCanvas, ui!, renderer, app, {
-        ...camera, zoom: fullHudZoomForViewport(worldCanvas.width, worldCanvas.height),
-      },
-        fixture ? null : region.controls, world.player.tile,
-        () => ({ width: worldCanvas.width, height: worldCanvas.height }));
+      if (presentationCamera === null) {
+        await prepareNativeCamera(world);
+        current();
+      } else {
+        input = new InputController(uiCanvas, ui!, renderer, app, {
+          ...camera!, zoom: fullHudZoomForViewport(worldCanvas.width, worldCanvas.height),
+        },
+          fixture ? null : region.controls, world.player.tile,
+          () => ({ width: worldCanvas.width, height: worldCanvas.height }));
+      }
       sceneLoaded = true;
     },
     async prepareAudio(world) {
@@ -211,6 +253,12 @@ export async function mountApplication(options: {
     },
     events(world, events) {
       if (world === null) {
+        worldPreparation++;
+        sceneLoaded = false;
+        input?.dispose();
+        input = null;
+        nativeCamera?.reset();
+        benchmark.worldReady(false);
         spatialKey = "";
         renderer?.clearPreviewMetadata?.();
         preview?.update(null);
@@ -240,6 +288,11 @@ export async function mountApplication(options: {
       void settingsHash().catch(() => app.report(new AppError("Settings identity could not be calculated.", { kind: "benchmark" })));
     },
     disconnected() {
+      worldPreparation++;
+      sceneLoaded = false;
+      input?.dispose();
+      input = null;
+      nativeCamera?.suspend();
       benchmark.worldReady(false);
       spatialKey = "";
       renderer?.clearPreviewMetadata?.();
@@ -258,6 +311,7 @@ export async function mountApplication(options: {
     resize?.disconnect();
     unsubscribe?.();
     input?.dispose();
+    nativeCamera?.dispose();
     preview?.dispose();
     renderer?.dispose();
     stopMinimapProjection?.();
@@ -301,15 +355,17 @@ export async function mountApplication(options: {
           rendererHadWorld = true;
         }
         const presence = presenceOf(state.world);
-        benchmark.worldReady(state.phase === "world" && sceneLoaded && presence?.connected === true && presence.presentInWorld
+        benchmark.worldReady(state.phase === "world" && sceneLoaded
+          && (!nativeCamera || nativeCamera.ready() && renderer?.observe?.()?.ready === true)
+          && presence?.connected === true && presence.presentInWorld
           && app.gameplayUi().complete);
         const actor = state.world?.player.id ?? null;
         if (actor !== settingsActor) {
           settingsActor = actor;
           void settingsHash().catch(() => app.report(new AppError("Player-scoped applied settings could not be hashed.", { kind: "benchmark" })));
         }
-      } catch {
-        queueMicrotask(() => componentFailure(new AppError(
+      } catch (error) {
+        queueMicrotask(() => componentFailure(error instanceof AppError ? error : new AppError(
           "The source UI/renderer could not apply the authoritative view.", { kind: "component", recoverable: false },
         )));
       }
@@ -325,9 +381,10 @@ export async function mountApplication(options: {
           else { worldCanvas.width = pixelsWide; worldCanvas.height = pixelsHigh; }
         },
         camera(zoom) { input?.resizeZoom(zoom); },
+        nativeCamera(width, height) { nativeCamera?.resize(width, height); },
         ui(width, height) { ui?.resize(width, height); },
         observe(width, height, scale) { benchmark.viewport(width, height, scale); },
-      });
+      }, presentationCamera === null ? "native-controller" : "recorded-full-hud");
     };
     resizeSurfaces();
     resize = new ResizeObserver(resizeSurfaces);
@@ -348,6 +405,10 @@ export async function mountApplication(options: {
         benchmark.device(epoch, ready, timestamps);
       }, (error) => {
         sceneLoaded = false;
+        worldPreparation++;
+        input?.dispose();
+        input = null;
+        nativeCamera?.suspend();
         benchmark.worldReady(false);
         if (playerAudio) playerAudio.disconnected();
         else audio?.disconnected();
@@ -357,6 +418,25 @@ export async function mountApplication(options: {
         assetBaseUrl: assets.manifest.renderer?.assetBaseUrl ?? assets.baseUrl, manifestUrl: assets.url(assets.manifest.rendererManifest),
         sourcePackSha256: SOURCE_PACK_SHA256, width: worldCanvas.width, height: worldCanvas.height,
       });
+      if (presentationCamera === null) {
+        const source = renderer;
+        invariant(source.cameraSceneReady && source.cameraSource && source.cameraScene && source.applyNativeCamera,
+          "This renderer build has no real native-camera source ABI.", "camera_unavailable");
+        cameraMetadata = new CameraSourceMetadata(assets, (id) => {
+          if (!required.includes(id)) required.push(id);
+          const pin = assetPins.get(id);
+          invariant(pin, "An original camera metadata asset has no pinned identity.", "camera_unavailable");
+          requiredPins.set(id, pin);
+        });
+        const metadata = cameraMetadata;
+        nativeCamera = new NativeCameraSession({
+          cameraSceneReady: source.cameraSceneReady.bind(source),
+          cameraSource: source.cameraSource.bind(source),
+          cameraScene: source.cameraScene.bind(source),
+          applyNativeCamera: source.applyNativeCamera.bind(source),
+        }, () => new WasmNativeCamera(), (scene) => metadata.definitions(scene), () => app.state().world,
+        () => ({ width: worldCanvas.width, height: worldCanvas.height }));
+      }
       const previewRenderer = renderer;
       if (components.bindUiMinimapProjection && renderer.minimapIconPlacements) {
         const project = renderer.minimapIconPlacements.bind(renderer);
@@ -457,16 +537,48 @@ export async function mountApplication(options: {
           previewResetReported = true;
           app.report(new AppError("A new character preview needs a renderer actor reset after the preceding session; prior character equipment is not reused.", { kind: "renderer_preview" }));
         }
-        if (!renderer || !sceneLoaded || state.phase !== "world") return;
+        if (!renderer || !sceneLoaded || state.phase !== "world" || !state.world) return;
         input?.update(delta);
+        if (nativeCamera) {
+          if (document.hidden) return;
+          if (!nativeCamera.ready()) {
+            benchmark.worldReady(false);
+            input?.dispose();
+            input = null;
+            if (nativePreparation === null && renderer.cameraSceneReady?.()) {
+              const pending = prepareNativeCamera(state.world).catch((value: unknown) => {
+                const error = appError(value, "The native camera could not bind the newly streamed source scene.");
+                if (disposed || error.kind === "cancelled") return;
+                componentFailure(new AppError(error.message, { kind: "camera_unavailable", errorId: error.errorId, recoverable: false }));
+              }).finally(() => { if (nativePreparation === pending) nativePreparation = null; });
+              nativePreparation = pending;
+            }
+            return;
+          }
+          const camera = nativeCamera.frame(performance.now(), state.world);
+          if (camera === null) {
+            input?.dispose();
+            input = null;
+            benchmark.worldReady(false);
+            return;
+          }
+          input?.publishNativeCamera(camera);
+        }
         invariant(inFlight < 128, "The renderer has too many uncompleted GPU submissions.", "device");
         inFlight++;
+        const epoch = worldPreparation;
+        const frameWorld = state.world;
+        const cameraIdentity = nativeCamera?.identity();
         // frame() resolves on GPU completion. Do not serialize submissions behind receipts.
         void renderer.frame(now).then((completed) => {
-          if (disposed) return;
+          if (disposed || epoch !== worldPreparation || app.state().world !== frameWorld
+            || nativeCamera && (!nativeCamera.ready() || nativeCamera.identity() !== cameraIdentity || !renderer?.cameraSceneReady?.())) return;
           if (completed !== null) benchmark.completed(completed);
           const observation = renderer?.observe?.() ?? null;
           const worldView = app.state().world;
+          const presence = presenceOf(worldView);
+          benchmark.worldReady(app.state().phase === "world" && sceneLoaded && observation?.ready === true
+            && presence?.connected === true && presence.presentInWorld && app.gameplayUi().complete);
           if (worldView && spatialMetadata && audio?.hasAppliedWorld(worldView) && observation) {
             const geometry = spatialGeometry(observation);
             const key = spatialMetadata.identity(worldView, geometry);
@@ -510,18 +622,36 @@ export async function mountApplication(options: {
             void settingsHash().catch(() => app.report(new AppError("Applied render settings could not be hashed.", { kind: "benchmark", recoverable: false })));
           }
         }).catch((error: unknown) => {
-          if (disposed) return;
+          if (disposed || epoch !== worldPreparation) return;
           sceneLoaded = false;
+          input?.dispose();
+          input = null;
+          nativeCamera?.suspend();
           benchmark.worldReady(false);
           app.report(error instanceof AppError ? error
             : new AppError("The real renderer failed to complete or observe its GPU frame.", { kind: "device", recoverable: false }));
         }).finally(() => { inFlight--; });
       } catch (error) {
         sceneLoaded = false;
-        app.report(appError(error, "The source game renderer failed."));
+        input?.dispose();
+        input = null;
+        nativeCamera?.suspend();
+        benchmark.worldReady(false);
+        const problem = appError(error, "The source game renderer failed.");
+        if (problem.kind === "camera_unavailable") {
+          componentFailure(new AppError(problem.message, { kind: problem.kind, errorId: problem.errorId, recoverable: false }));
+        } else app.report(problem);
       }
     };
     frame = requestAnimationFrame(render);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && nativeCamera) {
+        input?.dispose();
+        input = null;
+        nativeCamera.suspend();
+        benchmark.worldReady(false);
+      }
+    }, { signal: lifecycle.signal });
     window.addEventListener("online", () => {
       if (app.state().phase === "reconnecting") void app.reconnect().catch(() => {});
     }, { signal: lifecycle.signal });

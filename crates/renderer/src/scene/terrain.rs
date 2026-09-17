@@ -263,6 +263,7 @@ pub struct SceneTerrain {
     overlay_rotation: Vec<i8>,
     settings: Vec<i8>,
     heights: Vec<i32>,
+    height_present: Vec<bool>,
     shadows: Vec<i8>,
 }
 
@@ -279,6 +280,7 @@ impl SceneTerrain {
             overlay_rotation: vec![0; tiles],
             settings: vec![0; tiles],
             heights: vec![0; corners],
+            height_present: vec![false; corners],
             shadows: vec![0; corners],
         }
     }
@@ -327,7 +329,9 @@ impl SceneTerrain {
         if !(0..MAIN).contains(&sx) || !(0..MAIN).contains(&sy) {
             return;
         }
-        self.heights[Self::c(plane, sx + MARGIN, sy + MARGIN)] = height;
+        let index = Self::c(plane, sx + MARGIN, sy + MARGIN);
+        self.heights[index] = height;
+        self.height_present[index] = true;
     }
 
     /// Whether the live loader places a location whose origin is scene tile (`sx, sy`)
@@ -916,11 +920,12 @@ pub fn apply(
         // undeclared chunk hold no height (0).
         for sx in 0..=MAIN {
             for sy in 0..=MAIN {
-                scene.set_height(
+                scene.set_height_with_presence(
                     plane,
                     sx + scene.offset,
                     sy + scene.offset,
                     terrain.height(plane, sx, sy),
+                    terrain.height_present[SceneTerrain::c(plane, sx + MARGIN, sy + MARGIN)],
                 );
             }
         }

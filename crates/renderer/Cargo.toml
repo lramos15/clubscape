@@ -24,6 +24,7 @@ path = "src/bin/pose_fit_table.rs"
 required-features = ["tools"]
 
 [dependencies]
+clubscape-camera = { path = "../camera" }
 serde = { workspace = true }
 serde_json = { workspace = true }
 sha2 = { workspace = true, optional = true }

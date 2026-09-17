@@ -234,6 +234,7 @@ export class BrowserApp implements AppServices {
   }
 
   async #join(): Promise<void> {
+    this.#worldPrepared = null;
     this.#hooks.disconnected();
     await this.#request("hello");
     const state = await this.#request("join");
@@ -242,6 +243,7 @@ export class BrowserApp implements AppServices {
     const catalog = await this.#hooks.content(state.contentRevision, state.contentManifestPath);
     const installed = bridgeState(this.#bridge.set_catalog(JSON.stringify(catalog)));
     await this.#acceptWorld(installed);
+    if (this.#disposed || this.#terminal || this.#pendingExits > 0 || this.#logoutRequested) return;
     const retry = this.#bridge.retry_uncertain_input();
     if (retry !== undefined) {
       const shopBuy = this.#bridge.request_is_shop_buy(retry);
@@ -363,6 +365,10 @@ export class BrowserApp implements AppServices {
   }
 
   async #acceptWorld(state: Readonly<BridgeState>): Promise<void> {
+    const generation = this.#generation;
+    const cancelled = (): boolean => this.#disposed || this.#terminal || generation !== this.#generation
+      || this.#pendingExits > 0 || this.#logoutRequested;
+    if (cancelled()) return;
     this.#uiSupport = gameplayUiSupport(state.capabilities, state.gameplayUiWireSupported, state.world);
     const world = state.world;
     if (!world) return;
@@ -380,15 +386,16 @@ export class BrowserApp implements AppServices {
       });
       return;
     }
-    const key = `${state.contentRevision}:${world.player.region}:${world.player.instance ?? ""}:${world.player.tile.plane}`;
+    const key = JSON.stringify([state.contentRevision, world.player.id, world.player.region, world.player.instance, world.player.tile.plane]);
     if (key !== this.#worldPrepared) {
       this.#publish({ phase: "connecting", world, accountName: state.accountName });
       await this.#hooks.prepareWorld(world);
+      if (cancelled()) return;
       this.#worldPrepared = key;
     }
-    if (this.#disposed || this.#terminal) return;
+    if (cancelled()) return;
     if (this.#pendingExits === 0 && !this.#logoutRequested) await this.#hooks.prepareAudio?.(world);
-    if (this.#disposed || this.#terminal) return;
+    if (cancelled()) return;
     this.#publish({ world, accountName: state.accountName, phase: "world" });
     if (this.#pendingExits === 0 && !this.#logoutRequested) this.#hooks.events(world, state.events);
     const support = this.#uiSupport;

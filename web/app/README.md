@@ -11,9 +11,10 @@ These are Vite module imports, not script-tag loading or a substitute renderer.
 All three actual factories are integrated, including the published 61-block
 streaming renderer and its model-only player preview. The shell accepts only
 published canonical region IDs or an explicitly selected diagnostic fixture.
-Source-bound live camera/control bindings are still absent from the current
-delivery; normal entry reports that exact gap, not obsolete missing-renderer
-or five-scene-only coverage. A recorded-camera streaming diagnostic is separate
+Native camera consumers now use the real Rust/WASM controller and renderer
+source-data ABI. The current actor producer still lacks native focus identity,
+fine logical/render-focus coordinates, camera footprint and explicit effects;
+normal entry reports those exact gaps rather than guessing from tiles. A recorded-camera streaming diagnostic is separate
 and labeled. The small HTML bootstrap diagnostic remains only a fatal startup
 fallback, **not** approved title/login presentation.
 
@@ -66,7 +67,7 @@ The current backend and UI adapter contracts are integrated, including native
 recovery and all four real preference/minimap ports. Normal `pnpm build` now
 includes the actual protocol/renderer WASM, production typecheck and delivery;
 the old five UI compiler errors are not current blockers. Missing source models,
-independent preview-actor contracts and normal camera consumers remain explicit
+independent preview-actor contracts and normal camera input producers remain explicit
 separate gaps. Diagnostic Vite bundling is not substituted for a passing
 production build, and component/startup checks do not certify the full journey
 or presentation.
@@ -269,14 +270,20 @@ Raw subscriber exceptions are not exposed as public diagnostics.
   The current renderer returns canonical actor/object IDs and source scenery
   footprints. Opaque old hashes, invalid tiles and unknown entity IDs reject;
   there is no nearest-object or ID-suffix guess.
-* Arrow keys and middle-drag camera/scroll zoom use explicit source camera
-  bindings in the current region manifest. There are no fabricated initial
-  camera defaults. Keyboard controls are ignored for editable/accessible
-  input focus; focus loss clears held keys.
+* Normal arrow/middle/wheel input transports timestamped events to `NativeCamera`.
+  Rust retains20ms logical ticks separately from elapsed-nanosecond rendering.
+  Editable/accessible focus, UI default prevention, capture, blur, hidden pages
+  and disposal fence input; release retains native residual damping. Middle
+  camera stays disabled under the approved constructor preference unless an
+  actual source control enables it. One nonzero vertical DOM wheel event is
+  one signed transport step; native accumulation/FOV owns its effect. Physical
+  browser/device detent calibration is not claimed by Node tests.
 * UI capture/forwarding/resizing use **viewport-local logical pixels**, as the
   real adapter requires. Only renderer picking/resizing is converted to its
-  backing pixels; the world stays full resolution. The same camera is sent to
-  `renderer.camera` and `setUiCamera`. `onUiCameraRequest` is disposed with input.
+  backing pixels; the world stays full resolution. Normal camera output is
+  applied through the validated Rust `applyNativeCamera` ABI, then its actual
+  scalar readback is sent to `setUiCamera`; only diagnostics call `renderer.camera`.
+  `onUiCameraRequest` routes compass yaw to Rust and is disposed with input.
 * `createCharacter(appearance)` is the actual UI workflow adapter: a new actor
   gets the empty source creation RPC, then joins, then receives a separate
   sequenced `ConfirmAppearance` request with the UI choice. No appearance,
@@ -445,18 +452,43 @@ to that source square. `sceneId` reports the actual assembled `blocks@x,y`;
 `recorded-camera-not-journey`. Neither diagnostic is a verified live spawn/
 arrival camera. Unknown/duplicate URL parameters and URL secrets reject.
 
-The composed app uses16384 units/turn, near50 and the renderer's exact
+The explicit recorded-camera composition uses16384 units/turn, near50 and the renderer's exact
 `fullHudViewport(width,height)` / `fullHudZoomForViewport(width,height)`:
 410 at1920x1080,292 at1024x768,547 at2560x1440, checked against all16 original
 viewport samples. `viewport.ts` deduplicates ResizeObserver/window notifications,
 keeping logical UI coordinates separate from backing pixels and sending each
 actual renderer resize/camera change once. The app always contains the real
 Classic HUD, including when its world uses an explicitly named diagnostic scene;
-only standalone viewport fixtures use the retained662 helper. An early fixture with no live control
+standalone viewport fixtures retain their662 helper. An early fixture with no live control
 calibration keeps its recorded camera: no guessed mouse sensitivity or scroll
-curve. Source live camera/control bindings must be supplied before normal
-entry. Native full-HUD zoom is source-bound; a live camera position/input policy
-is a different still-required contract, not supplied by a zoom formula.
+curve. Normal entry instead uses the approved native constructor FOV256/205,
+computed in Rust (662 at1080), never the controlled127/127 helper (410).
+Native initialization selects only approved yaw0/pitch2048 angles; actual
+focus/terrain must derive the eye before readiness. These are approved
+ClubScape defaults, not authenticated OSRS account settings.
+
+`camera.ts` owns lifecycle transport, not camera mechanics. It loads only
+already-declared hash-verified original object `id`/`raise` metadata for actual
+renderer floor-decoration tags. The persistent WASM consumer rebinds/rebases
+when the source scene generation changes, preserving yaw/inertia/preferences;
+disconnect/hidden pages clear physical input backlog, while logout/teardown
+release state. Actor IDs participate in world preparation identity. Old
+asset loads, initialization promises and GPU receipts cannot publish a newer
+actor/scene or briefly set ready during a cancelled entry.
+
+`cameraSource()` currently has no `CameraFocusableEntity` native identity,
+fine logical position, actual render-focus position or camera-query footprint.
+`WorldView.player.tile` and the renderer's one-tile draw span do not provide
+them. Source effect activation/suppression/phase/random inputs are likewise
+absent, not assumed inactive. The normal branch now reaches this exact source
+contract fence after real scene loading; it never fills canonical null with a
+fixture camera or relabels `presentation_camera` as normal entry.
+The reserved checkout also lacks all122 declared block/model buffers, so the
+strict streamed-block CPU check is explicitly blocked. No source generation
+or additional browser/capture run is authorized by this implementation.
+See `crates/wasm/camera-consumer-validation.json` for bounded CPU/actual-WASM
+evidence. Parent M1-CAMERA-INTEGRATION and all normal-browser, full renderer,
+presentation and performance acceptance flags remain closed.
 
 The independent byte-identical frozen inventory/full-HUD replay in
 `53fbd543828cda12f28f2ec30b8f78c9d914ccef` reports native full-HUD zoom410,
