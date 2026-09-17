@@ -7,11 +7,10 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
-      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
+      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
+      {"id": "22b898a4-8850-4fc0-be15-af0b7440e32a", "task": "M1-SAVED-WATER-DEADLINE-REVIEW"}
     ],
-    "reserved": [
-      {"id": "saved-water-deadline-review", "task": "M1-SAVED-WATER-DEADLINE-REVIEW", "reason": "One independent read-only review of the Director-authored4526d0d deadline append; not another implementation worker or execution allowance."}
-    ],
+    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "115554cb-8e25-40c8-854a-4f9dc8936166", "reason": "Delivered2fbf5afa/b958cc44 code-only continuation;15 owned paths integrateddd043bce with existing83Python/53native main regressions passing. Director's additional actual-process deadline regression fails. Runtime retired the worker and rejected its first repair follow-up before processing; Director owns that code-only append, with no saved execution or new allowance."},

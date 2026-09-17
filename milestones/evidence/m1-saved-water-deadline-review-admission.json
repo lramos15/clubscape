@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "task": "M1-SAVED-WATER-DEADLINE-REVIEW",
-  "status": "reserved_read_only_independent_delta_review",
+  "status": "in_progress_read_only_independent_delta_review",
   "authority": "director",
-  "reviewer": null,
+  "reviewer": "22b898a4-8850-4fc0-be15-af0b7440e32a",
   "implementation_author": "director",
   "candidate_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
   "base_revision": "b958cc44425804dd56ef4a940a416588f23b059b",
