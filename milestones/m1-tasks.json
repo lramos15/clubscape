@@ -6,7 +6,7 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION"},
+      {"id": "director", "task": "M1-SAVED-WATER-BINDING-02"},
       {"id": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "task": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW"}
     ],
     "reserved": [],
@@ -39,6 +39,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-SAVED-WATER-BINDING-02",
+      "goal": "Prepare only the fixed owner-approved successor binding without accessing or executing saved state.",
+      "status": "IMPLEMENTING",
+      "specs": ["milestones/approvals/m1-saved-water-continuation-02.json", "milestones/evidence/m1-saved-water-binding-02-implementation.json"],
+      "dependencies": ["M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION", "M1-SAVED-WATER-BOOTSTRAP-REVIEW"],
+      "allowed_paths": ["tools/journey-tests/saved_water_gate.py", "tools/journey-tests/saved_water_runtime.py", "tools/journey-tests/test_saved_water.py", "tools/journey-tests/test_saved_water_runtime.py", "tools/journey-tests/SAVED_WATER.md"],
+      "forbidden_paths": ["Actual checkpoint/control/old-journal access", "crates/**", "tools/simulator/**", "Cargo.lock", "content/**", "assets/**", "research/**", "web/**"],
+      "outputs": ["Exact fixed successor binding and synthetic one-shot/old-binding regressions", "Committed code qualification and independent review prerequisite"],
+      "validation_commands": ["Existing eight-module Python machinery selector,120seconds, synthetic fixtures only"],
+      "test_requirements": ["Canonical authority types, exact new owner pin, old binding denial, independent successor journal and actual-script no-retry coverage", "Preserve all original source/identity/deadline/native-claim/conservation/preservation guards", "No actual entrypoint, native game, private state, service or source/GPU/operator work"],
+      "acceptance": ["The new binding is independently reviewed and qualified before a separate exact executable admission or protected access"],
+      "reserved_namespaces": [],
+      "source_notes": ["Owner explicitly approved one new conditional attempt via the pinned proposal; this is not a refund or renewal ofce09 or any unrelated allowance."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/approvals/m1-saved-water-continuation-02.json", "milestones/evidence/m1-saved-water-binding-02-implementation.json"]
+    },
     {
       "id": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW",
       "goal": "Independently assess the Director-authored source-height availability repair before camera integration.",
