@@ -1,7 +1,9 @@
 {
   "schema_version": 1,
   "task": "M1-SHELL-METADATA-INTEGRATION",
-  "status": "authorized_pending_quiet_gpu_window",
+  "status": "consumed_passed",
+  "execution_receipt": "milestones/evidence/m1-shell-metadata-browser-receipt.json",
+  "browser_invocations_remaining": 0,
   "scope": "One real source-browser integration of the newly supplied preview/spatial metadata, not the full M1 journey or normal-camera acceptance.",
   "worktree": ".worktrees/m1-shell-metadata",
   "code_revision": "b4f63046a75f90978afb432441316c70cf96f73b",

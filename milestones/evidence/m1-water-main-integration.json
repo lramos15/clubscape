@@ -50,6 +50,15 @@
     "published_source_profiles_positive_passed_each": 4,
     "published_source_profiles_negative_passed_each": 15,
     "strict_all_target_native_clippy_passed": true,
+    "strict_wasm32_clippy_six_packages_passed": true,
+    "affected_eight_package_formatting_passed": true,
+    "non_test_native_service_compiler_simulator_inspector_build_passed": true,
+    "supplemental_root_evidence": {
+      "index": "milestones/evidence/m1-water-main-integration/root-qualification/index.json",
+      "sha256": "879e0789563c0239860f641faa483c8b288052dba8f0cdfb7c21950d27b78b6f",
+      "files": 4,
+      "qualification": "Fresh root checks after01ab19f, with actual four AArch64 ELF hashes and Cargo manifest provenance. These are ordinary non-test dev-profile executables, not release-optimized builds or world executions. Selected content files remain separately pinned; no embedded content identity is claimed."
+    },
     "operator_machinery_tests_passed": 32,
     "web_tests_passed": 263,
     "normal_production_build_and_typecheck_passed": true,
@@ -73,7 +82,8 @@
     "product_code_whitespace_failure": false
   },
   "source_generation_qualification": {
-    "full_root_repeat": "All gates pass twice with106 identical generated outputs and both water profiles4/4positive,15/15negative.",
+    "full_root_repeat": "Inspected the immutable full log:13 gates in each pass, all26 individual exits0, final done with106 identical generated outputs. Detailed retained diagnostics are second-pass only. Both selected-artifact water profiles separately pass4/4positive,15/15negative.",
+    "both_pass_log_review": "milestones/evidence/m1-water-main-integration/root-qualification/report.json",
     "published_identity_check": "Failed after regeneration; deterministic generation is not proof of the selected published artifact identity.",
     "cause": "input_lock includes content.rs and runtime_validation.rs. The reviewed04a40ee native changes alter their hashes and therefore the fresh generator's opaque content revision.",
     "unadmitted_generated_revision": "m1.source-backed.v4.80142e9e9c5d6b5c",

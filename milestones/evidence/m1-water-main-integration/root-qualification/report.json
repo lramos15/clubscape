@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "code_revision": "01ab19fea0a2ab677508a0462451592bfccbc257",
+  "started_at": "2026-09-17T01:02:18.015424+00:00",
+  "workspace_dirty": false,
+  "source_pins_before": [
+    {
+      "profile": "current5b-water",
+      "raw_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+      "gzip_sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+      "raw_bytes": 13222639,
+      "gzip_bytes": 528842
+    },
+    {
+      "profile": "legacy5e-water",
+      "raw_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+      "gzip_sha256": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+      "raw_bytes": 13125018,
+      "gzip_bytes": 521255
+    }
+  ],
+  "checks": [
+    {
+      "name": "wasm-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "-p",
+        "clubscape-game-types",
+        "-p",
+        "clubscape-content",
+        "-p",
+        "clubscape-world-engine",
+        "-p",
+        "clubscape-client-core",
+        "-p",
+        "clubscape-protocol",
+        "-p",
+        "clubscape-wasm",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "elapsed_seconds": 6.361,
+      "log": "wasm-clippy.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "affected-format",
+      "command": [
+        "cargo",
+        "fmt",
+        "-p",
+        "clubscape-game-types",
+        "-p",
+        "clubscape-content",
+        "-p",
+        "clubscape-world-engine",
+        "-p",
+        "clubscape-client-core",
+        "-p",
+        "clubscape-protocol",
+        "-p",
+        "clubscape-wasm",
+        "-p",
+        "clubscape-server",
+        "-p",
+        "clubscape-sim",
+        "--",
+        "--check"
+      ],
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "elapsed_seconds": 0.823,
+      "log": "affected-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production-binaries",
+      "command": [
+        "cargo",
+        "build",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "-p",
+        "clubscape-server",
+        "-p",
+        "clubscape-content",
+        "-p",
+        "clubscape-sim",
+        "--features",
+        "clubscape-sim/journey-server",
+        "--message-format=json"
+      ],
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "elapsed_seconds": 12.236,
+      "log": "production-binaries.log",
+      "log_sha256": "ca1e0334b35e133af2ed5403fe855f2f64dcf890a1c21610ae66b39dfeafc9b6"
+    }
+  ],
+  "executables": [
+    {
+      "name": "clubscape-server",
+      "path": "target/debug/clubscape-server",
+      "bytes": 332998848,
+      "sha256": "06aa92f8859f335d0d766afec65181584b1df0b7491d21e8ebfb18edab0174c5",
+      "elf": "AArch64 ELF64 little-endian",
+      "cargo_profile": {
+        "opt_level": "0",
+        "debuginfo": 2,
+        "debug_assertions": true,
+        "overflow_checks": true,
+        "test": false
+      },
+      "cargo_fresh": false,
+      "manifest_path": "/home/lramos15/clubscape/crates/server/Cargo.toml",
+      "contains_exact_selected_current_gzip": false,
+      "contains_selected_current_raw_sha_literal": false,
+      "qualification": "Ordinary non-test Cargo dev-profile executable, not a release-optimized build and not an execution against a world."
+    },
+    {
+      "name": "clubscape-content",
+      "path": "target/debug/clubscape-content",
+      "bytes": 137215736,
+      "sha256": "a16aba995f92326e609272e828d7518490daccd1f20c7ff0188e1253ff068606",
+      "elf": "AArch64 ELF64 little-endian",
+      "cargo_profile": {
+        "opt_level": "0",
+        "debuginfo": 2,
+        "debug_assertions": true,
+        "overflow_checks": true,
+        "test": false
+      },
+      "cargo_fresh": false,
+      "manifest_path": "/home/lramos15/clubscape/crates/content/Cargo.toml",
+      "contains_exact_selected_current_gzip": false,
+      "contains_selected_current_raw_sha_literal": false,
+      "qualification": "Ordinary non-test Cargo dev-profile executable, not a release-optimized build and not an execution against a world."
+    },
+    {
+      "name": "clubscape-journey-server",
+      "path": "target/debug/clubscape-journey-server",
+      "bytes": 333881896,
+      "sha256": "90dd1a640b49ddf3cb57e8e48e99bdad75fea8585e412e68fca23fe2ab1086c9",
+      "elf": "AArch64 ELF64 little-endian",
+      "cargo_profile": {
+        "opt_level": "0",
+        "debuginfo": 2,
+        "debug_assertions": true,
+        "overflow_checks": true,
+        "test": false
+      },
+      "cargo_fresh": false,
+      "manifest_path": "/home/lramos15/clubscape/tools/simulator/Cargo.toml",
+      "contains_exact_selected_current_gzip": false,
+      "contains_selected_current_raw_sha_literal": false,
+      "qualification": "Ordinary non-test Cargo dev-profile executable, not a release-optimized build and not an execution against a world."
+    },
+    {
+      "name": "clubscape-sim",
+      "path": "target/debug/clubscape-sim",
+      "bytes": 130096408,
+      "sha256": "877c33eebf12f88866d7dd820cf40f5d911c7ab1e0bca8638fc0b2acd6f934b2",
+      "elf": "AArch64 ELF64 little-endian",
+      "cargo_profile": {
+        "opt_level": "0",
+        "debuginfo": 2,
+        "debug_assertions": true,
+        "overflow_checks": true,
+        "test": false
+      },
+      "cargo_fresh": false,
+      "manifest_path": "/home/lramos15/clubscape/tools/simulator/Cargo.toml",
+      "contains_exact_selected_current_gzip": false,
+      "contains_selected_current_raw_sha_literal": false,
+      "qualification": "Ordinary non-test Cargo dev-profile executable, not a release-optimized build and not an execution against a world."
+    }
+  ],
+  "source_generation_invocations": 0,
+  "source_operator_invocations": 0,
+  "database_world_or_server_execution": false,
+  "saved_checkpoint_accessed": false,
+  "browser_or_gpu_execution": false,
+  "milestone_accepted": false,
+  "source_repeat_log_review": {
+    "path": "milestones/evidence/m1-water-main-integration/source-validation.log",
+    "sha256": "3368805eaab962dce6d98457b9122ceba2f6f1b611c4ea162d8e59746ed4a9c2",
+    "passes": [
+      {
+        "number": 1,
+        "line_range": [
+          1,
+          13
+        ],
+        "gates": 13,
+        "nonzero_exits": 0
+      },
+      {
+        "number": 2,
+        "line_range": [
+          14,
+          26
+        ],
+        "gates": 13,
+        "nonzero_exits": 0
+      }
+    ],
+    "gate_names_in_each_pass": [
+      "build_and_strict_runtime_compile",
+      "legacy5e_water_strict_artifact",
+      "content_tests",
+      "source_asset_closure",
+      "source_application",
+      "source_routes",
+      "source_state_oracles",
+      "original_source_oracles",
+      "rust_format",
+      "rust_typecheck",
+      "water_driver_source_tests",
+      "strict_reload_and_native_source_probes",
+      "both_water_profile_native_probes"
+    ],
+    "identical_outputs_from_original_receipt": 106,
+    "generated_identity_promoted": false,
+    "qualification": "Both passes' individual exit records were inspected. Detailed retained diagnostics are second-pass only. Repeatability does not prove the selected published current artifact identity."
+  },
+  "source_pins_after": [
+    {
+      "profile": "current5b-water",
+      "raw_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+      "gzip_sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+      "raw_bytes": 13222639,
+      "gzip_bytes": 528842
+    },
+    {
+      "profile": "legacy5e-water",
+      "raw_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+      "gzip_sha256": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+      "raw_bytes": 13125018,
+      "gzip_bytes": 521255
+    }
+  ],
+  "completed_at": "2026-09-17T01:02:38.464967+00:00"
+}

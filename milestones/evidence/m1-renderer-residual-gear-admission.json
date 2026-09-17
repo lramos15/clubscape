@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "task": "M1-BROWSER-RENDERER",
+  "status": "admitted_native_only_residual_repair",
+  "worker": "bb7f85f7-096a-4377-80cb-3e7eae196c6b",
+  "worktree": ".worktrees/m1-renderer",
+  "base": "9051712625f8cc2ead637b7ae4b90991ab578c7e",
+  "handoff": "milestones/evidence/m1-renderer-handoff-9051712.json",
+  "objective": "Repair the eight remaining legal gear-pose failures through the existing permitted fitting, then measure the entire unchanged2034-pose denominator. Deliver owned code and actual results, or a precise bounded blocker.",
+  "remaining_poses": [
+    {"item": "necklace", "sequence": 4847, "frames": [18, 21, 24]},
+    {"item": "tinderbox", "sequence": 733, "frames": [7, 9]},
+    {"item": "hat", "sequence": 625, "frames": [8]},
+    {"item": "spear", "sequence": 429, "frames": [5]},
+    {"item": "spear", "sequence": 440, "frames": [4]}
+  ],
+  "allowed_paths": [
+    "crates/renderer/src/actor.rs",
+    "crates/renderer/src/penetration.rs",
+    "crates/renderer/tests/gear*.rs",
+    "crates/renderer/README.md",
+    "tools/render-assets/README.md",
+    "tools/render-assets/export.py",
+    "assets/compiled/render/**"
+  ],
+  "forbidden": [
+    "Root worktree or another worker's files",
+    "Cargo.lock, dependency changes or package installation",
+    "Frozen references, source assets, benchmark thresholds or approved adaptations",
+    "Camera, UI/widget, audio, server, content, protocol or gameplay implementation",
+    "Protected checkpoints, accounts, databases, operator execution or source capture",
+    "GPU/browser/native-wgpu tests, RuneLite, peers, new agents or factories"
+  ],
+  "limits": {
+    "cargo_build_jobs": 4,
+    "full_2034_pose_recomputations": 2,
+    "maximum_seconds_per_full_recomputation": 1200,
+    "maximum_seconds_per_other_native_command": 300,
+    "gpu_or_browser_invocations": 0,
+    "new_source_captures": 0,
+    "source_operator_invocations": 0,
+    "protected_state_access": 0,
+    "automatic_retry_or_resumption_after_handoff": false
+  },
+  "requirements": [
+    "Preserve9051712, all rejected variants and the existing uncommitted worker lockfile.",
+    "Diagnose and repair the remaining frame failures before spending the full-denominator recomputation budget; export and recomputing test runs both consume it.",
+    "Keep penetration<=1 and attachment/surface-gap<=2 source units, all2034 legal poses and the original base, materials, palette, face topology and source cadence.",
+    "Sampling may rank candidates but must not replace the numeric gate. Preserve the crossed-box and face-interior regressions; no pose pruning, masks, hidden/collapsed geometry or source-human waiver.",
+    "Report the12 open-mesh heuristic qualification honestly. No claim of complete mathematical certification or independent review follows from this implementation task.",
+    "Report net/total displacement, collapsed/flipped faces and actual visual/proportion costs; do not turn the reported >3-unit concern into a new acceptance threshold.",
+    "Exclude the gpu test binary explicitly. Use worktree-private targets and locked/offline commands.",
+    "Native/WASM builds and focused CPU regressions may run within the stated bounds. No new browser proof is created for84:4, draftGear or the changed module.",
+    "Publish exact owned commits, output hashes, full denominator/results and consumed command/recomputation counts, then stop."
+  ],
+  "independent_review_and_selective_integration_required": true,
+  "main_renderer_changed": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

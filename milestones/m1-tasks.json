@@ -6,12 +6,12 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-SHELL-METADATA-INTEGRATION"}
+      {"id": "director", "task": "M1-SHELL-METADATA-INTEGRATION"},
+      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
-      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "reason": "Collected through turn27 and preserved9051712 plus unrelated worker Cargo.lock. Candidate reports8/2034 gear failures and new source widgets/instance placement; no main import, new-module browser proof or acceptance. Confirmed quiet GPU window and holds further captures. No automatic implementation or GPU resumption without fresh Director admission; handoff milestones/evidence/m1-renderer-handoff-9051712.json."},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Runtime retired this completed camera/recovery reviewer. Attempted water-review resumption was rejected before any execution; prior completed reports remain valid. No automatic resumption."},
       {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "reason": "Publishedeaa527a with strict current/legacy water candidates and preserved source qualifications. Both have0/4 positive native cases because the shared recipe-target guard has no item-on-only authorization for operation-less sink14868. Neither target is migration-ready. Director owns the next bounded shared-contract repair; no private-state access, migration or automatic resumption."},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Published clean six-file persisted-state repair04a40ee over5c6c581. Reports failing-before/passing-after serialized regressions,420 native tests and exact old/water profile bytes. A separately admitted narrow fix review is required; no automatic worker resumption, private state, migration or further implementation."},
@@ -866,8 +866,8 @@
     {
       "id": "M1-BROWSER-RENDERER",
       "goal": "Implement actual source-faithful Rust/WASM WebGPU world/model/animation rendering and picking.",
-      "status": "BLOCKED",
-      "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "spec/m1-benchmark-contract.json", "milestones/approvals/m1-reference-pack-v1.3.0.json"],
+      "status": "IMPLEMENTING",
+      "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "spec/m1-benchmark-contract.json", "milestones/approvals/m1-reference-pack-v1.3.0.json", "milestones/evidence/m1-renderer-residual-gear-admission.json"],
       "dependencies": ["M1-REFERENCE-APPROVAL"],
       "allowed_paths": ["crates/renderer/**", "web/renderer/**", "tools/render-assets/**", "assets/compiled/render/**"],
       "forbidden_paths": ["prompt.md", "crates/game-types/**", "crates/server/**", "crates/protocol/**", "web/shared/**", "web/ui/**", "web/audio/**", "web/app/**", "milestones/**"],
