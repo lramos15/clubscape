@@ -7,13 +7,16 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
-      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION"}
+      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
     ],
-    "reserved": [],
+    "reserved": [
+      {"id": "saved-water-continuation-replacement", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION", "replaces_retired": "2766e089-44e5-4a1d-974e-7b03ad9c269d"},
+      {"id": "camera-consumer-replacement", "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION", "replaces_retired": "ac0f0856-44af-445b-bd90-6db7a1f4fc74"}
+    ],
     "queued": [],
     "parked": [
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Runtime retired the completed native water implementer. The fresh code-only saved52-continuation request was rejected before processing; no implementation/test/protected operation occurred. Preserve its completed04a40ee repair; one replacement is reserved for the new, unexecuted task only."},
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Runtime retired the completed native camera implementer. The fresh consumer request was rejected before processing; no consumer work or test occurred. Preserve2401e98 and its independent review/conformance; one replacement is reserved only for consumer implementation."},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Runtime retired this completed camera/recovery reviewer. Attempted water-review resumption was rejected before any execution; prior completed reports remain valid. No automatic resumption."},
       {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "reason": "Publishedeaa527a with strict current/legacy water candidates and preserved source qualifications. Both have0/4 positive native cases because the shared recipe-target guard has no item-on-only authorization for operation-less sink14868. Neither target is migration-ready. Director owns the next bounded shared-contract repair; no private-state access, migration or automatic resumption."},
       {"id": "619c994e-a208-4acf-8c2a-261ae52c892b", "reason": "Runtime retired the initial water reviewer after its park acknowledgement. The separately admitted fix-delta request was rejected before any assessment; the original MEDIUM finding remains valid. One replacement is reserved only for04a40ee, not another initial review."},
