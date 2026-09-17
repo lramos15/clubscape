@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "task": "M1-SAVED-WATER-DEADLINE-REVIEW",
+  "status": "reserved_read_only_independent_delta_review",
+  "authority": "director",
+  "reviewer": null,
+  "implementation_author": "director",
+  "candidate_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
+  "base_revision": "b958cc44425804dd56ef4a940a416588f23b059b",
+  "worktree": ".worktrees/m1-saved-water-continuation",
+  "candidate_record": "milestones/evidence/m1-saved-water-deadline-repair-candidate.json",
+  "original_finding": "milestones/evidence/m1-saved-water-continuation-review/deadline-index.json",
+  "scope": "Independently review the seven-file Director-authored deadline append, the preserved actual-process regression and directly necessary public callers. Do not redo the prior full continuation implementation review or treat its original passing suites as closure of the deadline defect.",
+  "required_checks": [
+    "The native process cap remains effective while parent restart handling blocks, including watchdog-start failure, kill failure and timer/parent completion races.",
+    "Remaining phase/overall time reaches blocking setup/identity/readiness/shutdown operations without granting a new preservation window or changing old defaults.",
+    "Failures retain unknown outcomes, owned process identity and checkpoint-before-cleanup; do not create success-shaped failure or grant saved execution.",
+    "Report high-confidence actionable correctness findings with exact paths/lines and triggering conditions, or a qualified no-findings delta assessment."
+  ],
+  "read_only": true,
+  "edits_builds_tests_or_dependency_changes": 0,
+  "protected_checkpoint_path_stat_reads_or_hashes": 0,
+  "databases_services_gameplay_operators_or_source_capture": 0,
+  "browser_gpu_or_runelite": 0,
+  "nested_agents_or_factories": 0,
+  "saved_execution_admitted": false,
+  "milestone_accepted": false,
+  "automatic_continuation": false
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "kind": "saved_water_deadline_repair_candidate",
+  "status": "code_only_qualified_independent_review_pending",
+  "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
+  "author": "director",
+  "worktree": ".worktrees/m1-saved-water-continuation",
+  "branch": "task/m1-saved-water-continuation",
+  "previous_candidate": "b958cc44425804dd56ef4a940a416588f23b059b",
+  "regression_commit": "e5267810c0c271e513c282697e3819ead8c35ac1",
+  "code_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
+  "recorded_at": "2026-09-17T04:14:59.831510+00:00",
+  "finding": "saved-water-native-deadline",
+  "original_failure": "milestones/evidence/m1-saved-water-continuation-review/deadline-index.json",
+  "repair": [
+    "An owned process-group watchdog enforces the native deadline independently of blocking parent restart handling.",
+    "Watchdog startup failure, monitor failure and timer/parent expiry races stop the owned group and surface explicit failures; watchdog threads are cancelled and joined.",
+    "Native-phase deadlines also bound restart SQL/readiness/shutdown helpers instead of inheriting the larger setup window.",
+    "Public admission time is included in the original total clock. Shutdown/capture/cleanup switch only to that original overall deadline, not a renewed preservation window.",
+    "Database creation/readiness, restored identity, server readiness and shutdown inherit the remaining absolute budget; old callers retain their default bounds."
+  ],
+  "owned_files": [
+    {"path": "tools/journey-tests/SAVED_WATER.md", "bytes": 13535, "sha256": "3b5a3aff158a2b816da5f71798636942f5d420adf4cb2ba7a16cb06501ff8071"},
+    {"path": "tools/journey-tests/private_checkpoint.py", "bytes": 26433, "sha256": "7abdada525895c41abd22ae1bb6d2b6d8e46f45819ce1561fc01fa50ebd42526"},
+    {"path": "tools/journey-tests/run.py", "bytes": 38452, "sha256": "6f91e5a3ccea084a6f458687cafe1ffdd9ca7369a884dbbb42be0fb7d8bf45c4"},
+    {"path": "tools/journey-tests/saved_water.py", "bytes": 25554, "sha256": "243f90ca79ccf00d83b73ecc6e3b95f8a35b3b93deaad1048606d5b34d736ca4"},
+    {"path": "tools/journey-tests/saved_water_runtime.py", "bytes": 45564, "sha256": "9b5c9b80bb80f18cc7b5fd859a7e7d119b21a220f7d4b88b213958b7f69724dc"},
+    {"path": "tools/journey-tests/test_run.py", "bytes": 13347, "sha256": "16e7a37880ffe0953cc744a968cf10b559acb993d92a261580f243a1e95997b4"},
+    {"path": "tools/journey-tests/test_saved_water_runtime.py", "bytes": 38613, "sha256": "eae96d1ff995e4cdc1524c52ab83f7102072141057d162b4b8e6269e64f7849b"}
+  ],
+  "qualification": {
+    "index": "milestones/evidence/m1-saved-water-deadline-repair/index.json",
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/journey-tests timeout 120 python3 -m unittest test_saved_water test_saved_water_runtime test_private_checkpoint test_resume test_run test_cook_continue test_mainland_continue test_dying_observe",
+    "committed_python_tests_passed": 95,
+    "committed_python_exit_code": 0,
+    "committed_python_elapsed_seconds": 6.86,
+    "actual_process_regression": {
+      "synthetic_budget_seconds": 1,
+      "blocking_restart_seconds": 2,
+      "sample_elapsed_seconds": 1.5006196959875524,
+      "native_still_running_after_deadline": false,
+      "parent_gameplay_elapsed_seconds": 2.001517437864095,
+      "qualification": "The process is stopped while the deliberately blocked parent is still waiting. This measures actual process liveness rather than treating parent completion time as the native lifetime."
+    },
+    "native_inputs_and_existing_three_elfs": "verified_byte_identical_to_the_previously_reviewed_b958_candidate",
+    "native_builds_or_suites_rerun": false,
+    "actual_saved_execution": false
+  },
+  "inherited_native_binaries": {
+    "native_code_revision": "2fbf5afae6c548981dafd660c523d0ead758de81",
+    "previous_qualification": "tools/journey-tests/evidence/saved-water-continuation-code.json",
+    "cargo_lock_sha256": "eb443059216fdd402c6c94e8aa76ed84dd1b5678f37aa0540533fc4f4008f70c",
+    "migrator_sha256": "ccfd9f1bd084a2483e5d6238154b037a18453ea9e84c4788e18a8fe6462620b3",
+    "server_sha256": "c82915e8a5c20bbb2853ffbfe955f4cf6c996ffc30e0e4cc590cb858521af749",
+    "simulator_sha256": "f1416752b87390b1954c63967cb13f93c11e6c86aad4802b07e3e67ceb0a267b",
+    "rebuilt_or_relabelled_fresh": false
+  },
+  "production_bounds_changed": false,
+  "main_repair_integration": false,
+  "independent_delta_review_required": true,
+  "protected_checkpoint_accesses": 0,
+  "actual_databases_services_restores_migrations_or_gameplay": 0,
+  "gpu_browser_source_capture_generation_or_runelite_invocations": 0,
+  "saved_execution_admitted": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

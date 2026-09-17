@@ -9,7 +9,9 @@
       {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
     ],
-    "reserved": [],
+    "reserved": [
+      {"id": "saved-water-deadline-review", "task": "M1-SAVED-WATER-DEADLINE-REVIEW", "reason": "One independent read-only review of the Director-authored4526d0d deadline append; not another implementation worker or execution allowance."}
+    ],
     "queued": [],
     "parked": [
       {"id": "115554cb-8e25-40c8-854a-4f9dc8936166", "reason": "Delivered2fbf5afa/b958cc44 code-only continuation;15 owned paths integrateddd043bce with existing83Python/53native main regressions passing. Director's additional actual-process deadline regression fails. Runtime retired the worker and rejected its first repair follow-up before processing; Director owns that code-only append, with no saved execution or new allowance."},
@@ -38,9 +40,27 @@
   },
   "tasks": [
     {
+      "id": "M1-SAVED-WATER-DEADLINE-REVIEW",
+      "goal": "Independently review the exact Director-authored deadline repair before integration or any saved52 execution admission.",
+      "status": "REVIEW",
+      "specs": ["milestones/evidence/m1-saved-water-deadline-review-admission.json", "milestones/evidence/m1-saved-water-deadline-repair-candidate.json"],
+      "dependencies": ["M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"],
+      "allowed_paths": [],
+      "forbidden_paths": ["**"],
+      "outputs": ["High-confidence correctness findings or a qualified independent fix-delta assessment"],
+      "validation_commands": [],
+      "test_requirements": ["Read-only exact4526d0d delta and necessary public context; no tests/builds/private state/services or nested agents", "Assess actual native lifetime enforcement and original phase/overall/preservation budgets without relaxing bounds", "Preserve explicit failure, owned reaping and checkpoint-before-cleanup semantics"],
+      "acceptance": ["A different reviewer assesses the Director-authored append; any blocking finding is repaired before source integration or saved execution"],
+      "reserved_namespaces": [],
+      "source_notes": ["Initial83/53 suites did not expose the native deadline overrun. Director preserved the actual-process counterexample e526781 and authored4526d0d, with95 code-only Python passes."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-saved-water-deadline-review-admission.json", "milestones/evidence/m1-saved-water-deadline-repair-candidate.json"]
+    },
+    {
       "id": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
       "goal": "Implement and test the exact migration-aware saved52 continuation without reading or executing protected state.",
-      "status": "IMPLEMENTING",
+      "status": "REVIEW",
       "specs": ["milestones/evidence/m1-saved-water-continuation-implementation.json", "milestones/evidence/m1-saved-water-delivery-preparation.json", "milestones/approvals/m1-water-fill-upgrade-v1.json"],
       "dependencies": ["M1-SAVED-WATER-DELIVERY-PREPARATION", "M1-WATER-MAIN-INTEGRATION"],
       "allowed_paths": ["tools/journey-tests/**", "tools/simulator/src/journey/**", "tools/simulator/src/main.rs", "tools/simulator/tests/**"],
@@ -58,7 +78,7 @@
     {
       "id": "M1-CAMERA-CONSUMER-IMPLEMENTATION",
       "goal": "Implement native-camera WASM/source-data/input consumers independently of still-open full renderer and browser acceptance.",
-      "status": "IMPLEMENTING",
+      "status": "REVIEW",
       "specs": ["milestones/evidence/m1-camera-consumers-implementation.json", "milestones/evidence/m1-native-camera-candidate.json", "research/camera-source/contract.json"],
       "dependencies": ["M1-NATIVE-CAMERA-CONTROLLER", "M1-NATIVE-CAMERA-REVIEW", "M1-SHELL-METADATA-INTEGRATION"],
       "allowed_paths": ["crates/camera/**", "crates/wasm/**", "crates/renderer/Cargo.toml", "crates/renderer/README.md", "crates/renderer/src/**", "crates/renderer/tests/camera*.rs", "web/renderer/README.md", "web/renderer/src/**", "web/renderer/pkg/*.d.ts", "web/app/**", "web/generated/protocol/*.d.ts", "Cargo.lock"],
