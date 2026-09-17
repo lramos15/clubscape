@@ -1,10 +1,18 @@
 # Exact saved52 water continuation
 
-**Only code and synthetic fixtures are currently admitted.** Implementation
+**Only successor-binding code and synthetic fixtures are currently admitted.** Implementation
 validation never inspects, hashes, copies, restores or validates an actual
 checkpoint, nor runs databases, servers, gameplay, source generation,
 browser/GPU or RuneLite. It does not renew the exhausted operator allowance.
 Saved-execution and acceptance flags remain false.
+
+The original `ce09f751c0814633` attempt consumed its allowance before protected
+access; its admission and `saved-water-continuation-01` journal/report remain
+immutable. The owner conditionally approved one separately journaled successor in
+`milestones/approvals/m1-saved-water-continuation-02.json`. That approval is pinned
+in the gate, but is not an executable admission. The new fixed binding must be
+independently reviewed and qualified before an exact successor execution record
+is committed. No original attempt or unrelated allowance is refunded.
 
 ## Separate execution gate
 
@@ -18,7 +26,7 @@ directory, `--skip-build`, fixture-execution switch or actual-checkpoint
 `--validate-only` shortcut.
 
 A future Director admission must be committed at the **canonical Git root** as
-`milestones/evidence/m1-saved-water-execution.json`. Both its commit and SHA-256
+`milestones/evidence/m1-saved-water-execution-02.json`. Both its commit and SHA-256
 are explicit arguments; the current canonical file must equal those committed
 bytes. The separate review is pinned identically at
 `milestones/evidence/m1-saved-water-continuation-review.json`.
@@ -37,7 +45,7 @@ bytes. The separate review is pinned identically at
 | `bounds` | Exact `BOUNDS` object; no extra attempts or replacement paths |
 | `journal`, `output` | Exact absolute executor paths for the fixed names below |
 | `independent_review` | `path`, `revision`, `sha256`; passed `m1_saved_water_continuation_code_review` for the executor HEAD, a different named reviewer, and `saved_execution_admitted: false` |
-| `public_inputs` | SHA-256 map with exactly the `PUBLIC_INPUTS` keys: owner approval, frontier, preparation, integration/preflight/root qualification, delivery index/inventory and public report |
+| `public_inputs` | SHA-256 map with exactly the `PUBLIC_INPUTS` keys: original water approval, the separately hash-pinned successor owner approval, frontier, preparation, integration/preflight/root qualification, delivery index/inventory and public report |
 | `binaries` | Exact `migrator`, `server`, `simulator` objects, each with fixed `path` and reviewed `sha256` |
 
 The executor is `.worktrees/m1-saved-water-continuation` on
@@ -49,10 +57,15 @@ After admission, existing no-symlink containment and owner-only modes apply.
 Generic `project_path` containment is not loosened.
 
 The permanent journal is executor
-`.local/saved-water-continuation-01/authority-v1.json`. Its parent and journal
+`.local/saved-water-continuation-02/authority-v1.json`. Its parent and journal
 are exclusively created with owner-only permissions and fsync. Failures retain
 that reservation. Run IDs cannot be selected to renew it. Original reads,
 restore, migration and each native invocation have exclusive phase records.
+Neither the old admission hash nor an old-output record copied under the new
+admission name can authorize this binding. The actual-script fixture reserves the
+successor once, leaves a synthetic consumed old journal unchanged, and refuses a
+second launch. Missing, differently pinned or changed successor approval fails
+before reservation. There is no retry or output-selection option.
 
 Reviewed executables must already exist at:
 
@@ -204,7 +217,7 @@ worktree's `.local`, synthetic archives and mocked subprocess/database/service
 results. Native fixtures decode synthetic capsules and exercise real public
 source selection/contact planning without a service or gameplay submission.
 
-Focused commands, from this worktree:
+Focused successor-binding check, from this worktree:
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/journey-tests timeout 120 \
@@ -212,17 +225,14 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/journey-tests timeout 120 \
   test_private_checkpoint test_resume test_run test_cook_continue \
   test_mainland_continue test_dying_observe
 
-CARGO_BUILD_JOBS=4 CARGO_TARGET_DIR="$PWD/.local/saved-water-target" timeout 600 \
-  cargo test --locked --offline --quiet -p clubscape-sim --bin clubscape-sim
-
-CARGO_BUILD_JOBS=4 CARGO_TARGET_DIR="$PWD/.local/saved-water-target" timeout 600 \
-  cargo clippy --locked --offline --quiet -p clubscape-sim \
-  --features journey-server --all-targets -- -D warnings
-
-CARGO_BUILD_JOBS=4 CARGO_TARGET_DIR="$PWD/.local/saved-water-target" timeout 600 \
-  cargo build --locked --offline --quiet -p clubscape-server -p clubscape-sim \
-  --features clubscape-sim/journey-server
 ```
+
+The original native qualification is retained in
+`evidence/saved-water-continuation-code.json`. This fixed Python binding changes
+no native source or dependency and admits no native rebuild or invocation.
+Preserve the previously reviewed executable paths and bytes. The existing native
+claim caller still enters the same `saved_water.py` CLI; admission and journal
+selection remain in its canonical Python gate.
 
 Director independent review, exact reviewed binary/source pins, a named executor
 and a separate public execution admission remain required. These tests perform

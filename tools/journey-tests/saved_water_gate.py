@@ -36,10 +36,12 @@ IDENTITY = "3eb17ef511523a44a01e3d18a13fa00e2872e3b0a74bada5534b8eccdc511bb1"
 WORLD = "95acc818-e1d6-4ad3-805f-d323623d2933"
 ACCOUNT = "f43da325-ffcc-4753-a823-7a345dfce33b"
 ACTOR = "actor.05a9c9bae95142fabe29d3ec35e8cf9e"
-ADMISSION_PATH = "milestones/evidence/m1-saved-water-execution.json"
+ADMISSION_PATH = "milestones/evidence/m1-saved-water-execution-02.json"
 REVIEW_PATH = "milestones/evidence/m1-saved-water-continuation-review.json"
-OUTPUT = ".local/saved-water-continuation-01"
+OUTPUT = ".local/saved-water-continuation-02"
 JOURNAL = OUTPUT + "/authority-v1.json"
+OWNER_APPROVAL = "milestones/approvals/m1-saved-water-continuation-02.json"
+OWNER_APPROVAL_HASH = "facac6a31f526be54bb40dd670208d1a7bc808f792df49c1bdbd8d3dc7193495"
 MANIFEST = "content/m1/legacy5e-water/manifest.json"
 MANIFEST_HASH = "718d50eb2134f76b9bb2d34ba2b99f162cb2ec6666b392aba52ce2a03477cdf4"
 DELIVERY = ".local/saved-water-delivery-01/game-root"
@@ -53,6 +55,7 @@ PUBLIC_REPORT = "milestones/evidence/m1-cook-reward/52f32d29b5dc4f1a.json.gz"
 PUBLIC_REPORT_HASH = "8e1d2bb00d120b178dcb2247cae661d151b72325d5d9813ef1217149122bb308"
 PUBLIC_INPUTS = (
     "milestones/approvals/m1-water-fill-upgrade-v1.json",
+    OWNER_APPROVAL,
     "milestones/evidence/m1-cook-reward-frontier.json",
     "milestones/evidence/m1-saved-water-delivery-preparation.json",
     "milestones/evidence/m1-water-main-integration.json",
@@ -246,6 +249,8 @@ def verify_admission(revision, expected_hash, executor_id, *, root=ROOT):
             "independent_review_not_for_this_code")
     require(set(record["public_inputs"]) == set(PUBLIC_INPUTS),
             "incomplete_public_prerequisite_pins")
+    require(record["public_inputs"][OWNER_APPROVAL] == OWNER_APPROVAL_HASH,
+            "successor_owner_approval_not_pinned")
     for name in PUBLIC_INPUTS:
         public_file(canonical, name, record["public_inputs"][name])
     require(record["public_inputs"][DELIVERY_INDEX] == DELIVERY_INDEX_HASH

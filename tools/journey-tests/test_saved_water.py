@@ -147,6 +147,7 @@ class SyntheticFixture(unittest.TestCase):
         replacements = {
             "ARCHIVE": WATER.sha_bytes(self.archive), "INVENTORY": inventory_hash,
             "IDENTITY": PRIVATE.digest(self.checkpoint / "private-identity.json"),
+            "OWNER_APPROVAL_HASH": PRIVATE.digest(self.canonical / WATER.OWNER_APPROVAL),
             "PUBLIC_REPORT_HASH": WATER.sha_bytes(public_report),
             "DELIVERY_INDEX_HASH": PRIVATE.digest(self.canonical / WATER.DELIVERY_INDEX),
             "DELIVERY_FILES_HASH": PRIVATE.digest(self.canonical / WATER.DELIVERY_FILES),
@@ -220,6 +221,9 @@ class SyntheticFixture(unittest.TestCase):
 class AdmissionTests(SyntheticFixture):
     def test_actual_script_bootstrap_shares_runtime_authority_types_and_cannot_retry(self):
         import saved_water_runtime as runtime
+        old_journal = self.root / ".local/saved-water-continuation-01/authority-v1.json"
+        old_bytes = b'{"synthetic_fixture_only":true,"attempts_consumed":1,"remaining":0}\n'
+        store(old_journal, old_bytes)
         original_verify = WATER.verify_admission
         def verify(revision, digest, executor, *, root=None):
             self.assertIn(root, (None, self.root))
@@ -245,6 +249,59 @@ class AdmissionTests(SyntheticFixture):
                 self.assertEqual(stopped.exception.code, expected)
         execution.assert_called_once()
         self.assertTrue((self.root / WATER.JOURNAL).is_file())
+        self.assertEqual(old_journal.read_bytes(), old_bytes)
+
+    def test_successor_rejects_the_old_admission_hash_and_aliased_old_output(self):
+        self.assertEqual(WATER.ADMISSION_PATH, "milestones/evidence/m1-saved-water-execution-02.json")
+        self.assertEqual(WATER.OUTPUT, ".local/saved-water-continuation-02")
+        self.assertEqual(WATER.JOURNAL, WATER.OUTPUT + "/authority-v1.json")
+        old_record = copy.deepcopy(self.record)
+        old_record.update(
+            output=str(self.root / ".local/saved-water-continuation-01"),
+            journal=str(self.root / ".local/saved-water-continuation-01/authority-v1.json"),
+        )
+        old_path = self.canonical / "milestones/evidence/m1-saved-water-execution.json"
+        store(old_path, old_record)
+        old_bytes = old_path.read_bytes()
+        with patch.object(WATER, "reserve", side_effect=AssertionError("Old authority cannot reserve")), \
+                patch.object(WATER, "read_saved52", side_effect=AssertionError("Protected read forbidden")):
+            with self.assertRaises(PRIVATE.CheckpointError) as rejected:
+                WATER.verify_admission(ADMISSION_REVISION, WATER.sha_bytes(old_bytes),
+                                       "synthetic-executor", root=self.root)
+            self.assertEqual(rejected.exception.code, "public_admission_commit_mismatch")
+            self.record = old_record
+            self.publish_record()
+            with self.assertRaises(PRIVATE.CheckpointError) as rejected:
+                self.admission()
+            self.assertEqual(rejected.exception.code, "exact_start_target_or_allowance_changed")
+        self.assertEqual(old_path.read_bytes(), old_bytes)
+        self.assertFalse((self.root / WATER.JOURNAL).exists())
+
+    def test_successor_owner_approval_is_required_and_pinned_independently_of_admission(self):
+        original = copy.deepcopy(self.record)
+        owner_path = self.canonical / WATER.OWNER_APPROVAL
+        owner_bytes = owner_path.read_bytes()
+        cases = (
+            ("missing", "incomplete_public_prerequisite_pins"),
+            ("different_pin", "successor_owner_approval_not_pinned"),
+            ("changed_bytes", "public_file_identity_changed"),
+        )
+        with patch.object(WATER, "reserve", side_effect=AssertionError("Owner denial precedes reservation")), \
+                patch.object(WATER, "read_saved52", side_effect=AssertionError("Protected read forbidden")):
+            for mutation, reason in cases:
+                self.record = copy.deepcopy(original)
+                store(owner_path, owner_bytes)
+                if mutation == "missing":
+                    del self.record["public_inputs"][WATER.OWNER_APPROVAL]
+                elif mutation == "different_pin":
+                    self.record["public_inputs"][WATER.OWNER_APPROVAL] = "0" * 64
+                else:
+                    store(owner_path, b"synthetic-altered-owner-approval")
+                self.publish_record()
+                with self.subTest(mutation=mutation), self.assertRaises(PRIVATE.CheckpointError) as rejected:
+                    self.admission()
+                self.assertEqual(rejected.exception.code, reason)
+        self.assertFalse((self.root / WATER.JOURNAL).exists())
 
     def test_valid_public_gate_never_touches_the_checkpoint_until_exclusive_reservation(self):
         original = PRIVATE.project_path
@@ -272,6 +329,7 @@ class AdmissionTests(SyntheticFixture):
     def test_implementation_owner_preparation_and_wrong_exact_admissions_are_not_execution_authority(self):
         cases = [
             ("kind", "bounded_source_content_upgrade"), ("status", "admitted_code_and_fixture_work_only"),
+            ("kind", "owner_conditional_saved52_execution_authority"),
             ("saved_execution_admitted", False), ("checkpoint_access_admitted", False),
             ("canonical_git_root", str(self.canonical / "other")),
             ("start", {**self.record["start"], "checkpoint_root": str(self.canonical / "other-checkpoint")}),
