@@ -69,7 +69,9 @@
     "generated_output_files_verified": 17,
     "initialization_approval_sha256": "f7f1ce92826fb1bafc1e17ecbbaace34e0851c4e5044cbcfafa86817ac3539e1",
     "required_streamed_case_inputs_on_main": "Both12850.bin.gz and12850.models.bin.gz exist on main with the exact candidate-declared hashes. They have not been copied into a review worktree or used to rerun the blocked case.",
-    "code_review": "in_progress_by_director",
+    "code_review": "All33 source-delta files read by Director; remaining generated exports/docs/lifecycle-input-resize test deltas read without a new high-confidence defect. Strict streamed CPU qualification remains separately pending.",
+    "evidence_semantics": "Read supplied logs and recursively compared replay JSON: only Cargo.lock hash/size metadata differ from original conformance. No scenario or result fields differ.",
+    "director_cpu_admission": "milestones/evidence/m1-camera-consumers-director-cpu-admission.json",
     "new_build_test_browser_or_source_capture_invocations": 0,
     "main_integration": false
   },
