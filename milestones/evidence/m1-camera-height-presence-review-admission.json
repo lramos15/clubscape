@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "task": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW",
+  "status": "admitted_read_only_delta_resume_pending",
+  "authority": "director",
+  "reviewer": "ce4d0723-ee8e-45fa-8219-94a7210fa308",
+  "implementation_author": "director",
+  "base_revision": "93979df1319ad6ab503b0292d553f8deb766ec63",
+  "candidate_revision": "44b3324d810375653e9157d0faa5caeebc1f827a",
+  "worktree": ".worktrees/m1-camera-consumers-review",
+  "candidate": "milestones/evidence/m1-camera-height-presence-repair-candidate.json",
+  "failure": "milestones/evidence/m1-camera-consumers-director-cpu-result.json",
+  "scope": "Independently assess the four-file Director-authored height-presence repair and necessary terrain assembly/source-camera callers. This is not a repeat of the33-file original consumer review or a renderer/style acceptance review.",
+  "source_paths": [
+    "crates/renderer/src/scene/mod.rs",
+    "crates/renderer/src/scene/terrain.rs",
+    "crates/renderer/tests/camera_source.rs",
+    "crates/renderer/README.md"
+  ],
+  "required_checks": [
+    "Genuine SceneTerrain corner writes, including zero, carry availability independently of their values; unobserved and far-edge zeros remain unavailable and stale prior presence is cleared.",
+    "Trace terrain::apply and ordinary/mapped assembly callers. Numeric height assignments, source draw arithmetic, geometry, lighting, settings and bridge behavior must not change or gain source-missing fallbacks.",
+    "Assess the complete all-corner controlled regression and unchanged strict source assertions. Seven CPU passes and strict Clippy are supplied precommit results, not independent execution.",
+    "Report actionable correctness findings with exact source locations and triggering conditions, or a qualified no-findings delta assessment; distinguish this append from missing live focus/footprint/effect producers and normal entry."
+  ],
+  "read_only": true,
+  "edits_tests_builds_dependency_changes_or_native_invocations": 0,
+  "source_buffers_materialized_exported_generated_or_captured": 0,
+  "protected_checkpoint_control_or_real_journal_stat_read_hashes": 0,
+  "browser_gpu_runelite_services_databases_accounts_gameplay_or_operators": 0,
+  "gear_pose_recomputations": 0,
+  "nested_agents_or_factories": 0,
+  "main_integration_admitted": false,
+  "any_exhausted_external_execution_allowance_renewed": false,
+  "milestone_accepted": false,
+  "automatic_continuation": false
+}

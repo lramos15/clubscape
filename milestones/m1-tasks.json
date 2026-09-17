@@ -7,7 +7,7 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
-      {"id": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "task": "M1-SAVED-WATER-BOOTSTRAP-REVIEW"}
+      {"id": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "task": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW"}
     ],
     "reserved": [],
     "queued": [],
@@ -40,9 +40,27 @@
   },
   "tasks": [
     {
+      "id": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW",
+      "goal": "Independently assess the Director-authored source-height availability repair before camera integration.",
+      "status": "CLAIMED",
+      "specs": ["milestones/evidence/m1-camera-height-presence-review-admission.json", "milestones/evidence/m1-camera-height-presence-repair-candidate.json"],
+      "dependencies": ["M1-CAMERA-CONSUMER-IMPLEMENTATION"],
+      "allowed_paths": [],
+      "forbidden_paths": ["**"],
+      "outputs": ["Actionable correctness findings or a qualified independent height-presence delta assessment"],
+      "validation_commands": [],
+      "test_requirements": ["Exact44b3324 versus939 and necessary public terrain/source-camera callers only", "No tests/builds/private state/GPU/gear/source operations or nested agents", "Check genuine zero/unloaded/stale/far-edge presence, unchanged numeric rendering and original strict regression coverage"],
+      "acceptance": ["A reviewer other than the author assesses the repair; resolve blocking findings before integration", "Keep supplied7-case precommit qualification separate from independent static review and subsequent integrated checks"],
+      "reserved_namespaces": [],
+      "source_notes": ["The unchanged939 strict streamed test reached real source surfaces but failed because terrain rebuilding marked unloaded zero heights present."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-camera-height-presence-review-admission.json", "milestones/evidence/m1-camera-height-presence-repair-candidate.json"]
+    },
+    {
       "id": "M1-SAVED-WATER-BOOTSTRAP-REVIEW",
       "goal": "Independently assess the Director-authored canonical CLI bootstrap repair without renewing saved execution.",
-      "status": "REVIEW",
+      "status": "VERIFIED",
       "specs": ["milestones/evidence/m1-saved-water-bootstrap-review-admission.json", "milestones/evidence/m1-saved-water-bootstrap-candidate.json"],
       "dependencies": ["M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"],
       "allowed_paths": [],
@@ -55,7 +73,7 @@
       "source_notes": ["The sole actualce09 entrypoint failed before protected access because of nominal module identity and consumed its entire attempt. Fixing code does not renew it."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-saved-water-bootstrap-review-admission.json", "milestones/evidence/m1-saved-water-bootstrap-candidate.json"]
+      "evidence": ["milestones/evidence/m1-saved-water-bootstrap-review-admission.json", "milestones/evidence/m1-saved-water-bootstrap-candidate.json", "milestones/evidence/m1-saved-water-bootstrap-review.json"]
     },
     {
       "id": "M1-SAVED-WATER-EXECUTION",
@@ -96,7 +114,7 @@
     {
       "id": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
       "goal": "Implement and test the exact migration-aware saved52 continuation without reading or executing protected state.",
-      "status": "REVIEW",
+      "status": "INTEGRATION",
       "specs": ["milestones/evidence/m1-saved-water-continuation-implementation.json", "milestones/evidence/m1-saved-water-delivery-preparation.json", "milestones/approvals/m1-water-fill-upgrade-v1.json"],
       "dependencies": ["M1-SAVED-WATER-DELIVERY-PREPARATION", "M1-WATER-MAIN-INTEGRATION"],
       "allowed_paths": ["tools/journey-tests/**", "tools/simulator/src/journey/**", "tools/simulator/src/main.rs", "tools/simulator/tests/**"],

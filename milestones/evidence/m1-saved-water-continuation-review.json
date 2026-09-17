@@ -2,16 +2,17 @@
   "schema_version": 1,
   "kind": "m1_saved_water_continuation_code_review",
   "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
-  "status": "blocked_cli_bootstrap",
-  "reviewer": "22b898a4-8850-4fc0-be15-af0b7440e32a",
-  "reviewer_role": "independent_director_authored_deadline_delta",
+  "status": "passed_code_only_bootstrap_delta",
+  "reviewer": "ce4d0723-ee8e-45fa-8219-94a7210fa308",
+  "reviewer_role": "independent_director_authored_bootstrap_delta",
   "baseline_reviewer": "director",
   "implementer": "115554cb-8e25-40c8-854a-4f9dc8936166",
   "deadline_repair_author": "director",
+  "bootstrap_repair_author": "director",
   "baseline_reviewed_at": "2026-09-17T03:29:05.131437+00:00",
-  "reviewed_at": "2026-09-17T04:38:48.218556+00:00",
+  "reviewed_at": "2026-09-17T05:59:30.638457+00:00",
   "baseline_candidate_revision": "b958cc44425804dd56ef4a940a416588f23b059b",
-  "code_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
+  "code_revision": "76971ee95040130ddd2084f7fa7c9fd275982e2c",
   "deadline_repair_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
   "implementation_revision": "2fbf5afae6c548981dafd660c523d0ead758de81",
   "implementation_admission": "milestones/evidence/m1-saved-water-continuation-implementation.json",
@@ -19,7 +20,8 @@
   "baseline_owned_candidate_paths": 15,
   "baseline_owned_implementation_files_verified": 14,
   "deadline_append_paths": 7,
-  "combined_candidate_paths": 17,
+  "bootstrap_append_paths": 6,
+  "combined_candidate_paths": 18,
   "review_scope": [
     "All new Python admission, reservation, reader, execution, preservation and fixture code; all native remaining-only and recovery changes.",
     "Existing checkpoint writers, source selection, typed operation/control decoding, source contact/production helpers and public report schema consumed by the new path.",
@@ -33,10 +35,12 @@
       "severity": "HIGH",
       "file": "tools/journey-tests/saved_water.py",
       "reporter": "director",
-      "status": "open",
+      "status": "resolved",
       "problem": "Actual script execution creates __main__.Admission, while the imported runtime reader creates saved_water.Admission. Nominal equality rejects the handoff before protected I/O. Import-based unit fixtures did not exercise this CLI boundary.",
       "evidence": "milestones/evidence/m1-saved-water-execution-result.json",
-      "required_repair": "Use one canonical authority module from a thin launcher and runtime, with synthetic actual-script bootstrap coverage. Preserve the equality guard, failed attempt and exhausted journal; no retry is admitted."
+      "required_repair": "Use one canonical authority module from a thin launcher and runtime, with synthetic actual-script bootstrap coverage. Preserve the equality guard, failed attempt and exhausted journal; no retry is admitted.",
+      "resolved_by_code_revision": "76971ee95040130ddd2084f7fa7c9fd275982e2c",
+      "independent_resolution": "milestones/evidence/m1-saved-water-bootstrap-review.json"
     },
     {
       "id": "saved-water-native-deadline",
@@ -62,9 +66,10 @@
   "review_chain": [
     {"reviewer": "director", "scope": "Complete originalb958 continuation implementation and public callers; original83/53 regressions", "historical_review_revision": "dd043bce998e3253f45de9542e6576fa3b77db88"},
     {"reviewer": "director", "scope": "Additional actual-process deadline counterexample, preserving and superseding the initial passed review", "evidence": "milestones/evidence/m1-saved-water-continuation-review/deadline-index.json"},
-    {"reviewer": "22b898a4-8850-4fc0-be15-af0b7440e32a", "scope": "Independent exact seven-file Director-authored4526 deadline append, not a repeated full baseline review", "evidence": "milestones/evidence/m1-saved-water-deadline-review.json"}
+    {"reviewer": "22b898a4-8850-4fc0-be15-af0b7440e32a", "scope": "Independent exact seven-file Director-authored4526 deadline append, not a repeated full baseline review", "evidence": "milestones/evidence/m1-saved-water-deadline-review.json"},
+    {"reviewer": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "scope": "Independent exact six-path Director-authored769 canonical-module bootstrap append and public callers; static assessment, not an independent test rerun or repeated full baseline review", "evidence": "milestones/evidence/m1-saved-water-bootstrap-review.json"}
   ],
-  "qualification": "The deadline review chain remains valid, but the subsequent actual CLI attempt exposed a separate nominal-module identity defect before protected access. That bootstrap finding now blocks this candidate despite the previously passing import-based suites. A76971ee thin-launcher repair passes96 synthetic checks including the actual script/runtime boundary, but is not independently reviewed or integrated and grants no retry.",
+  "qualification": "The actualce09 CLI failure remains preserved and its one-shot authority consumed. Independent reviewerce4 statically resolved the nominal-module defect in769, confirming preserved gate/main logic, shared authority types, exit behavior and synthetic actual-script/no-retry coverage. Supplied96-test evidence remains precommit qualification, not the reviewer's rerun. Exact main integration and committed-root qualification follow separately; neither renews saved execution.",
   "bootstrap_candidate": "milestones/evidence/m1-saved-water-bootstrap-candidate.json",
   "baseline_independent_checks": {
     "worktree": ".worktrees/m1-saved-water-review",
@@ -114,13 +119,14 @@
     "preparation_or_inspection_repeated": false
   },
   "remaining_execution_gates": [
-    "Persist main repair integration and its focused root regressions. The original failure and83/53 qualification remain historical evidence, not erased by the repair.",
-    "A new exact committed execution admission must bind this executor HEAD, these reviewed binaries, current public prerequisite hashes, the fixed journal and all proposed bounds before any protected filesystem operation.",
+    "Integrate only the six reviewed769 paths and qualify the exact committed root with the96-case code-only Python selector. No native rebuild or saved entrypoint is part of that check.",
+    "The solece09 saved entrypoint is consumed1/remaining0. No further protected stat/read/hash, retry, alternate journal/output or automatic replacement authority is permitted. Any future execution requires separate explicit authority after applicable qualification.",
     "Actual original identity, target service readiness, restore, fenced migration, remaining gameplay and fresh protected capture are unexecuted and may still fail their strict runtime guards.",
     "No old operator, preparation, restore, browser, audio or RuneLite allowance is renewed."
   ],
   "deadline_repair_qualification": "milestones/evidence/m1-saved-water-deadline-repair-candidate.json",
   "independent_deadline_review": "milestones/evidence/m1-saved-water-deadline-review.json",
+  "independent_bootstrap_review": "milestones/evidence/m1-saved-water-bootstrap-review.json",
   "protected_checkpoint_accesses": 0,
   "actual_databases_services_restores_migrations_or_gameplay": 0,
   "gpu_browser_source_capture_generation_or_runelite_invocations": 0,
