@@ -149,7 +149,7 @@
       "status": "IMPLEMENTING",
       "specs": ["milestones/evidence/m1-water-main-integration.json", "milestones/evidence/m1-water-item-on-review.json", "milestones/evidence/m1-water-upgrade-preflight-receipt.json"],
       "dependencies": ["M1-WATER-ITEM-ON-DISPATCH", "M1-WATER-ITEM-ON-REVIEW", "M1-WATER-UPGRADE-PREFLIGHT"],
-      "allowed_paths": ["content/m1/**", "crates/game-types/**", "crates/content/**", "crates/world-engine/**", "crates/server/src/game_service/tests/**", "crates/server/src/game_service/tests.rs", "crates/server/README.md", "tools/m1-content/**", "tools/simulator/src/journey/**", "tools/journey-tests/**", "research/water-fill/**", "research/m1-bindings/**", "spec/game-networking.md", "milestones/**"],
+      "allowed_paths": ["content/m1/**", "crates/game-types/**", "crates/content/**", "crates/world-engine/**", "crates/server/src/game_service/tests/**", "crates/server/src/game_service/tests.rs", "crates/server/README.md", "tools/m1-content/**", "tools/simulator/src/journey/**", "tools/journey-tests/**", "tools/web-build/README.md", "research/water-fill/**", "research/m1-bindings/**", "spec/game-networking.md", "milestones/**"],
       "forbidden_paths": ["prompt.md", "Cargo.lock", "crates/server/src/game_storage/**", "assets/**", "research/reference-pack/**", "spec/art-style.md", "spec/interface-parity.md", "spec/adaptations.md", ".local/journey-checkpoints/**"],
       "outputs": ["Byte-identical owned candidate integration", "Affected root regression and production-build evidence", "Preserved minimal legacy target and explicit saved-world execution gate"],
       "validation_commands": ["Focused native/source-pair/guarded PostgreSQL checks", "Existing web/native consumer tests and production build"],

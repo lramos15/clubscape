@@ -42,6 +42,25 @@ machine setup before builds. Existing Rust dependencies are used with
 `--locked --offline`; scratch/targets stay under the owned `.local/` directory.
 No global tools, graphics changes or source-account operations are needed.
 
+### Fresh generation versus a published artifact
+
+The generated revision includes `input_lock` hashes of native type/validation
+files. A native-only repair can therefore produce a new revision and artifact
+hash even when the complete generated definition differs only at `/revision`.
+Two identical fresh builds prove repeatability, not equality with an already
+reviewed or migration-admitted delivery.
+
+Keep those identities separate. Preserve a newly generated candidate and its
+actual input lock; do not silently replace a pinned delivery, rewrite input
+hashes, or describe revision-only differences as byte equality. To validate a
+selected published delivery with newer native code, strictly compile its exact
+committed source JSON unchanged and require both raw and gzip bytes to match
+its manifest. `build_water_legacy.compile_profile` and `compressed` provide the
+existing isolated compiler/carrier path. The published input lock remains its
+original data-generation provenance; the new compiler/build identity is
+recorded separately. A new artifact/world migration still needs its own
+explicitly reviewed and tested admission.
+
 The route checker selects actual content-3 combined collision states, checks
 all136 state products (38 mixed leaves), independently reconstructs636 cells by
 original object insertion, and verifies closed/open/closed restoration. All30

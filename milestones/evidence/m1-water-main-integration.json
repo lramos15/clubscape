@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "admitted_selective_integration",
+  "status": "code_imported_root_validation_in_progress",
   "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
   "scope": "Only the passing reviewed water dependency, required native repair, focused migration tests, source packaging/operator tooling and exact evidence.",
   "candidate": "a162eb7818639c2babcf4ad09ec21dd68c15f2ea",
@@ -28,7 +28,8 @@
     "Import only the enumerated owned commits; never merge stale candidate task, review or approval records over canonical main.",
     "Require the entire imported owned path set to match the passing candidate byte-for-byte, retaining the independent review and original failures.",
     "Run affected root native/source-pair tests, strict checks, guarded database regressions and web/native consumer validation after integration.",
-    "Preserve all frozen inputs, empty sink menu, one-conversion constraints and ordinary production behavior."
+    "Preserve all frozen inputs, empty sink menu, one-conversion constraints and ordinary production behavior.",
+    "Update only the directly related canonical/minimal-legacy source identities in tools/web-build/README.md; do not change browser or rendering behavior."
   ],
   "execution_limits": {
     "source_operator_allowance_remaining": 0,
@@ -36,8 +37,28 @@
     "saved_world_migration_or_continuation": 0,
     "browser_gpu_or_runelite_invocations": 0
   },
-  "main_code_commit": null,
-  "root_validation": "pending",
+  "main_code_commit": "6719717f65aba8f58058e1c5d2aa94608086cccc",
+  "owned_paths_byte_identical_at_import": 140,
+  "root_validation": "in_progress",
+  "import_style_check": {
+    "initial_result": "The staged full-diff check failed only on nine byte-preserved raw stdout logs ending in blank lines; the shell still proceeded to commit the import.",
+    "resolution": "Do not normalize evidence or change its hashes. Reverified all140 imported paths and all50 indexed evidence records, then passed the code/structured-evidence diff check with only explicitly hash-indexed raw .log paths excluded.",
+    "raw_evidence_changed": false,
+    "product_code_whitespace_failure": false
+  },
+  "source_generation_qualification": {
+    "full_root_repeat": "All gates pass twice with106 identical generated outputs and both water profiles4/4positive,15/15negative.",
+    "published_identity_check": "Failed after regeneration; deterministic generation is not proof of the selected published artifact identity.",
+    "cause": "input_lock includes content.rs and runtime_validation.rs. The reviewed04a40ee native changes alter their hashes and therefore the fresh generator's opaque content revision.",
+    "unadmitted_generated_revision": "m1.source-backed.v4.80142e9e9c5d6b5c",
+    "unadmitted_generated_raw_sha256": "1bc1b8347634b8af0bb3df6a75d4f55f6ac9bf235b8fbb4ea5fdb742cad0a2c4",
+    "changed_game_content_paths": ["/revision"],
+    "disposition": "Retained all22 changed generated outputs under .local/water-main-integration-01/regenerated-unadmitted, then restored only those outputs to the published6719717 bytes. No native code, unrelated edits, source inputs or hash rules were rolled back or weakened.",
+    "exact_published_recompile": "Both unchanged committed source JSON profiles now recompile with the current strict native compiler to the admitted raw and gzip bytes exactly: currentadb24c14 and minimal legacyb2a1be20.",
+    "published_input_lock_role": "Historical provenance of the selected data generation, not a claim that old native input hashes describe the current executable.",
+    "extra_operator_calls_or_world_repins": 0,
+    "evidence": [".local/water-main-integration-01/source-report.json", ".local/water-main-integration-01/source-pin-drift.json", ".local/water-main-integration-01/published-source-recompile.json"]
+  },
   "saved_world_migration_or_continuation_admitted": false,
   "milestone_accepted": false,
   "later_milestone_authorized": false

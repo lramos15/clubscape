@@ -161,10 +161,18 @@ compiler over stdin. Region scene-asset IDs must match that
 compiled content. Files reside under `asset-root` at their public URL paths
 without the leading slash. No entire cache is copied.
 
-Current canonical artifact4 is `m1.source-backed.v4.bdbf8a3788b842be`, raw SHA-256
-`5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059`,
+Current canonical artifact4 is `m1.source-backed.v4.71c86749d02088ee`, raw SHA-256
+`adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc`,
 compressed SHA-256
-`8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6`.
+`3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d`.
+This owner-approved water append does not silently repin any existing world.
+The separately retained minimal legacy5e target is
+`m1.source-backed.v4.3ff4292b311453cc.water.e337c77cc5ccd980`, raw SHA-256
+`b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650`.
+It excludes the unrelated newer metadata; its presence is not saved-account
+migration authority. The exact reviewed native/database/real-asset operator
+evidence is in `milestones/evidence/m1-water-upgrade-preflight.json`.
+
 `readArtifact` reads the explicitly supplied gzip, and `projectArtifact` passes
 those actual bytes to the rebuilt native Runtime validator over stdin.
 Stale `.local/compiler/game-content.csc` output is never the identity of a
