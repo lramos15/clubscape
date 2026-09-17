@@ -2,6 +2,7 @@
   "schema_version": 1,
   "task": "M1-SAVED-WATER-BOOTSTRAP-REVIEW",
   "status": "in_progress_read_only_bootstrap_delta",
+  "initial_assessment": "milestones/evidence/m1-saved-water-bootstrap-review.json",
   "authority": "director",
   "reviewer": "ce4d0723-ee8e-45fa-8219-94a7210fa308",
   "reserved_slot": "saved-water-bootstrap-review-replacement",

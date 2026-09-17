@@ -21,6 +21,7 @@
     "saved_water_execution_result": "milestones/evidence/m1-saved-water-execution-result.json",
     "saved_water_bootstrap_candidate": "milestones/evidence/m1-saved-water-bootstrap-candidate.json",
     "saved_water_bootstrap_review_admission": "milestones/evidence/m1-saved-water-bootstrap-review-admission.json",
+    "saved_water_bootstrap_review": "milestones/evidence/m1-saved-water-bootstrap-review.json",
     "camera_consumer_handoff": "milestones/evidence/m1-camera-consumers-implementation.json",
     "camera_consumer_strict_cpu_admission": "milestones/evidence/m1-camera-consumers-director-cpu-admission.json",
     "camera_consumer_strict_cpu_result": "milestones/evidence/m1-camera-consumers-director-cpu-result.json",
