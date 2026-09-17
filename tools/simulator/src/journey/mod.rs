@@ -7,6 +7,7 @@ mod mainland;
 mod observation;
 mod plan;
 mod recovery;
+mod saved_water;
 mod source;
 mod ui;
 
@@ -67,6 +68,19 @@ pub struct Arguments {
         conflicts_with_all = ["observe_dying", "continue_mainland"]
     )]
     continue_cook: bool,
+    /// Exact migration-aware saved52 remainder; requires a separately admitted reservation.
+    #[arg(long, requires_all = ["resume_client_checkpoint", "private_checkpoint_file",
+        "source_manifest", "saved_water_admission_revision", "saved_water_admission_sha256",
+        "saved_water_executor"], conflicts_with_all = ["observe_dying", "continue_mainland", "continue_cook"])]
+    continue_saved_water: bool,
+    #[arg(long, requires = "continue_saved_water")]
+    source_manifest: Option<PathBuf>,
+    #[arg(long, requires = "continue_saved_water")]
+    saved_water_admission_revision: Option<String>,
+    #[arg(long, requires = "continue_saved_water")]
+    saved_water_admission_sha256: Option<String>,
+    #[arg(long, requires = "continue_saved_water")]
+    saved_water_executor: Option<String>,
     /// Decode/verify an observation resume control without any network operation.
     #[arg(long, requires = "resume_client_checkpoint")]
     validate_resume_only: bool,
@@ -134,10 +148,20 @@ struct Runner {
     private_control: Option<checkpoint::ControlAttempt>,
     resume: Option<checkpoint::Resume>,
     historical_observation: Option<Value>,
+    saved_water: Option<saved_water::Progress>,
 }
 
 pub async fn run(arguments: Arguments) -> Result<()> {
-    let source = match Source::load(&arguments.source_root) {
+    let water_gate = arguments
+        .continue_saved_water
+        .then(|| saved_water::claim_gate(&arguments))
+        .transpose()?;
+    let loaded = if arguments.continue_saved_water {
+        Source::load_saved_water(&arguments.source_root)
+    } else {
+        Source::load(&arguments.source_root)
+    };
+    let source = match loaded {
         Ok(source) => source,
         Err(error) => {
             let mut evidence = Evidence::new(&arguments.report)?;
@@ -152,7 +176,9 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         .resume_client_checkpoint
         .as_ref()
         .map(|path| {
-            let mode = if arguments.continue_cook {
+            let mode = if arguments.continue_saved_water {
+                checkpoint::ResumeMode::ContinueSavedWater
+            } else if arguments.continue_cook {
                 ensure!(
                     arguments.max_seconds <= 5400,
                     "Cook continuation exceeds its source budget"
@@ -175,7 +201,8 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         ensure!(
             arguments.observe_dying && saved.observation_boundary.is_some()
                 || arguments.continue_mainland && saved.mainland_boundary.is_some()
-                || arguments.continue_cook && saved.cook.is_some(),
+                || arguments.continue_cook && saved.cook.is_some()
+                || arguments.continue_saved_water && saved.saved_water.is_some(),
             "Not an authorized observation boundary"
         );
         checkpoint::Attempt::from_saved(&saved.capsule["latest_attempt"])?;
@@ -184,6 +211,7 @@ pub async fn run(arguments: Arguments) -> Result<()> {
             json!({"status": "validated", "observation_boundary": saved.observation_boundary,
                 "mainland_boundary": saved.mainland_boundary,
                 "cook_boundary": saved.cook.as_ref().map(|cook| &cook.verification),
+                "saved_water_boundary": saved.saved_water.as_ref().map(|water| &water.verification),
             "network_operations": 0, "world_inputs": 0, "private_payloads_published": false})
         );
         return Ok(());
@@ -201,6 +229,31 @@ pub async fn run(arguments: Arguments) -> Result<()> {
     evidence.report["observation_only"] = json!(arguments.observe_dying);
     evidence.report["mainland_continuation"] = json!(arguments.continue_mainland);
     evidence.report["cook_continuation"] = json!(arguments.continue_cook);
+    if arguments.continue_saved_water {
+        let saved = resume.as_ref().context("Saved-water history missing")?;
+        evidence.report["saved_water_continuation"] = json!(true);
+        evidence.report["saved_water_history"] = json!({
+            "source_identity": saved.report["identity"],
+            "checks_passed": saved.report["checks_passed"],
+            "observation_checks_passed": saved.report["observation_checks_passed"],
+            "input_count": saved.report["input_count"],
+            "trace_records": saved.report["trace_records"],
+            "completed_segments": saved.report["segments"],
+            "previous_resume_lineage": saved.report["private_checkpoint_resume"],
+            "original_report_sha256": source::hash(&std::fs::read(
+                arguments.resume_client_checkpoint.as_ref().context("Missing capsule")?
+                    .with_file_name("resume-report.json"))?),
+            "original_capsule_sha256": source::hash(&std::fs::read(
+                arguments.resume_client_checkpoint.as_ref().context("Missing capsule")?)?),
+            "historical_work_performed_on_target": false
+        });
+        evidence.report["source_transition"] = json!({
+            "from_artifact": saved_water::FROM, "to_artifact": saved_water::TO,
+            "next_sequence": saved_water::NEXT_SEQUENCE,
+            "execution_admission_sha256": arguments.saved_water_admission_sha256,
+            "multi_artifact_journey": true, "original_checkpoint_rewritten": false
+        });
+    }
     evidence.report["identity"] = source.identity.clone();
     let connection = match Connection::new(&arguments.url) {
         Ok(connection) => connection,
@@ -253,6 +306,19 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         private_control: None,
         resume,
         historical_observation: None,
+        saved_water: water_gate
+            .map(|gate| -> Result<saved_water::Progress> {
+                Ok(saved_water::Progress {
+                    phase: saved_water::Phase::Entry,
+                    historical_inputs: input_count,
+                    receipt: None,
+                    server_hash: gate["server_sha256"]
+                        .as_str()
+                        .context("Admitted restart server hash missing")?
+                        .to_owned(),
+                })
+            })
+            .transpose()?,
     };
     let result = runner.execute().await;
     runner.evidence.report["input_count"] = json!(runner.input_count);
@@ -261,7 +327,7 @@ pub async fn run(arguments: Arguments) -> Result<()> {
     if runner.snapshot.player.is_some() {
         runner.evidence.report["last_snapshot"] = public_snapshot(&runner.snapshot)?;
     }
-    if runner.arguments.observe_dying {
+    if runner.arguments.observe_dying || runner.arguments.continue_saved_water {
         runner.evidence.report["observation_snapshot_origin"] =
             json!(if runner.snapshot.player.is_some() {
                 "actual_current_invocation"
@@ -272,6 +338,11 @@ pub async fn run(arguments: Arguments) -> Result<()> {
     match &result {
         Ok(()) if runner.arguments.observe_dying => {
             runner.evidence.report["status"] = json!("observed");
+            runner.evidence.report["full_journey_passed"] = json!(false);
+        }
+        Ok(()) if runner.arguments.continue_saved_water => {
+            runner.evidence.report["status"] = json!("continued");
+            runner.evidence.report["saved_water_remainder_passed"] = json!(true);
             runner.evidence.report["full_journey_passed"] = json!(false);
         }
         Ok(()) => {
@@ -331,6 +402,13 @@ impl Runner {
             "Journey wall-clock budget exhausted"
         );
         Ok(())
+    }
+
+    fn input_budget_available(&self) -> bool {
+        let consumed = self.saved_water.as_ref().map_or(self.input_count, |water| {
+            self.input_count.saturating_sub(water.historical_inputs)
+        });
+        consumed < self.arguments.max_inputs
     }
 
     fn player(&self) -> Result<&game::Player> {
@@ -409,6 +487,10 @@ impl Runner {
         ensure!(
             !self.arguments.observe_dying || observation::allowed(&command),
             "Observation-only mode forbids this RPC"
+        );
+        ensure!(
+            self.saved_water.is_none() || saved_water::lifecycle_command(&command),
+            "Saved-water forbids registration, character creation and non-lifecycle RPCs"
         );
         let request_id = Uuid::new_v4().to_string();
         let observed_command = observation::command_name(&command);
@@ -774,9 +856,12 @@ impl Runner {
             "Observation-only mode forbids all WorldInput, including replay"
         );
         ensure!(
-            self.input_count < self.arguments.max_inputs,
+            self.input_budget_available(),
             "Journey input budget exhausted"
         );
+        if self.saved_water.is_some() {
+            saved_water::validate_input(self, receipt, duplicate)?;
+        }
         let before_sequence = self.sequence;
         let input = game::WorldInput {
             world_session_id: self.world_session.clone(),
@@ -1214,6 +1299,13 @@ impl Runner {
     }
 
     async fn execute(&mut self) -> Result<()> {
+        if self.arguments.continue_saved_water {
+            let saved = self
+                .resume
+                .take()
+                .context("Saved-water requires its exact original capsule")?;
+            return self.continue_saved_water(saved).await;
+        }
         plan::validate_source_path(&self.source)?;
         if self.arguments.observe_dying {
             let saved = self

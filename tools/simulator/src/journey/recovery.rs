@@ -37,7 +37,7 @@ impl Runner {
     async fn reject_sequence(&mut self, sequence: u64, label: &str) -> Result<()> {
         self.bound()?;
         ensure!(
-            !self.arguments.observe_dying,
+            !self.arguments.observe_dying && !self.arguments.continue_saved_water,
             "Observation-only mode forbids sequence probes"
         );
         ensure!(
@@ -132,6 +132,10 @@ impl Runner {
 
     pub(super) async fn logout(&mut self) -> Result<()> {
         self.cancel().await?;
+        self.logout_lifecycle().await
+    }
+
+    pub(super) async fn logout_lifecycle(&mut self) -> Result<()> {
         let response = self
             .rpc(
                 Command::LeaveWorld(game::LeaveWorld {
@@ -276,6 +280,66 @@ impl Runner {
         })
     }
 
+    pub(super) async fn saved_water_recovery(&mut self) -> Result<()> {
+        use super::saved_water::Phase;
+        let progress = self
+            .saved_water
+            .as_mut()
+            .context("Missing saved-water progress")?;
+        progress.phase = Phase::Recovery;
+        let receipt = progress
+            .receipt
+            .clone()
+            .context("New water receipt missing")?;
+        super::saved_water::require_new_replay(&receipt, progress.receipt.as_ref())?;
+        ensure!(
+            self.player()?.activity == "idle",
+            "Postquest lifecycle starts only when idle"
+        );
+        self.label("recovery.after_quest_saved_water")?;
+        self.verify_duplicate(&receipt, "saved_water.before_reconnect")
+            .await?;
+        let before = stable_player(self.player()?);
+        let sequence = self.sequence;
+        self.connection = Connection::new(&self.arguments.url)?;
+        self.hello().await?;
+        self.join().await?;
+        self.compare_recovered("saved_water.transport_reconnect", &before, sequence, None)
+            .await?;
+        self.recovery_record("after_quest", "transport_reconnect")?;
+        self.verify_duplicate(&receipt, "saved_water.after_reconnect")
+            .await?;
+
+        let before = stable_player(self.player()?);
+        let sequence = self.sequence;
+        self.logout_lifecycle().await?;
+        self.login().await?;
+        self.hello().await?;
+        self.join().await?;
+        self.compare_recovered("saved_water.logout_login", &before, sequence, None)
+            .await?;
+        self.recovery_record("after_quest", "logout_login")?;
+        self.verify_duplicate(&receipt, "saved_water.after_logout_login")
+            .await?;
+
+        let before = stable_player(self.player()?);
+        let sequence = self.sequence;
+        self.request_owned_restart("after_quest").await?;
+        self.hello().await?;
+        self.join().await?;
+        self.compare_recovered("saved_water.same_target_restart", &before, sequence, None)
+            .await?;
+        self.recovery_record("after_quest", "owned_server_restart")?;
+        self.verify_duplicate(&receipt, "saved_water.after_restart")
+            .await?;
+        self.evidence.report["saved_water_postquest_recovery"] = json!({
+            "status": "passed", "replayed_operation_id": receipt.operation_id,
+            "replayed_sequence": receipt.sequence, "new_water_receipt_only": true,
+            "same_target_logout_login_reconnect_restart": true, "replays": 4
+        });
+        self.evidence.passed("after_quest_recovery")
+    }
+
     async fn request_owned_restart(&mut self, label: &str) -> Result<()> {
         let directory = self.arguments.recovery_control_dir.as_ref().context(
             "Required server-restart checkpoint has no owned orchestrator. Run tools/journey-tests/run.py; the client never kills an arbitrary server or silently omits restart evidence",
@@ -332,6 +396,9 @@ impl Runner {
                     ack["same_isolated_database"] == true,
                     "Restart did not retain the isolated database"
                 );
+                if let Some(water) = &self.saved_water {
+                    super::saved_water::validate_restart(&ack, &water.server_hash)?;
+                }
                 let old_pid = ack["old_server_pid"]
                     .as_u64()
                     .context("Restart omitted the old owned PID")?;

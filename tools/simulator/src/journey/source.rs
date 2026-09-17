@@ -238,6 +238,49 @@ pub struct Source {
 
 impl Source {
     pub fn load(root: &Path) -> Result<Self> {
+        Self::load_profile(root, "content/m1")
+    }
+
+    pub fn load_saved_water(root: &Path) -> Result<Self> {
+        let source = Self::load_profile(root, "content/m1/legacy5e-water")?;
+        let manifest_path = root.join(super::saved_water::MANIFEST);
+        ensure!(
+            hash(&fs::read(manifest_path)?) == super::saved_water::MANIFEST_HASH
+                && source.identity["content_artifact"]["uncompressed_sha256"]
+                    == super::saved_water::TO
+                && source.content["revision"] == super::saved_water::TO_REVISION,
+            "Saved-water requires the exact committed minimal b2 manifest"
+        );
+        let compressed = fs::read(root.join("content/m1/legacy5e-water/game-content.csc.gz"))?;
+        ensure!(
+            hash(&compressed) == source.identity["content_artifact"]["sha256"],
+            "Selected saved-water archive changed"
+        );
+        let mut raw = Vec::new();
+        GzDecoder::new(compressed.as_slice())
+            .take(MAX_SOURCE_BYTES + 1)
+            .read_to_end(&mut raw)?;
+        ensure!(
+            raw.len() as u64 <= MAX_SOURCE_BYTES && hash(&raw) == super::saved_water::TO,
+            "Saved-water source must be b2, never current adb or regenerated 1bc"
+        );
+        let old = read_json(&root.join("research/water-fill/inputs/legacy5e-source.json.gz"))?;
+        let mut unchanged = source.content.clone();
+        unchanged["revision"] = old["revision"].clone();
+        ensure!(
+            unchanged["recipes"]
+                .as_object_mut()
+                .context("Missing selected recipes")?
+                .remove("recipe.water.bucket")
+                .is_some()
+                && old["recipes"].get("recipe.water.bucket").is_none()
+                && unchanged == old,
+            "Minimal saved-water target imported changes beyond the recipe and revision"
+        );
+        Ok(source)
+    }
+
+    fn load_profile(root: &Path, profile: &str) -> Result<Self> {
         let oracle = read_json(&root.join("tests/scenarios/m1_fresh_account.json"))?;
         ensure!(
             oracle["name"] == "m1_fresh_account",
@@ -256,17 +299,21 @@ impl Source {
             hashes.insert(name.to_owned(), hash(&fs::read(root.join(name))?));
         }
         for name in [
-            "content/m1/manifest.json",
-            "content/m1/game-content.json.gz",
-            "content/m1/game-content.csc.gz",
+            format!("{profile}/manifest.json"),
+            format!("{profile}/game-content.json.gz"),
+            format!("{profile}/game-content.csc.gz"),
+        ] {
+            hashes.insert(name.clone(), hash(&fs::read(root.join(name))?));
+        }
+        for name in [
             "tests/scenarios/m1_fresh_account.json",
             "crates/protocol/proto/account.proto",
             "crates/protocol/proto/game.proto",
         ] {
             hashes.insert(name.to_owned(), hash(&fs::read(root.join(name))?));
         }
-        let content = read_json(&root.join("content/m1/game-content.json.gz"))?;
-        let manifest = read_json(&root.join("content/m1/manifest.json"))?;
+        let content = read_json(&root.join(format!("{profile}/game-content.json.gz")))?;
+        let manifest = read_json(&root.join(format!("{profile}/manifest.json")))?;
         ensure!(
             content["revision"] == manifest["revision"],
             "Content/manifest revision mismatch"
@@ -293,7 +340,9 @@ impl Source {
             "content_revision": content["revision"],
             "content_schema_version": content["schema_version"],
             "content_artifact": manifest["compiled_artifact"],
-            "baseline": manifest["baseline"],
+            "baseline": if profile == "content/m1/legacy5e-water" {
+                manifest.get("source_baseline").context("Missing selected legacy baseline")?
+            } else { &manifest["baseline"] },
             "protocol_version": clubscape_protocol::PROTOCOL_VERSION,
             "generated_descriptor_sha256": hash(clubscape_protocol::FILE_DESCRIPTOR_SET),
             "source_oracle_policy": "Expected values come from independently authored source contracts/scenario literals, never engine execution or seeded state.",

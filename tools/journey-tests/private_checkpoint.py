@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import re
 import selectors
+import signal
 import stat
 import subprocess
 import time
@@ -155,7 +156,7 @@ def sync_directory(path):
 
 
 def private_command(root, directory, phase, arguments, *, output, maximum=MAX_METADATA,
-                    stdin=None, timeout=90):
+                    stdin=None, timeout=90, env=None, process_group=False):
     """Bound both streams; command errors never disclose captured stdout/stderr."""
     process = None
     input_stream = None
@@ -169,6 +170,7 @@ def private_command(root, directory, phase, arguments, *, output, maximum=MAX_ME
                 [str(argument) for argument in arguments], cwd=root,
                 stdin=input_stream if input_stream else subprocess.DEVNULL,
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                env=env, start_new_session=process_group,
             )
             selector.register(process.stdout, selectors.EVENT_READ, (out, maximum))
             selector.register(process.stderr, selectors.EVENT_READ, (err, 1024 * 1024))
@@ -201,13 +203,44 @@ def private_command(root, directory, phase, arguments, *, output, maximum=MAX_ME
     finally:
         if process is not None:
             if process.poll() is None:
-                process.kill()
+                if process_group:
+                    os.killpg(process.pid, signal.SIGKILL)
+                else:
+                    process.kill()
             process.wait(timeout=10)
             for stream in (process.stdout, process.stderr):
                 if stream is not None and not stream.closed:
                     stream.close()
         if input_stream is not None:
             input_stream.close()
+
+
+def seal_inventory(directory):
+    files = []
+    total = 0
+    for path in sorted(directory.rglob("*")):
+        metadata = path.lstat()
+        require(metadata.st_uid == os.getuid(), "inventory", "unowned_preserved_path")
+        if stat.S_ISDIR(metadata.st_mode):
+            require(stat.S_IMODE(metadata.st_mode) == 0o700, "inventory", "nonprivate_directory")
+            continue
+        require(stat.S_ISREG(metadata.st_mode) and stat.S_IMODE(metadata.st_mode) == 0o600,
+                "inventory", "nonprivate_file")
+        total += metadata.st_size
+        require(total <= MAX_CHECKPOINT, "inventory", "checkpoint_byte_limit")
+        files.append({"path": str(path.relative_to(directory)), "bytes": metadata.st_size,
+                      "sha256": digest(path)})
+    write_json(directory / "private-inventory.json", {"schema_version": 1, "files": files})
+    return digest(directory / "private-inventory.json")
+
+
+def sync_tree(directory):
+    directories = [path for path in directory.rglob("*") if path.is_dir()]
+    for path in sorted(directories, key=lambda value: len(value.parts), reverse=True):
+        sync_directory(path)
+    sync_directory(directory)
+    sync_directory(directory.parent)
+    sync_directory(directory.parent.parent)
 
 
 def copy_file(source, target, maximum, expected_sha256=None, *, secret=False):
@@ -442,28 +475,9 @@ def preserve_checkpoint(root, run_directory, report, server):
             "restore_executed": False, "resume_authorized": False,
         })
         phase = "inventory"
-        files = []
-        total = 0
-        for path in sorted(directory.rglob("*")):
-            metadata = path.lstat()
-            require(metadata.st_uid == os.getuid(), phase, "unowned_preserved_path")
-            if stat.S_ISDIR(metadata.st_mode):
-                require(stat.S_IMODE(metadata.st_mode) == 0o700, phase, "nonprivate_directory")
-                continue
-            require(stat.S_ISREG(metadata.st_mode) and stat.S_IMODE(metadata.st_mode) == 0o600,
-                    phase, "nonprivate_file")
-            total += metadata.st_size
-            require(total <= MAX_CHECKPOINT, phase, "checkpoint_byte_limit")
-            files.append({"path": str(path.relative_to(directory)), "bytes": metadata.st_size,
-                          "sha256": digest(path)})
-        write_json(directory / "private-inventory.json", {"schema_version": 1, "files": files})
+        seal_inventory(directory)
         phase = "durability"
-        directories = [path for path in directory.rglob("*") if path.is_dir()]
-        for path in sorted(directories, key=lambda value: len(value.parts), reverse=True):
-            sync_directory(path)
-        sync_directory(directory)
-        sync_directory(base)
-        sync_directory(base.parent)
+        sync_tree(directory)
         available = {
             "schema_version": 1, "status": "available", "snapshot_available": True,
             "run_id": run_id, "directory": str(directory.relative_to(root)),

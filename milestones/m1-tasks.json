@@ -53,7 +53,7 @@
       "source_notes": ["Current generic resume checks the root manifest and only old tutorial/mainland/Cook frontiers. Source-only delivery preparation does not make that reader migration-aware."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-saved-water-continuation-implementation.json"]
+      "evidence": ["milestones/evidence/m1-saved-water-continuation-implementation.json", "milestones/evidence/m1-saved-water-continuation-review.json", "tools/journey-tests/evidence/saved-water-continuation-code.json"]
     },
     {
       "id": "M1-CAMERA-CONSUMER-IMPLEMENTATION",

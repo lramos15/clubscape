@@ -26,7 +26,7 @@ enum Scenario {
         url: String,
     },
     /// Execute a source-backed named journey, never a fixture or seeded character.
-    Scenario(journey::Arguments),
+    Scenario(Box<journey::Arguments>),
 }
 
 struct Connection {
@@ -322,7 +322,7 @@ async fn account_lifecycle(url: &str) -> Result<()> {
 async fn main() -> Result<()> {
     match Arguments::parse().command {
         Scenario::AccountLifecycle { url } => account_lifecycle(&url).await,
-        Scenario::Scenario(arguments) => journey::run(arguments).await,
+        Scenario::Scenario(arguments) => journey::run(*arguments).await,
     }
 }
 

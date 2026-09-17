@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
-  "status": "admitted_code_and_fixture_work_only",
+  "status": "reviewed_code_candidate_main_qualification_pending",
   "worker": "115554cb-8e25-40c8-854a-4f9dc8936166",
   "retired_predecessor": "2766e089-44e5-4a1d-974e-7b03ad9c269d",
   "assignment": "One bounded replacement received the previously unexecuted code-only task after reservation in2b90e30. The retired predecessor performed no work on this task; no scope or execution budget was renewed.",
@@ -55,6 +55,17 @@
     "restores_migrations_or_gameplay_runs": 0,
     "browser_gpu_runelite_or_source_capture": 0,
     "nested_agents_or_factories": 0
+  },
+  "reviewed_candidate": {
+    "implementation_revision": "2fbf5afae6c548981dafd660c523d0ead758de81",
+    "candidate_revision": "b958cc44425804dd56ef4a940a416588f23b059b",
+    "qualification": "tools/journey-tests/evidence/saved-water-continuation-code.json",
+    "independent_review": "milestones/evidence/m1-saved-water-continuation-review.json",
+    "independent_python_tests_passed": 83,
+    "independent_native_tests_passed": 53,
+    "owned_paths_imported_byte_identically": 15,
+    "main_regression_qualification": "pending",
+    "actual_saved_execution": false
   },
   "independent_review_required_before_saved_execution": true,
   "saved_execution_admitted": false,

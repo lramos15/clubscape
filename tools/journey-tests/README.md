@@ -74,6 +74,22 @@ importing unrelated newer UI/audio metadata. The ordinary journey command keeps
 its canonical defaults and source-identity check; preparing a directory does
 not authorize restoring or migrating a saved world.
 
+### Saved52 minimal-water continuation
+
+[`saved_water.py`](saved_water.py) is a separate, migration-aware entrypoint,
+not another `resume.py` mode or another water-operator allowance. Its
+[execution contract](SAVED_WATER.md) requires a new committed exact execution
+admission, an independent code review, explicitly pinned executor/binaries and
+one fixed exclusive journal **before any original checkpoint path is inspected**.
+The implementation/preparation/owner records do not pass this gate.
+
+It retains the original 5e capsule/report/trace lineage, calls the existing
+production `migrate-ui` transaction once with the minimal b2 GameRoot, and
+continues only the already-owned bucket/flour water/dough/range and postquest
+recovery. Unlike the old general runner, this entrypoint forbids owned database
+or credential cleanup if a fresh protected checkpoint cannot be completed.
+Success and failure snapshots do not authorize another restore or M1 acceptance.
+
 ### Bounded empty-world water operator preflight
 
 `water_operator.py` is separate from the account journey. It can consume only

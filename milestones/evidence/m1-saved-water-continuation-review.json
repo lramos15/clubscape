@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "kind": "m1_saved_water_continuation_code_review",
+  "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
+  "status": "passed",
+  "reviewer": "director",
+  "implementer": "115554cb-8e25-40c8-854a-4f9dc8936166",
+  "reviewed_at": "2026-09-17T03:29:05.131437+00:00",
+  "code_revision": "b958cc44425804dd56ef4a940a416588f23b059b",
+  "implementation_revision": "2fbf5afae6c548981dafd660c523d0ead758de81",
+  "implementation_admission": "milestones/evidence/m1-saved-water-continuation-implementation.json",
+  "candidate_qualification": "tools/journey-tests/evidence/saved-water-continuation-code.json",
+  "owned_candidate_paths": 15,
+  "owned_implementation_files_verified": 14,
+  "review_scope": [
+    "All new Python admission, reservation, reader, execution, preservation and fixture code; all native remaining-only and recovery changes.",
+    "Existing checkpoint writers, source selection, typed operation/control decoding, source contact/production helpers and public report schema consumed by the new path.",
+    "Pre-I/O canonical admission and exclusive journal, source/executor containment, native claims and completed-segment/trace preservation.",
+    "Owned empty restore and original private identity comparison before the existing production migrate-ui call, exact migration conservation oracle, lifecycle-only entry and new-operation-only duplicate proof.",
+    "Source success or burn, additional-input accounting, bounded owned lifecycle and fresh checkpoint before cleanup, with unknown outcomes and capture failures retained."
+  ],
+  "findings": [],
+  "qualification": "No blocking correctness finding in this candidate after direct independent inspection and isolated synthetic/native regressions. This reviews code, not the actual saved checkpoint, source-service readiness, migration or remaining gameplay. The production migration implementation is the separately reviewed and qualified water dependency, not a replacement implemented by this candidate.",
+  "independent_checks": {
+    "worktree": ".worktrees/m1-saved-water-review",
+    "index": "milestones/evidence/m1-saved-water-continuation-review/index.json",
+    "python": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/journey-tests timeout 120 python3 -m unittest test_saved_water test_saved_water_runtime test_private_checkpoint test_resume test_run test_cook_continue test_mainland_continue test_dying_observe",
+      "exit_code": 0,
+      "tests_passed": 83,
+      "elapsed_seconds": 3.42
+    },
+    "native": {
+      "command": "CARGO_BUILD_JOBS=4 CARGO_TARGET_DIR=$PWD/.local/review-target timeout 600 cargo test --locked --offline --quiet -p clubscape-sim --bin clubscape-sim",
+      "exit_code": 0,
+      "tests_passed": 53,
+      "elapsed_seconds": 26.01,
+      "actual_test_binary": ".worktrees/m1-saved-water-review/.local/review-target/debug/deps/clubscape_sim-df458c8d8e14b8bc",
+      "actual_test_binary_sha256": "528558968cb484b4ac518941fe65467a47122180239e90702a180c7070f70481"
+    },
+    "candidate_qualification_logs_hash_verified": 5,
+    "candidate_retained_initial_failure_logs_hash_verified": 2,
+    "candidate_source_files_hash_verified": 14,
+    "candidate_and_root_lock_identical": true,
+    "cargo_lock_sha256": "eb443059216fdd402c6c94e8aa76ed84dd1b5678f37aa0540533fc4f4008f70c",
+    "candidate_non_test_build_records_and_actual_aarch64_elfs_verified": 3,
+    "candidate_clippy_and_non_test_builds_rerun_by_director": false,
+    "host": "Linux aarch64; Python3.12.3, Rust/Cargo1.98.1; no environment changes"
+  },
+  "binaries": {
+    "migrator": {
+      "path": ".local/saved-water-target/debug/clubscape-server",
+      "sha256": "ccfd9f1bd084a2483e5d6238154b037a18453ea9e84c4788e18a8fe6462620b3"
+    },
+    "server": {
+      "path": ".local/saved-water-target/debug/clubscape-journey-server",
+      "sha256": "c82915e8a5c20bbb2853ffbfe955f4cf6c996ffc30e0e4cc590cb858521af749"
+    },
+    "simulator": {
+      "path": ".local/saved-water-target/debug/clubscape-sim",
+      "sha256": "f1416752b87390b1954c63967cb13f93c11e6c86aad4802b07e3e67ceb0a267b"
+    }
+  },
+  "public_delivery_review": {
+    "inline_game_root_and_delivered_manifest_claims": "both_verified_unchanged",
+    "receipt": "milestones/evidence/m1-saved-water-delivery-preparation.json",
+    "prepared_files": 40,
+    "existing_copy_helper_preserves_all_prepared_files": true,
+    "preparation_or_inspection_repeated": false
+  },
+  "remaining_execution_gates": [
+    "Main integration and focused regression qualification must be persisted separately.",
+    "A new exact committed execution admission must bind this executor HEAD, these reviewed binaries, current public prerequisite hashes, the fixed journal and all proposed bounds before any protected filesystem operation.",
+    "Actual original identity, target service readiness, restore, fenced migration, remaining gameplay and fresh protected capture are unexecuted and may still fail their strict runtime guards.",
+    "No old operator, preparation, restore, browser, audio or RuneLite allowance is renewed."
+  ],
+  "protected_checkpoint_accesses": 0,
+  "actual_databases_services_restores_migrations_or_gameplay": 0,
+  "gpu_browser_source_capture_generation_or_runelite_invocations": 0,
+  "main_qualification_in_this_record": false,
+  "saved_execution_admitted": false,
+  "saved_execution_performed": false,
+  "automatic_resume": false,
+  "full_journey_passed": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

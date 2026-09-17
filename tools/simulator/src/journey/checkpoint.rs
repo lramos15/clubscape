@@ -22,6 +22,7 @@ pub(super) enum ResumeMode {
     ObserveDying,
     ContinueMainland,
     ContinueCook,
+    ContinueSavedWater,
 }
 
 pub(super) struct Resume {
@@ -34,6 +35,7 @@ pub(super) struct Resume {
     pub mainland_boundary: Option<Value>,
     pub existing_death: Option<super::mainland::ExistingDeath>,
     pub cook: Option<super::cook::Continuation>,
+    pub saved_water: Option<super::saved_water::Continuation>,
 }
 
 impl Resume {
@@ -44,6 +46,7 @@ impl Resume {
     ) -> Result<Self> {
         let observe = mode == ResumeMode::ObserveDying;
         let mainland = mode == ResumeMode::ContinueMainland;
+        let water = mode == ResumeMode::ContinueSavedWater;
         let resolved = control_path(path, "resume-client-checkpoint.json")?;
         let capsule = source::read_json(&resolved)?;
         let report_path = path.with_file_name("resume-report.json");
@@ -53,8 +56,13 @@ impl Resume {
         ensure!(
             capsule["schema_version"] == 1
                 && capsule["kind"] == "private_m1_client_checkpoint"
-                && capsule["source_identity"] == source.identity
-                && report["identity"] == source.identity
+                && capsule["source_identity"] == report["identity"]
+                && (report["identity"] == source.identity
+                    || water
+                        && report["identity"]["content_artifact"]["uncompressed_sha256"]
+                            == super::saved_water::FROM
+                        && source.identity["content_artifact"]["uncompressed_sha256"]
+                            == super::saved_water::TO)
                 && (report["status"] == "blocked" || mainland && report["status"] == "observed")
                 && report["last_snapshot"] == capsule["last_observed_state"],
             "Resume capsule/source/report identity mismatch"
@@ -76,6 +84,9 @@ impl Resume {
         let cook = (mode == ResumeMode::ContinueCook)
             .then(|| super::cook::admitted(&capsule, &report))
             .transpose()?;
+        let saved_water = water
+            .then(|| super::saved_water::admitted(&capsule, &report, source))
+            .transpose()?;
         ensure!(
             !edges.is_empty()
                 && edges.len() <= 70
@@ -83,7 +94,8 @@ impl Resume {
                     || after_goblin_kill
                     || observation_boundary.is_some()
                     || mainland_boundary.is_some()
-                    || cook.is_some())
+                    || cook.is_some()
+                    || saved_water.is_some())
                 && report["segments"]["onboarding_recovery"]["status"] == "passed",
             "Checkpoint is outside the explicitly supported source continuation boundaries"
         );
@@ -166,6 +178,7 @@ impl Resume {
             mainland_boundary,
             existing_death,
             cook,
+            saved_water,
         })
     }
 
@@ -266,6 +279,25 @@ pub(super) struct ControlAttempt {
 }
 
 impl ControlAttempt {
+    pub(super) fn from_saved(value: &Value) -> Result<Option<Self>> {
+        if value.is_null() {
+            return Ok(None);
+        }
+        super::observation::validate_control(value, false)?;
+        let bytes: Vec<u8> = serde_json::from_value(value["client_message_protobuf"].clone())?;
+        Ok(Some(Self {
+            message: ClientMessage::decode(bytes.as_slice())?,
+            bearer_token: value["private_bearer_token"].as_str().map(str::to_owned),
+            http_status: Some(
+                value["observed_http_status"]
+                    .as_u64()
+                    .context("Missing status")?
+                    .try_into()?,
+            ),
+            error: None,
+        }))
+    }
+
     pub(super) fn new(
         operation_id: String,
         command: Command,
@@ -302,6 +334,18 @@ impl ControlAttempt {
 }
 
 impl Attempt {
+    pub(super) fn require_acknowledged_sequence(&self, sequence: u64) -> Result<()> {
+        ensure!(
+            self.input.sequence == sequence
+                && self.input.action.is_some()
+                && matches!(self.response, Response::AcknowledgmentReceived {
+                    duplicate: false, next_sequence: Some(next),
+                } if next == sequence + 1),
+            "Original boundary operation was not definitively acknowledged"
+        );
+        Ok(())
+    }
+
     pub(super) fn require_acknowledged_action(
         &self,
         sequence: u64,
@@ -399,7 +443,7 @@ pub(super) fn capture(runner: &Runner, path: &Path) -> Result<Value> {
         evidence::public_snapshot(&runner.snapshot)?
     } else {
         ensure!(
-            runner.arguments.observe_dying,
+            runner.arguments.observe_dying || runner.arguments.continue_saved_water,
             "Private checkpoint has no new source observation"
         );
         runner
@@ -413,7 +457,7 @@ pub(super) fn capture(runner: &Runner, path: &Path) -> Result<Value> {
             && observed["player"]["actor_id"] == runner.actor_id,
         "Private checkpoint has no actually observed source character"
     );
-    let value = json!({
+    let mut value = json!({
         "schema_version": 1,
         "kind": "private_m1_client_checkpoint",
         "scenario": "m1_fresh_account",
@@ -425,7 +469,9 @@ pub(super) fn capture(runner: &Runner, path: &Path) -> Result<Value> {
             "world_session_id": runner.world_session
         },
         "actor_id": runner.actor_id,
-        "source_identity": runner.source.identity,
+        "source_identity": if runner.arguments.continue_saved_water && runner.snapshot.player.is_none() {
+            &runner.evidence.report["saved_water_history"]["source_identity"]
+        } else { &runner.source.identity },
         "server_build_revision": runner.evidence.report["server_build_revision"],
         "report_path": runner.arguments.report,
         "trace_path": runner.evidence.report["trace_path"],
@@ -448,6 +494,14 @@ pub(super) fn capture(runner: &Runner, path: &Path) -> Result<Value> {
         "resume_authorized": false,
         "receipt_state_reconciliation_required": true
     });
+    if runner.arguments.continue_saved_water {
+        value["saved_water_lineage"] = json!({
+            "history": runner.evidence.report["saved_water_history"],
+            "transition": runner.evidence.report["source_transition"],
+            "new_acknowledged_water_receipt": runner.saved_water.as_ref()
+                .and_then(|water| water.receipt.as_ref()).map(receipt_value)
+        });
+    }
     write_capsule(path, &value)
 }
 

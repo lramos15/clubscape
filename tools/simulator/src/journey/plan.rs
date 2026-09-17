@@ -2484,6 +2484,109 @@ impl Runner {
         )
         .await
     }
+
+    pub(super) async fn saved_water_range(&mut self) -> Result<()> {
+        use super::saved_water::{self, Phase, RANGE, SINK};
+        ensure!(
+            self.count("item.flour.pot")? == 1
+                && self.count("item.bucket")? == 1
+                && self.count("item.water.bucket")? == 0
+                && self.player()?.inventory.len() == 2
+                && self.xp("skill.cooking")? == 3000
+                && self.quest("quest.cooks_assistant")? == "stage.cooks.completed"
+                && self.player()?.quest_points == 2,
+            "Saved-water starts with existing flour/bucket and the completed reward, never reacquisition"
+        );
+        self.saved_water
+            .as_mut()
+            .context("Missing saved-water phase")?
+            .phase = Phase::Water;
+        self.label("saved_water.source_sink_existing_bucket")?;
+        let navigation = self
+            .source
+            .navigation_with_states(&self.observed_states, true)?;
+        let goals = self
+            .source
+            .item_use_goals(SINK, "recipe.water.bucket", &navigation)?;
+        self.evidence.append(
+            "saved_water_source_contact_candidates",
+            json!({
+                "target": self.source.source_identity(SINK)?,
+                "goals": goals, "fabricated_menu": false, "reach_widened": false
+            }),
+        )?;
+        self.go_to(goals).await?;
+        let navigation = self
+            .source
+            .navigation_with_states(&self.observed_states, false)?;
+        ensure!(
+            self.source
+                .item_use_goals(SINK, "recipe.water.bucket", &navigation)?
+                .contains(&self.tile()?),
+            "Actual sink contact is not source-qualified"
+        );
+        let before = evidence::stable_player(self.player()?);
+        let receipt = self
+            .input(Action::UseItem(game::UseItem {
+                inventory_slot: self.slot("item.bucket")?,
+                target: Some(game::use_item::Target::WorldSpawn(SINK.into())),
+            }))
+            .await?;
+        self.saved_water
+            .as_mut()
+            .context("Missing saved-water phase")?
+            .receipt = Some(receipt.clone());
+        self.wait_for("saved_water_one_bucket_conversion", 20, |runner| {
+            Ok(runner.count("item.water.bucket")? == 1
+                && runner.count("item.bucket")? == 0
+                && runner.player()?.activity == "idle")
+        })
+        .await?;
+        saved_water::water_conversion(&before, &evidence::stable_player(self.player()?))?;
+        self.evidence.report["saved_water_conversion"] = json!({
+            "status": "passed", "source_recipe": "recipe.water.bucket",
+            "acknowledged_operation_id": receipt.operation_id, "sequence": receipt.sequence,
+            "converted_buckets": 1, "extra_items_xp_or_quests": false,
+            "source_contact_tile": self.tile()?
+        });
+        self.saved_water
+            .as_mut()
+            .context("Missing saved-water phase")?
+            .phase = Phase::Dough;
+        self.label("saved_water.existing_flour_dough")?;
+        self.dough().await?;
+        self.saved_water
+            .as_mut()
+            .context("Missing saved-water phase")?
+            .phase = Phase::Range;
+        self.label("saved_water.source_range_success_or_burn")?;
+        self.cook(
+            "recipe.cooking.bread.lumbridge_range",
+            Some(RANGE),
+            "item.bread.dough",
+            "item.bread",
+            "item.bread.burnt",
+            400,
+        )
+        .await?;
+        ensure!(
+            self.count("item.bread")? + self.count("item.bread.burnt")? == 1
+                && self.count("item.flour.pot")? == 0
+                && self.count("item.bread.dough")? == 0
+                && self.count("item.bucket")? == 1
+                && self.count("item.pot")? == 1
+                && self.quest("quest.cooks_assistant")? == "stage.cooks.completed"
+                && self.player()?.quest_points == 2,
+            "Range outcome changed the completed quest or lost its source containers"
+        );
+        self.evidence.report["saved_water_range"] = json!({
+            "status": "passed", "successes": self.count("item.bread")?,
+            "burns": self.count("item.bread.burnt")?, "rng_controlled": false,
+            "cooking_xp_tenths": self.xp("skill.cooking")?,
+            "old_reward_replayed": false, "ingredient_reacquisition": false
+        });
+        self.evidence.passed("cooks_reward_and_range")
+    }
 }
 
 fn mobile_target_reapproachable(

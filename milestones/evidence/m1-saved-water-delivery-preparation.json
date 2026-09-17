@@ -76,6 +76,20 @@
     "evidence_files": 4,
     "qualification": "Strict Runtime artifact and genuine source-asset preparation only. No saved file was read, no service/database/world was started, and the server's actual F2P readiness and migration still require separate execution."
   },
+  "inline_receipt_verification": {
+    "verified_at": "2026-09-17T03:18:50.239588+00:00",
+    "reviewer": "director",
+    "status": "both_claims_verified_unchanged",
+    "game_root_matches_original_preparation_and_inventory": true,
+    "game_root": ".local/saved-water-delivery-01/game-root",
+    "delivered_content_manifest_bytes": 6455,
+    "delivered_content_manifest_sha256": "718d50eb2134f76b9bb2d34ba2b99f162cb2ec6666b392aba52ce2a03477cdf4",
+    "delivered_manifest_matches_inventory_input_and_inline_claim": true,
+    "committed_public_records_equal_retained_originals": true,
+    "delivery_helper_or_inspector_rerun": false,
+    "protected_paths_accessed": false,
+    "qualification": "Read-only comparison of existing public preparation/inventory records and the delivered manifest. No receipt correction, service readiness proof or renewed allowance."
+  },
   "saved_execution_admitted": false,
   "milestone_accepted": false,
   "later_milestone_authorized": false
