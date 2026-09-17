@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "task": "M1-OWNER-COMPOSE-DEPLOYMENT",
+  "status": "blocked_on_playable_browser_candidate",
+  "authority": "milestones/approvals/m1-owner-mac-testing-deployment-v1.json",
+  "recorded_at": "2026-09-17T13:48:20.991156+00:00",
+  "current_code_revision": "3eff49c2d6d6de129acb7a4102c6cc6eb2765278",
+  "current_checkpoint_revision": "75fa9096cc576fb9c66692c3e5fbe497c3b7fdb0",
+  "readiness_task": "M1-OWNER-TEST-CANDIDATE-READINESS",
+  "readiness_record_required": "milestones/evidence/m1-owner-playable-candidate.json",
+  "discovery": {
+    "dashboard_readme": "/home/lramos15/docker-lander/README.md",
+    "dashboard_directory_is_git_repository": false,
+    "compose_file": "/home/lramos15/compose.yaml",
+    "compose_project": "home-services",
+    "compose_sha256_at_inspection": "92186afc263c23e7584d226118e0242b429ab37cdb5fdd56009c10aaea75e451",
+    "compose_snapshot_policy": "Reinspect and integrate any later owner changes before editing; this snapshot does not authorize overwriting the host stack.",
+    "host": "Linux aarch64",
+    "compose_version": "5.0.2",
+    "docker_context": "default",
+    "docker_endpoint": "unix:///var/run/docker.sock",
+    "existing_services": ["socket-proxy", "lander", "bunkr-view", "scrapely", "es100-tracker", "copilot-proxy"],
+    "observed_service_state": "All six containers were running; the five application containers reported healthy. The socket proxy has no healthy label in the observed status.",
+    "read_only_inspection": "Compose config --no-interpolate --no-env-resolution, projected to service/image/port/network/label names, and docker ps. Environment values and private application data were not published."
+  },
+  "deployment_requirements": [
+    "Record a playable, reviewed candidate and its relevant native/browser readiness evidence before deployment. Current camera code-only qualification is not normal browser readiness.",
+    "Use dedicated ClubScape application/database services, private persistence and least-privilege runtime configuration. Do not reuse the development database or either consumed saved-state continuation.",
+    "Stage only identified application code and approved public runtime assets. Exclude .local, .worktrees, Git/session data, private checkpoints, credentials and the unrelated feedback archive from Docker build contexts and images.",
+    "Bind only an available 127.0.0.1 application port; do not publish PostgreSQL. Select exact ports after inspecting the host at deployment time.",
+    "Provide Docker Lander metadata for the application and hide its infrastructure service. The owner-facing URL must be the Mac localhost SSH-forward endpoint, not a plain-HTTP LAN URL.",
+    "Build and start only the ClubScape services. Do not run unscoped compose up/down, down --volumes, volume pruning or unrelated service recreation.",
+    "Preserve owner data on subsequent updates and failures. Report real readiness failures; an account-only or fenced page is not a successful playable deployment.",
+    "Publish the exact image/revision, container identities, localhost URL and SSH command only after real deployment checks. Do not claim Mac rendering/audio/performance checks that only the owner can perform."
+  ],
+  "current_blockers": [
+    "Normal camera entry remains fenced: live source focus identity, fine logical/render coordinates, source footprint and explicit effects are absent/unverified.",
+    "Required source world approach-and-act routing and remaining browser/UI/renderer integration are not complete."
+  ],
+  "owner_mac_acceptance_is_a_post_deployment_gate": true,
+  "deployment_permission_must_not_be_reasked_within_this_approved_scope": true,
+  "host_compose_modified": false,
+  "images_built_or_pulled": 0,
+  "containers_started_stopped_or_recreated": 0,
+  "credentials_or_owner_testing_state_created": false,
+  "actual_deployment": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

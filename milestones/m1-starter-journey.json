@@ -48,6 +48,7 @@
     "latest_integrated_code_revision": "3eff49c2d6d6de129acb7a4102c6cc6eb2765278",
     "latest_actual_saved_executor_revision": "0b6105d66a615fcaf47886cc97f094d6063320e8",
     "latest_saved_phase_checkpoint": "4282ed4b806b4be4",
+    "owner_testing_deployment": "milestones/evidence/m1-owner-compose-deployment.json",
     "renderer_numeric_blocker": "milestones/evidence/m1-gear-convex-certificate-review.json",
     "renderer_residual_handoff": "milestones/evidence/m1-renderer-handoff-0665f94.json",
     "scope_note": "M1 remains unaccepted. Actual4282 saved continuation passed once under3a52/dd631 on reviewed0b: conserved5e-to-b2 migration, source water/dough/natural range burn and four new-water duplicates across recovery. Only11new inputs and39new checks were added, preserving70tutorial edges and4547trace rows; the historical chain now has416checks/614submissions/4633rows and all11segments passed. Fresh4282 phase capture preceded verified owned cleanup; both01/02 are consumed and no further protected access or retry is admitted. Exact camera53/939/44 consumers are integrated3eff49c and pass61native/5actual-WASM/289web cases, strict Clippy, generated bindings/typecheck and isolated code build with byte-identical14/354conformance. This supplies consumers/height presence, not missing live native focus/fine coordinates/footprint/effects or normal browser entry. Renderer0665 remains parked with2/2 full recomputations spent; historical3/2034 predates certificate repair and root remains931/2034. Full-journey/browser/presentation/animation/audio/performance and owner Mac/Chrome/Edge/speaker acceptance stay open. No unrelated allowance or later milestone is authorized."
@@ -70,6 +71,10 @@
     "path": "milestones/approvals/m1-water-fill-upgrade-v1.json",
     "sha256": "438ba1e44c35f3ad7ebbe8e4c099b02f594df851bd2092a7f767bc4928b4c9d1",
     "scope": "Source-backed water dependency and exact fenced upgrade of the same saved world. The separately approved4282 attempt now proves one restore, conserved5e-to-b2 migration and source water/dough/natural-range-burn/postquest continuation; no further restore or execution is admitted."
+  },
+  "owner_mac_testing_deployment_approval": {
+    "path": "milestones/approvals/m1-owner-mac-testing-deployment-v1.json",
+    "scope": "After normal browser playability, deploy only ClubScape services through ~/compose.yaml for Mac localhost access over SSH. No current engineering-preview deployment, public exposure, saved-state reuse, M1 acceptance or release."
   },
   "presentation_acceptance": null,
   "later_milestone_authorized": false,
