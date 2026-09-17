@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "kind": "saved_water_execution_public_receipt",
+  "run_id": "ce09f751c0814633",
+  "admission_revision": "1bf49d97a92ec7a6d133ff62b5d92bbfab0e0bff",
+  "admission_sha256": "228dfd7e5af154f45f87b85f9b76f56e25602ea2c041ab112f1cad39ada37ea1",
+  "files": [
+    {"path": "report.json", "bytes": 2092, "sha256": "ee0b31a6431f10831df979e483028bcfaf81046971eb7071c177096ade52689b"},
+    {"path": "authority-v1.json", "bytes": 2924, "sha256": "55724000212b8ee79bae8451017d98732b01991b70107dc93d71856e7d6e6edb"}
+  ],
+  "entrypoint_exit_code": 1,
+  "entrypoint_attempts_consumed": 1,
+  "entrypoint_attempts_remaining": 0,
+  "protected_checkpoint_accessed": false,
+  "actual_restore_migration_or_gameplay": false,
+  "milestone_accepted": false
+}

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "m1_saved_water_continuation_code_review",
   "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
-  "status": "passed",
+  "status": "blocked_cli_bootstrap",
   "reviewer": "22b898a4-8850-4fc0-be15-af0b7440e32a",
   "reviewer_role": "independent_director_authored_deadline_delta",
   "baseline_reviewer": "director",
@@ -28,6 +28,16 @@
     "Source success or burn, additional-input accounting, bounded owned lifecycle and fresh checkpoint before cleanup, with unknown outcomes and capture failures retained."
   ],
   "findings": [
+    {
+      "id": "saved-water-cli-module-identity",
+      "severity": "HIGH",
+      "file": "tools/journey-tests/saved_water.py",
+      "reporter": "director",
+      "status": "open",
+      "problem": "Actual script execution creates __main__.Admission, while the imported runtime reader creates saved_water.Admission. Nominal equality rejects the handoff before protected I/O. Import-based unit fixtures did not exercise this CLI boundary.",
+      "evidence": "milestones/evidence/m1-saved-water-execution-result.json",
+      "required_repair": "Use one canonical authority module from a thin launcher and runtime, with synthetic actual-script bootstrap coverage. Preserve the equality guard, failed attempt and exhausted journal; no retry is admitted."
+    },
     {
       "id": "saved-water-native-deadline",
       "severity": "HIGH",

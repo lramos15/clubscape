@@ -6,7 +6,7 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-SAVED-WATER-EXECUTION"},
+      {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
     ],
     "reserved": [],
@@ -41,7 +41,7 @@
     {
       "id": "M1-SAVED-WATER-EXECUTION",
       "goal": "Consume only the exact one-shot reviewed saved52 minimal-water upgrade and remaining range/postquest attempt.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["milestones/evidence/m1-saved-water-execution.json", "milestones/evidence/m1-saved-water-deadline-root-qualification.json", "tools/journey-tests/SAVED_WATER.md"],
       "dependencies": ["M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION", "M1-SAVED-WATER-DEADLINE-REVIEW", "M1-SAVED-WATER-DELIVERY-PREPARATION", "M1-WATER-MAIN-INTEGRATION", "M1-WATER-UPGRADE-PREFLIGHT"],
       "allowed_paths": [".worktrees/m1-saved-water-continuation/.local/saved-water-continuation-01/**", ".worktrees/m1-saved-water-continuation/.local/journey-runs/**", ".worktrees/m1-saved-water-continuation/.local/journey-checkpoints/**", "milestones/**"],
@@ -54,7 +54,7 @@
       "source_notes": ["Original52 access is a read-only exception granted only by the separate exact execution record after its public gate/reservation; no prior consumed restore admission applies."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-saved-water-execution.json"]
+      "evidence": ["milestones/evidence/m1-saved-water-execution.json", "milestones/evidence/m1-saved-water-execution-result.json"]
     },
     {
       "id": "M1-SAVED-WATER-DEADLINE-REVIEW",
@@ -77,7 +77,7 @@
     {
       "id": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
       "goal": "Implement and test the exact migration-aware saved52 continuation without reading or executing protected state.",
-      "status": "VERIFIED",
+      "status": "IMPLEMENTING",
       "specs": ["milestones/evidence/m1-saved-water-continuation-implementation.json", "milestones/evidence/m1-saved-water-delivery-preparation.json", "milestones/approvals/m1-water-fill-upgrade-v1.json"],
       "dependencies": ["M1-SAVED-WATER-DELIVERY-PREPARATION", "M1-WATER-MAIN-INTEGRATION"],
       "allowed_paths": ["tools/journey-tests/**", "tools/simulator/src/journey/**", "tools/simulator/src/main.rs", "tools/simulator/tests/**"],

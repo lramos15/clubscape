@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
-  "status": "verified_code_only_no_saved_execution",
+  "status": "cli_bootstrap_code_only_repair_no_saved_access",
   "worker": "director",
   "candidate_implementer": "115554cb-8e25-40c8-854a-4f9dc8936166",
   "retired_predecessor": "2766e089-44e5-4a1d-974e-7b03ad9c269d",
@@ -86,6 +86,8 @@
     "new_agent_or_execution_allowance": false
   },
   "independent_review_required_before_saved_execution": true,
+  "consumed_execution_result": "milestones/evidence/m1-saved-water-execution-result.json",
+  "bootstrap_repair_scope": "Director may fix only canonical module identity and synthetic actual-CLI coverage in the same worktree. No protected checkpoint read, actual entrypoint retry, database/server/migration/gameplay, changed journal, new output root or renewed execution allowance.",
   "saved_execution_admitted": false,
   "milestone_accepted": false
 }
