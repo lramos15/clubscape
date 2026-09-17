@@ -1,0 +1,34 @@
+{
+  "kind": "strict-source-integrity-with-external-owner-authority",
+  "recordedAt": "2026-09-17T00:25:03.860Z",
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "approvalSha256": "e910cb02b6984a94be542af1c56e29dc67bfe2e1cd14b72deda8b4b369feeb70",
+  "frozenContext": [
+    {
+      "path": "spec/art-style.md",
+      "sha256": "79a1527765c34612e035d67de0718165c98b4b4c54c056ac7c051ceb3e95c259",
+      "size_bytes": 939,
+      "source_role": "hash_bound_existing_contract_or_inventory"
+    },
+    {
+      "path": "spec/interface-parity.md",
+      "sha256": "77cfea36b5fd3c17f15e388c65a33d99bf0e462e898fb407aea93b1ec5ae41be",
+      "size_bytes": 1388,
+      "source_role": "hash_bound_existing_contract_or_inventory"
+    }
+  ],
+  "validator": {
+    "path": "tools/reference-pack/validate.py",
+    "sha256": "c81979af943a90ff454882e7b9797e8efecd7d6c6b50c7c624808777ed6a3866",
+    "strictCompleteness": true
+  },
+  "checked": {
+    "hashes": 1307,
+    "cases": 126,
+    "tutorialStates": 71,
+    "nativeImages": 109,
+    "flacs": 264
+  },
+  "frozenStatusIsHistorical": true,
+  "candidateAccepted": false
+}

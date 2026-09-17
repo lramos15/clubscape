@@ -116,7 +116,8 @@
       "normalization_activity_clearing_or_tick_error_swallowing_added": false
     }
   },
-  "main_integrated": false,
+  "main_integrated": true,
+  "main_integration": "milestones/evidence/m1-water-main-integration.json",
   "saved_world_migration_or_continuation_admitted": false,
   "milestone_accepted": false
 }

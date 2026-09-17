@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "main_code_commit": "6719717f65aba8f58058e1c5d2aa94608086cccc",
+  "candidate": "a162eb7818639c2babcf4ad09ec21dd68c15f2ea",
+  "byte_identical_owned_paths": 140,
+  "verified_evidence_records": 50,
+  "initial_full_diff_check_exit_code": 2,
+  "retained_raw_stdout_eof_warnings": 9,
+  "initial_warning_log_sha256": "bce01e3ca0fbaae9e9823271f9179138afc478d21771c9e6f1a9fbbb7aaf6067",
+  "code_and_structured_evidence_check_exit_code": 0,
+  "excluded_only_explicitly_hash_verified_raw_logs": true,
+  "evidence_normalized": false,
+  "saved_world_migrated": false,
+  "milestone_accepted": false
+}

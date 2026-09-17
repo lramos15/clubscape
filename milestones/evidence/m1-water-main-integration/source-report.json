@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "code_revision": "6719717f65aba8f58058e1c5d2aa94608086cccc",
+  "command": [
+    "/usr/bin/python3",
+    "tools/m1-content/validate.py",
+    "--repeat"
+  ],
+  "timeout_seconds": 900,
+  "status": "passed",
+  "saved_checkpoint_accessed": false,
+  "source_operator_invocations": 0,
+  "milestone_accepted": false,
+  "exit_code": 0,
+  "identical_outputs": 106,
+  "source_profiles": [
+    {
+      "profile": "current5b-water",
+      "positive_passed": 4,
+      "negative_passed": 15
+    },
+    {
+      "profile": "legacy5e-water",
+      "positive_passed": 4,
+      "negative_passed": 15
+    }
+  ],
+  "elapsed_seconds": 371.985,
+  "log_sha256": "3368805eaab962dce6d98457b9122ceba2f6f1b611c4ea162d8e59746ed4a9c2"
+}

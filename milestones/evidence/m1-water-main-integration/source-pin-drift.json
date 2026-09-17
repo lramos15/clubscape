@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "status": "unadmitted_regeneration_retained_published_targets_restored",
+  "source_repeat_gate_passed": true,
+  "repeated_outputs": 106,
+  "published_identity_gate_passed": false,
+  "changed_source_input_files": [
+    "crates/game-types/src/content.rs",
+    "crates/game-types/src/runtime_validation.rs"
+  ],
+  "changed_game_content_paths": [
+    "/revision"
+  ],
+  "published_revision": "m1.source-backed.v4.71c86749d02088ee",
+  "unadmitted_generated_revision": "m1.source-backed.v4.80142e9e9c5d6b5c",
+  "unadmitted_generated_raw_sha256": "1bc1b8347634b8af0bb3df6a75d4f55f6ac9bf235b8fbb4ea5fdb742cad0a2c4",
+  "cause": "The existing revision derives from all input-lock hashes, including the two native type/validator files changed by the independently reviewed persisted-state repair.",
+  "restored_only_our_generated_files": [
+    {
+      "path": "content/m1/game-content.csc.gz",
+      "generated_sha256": "7a0c16fa14325392321779c3bdbeeaf3417d6a52249fb556f28d2cf1da34c66a",
+      "restored_published_sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d"
+    },
+    {
+      "path": "content/m1/game-content.json.gz",
+      "generated_sha256": "b3feb69128e2f90a293b808cd8f3d5d8fbbf22d51612368d128c9a75573c07ff",
+      "restored_published_sha256": "ce3b2448455595b0e0f65ab67c9670ff08ff7f89d02b965f083f8e24cac91255"
+    },
+    {
+      "path": "content/m1/legacy5e-water/manifest.json",
+      "generated_sha256": "318dcb6c731f32b69c40488b2767aeba6756705ef374f1580844d87170f766a1",
+      "restored_published_sha256": "718d50eb2134f76b9bb2d34ba2b99f162cb2ec6666b392aba52ce2a03477cdf4"
+    },
+    {
+      "path": "content/m1/manifest.json",
+      "generated_sha256": "6be178c85d80874c872446efcb4e1b60e51bd90978f7b7cd770635a22e313d92",
+      "restored_published_sha256": "faf9437a395a73955b8f03d498a8e90c080e0df95feeadc13d641c79befaee03"
+    },
+    {
+      "path": "research/m1-bindings/application-result.json",
+      "generated_sha256": "fa86f796675a9ca60db53828b30e243996c2b3f065aabbdaf9964bb752e35ff4",
+      "restored_published_sha256": "d7e65c92f9c5e5873bc9f70cc516c40ba43164f76e35f5c7df667cf75c6f5592"
+    },
+    {
+      "path": "research/m1-bindings/application-validation.json",
+      "generated_sha256": "4c9654e23fb3abc090096efd8a34fc6837e2cb3a10e7cd92b8b0ebe26e1f27ba",
+      "restored_published_sha256": "ab2e3c23f209906cbe44a0dc1a2d80eb06de8335173cd93ec8a43b5445924a5d"
+    },
+    {
+      "path": "research/m1-bindings/asset-refresh-validation.json",
+      "generated_sha256": "ce76a3765da43b1f8ccd85467d80522c916513757a209bc3bb2f79a5b6478b14",
+      "restored_published_sha256": "9625fead3ca7c91a39f16c10c1c3be3993ec3b086b3bbf9c058b893905256cba"
+    },
+    {
+      "path": "research/m1-bindings/compiler-validation.json",
+      "generated_sha256": "472c1c56862615e582c7de8cef03b3a53635e2b68a32525572e9283ee62ae77b",
+      "restored_published_sha256": "e8e5fe90afb79876d46f84f612b2097141d2744e06b1d4759e5ad481c621cde1"
+    },
+    {
+      "path": "research/m1-bindings/input-lock.json",
+      "generated_sha256": "a7fba7edac1740c30c9b332e1b90d35fd66db989e69fbe88c57f38ff83559f42",
+      "restored_published_sha256": "efdc963b5b04077bd02d5330276c327e1e391341f97f090037a4961fa643c20c"
+    },
+    {
+      "path": "research/m1-bindings/repeatability.json",
+      "generated_sha256": "62bedcbaeb10bcff520b46cd9a1f540508bd69bb04ce8060faec36f7333a2744",
+      "restored_published_sha256": "55460e1dc7e11d9b41ac4eb9f91ad143cc44a8691e1340f8949efe3af403b56d"
+    },
+    {
+      "path": "research/m1-bindings/route-validation.json",
+      "generated_sha256": "f896794a5f78bc64f077ded5e09cfdea0e8cd5d0c0de53e5e9d6b4d1dcdbe06e",
+      "restored_published_sha256": "bfed260d6593631b13526718fc35bc089d845435576ed4109f7e0dcf3231724d"
+    },
+    {
+      "path": "research/m1-bindings/schema-validation.json",
+      "generated_sha256": "82d4858f1812a8f6d865b04b93c26a538ee9610407d2f35f854bf5fbb90c91f7",
+      "restored_published_sha256": "d38f0781f8eb91b2471a2854579dee31891b9d72f54ae2aa0c92f04474565f24"
+    },
+    {
+      "path": "research/m1-bindings/state-oracle-validation.json",
+      "generated_sha256": "58d310014c804e8875225752a23bf779599551aca669b47ad61f0c40386a08ec",
+      "restored_published_sha256": "a68caea6adcdc197504d855b1988a6d5bd3fc9fa1ef903acf4c89c51c8a86c7c"
+    },
+    {
+      "path": "research/m1-bindings/status.json",
+      "generated_sha256": "a72a1131a431dec9f7a357486d77783b1c2de6fac7bc73da235d8798775e50b5",
+      "restored_published_sha256": "ebfe32dae63dfc518917365ad41665f2468f05fd065440f0b2660e770cc5464b"
+    },
+    {
+      "path": "research/m1-bindings/unresolved-bindings.json",
+      "generated_sha256": "e6756e3a76cb8f6e7646d9ffe2f97cdf34908593918373f0419afbaf18f120a2",
+      "restored_published_sha256": "6c4da9ccd9f2d705be9f9f305cbf22bc3cc3e08821ff6df9e202cdb32cb70b76"
+    },
+    {
+      "path": "research/m1-bindings/validation-run.json",
+      "generated_sha256": "b30c1a393437d77cc7b48bd25b7af661d1cdc19f8c0033717dd154f410fea7ed",
+      "restored_published_sha256": "8fe09a1076dd94085f4a4b78d2d7326874d7aeeb08feda80e3fab668dcdc9e93"
+    },
+    {
+      "path": "research/water-fill/current5b-water-native.json",
+      "generated_sha256": "fc4cbc922310014aadcd5754ff190505a86a404910ffb0ce634227f9f9cc9fee",
+      "restored_published_sha256": "dd0c6754f22fd576ae883ff549afdbb12ddade65b9193b52a188f5a277ef58ee"
+    },
+    {
+      "path": "research/water-fill/handoff.json",
+      "generated_sha256": "120229e6005fc70662905580526f086aafcdf693cbe6cc19317d7563cb8da47b",
+      "restored_published_sha256": "631c3744d9418700c8df47a4c4eeb7e841d2544f6d14caebb255d1852e9fb01f"
+    },
+    {
+      "path": "research/water-fill/item-on-compatibility.json",
+      "generated_sha256": "73e94676eab9427f3f0b4fd3b27deb3b646d277ab8fea4706acb8b24d70061c5",
+      "restored_published_sha256": "819a3edddc9e9956af63e388fcb51e3845d6ca1940533d6f792bafd086a4152e"
+    },
+    {
+      "path": "research/water-fill/legacy5e-application.json",
+      "generated_sha256": "318dcb6c731f32b69c40488b2767aeba6756705ef374f1580844d87170f766a1",
+      "restored_published_sha256": "718d50eb2134f76b9bb2d34ba2b99f162cb2ec6666b392aba52ce2a03477cdf4"
+    },
+    {
+      "path": "research/water-fill/legacy5e-water-native.json",
+      "generated_sha256": "b7262e924d81fcb3bc30c9551ae0d88a3abb8ad1566b34f280c12ae3a9b0168d",
+      "restored_published_sha256": "66f5039eff034c2904f63768b179c18ba9d7ae9fcd41bed0657c299f96df3b4e"
+    },
+    {
+      "path": "research/water-fill/validation.json",
+      "generated_sha256": "d6db67b70503e5b26833facd16dbe5964cab5229534231c2d93c46657e219fa1",
+      "restored_published_sha256": "d510502b0eb817bfdf250c0f5c0e67d52adf6afcec26e71ac9bbb1ee0ca7fb32"
+    }
+  ],
+  "native_code_or_unrelated_document_changes_reverted": false,
+  "source_generator_or_input_hash_rules_weakened": false,
+  "published_source_recompile_required": true,
+  "extra_operator_calls": 0,
+  "saved_checkpoint_accessed": false,
+  "milestone_accepted": false
+}

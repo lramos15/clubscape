@@ -57,7 +57,9 @@
     "shell_browser_calls_limit": 1,
     "shell_browser_gate": "Renderer quiet-window confirmation is still required; exact b4f6304/5ea9e28 source pins remain unchanged."
   },
-  "main_code_integrated": false,
+  "main_code_integrated": true,
+  "main_code_commit": "6719717f65aba8f58058e1c5d2aa94608086cccc",
+  "root_validation": "milestones/evidence/m1-water-main-integration.json",
   "saved_world_migration_or_continuation_admitted": false,
   "milestone_accepted": false,
   "later_milestone_authorized": false

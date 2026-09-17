@@ -1,0 +1,117 @@
+[
+  {
+    "path": "m1-water-main-integration/import-check.json",
+    "sha256": "48be1b60890a55d60e3c5f3953cfe9c81d232c961a1db47b592e7fb765467c67",
+    "bytes": 614
+  },
+  {
+    "path": "m1-water-main-integration/raw-evidence-style-check.log",
+    "sha256": "bce01e3ca0fbaae9e9823271f9179138afc478d21771c9e6f1a9fbbb7aaf6067",
+    "bytes": 870
+  },
+  {
+    "path": "m1-water-main-integration/source-report.json",
+    "sha256": "600b01d344fba83f025b3dfaf0ef73adf38603c34ba8b6c4c4610d94adefdaeb",
+    "bytes": 733
+  },
+  {
+    "path": "m1-water-main-integration/source-validation.log",
+    "sha256": "3368805eaab962dce6d98457b9122ceba2f6f1b611c4ea162d8e59746ed4a9c2",
+    "bytes": 1606
+  },
+  {
+    "path": "m1-water-main-integration/source-pin-drift.json",
+    "sha256": "97c058c7ce8edc29e5e061bbdcf8437ded552d4361ddcaf78509d30d732d9be4",
+    "bytes": 7009
+  },
+  {
+    "path": "m1-water-main-integration/published-source-recompile.json",
+    "sha256": "8a379519c29fa2d6cb8004044d8cf916d4062d8ff177517f59ec44eb1246eb4d",
+    "bytes": 2580
+  },
+  {
+    "path": "m1-water-main-integration/root-consumers.json",
+    "sha256": "c256437f2322dc4c5224fff91aa5afc6cb43edb4042fbcacf415bd51736be6c2",
+    "bytes": 3471
+  },
+  {
+    "path": "m1-water-main-integration/postgres-report.json",
+    "sha256": "1ce7c5831cb5d5a3ec5439688b69a46fcab9366fe3b9e4848965f3342f059897",
+    "bytes": 1304
+  },
+  {
+    "path": "m1-water-main-integration/postgres-tests.log",
+    "sha256": "7b3aba8a8f13ac7a4a5b5431b7ca16c6e8482cd8674c763fd8e06c67d5a9029d",
+    "bytes": 378
+  },
+  {
+    "path": "m1-water-main-integration/native-consumers.log",
+    "sha256": "f7fa6f0c2087d448564155d516d458aae88cc88a76ab92cbf7a34d8fb79fd1e4",
+    "bytes": 5594
+  },
+  {
+    "path": "m1-water-main-integration/native-source-pairs.log",
+    "sha256": "e4ff1677bb5314a20864ea901d76e34873381287b84d981c4e3007e364107721",
+    "bytes": 118
+  },
+  {
+    "path": "m1-water-main-integration/strict-clippy.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "m1-water-main-integration/operator-machinery.log",
+    "sha256": "d3b6fc5affa853f908cc93c0abfedf5f40a173c8ca89c4e533a216a720d9fdaa",
+    "bytes": 131
+  },
+  {
+    "path": "m1-water-main-integration/normal-web-build.log",
+    "sha256": "6220c3c1af7b1b9a3046367d9417edeab6751d9c40b54971468533984cd0eebc",
+    "bytes": 1806
+  },
+  {
+    "path": "m1-water-main-integration/web-tests.log",
+    "sha256": "f8320ec9bef1ed1bb266ea98b75ccc6ece01ad58c4b519a331d21dbba6dc439a",
+    "bytes": 28353
+  },
+  {
+    "path": "m1-water-main-integration/published-probes-report.json",
+    "sha256": "a6e739af9095b2e602802be3d29859f5c6ad36b0741149d4642fbd3fe3f134c4",
+    "bytes": 893
+  },
+  {
+    "path": "m1-water-main-integration/published-probes-current5b-water.json",
+    "sha256": "ceaf8192d86c2a293a7af890f063b5cf89d77be3122d1b1782e89d49cb8ea059",
+    "bytes": 12184
+  },
+  {
+    "path": "m1-water-main-integration/published-probes-legacy5e-water.json",
+    "sha256": "e5c4dee7546a79553a58bab554fcc94dfe84df5381e595f73042c9a473b28e3b",
+    "bytes": 12207
+  },
+  {
+    "path": "m1-water-main-integration/published-probes-current5b-water.log",
+    "sha256": "d220868c298708fbddd0f1c7dc5a843ad6abc7e487fd26f7360a382d46e7f34e",
+    "bytes": 8889
+  },
+  {
+    "path": "m1-water-main-integration/published-probes-legacy5e-water.log",
+    "sha256": "380487784f1bcd0877eb95cc62eb85bb66a971670b0bd3bc10c314ee701367fb",
+    "bytes": 8912
+  },
+  {
+    "path": "m1-water-main-integration/normal-build.json",
+    "sha256": "a1943e639ad647b5dc3fbdd993b7078ecb6e067641e89e4a762f77b72a101d6a",
+    "bytes": 848
+  },
+  {
+    "path": "m1-water-main-integration/normal-build-artifact.json",
+    "sha256": "05775c66438885dd3503ee5ecdf781ac68ce7e787f55b441670284364c94b5cb",
+    "bytes": 2877
+  },
+  {
+    "path": "m1-water-main-integration/frozen-reference-integrity.json",
+    "sha256": "dbba3aea30152c473d379ecbc063c7d7c40f0b1726ecc859cb4341304103b5b9",
+    "bytes": 1144
+  }
+]

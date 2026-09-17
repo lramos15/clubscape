@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "code_revision": "6719717f65aba8f58058e1c5d2aa94608086cccc",
+  "profiles": [
+    {
+      "profile": "current5b-water",
+      "revision": "m1.source-backed.v4.71c86749d02088ee",
+      "source_path": "content/m1/game-content.json.gz",
+      "source_sha256": "ce3b2448455595b0e0f65ab67c9670ff08ff7f89d02b965f083f8e24cac91255",
+      "raw_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+      "gzip_sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+      "compiler_command": [
+        "cargo",
+        "run",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "/home/lramos15/clubscape/crates/content/Cargo.toml",
+        "-p",
+        "clubscape-content",
+        "--",
+        "--input",
+        "/home/lramos15/clubscape/tools/m1-content/.local/water-fill/root-published-current5b-water/game-content.json",
+        "--output",
+        "/home/lramos15/clubscape/tools/m1-content/.local/water-fill/root-published-current5b-water/game-content.csc"
+      ],
+      "raw_and_gzip_byte_exact": true,
+      "elapsed_seconds": 19.164
+    },
+    {
+      "profile": "legacy5e-water",
+      "revision": "m1.source-backed.v4.3ff4292b311453cc.water.e337c77cc5ccd980",
+      "source_path": "content/m1/legacy5e-water/game-content.json.gz",
+      "source_sha256": "9659cd96567e34f9fdf98d131ca1028bcd7b6621f10c28aa2bec301684ccb552",
+      "raw_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+      "gzip_sha256": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+      "compiler_command": [
+        "cargo",
+        "run",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "/home/lramos15/clubscape/crates/content/Cargo.toml",
+        "-p",
+        "clubscape-content",
+        "--",
+        "--input",
+        "/home/lramos15/clubscape/tools/m1-content/.local/water-fill/root-published-legacy5e-water/game-content.json",
+        "--output",
+        "/home/lramos15/clubscape/tools/m1-content/.local/water-fill/root-published-legacy5e-water/game-content.csc"
+      ],
+      "raw_and_gzip_byte_exact": true,
+      "elapsed_seconds": 19.229
+    }
+  ],
+  "input_policy": "Strictly compile the exact committed published source JSON, without replacing its revision or changing generator input hashes.",
+  "unadmitted_regenerated_revision_promoted": false,
+  "source_operator_invocations": 0,
+  "saved_checkpoint_accessed": false,
+  "milestone_accepted": false
+}
