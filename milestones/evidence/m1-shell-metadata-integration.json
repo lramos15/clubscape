@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "milestone": "m1-starter-journey",
-  "status": "source_browser_passed_ready_for_selective_root_integration",
+  "status": "verified_on_main",
   "worker": "78d01af9-70a4-4b02-8339-6a61eb377374",
   "worker_read_through_turn": 39,
   "worker_worktree": ".worktrees/m1-browser-shell",
@@ -68,7 +68,26 @@
     "result": "The old missing-UI-widget claim is obsolete. The current UI has84:4, but its matching native renderer projection is still unpublished. Cache default328 is not substituted for the current template's0."
   },
   "source_raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
-  "root_code_integrated": false,
+  "root_code_integrated": true,
+  "main_code_commit": "da6f78554e7a835dac60b794dac3acf644490f35",
+  "owned_paths_byte_identical_at_import": 14,
+  "root_validation": {
+    "tested_code_revision": "da6f78554e7a835dac60b794dac3acf644490f35",
+    "web_tests_passed": 276,
+    "web_tests_failed_or_skipped": 0,
+    "normal_production_build_and_typecheck_passed": true,
+    "normal_build_artifact_sha256": "e67fabcefbd6d80193ecd5c0b1ad1330a07df14fc49874b28bd079a482e1cdd7",
+    "normal_build_content": null,
+    "frozen_hashes_verified": 1307,
+    "selected_current_and_legacy_water_pins_unchanged": true,
+    "additional_browser_or_operator_invocations": 0,
+    "qualification": "Fresh root code-only normal delivery. The source-browser receipt remains the exact b4/5ea candidate execution, not a second run on main."
+  },
+  "root_evidence": {
+    "index": "milestones/evidence/m1-shell-metadata/main-integration/index.json",
+    "sha256": "5b910859a67279b7dda093c757b21abf96f44969fe5ec9c400925d9b32d71da2",
+    "files": 6
+  },
   "private_journey_accessed": false,
   "milestone_accepted": false,
   "later_milestone_authorized": false

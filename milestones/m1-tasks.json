@@ -6,7 +6,7 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-SHELL-METADATA-INTEGRATION"},
+      {"id": "director", "task": "M1-SAVED-WATER-DELIVERY-PREPARATION"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
     ],
     "reserved": [],
@@ -35,6 +35,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-SAVED-WATER-DELIVERY-PREPARATION",
+      "goal": "Prepare and pin the exact minimal legacy-water source delivery for the public saved-world UUID without accessing protected state.",
+      "status": "IMPLEMENTING",
+      "specs": ["milestones/evidence/m1-saved-water-delivery-preparation.json", "milestones/approvals/m1-water-fill-upgrade-v1.json", "tools/journey-tests/README.md", "spec/game-networking.md"],
+      "dependencies": ["M1-WATER-MAIN-INTEGRATION", "M1-WATER-UPGRADE-PREFLIGHT"],
+      "allowed_paths": [".local/saved-water-delivery-01/**", "milestones/**"],
+      "forbidden_paths": [".worktrees/m1-headless-journey/.local/journey-checkpoints/**", ".local/journey-checkpoints/**", "content/**", "assets/**", "research/reference-pack/**", "spec/art-style.md", "spec/interface-parity.md", "spec/adaptations.md"],
+      "outputs": ["One genuine source-only GameRoot naming the public saved-world UUID", "Exact artifact/descriptor/manifest/asset and bounded file inventory hashes", "Explicitly closed saved52 execution gate"],
+      "validation_commands": ["Use the pinned publish_product_root helper and one pinned native inspect-artifact invocation only"],
+      "test_requirements": ["Use minimal legacyb2a1be20, not currentadb or unadmitted1bc", "Verify every compiler asset mapping against original publications", "No source generation, server/database/world creation, account input, saved-file read, restore, migration, browser or operator replay"],
+      "acceptance": ["A reproducible exact source-only target is ready for review; no protected execution follows automatically"],
+      "reserved_namespaces": [],
+      "source_notes": ["Public world95acc818-e1d6-4ad3-805f-d323623d2933 is known from the owner approval. The original52 checkpoint is not an input to preparation."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-saved-water-delivery-preparation.json"]
+    },
     {
       "id": "M1-WATER-ITEM-ON-DISPATCH",
       "goal": "Close the explicit source item-on-only recipe authorization/reach seam without manufacturing an object menu operation or changing old recipe behavior.",
@@ -74,7 +92,7 @@
     {
       "id": "M1-SHELL-METADATA-INTEGRATION",
       "goal": "Integrate only the completed source preview/spatial metadata producers against the current committed UI/recovery/audio candidate without changing the candidate under independent review.",
-      "status": "IMPLEMENTING",
+      "status": "VERIFIED",
       "specs": ["milestones/evidence/m1-shell-metadata-integration.json", "web/app/README.md", "web/app/ui-preview-request.ts", "web/app/spatial-metadata.ts"],
       "dependencies": ["M1-SHELL-INTEGRATION"],
       "allowed_paths": ["web/app/**"],

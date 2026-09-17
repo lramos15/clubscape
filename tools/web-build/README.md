@@ -7,17 +7,19 @@ checked against `web/shared/contracts.ts` and the owner approval record.
 Final source fidelity, gameplay, audio,
 performance and owner acceptance are unchanged.
 
-The owned UI4/WASM mapping and fresh FINAL4 delivery work, but the current
-UI-owner schema/dispatch tables lack `activeTab`, `document`,
-`bank_placeholder`, `ui_document_page`, `production_select_all`,
-`bank_set_amount`, `recovery_take` and `recovery_bank_all`, and its component
-fixture is stale.
-Its audio fixture also lacks the new native `AudioSnapshot.preferences` field.
-These are five current UI-owner compile errors.
-Those UI files have not been edited outside ownership. Normal `pnpm typecheck`
-and therefore `pnpm build` remain blocked on that owner follow-up.
-Any separately recorded Vite/real-browser run is a diagnostic build, not a
-passing production typecheck or complete UI handoff.
+The current UI4/WASM, recovery, audio-preference and shell metadata consumers
+pass the normal production build and typecheck. The former missing-schema and
+stale-fixture compile errors are historical, not current build blockers.
+The root metadata integration passes276 web tests; its normal delivery has
+`content:null`, so it is not a source-configured game or presentation proof.
+
+The separately pinned source-browser metadata check passed21 actual controls
+and its separate18-cue native audio/storage fixture. That one-shot allowance
+is consumed; another directory does not authorize a retry. Its uncreated
+preview remains explicitly unavailable, the camera is an approved diagnostic,
+and the short59.67FPS observation is not frozen performance acceptance. See
+[`m1-shell-metadata-integration.json`](../../milestones/evidence/m1-shell-metadata-integration.json)
+for exact code/build/source identities and these distinct evidence scopes.
 
 ## Normal commands
 
