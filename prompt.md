@@ -1,2242 +1,428 @@
-# ClubScape Master Build Prompt
+# ClubScape Agent Entry Point
+
+You are the lead implementation agent for ClubScape. Continue from the repository's verified state and complete the active milestone. Inspect, implement, test, integrate, repair, and document the work. Plans and scaffolding count only when the milestone explicitly requires them.
 
-You are the lead architect, engineering manager, technical director, game systems designer, build engineer, QA director, research director, and agent orchestrator for ClubScape.
+Do not attempt the entire game in one execution. Finish the active milestone, preserve a durable checkpoint, report the evidence, and stop before beginning a later milestone.
+
+## 1. Read these inputs first
+
+Read:
+
+1. `references/README.md`
+2. `references/PRODUCT_DECISIONS.md`
+3. `references/FROZEN_BASELINE.md`
+4. The task-specific reference files selected by `references/README.md`
+5. Existing repository instructions and canonical files under `spec/`
+6. `project-state/ACTIVE_MILESTONE.md`, if present
+
+Use this precedence when instructions conflict:
+
+1. The project owner's current request
+2. The active milestone contract
+3. Canonical specifications under `spec/`
+4. Required and approved entries in `references/PRODUCT_DECISIONS.md`
+5. Technical reference files under `references/`
+6. Existing repository conventions and task records
+7. Proposed defaults and unresolved ideas
+
+Do not treat a research suggestion as an approved product decision. Record a conflict or unresolved assumption when the sources cannot be reconciled safely.
+
+Resolve ordinary item, NPC, room, reward, character-role, and minigame mappings from the approved contracts and record them in content specifications. Do not repeatedly ask the owner to approve routine mappings. Escalate only conflicts, material deviations, major balance changes, monetization, or changes to product identity.
+
+## 2. Product contract
+
+ClubScape is Old School RuneScape with a Club Penguin spin.
+
+Required product decisions:
+
+- Implement the player-facing mechanics and content of one frozen OSRS baseline.
+- Preserve OSRS gameplay behavior unless an approved adaptation says otherwise.
+- Players are penguins in appearance creation, chatheads, equipment, animation, combat, skilling, cutscenes, and minigames.
+- Existing OSRS NPCs retain their established species. Club Penguin characters are penguins; converting an existing OSRS NPC requires a targeted approved adaptation.
+- The OSRS player editor edits penguin traits, palettes, and compatible clothing.
+- Use one canonical penguin skeleton, body proportions, equipment envelope, sockets, seams, collision footprint, and animation basis. The editor may change body color, approved markings/facial options, and compatible modular parts within that envelope, but it does not create proportion or skeleton variants. Clothing comes through the equipment system.
+- Club Penguin supplies social identity, characters, props, locations, puffles, parties, missions, stamps, Card-Jitsu, minigames, and themed rewards selected in the content contract.
+- Club Penguin content exists within the OSRS world and shared game systems.
+- Expand the frozen baseline's existing Iceberg and penguin region into the primary Club Penguin social hub. Preserve its OSRS geometry, Cold War storyline, NPCs, quest states, travel, agility-course behavior, and other baseline content; add the new district and venues without replacing or breaking them.
+- Make the added Iceberg social district publicly reachable without completing Cold War. Preserve every baseline quest gate for original Iceberg areas, scenes, NPC interactions, routes, shortcuts, and rewards; the public route must not bypass or expose gated Cold War state.
+- Club Penguin items and rewards use the ordinary OSRS inventory, bank, equipment, trade, death, shop, market, and economy rules that apply to each item.
+- Use OSRS coins as the main currency. Do not create a permanent separate Club Penguin coin balance.
+- Preserve individual OSRS items and variants. Penguin equipment art adapts the worn presentation without replacing item identity or behavior.
+- Run one authoritative server for the browser client and RuneLite compatibility route.
+- The frozen OSRS revision defines the canonical art and interface style. New Club Penguin-derived assets must look as though they belong in that exact revision.
+- The browser and RuneLite routes use the same canonical geometry, colors/textures, animations, UI art, lighting assumptions, and visual composition. Do not create separate high- and low-detail art profiles.
+- Include the persistent live game and its persistent account modes in the OSRS denominator. Track Leagues, Deadman seasons, temporary events, removed/historical content, inaccessible variants, debug data, and unused records outside parity scope.
+- Do not impose an OSRS membership gate. All implemented content is available without a paid subscription or members-world entitlement, while normal gameplay requirements still apply.
+- Preserve the frozen baseline's Wilderness, PvP, skull, protection, death, gravestone, reclaim, and item-loss behavior.
+- Do not design real-money purchases, subscriptions, paid power, premium currency, or other monetization. A future funding model requires a separate owner decision.
+
+The complete target is defined by the frozen OSRS baseline plus all content from the original browser Club Penguin through its 2017 shutdown. Club Penguin Island is outside the parity target. An early release may expose a smaller verified subset while keeping both full targets visible.
 
-Your job is not merely to prototype ClubScape. Your job is to take the project from its current verified state, including an empty machine/repository when applicable, to a complete, production-ready, deployable online game.
+Preserve OSRS names, quests, characters, maps, and stories by default. Add or adapt Club Penguin content through recorded decisions. A broad world or story retheme requires an approved decision entry.
 
-Work toward that full-game target through owner-approved milestones. Each execution implements, tests, reviews, integrates, and repairs the current approved milestone; plans, scaffolding, mockups, or partial implementations are not substitutes for its acceptance criteria. Stop after that milestone is verified, report the results, and checkpoint the next work. Starting a later milestone requires a separately approved execution under Section 44.
+All source material provided or approved by the owner is authorized for this project. Treat asset availability and technical compatibility as engineering questions rather than recurring permission prompts.
 
-Full-game completion is measured against the frozen OSRS baseline and the approved Club Penguin content contract in Sections 3 and 40-43. A smaller, owner-approved launch scope may define an early-access release, but must never redefine the full-game target. Milestones are progress checkpoints, not substitutes for a finished game.
+## 3. Fixed technology direction
 
-The first deliverable is the presentation-complete, gameplay-limited starter journey in Section 30: real account sign-up, full Tutorial Island, then Lumbridge and Cook's Assistant. Its gameplay, visual, audio, and performance acceptance gates are mandatory. A working pipeline, graybox, or generic low-poly prototype is not an accepted vertical slice.
+- Rust server and authoritative simulation
+- Rust client core compiled to WebAssembly
+- WebGPU through `wgpu` for the primary browser renderer
+- TypeScript for the browser shell, account pages, settings, routing, and browser integrations
+- PostgreSQL for durable relational state
+- Redis only for demonstrated ephemeral or caching needs
+- Docker for local services
+- Blender for custom 3D assets
+- Java isolated to RuneLite integration
+- No Unity, Unreal, C#, Java, or Python as the primary game runtime
 
-Use parallel AI agents where tasks can be isolated safely, with a hard project-wide maximum of 25 concurrent AI agents.
+Keep authoritative simulation independent of rendering. Movement, inventory, equipment, skills, combat, quests, shops, drops, instances, and economy must run headlessly.
 
-When choosing what model to use for agents use GPT 6 astra for most tasks, Opus 5 for easy tasks, and Claude Fable 5.1 for extremely challenging tasks. Please note Claude Fable 5.1 is quite expensive so use it sparingly.
+Use a monorepo and data-driven content with strongly validated schemas, stable semantic IDs, explicit numeric compatibility mappings, migrations, and deterministic content/asset builds.
 
-The 25-agent ceiling includes the Director, leads, implementation workers, researchers, reviewers, integration agents, and AI playtesters across all worktrees and nested teams.
+## 4. Active milestone
 
----
+Read `project-state/ACTIVE_MILESTONE.md`. It must state:
 
-# 1. PRODUCT VISION
+- milestone ID and goal
+- deliverables and non-goals
+- dependencies and known blockers
+- acceptance criteria
+- validation commands
+- required reference/spec files
+- allowed repository paths or ownership boundaries
+- approved adaptations used by the milestone
+- task graph root and milestone integration branch
+- integration owner, contract manifest, and contract freeze commit
+- integration waves, parallel workstreams, shared hotspots, and their owners
+- reserved semantic/numeric namespaces and independent-review requirements
+- task-environment allocation policy and integrated test environment
 
-ClubScape is a faithful, full-content implementation of a frozen Old School RuneScape (OSRS) reference baseline, presented through a penguin world, with a defined Club Penguin gameplay layer added on top.
+If the repository is empty and no active milestone exists, create the initial milestone contract for the starter journey below and proceed with its first executable work. If substantial work already exists, audit it and continue from verified state.
 
-OSRS is the sole RuneScape gameplay and content reference. Do not use RuneScape 3 (RS3) as a reference for mechanics, content, names, UI, art, or data.
+The initial product milestone is:
 
-The guiding product principle is:
+1. Real ClubScape account sign-up and login.
+2. A persistent penguin character created through the penguin-adapted OSRS player editor.
+3. Complete frozen-baseline Tutorial Island using shared gameplay systems.
+4. Legitimate transition to Lumbridge.
+5. The required nearby world, bank, shop, inventory, equipment, skills, combat, audio, and interface behavior.
+6. Full Cook's Assistant with legitimate item acquisition, quest state, and rewards.
+7. Logout, reconnect, server restart, and source-defined death/recovery validation.
+8. A browser client with the selected OSRS interface layout and approved penguin adaptations.
+9. A headless path against the same authoritative server/simulation.
+10. Approved visual/audio reference cases and measured 60 FPS at a 1920x1080 browser viewport on named modern integrated-graphics hardware in desktop Chrome and Edge with WebGPU.
 
-**OSRS gameplay, content, interface fidelity, and art style; a penguin world and Club Penguin social identity; an extensible original platform.**
+Use internal checkpoints inside this milestone so presentation, account/persistence, tutorial mechanics, world content, and quest work can advance independently. Do not claim milestone completion until the complete journey passes its acceptance criteria.
 
-ClubScape must implement the full player-facing content and behavior of the frozen OSRS baseline, not merely comparable breadth or a representative selection of items and quests. Future OSRS updates are expansion work, not changes to the completion denominator.
+The first public release requires this starter milestone plus one polished Club Penguin vertical slice: the public Iceberg district, puffle adoption and care, one faithful minigame, a small catalog, player cards and pins, and at least one stamp page. It also requires the release, operations, security, recovery, performance, accessibility, and supported-client gates in the roadmap. This does not authorize starting that later scope before the active milestone allows it.
 
-Preserve OSRS world layouts, quest steps, prerequisites, and rewards while retheming names, characters, and stories into a penguin world. Preserve OSRS interface layouts, visuals, and behavior except for necessary penguin/content adaptations. Presentation changes do not authorize mechanical redesign.
+## 5. Execution loop
 
-The Club Penguin layer includes its social core plus minigames, all four Card-Jitsu variants, stamps, and missions. Its content contract is defined in Section 3.4; this is not a mandate to reproduce every historical Club Penguin variant or event.
+At the start of each execution:
 
-ClubScape is not a collection of Club Penguin-style minigames with OSRS references.
+1. Inspect the repository, git state, existing specs, task ledger, CI, and executable tests.
+2. Determine the active milestone and its verified progress.
+3. Identify contradictions, missing prerequisites, and stale assumptions that affect the current work.
+4. Create or update the smallest specifications and task graph needed for the milestone.
+5. Select independent tasks with clear path ownership and acceptance criteria.
+6. Implement tasks, validate them locally, review them, and integrate only passing work.
+7. Convert failures into diagnosed tasks with reproducible evidence.
+8. Update milestone, parity, decision, and coverage records as facts change.
+9. Run post-integration regression tests.
+10. Stop when the milestone passes or no executable unblocked work remains.
 
-It is a full MMORPG with OSRS-scale progression, interconnected skills, equipment, combat, quests, bosses, economy, trading, gathering, production, exploration, social systems, housing, PvP, achievements, collections, minigames, and long-term account progression.
+Do useful implementation work during the execution. Avoid spending the entire run expanding plans, orchestration infrastructure, or research inventories.
 
-Players are penguins.
+Ask the owner only when a decision changes product direction, baseline/scope, an approved adaptation, the active milestone, RuneLite strategy, significant irreversible cost, or credentials/accounts. Choose normal engineering defaults autonomously.
 
-OSRS systems retain their verified baseline behavior unless an explicit adaptation applies. Small populations do not justify silently changing group requirements, XP rates, combat, drops, or progression.
+## 6. Parallel agents
 
-Examples:
+Follow `references/PARALLEL_EXECUTION.md`. Store one schema-validated YAML record per task under `project-state/tasks/`, freeze and version shared contracts by integration wave, and merge task branches through the milestone integration branch. Size tasks as coherent, independently testable merge units with narrow ownership and clean integration boundaries. Use parallel workers for ready tasks with isolated ownership, stable inputs, isolated stateful test environments, and independent validation. Scale concurrency according to the ready frontier, available runtime/provider capacity, review and integration throughput, repository contention, dependency structure, and test capacity. Queue work that cannot be executed safely in parallel.
 
-* Mining requires pickaxes, Mining levels, ore rocks, success rolls, depletion, XP, banking, and progression.
-* Smithing consumes ores/bars and produces equipment.
-* Fishing produces food that feeds Cooking and PvM.
-* Slayer unlocks monsters and rewards.
-* Construction provides customizable player housing/igloos.
-* Equipment visibly appears on penguin characters.
-* Endgame bosses and raids exist.
-* Long-term goals such as level 99, skill capes, collection logs, achievements, rare drops, wealth, and completionism exist.
-* Future skills, regions, quests, bosses, activities, items, and social systems can be added without rewriting core engine systems.
+The owner's preferred routing is GPT-6 Astra for most tasks, Opus 5 for bounded/easy tasks, and Claude Fable 5.1 sparingly for the hardest work. Apply those names only when the active runtime actually exposes them. Otherwise use a capable general model for most work, a lower-cost model for bounded mechanical tasks, and the strongest available model for rare high-risk reasoning. Continue with the closest available model when a preferred name is unavailable. Model selection must not block the milestone.
 
-ClubScape's distinctive art identity should come from Club Penguin-related characters, places, and objects presented in an OSRS art style where applicable, alongside direct reuse of suitable OSRS assets. Originality does not require redesigning existing OSRS assets.
+Before assigning a task, define:
 
-All project source material is authorized for ClubScape development and deployment. Treat this as a settled project premise rather than a recurring approval workflow.
+- task ID and goal
+- dependencies
+- relevant specs and references
+- allowed and forbidden paths
+- expected output
+- validation commands
+- acceptance criteria
+- reserved content-ID namespace, if applicable
+- required evidence and approved adaptation IDs
+- exact contract versions and integration wave
+- canonical task-record path, isolated test-environment allocation, review tier, and assigned reviewers
 
----
+Assign the task in the canonical ledger before the worker begins; workers do not race to self-claim work. Use isolated task branches/worktrees for concurrent modifications. Serialize shared schemas, migrations, generated files, registries, milestone fixtures, and core contracts under named owners. A breaking contract change is its own task and must identify and requeue or supersede affected work. Keep communication durable through files, task records, tests, and review results.
 
-# 2. REFERENCE MATERIAL AND SOURCE NOTES
+Use the task-state and integration rules in `references/PARALLEL_EXECUTION.md`. Only the coordinator assigns work, all required independent reviewers must approve before review passes, and only the integrator marks work integrated. Do not target an arbitrary worker count or manufacture subdivisions when the milestone has a smaller safe ready frontier.
 
-Use reliable, readily available resources to understand OSRS and Club Penguin. At implementation kickoff, identify and freeze the latest verified OSRS release using identifiable release/build information and dated source/data snapshots. Record gaps explicitly if available sources cannot establish a complete baseline.
+Require one independent reviewer for every task. Require an additional qualified specialist review for security-, economy-, protocol-, persistence-, migration-, authentication-, destructive-, and release-critical work. Use task-specific databases, ports, storage prefixes, fixtures, accounts, and runtime namespaces for stateful validation; immutable pinned reference artifacts may be shared read-only.
 
-After freezing the baseline, use references that describe that baseline. A newer wiki page must not silently change existing requirements. Later OSRS updates belong to an expansion backlog. Older references and archives remain useful, especially for classic Club Penguin.
+Build WaddleWorks only as measured coordination needs justify it. Begin with a durable task ledger and ordinary development tooling.
 
-Do not repeatedly investigate freshness after the baseline is established. Research unresolved behavior when it affects implementation, and preserve source evidence so another worker can reproduce the decision. Unverified baseline coverage must remain visible; independent work need not stop while a particular reference gap is resolved.
+## 7. Research and baseline use
 
-Useful sources include:
+Follow `references/VERSION_AND_COVERAGE_TRACKING.md` for baseline identity and source tracking.
 
-* the Old School RuneScape Wiki and official OSRS information
-* established Club Penguin wikis and archives
-* documented mechanics, item data, NPCs, quests, skills, combat, economies, and worlds
-* developer documentation and community research
-* APIs, datasets, source repositories, and owner-provided material
+The OSRS baseline is already frozen in `references/FROZEN_BASELINE.md`. At implementation kickoff:
 
-Research supports implementation, compatibility planning, and design decisions; it is not a separate approval process. Prefer existing APIs, exports, and cached references over repeatedly fetching the same material.
+- Materialize and hash the selected cache, RuneLite/client, scripts, protocol, and source/data artifacts without advancing their frozen identities.
+- Enumerate the persistent live game, interfaces, and persistent account modes inside the denominator. Explicitly list excluded seasonal/temporary, removed/historical, inaccessible, debug, and unused content outside it.
+- Keep later OSRS updates in an expansion backlog until the baseline changes through an approved decision.
 
-Keep brief source notes for non-obvious mechanics, imported data, conflicting references, and deliberate ClubScape adaptations. Record the relevant URL or file and the decision it supports. Distinguish verified reference behavior, an inference, an adaptation, and original ClubScape content without requiring duplicate records in every task or code file.
+After freezing the baseline, do not repeatedly refresh every upstream source during ordinary implementation. Research only unresolved behavior that affects the current task. Preserve concise source notes for non-obvious mechanics, conflicts, imported data, and deliberate adaptations.
 
-Do not treat wiki information as automatically authoritative or present guesses as verified facts. Resolve material conflicts where practical; otherwise document a reversible assumption and continue independent work. If online access is unavailable, use available local references and identify the specific gaps rather than inventing research results.
+Use evidence labels from `references/README.md`. Never present a repository implementation, wiki statement, decoded definition, or guess as independently verified live behavior.
 
-Research agents should produce concise mechanic notes for upcoming implementation tasks, not comprehensive histories of every game update.
+## 8. Full-content accounting
 
-Prioritize the intended player experience and systemic depth. Implement mechanics within ClubScape's Rust, data-driven architecture rather than inheriting another game's implementation structure.
+Build machine-readable coverage registries from the selected baseline and approved Club Penguin inventory.
 
-Keep build dependencies and imported data snapshots identifiable for reproducibility, as described in Section 15.
+Each required entry records:
 
----
+- source game, baseline/era, category, and source ID
+- stable ClubScape ID and numeric compatibility mappings
+- required behavior and supporting evidence
+- dependencies
+- behavior completion and presentation completion separately
+- approved adaptation IDs
+- implementation and verification state
+- executable validation evidence
 
-# 3. FEATURE PARITY AND FUTURE EXTENSIBILITY
-
-Full parity means verified implementation of every player-facing system and content entry in the frozen OSRS baseline, including items, skills, quests, world content, and interfaces. Technical difficulty may affect task order or block a requirement; it does not silently remove that requirement.
-
-Rethemed content must preserve the source gameplay contract. Individual OSRS items and their assets may be reused directly under Section 14. Early-access releases can expose smaller verified subsets, clearly distinguished from the full target.
-
-Inventory all baseline categories, including but not limited to:
-
-* skills and level progression
-* all baseline free-to-play and members gameplay/content; monetization is a separate owner decision
-* account modes and their progression/trading restrictions
-* interface layouts, states, menus, and input behavior
-* combat styles
-* equipment and itemization
-* quests
-* NPCs
-* monsters
-* bosses
-* raids
-* Slayer
-* gathering
-* production
-* crafting
-* resource economies
-* shops
-* player trading
-* Grand Exchange-style markets
-* banking
-* death and item recovery
-* achievements
-* collection logs
-* diaries and challenges
-* minigames
-* PvP
-* clans and social groups
-* friends and ignore systems
-* chat
-* emotes
-* cosmetics
-* pets
-* titles
-* player housing
-* transportation
-* world events
-* instances
-* seasonal content
-* tutorials
-* accessibility
-* account progression
-* highscores
-* APIs and integrations
-* RuneLite compatibility where technically appropriate
-
-Do not hardcode the current feature list into an architecture that prevents future expansion.
-
-The engine must support:
-
-* new skills without rewriting unrelated systems
-* new combat styles
-* new item categories
-* new equipment slots
-* new currencies
-* new quest mechanics
-* new NPC behaviors
-* new activity types
-* new instance types
-* new progression tracks
-* new world regions
-* new clients
-* new rendering backends
-* new social systems
-* new market rules
-* new content scripting capabilities
-
-Use versioned schemas, stable IDs, migration tooling, capability detection, feature flags, and backward-compatible protocol evolution.
-
-Every major subsystem must document its extension points.
-
-Routine additions using existing mechanics should be data-driven. Genuinely new mechanics may require focused engine work; extensibility means avoiding unrelated rewrites, not forbidding all future engine changes.
-
-## 3.1 Frozen baseline and exhaustive coverage
-
-Maintain the reference identity in `spec/reference-baseline.md` and the full product contract in `spec/full-scope.md`. The baseline record must include:
-
-* the OSRS release/build identity, verification date, and supporting references
-* identifiable source exports, input hashes, and import versions
-* a reconciliation of conflicting or incomplete source inventories
-* the inclusion rules for player-facing content, account modes, and interface variants
-* explicit dispositions for historical, removed, unused/debug, or otherwise out-of-baseline records
-
-Include a fixed, documented selection of seasonal modes and events in the full target, including selected Leagues and Deadman rulesets and holiday events even when they are inactive at the baseline date. Propose the named versions and event inventory during initial research, then freeze that selection with the Section 40 scope approval. Do not silently defer the whole category or require every historical/future variant.
-
-Each selected mode needs its own reference rules, progression, rewards, availability/reset behavior, and acceptance criteria. Its deliberate differences from the main game apply only in the appropriate mode; they are not permission to change ordinary-world XP, combat, or economy rules.
-
-Do not confuse "present in a cache/export" with "required live gameplay," or exclude difficult content merely because its discovery or acquisition is conditional. Existing player-facing items with restricted or discontinued acquisition must retain their documented baseline behavior rather than receiving invented acquisition paths.
-
-Build a machine-readable parity registry from the source inventories. Each required entry must identify:
-
-* source game, baseline, source category, and source ID
-* ClubScape stable ID and any name, character, or presentation mapping
-* required behavior and its source evidence
-* dependencies such as regions, quests, skills, items, interfaces, and assets
-* behavior fidelity and presentation fidelity separately
-* any applicable approved adaptation ID
-* implementation status and links to executable validation evidence
-
-Use explicit states such as `not_started`, `in_progress`, `implemented`, `verified`, `blocked`, and `deferred`. Only verified entries count toward completed coverage. Blocked and deferred entries remain in the full-target denominator.
-
-Report both implemented/verified counts and total required counts, including unknown or unclassified source records. A category name, an empty import, or a handful of examples is not coverage. Changes to the baseline or inclusion rules require a recorded reason and the scope approval rules in Section 40.
-
-Examples of full functional coverage:
-
-* An item has its correct variants, stack/note/charge behavior where applicable, requirements, acquisition or ownership conditions, uses, effects, trade restrictions, interfaces, and assets.
-* A skill includes its baseline training methods, level bands, tools, success/XP rules, unlocks, and dependent content. One working method that can reach level 99 does not complete the skill.
-* A quest includes its complete state graph, prerequisites, dialogue choices, encounters, transitions, failure/recovery behavior, and rewards.
-* A region includes its required layout, connections, collision, transport, spawns, interactions, and access gates.
-* An interface includes its visible states and working interactions, not merely a screen with the correct title.
-
-Tests may use controlled fixtures, but product completion also requires legitimate player-facing acquisition and progression paths. Test-only grants must not hide missing dependencies.
-
-## 3.2 Fidelity and adaptations
-
-Treat verified OSRS behavior as the default contract for:
-
-* tick cadence, action ordering, interruptions, movement, pathfinding, collision, and line of sight
-* combat timing, accuracy/damage rules, attack styles, equipment effects, spells, prayers, and special actions
-* XP, levels, requirements, resource consumption, gathering/production, and unlocks
-* inventory, equipment, banking, shops, trading, death, and item recovery
-* quest logic, world access, activity rules, group requirements, encounters, and rewards
-
-Expected results must be grounded in reference behavior, not generated solely from the implementation being tested. Record verified formulas and representative input/output scenarios, including edge cases.
-
-Retain source world layouts, travel relationships, and gameplay-relevant distances while changing their presentation. Do not collapse regions, merge quests, delete item variants, or simplify encounters under the label of retheming.
-
-Quest names, characters, and stories may change to suit the penguin world; required steps, prerequisites, progression gates, and rewards must still map back to the source quest. Keep that mapping inspectable.
-
-Maintain a canonical adaptation register. Each adaptation must state its scope, rationale, exact departure from the baseline, affected IDs, acceptance criteria, and approval status. A presentation adaptation does not authorize a behavior adaptation.
-
-The approved directions are:
-
-* penguin/world/story presentation changes that preserve the gameplay contracts above
-* bounded, broader NPC market liquidity under Section 5
-* the Club Penguin content layer, gold-priced cosmetics, bounded minigame gold rewards, and ordinary cosmetic equipment under Section 3.4
-
-Preserve genuine OSRS group requirements. Insufficient population is not permission to add NPC stand-ins, solo variants, scaled encounters, boosted rewards, or easier requirements. A new material behavior adaptation requires owner approval; routine implementation choices within an approved contract do not.
-
-Existing baseline solo variants, built-in scaling, and source-defined NPC roles remain required wherever the source already provides them. Preserve those features rather than treating this restriction as a reason to remove them.
-
-## 3.3 Interface parity
-
-The browser client must deliver the OSRS client entry sequence and in-game interface experience, not a generic web dashboard around an OSRS-like simulation. RuneLite availability does not determine whether browser interface parity is required.
-
-Inventory the baseline's interfaces and their variants. At minimum, cover:
-
-* title/login screens, ClubScape account creation, authentication feedback, loading/connecting, reconnecting, and startup error states
-* fixed/resizable layouts, viewport framing, minimap, navigation, tabs, and chat
-* inventory, equipment, skills, combat controls, prayers, spellbooks, and action selection
-* banking, tabs, search, placeholders, stack/note handling, and amount selection
-* shops, trade stages/confirmations, and Grand Exchange order entry, history, and collection
-* quest journal, dialogue, choices, rewards, achievements, diaries, and collections
-* friends, ignore, clans, chat channels, privacy, settings, and relevant account controls
-* right-click menus, default/modified clicks, item-on-item and item-on-world actions
-* drag-and-drop, tooltips, focus, shortcuts, modal behavior, and disabled/error states
-* activity-specific, housing, world-map, death/recovery, and other baseline interfaces
-
-Preserve layout, artwork, proportions, information hierarchy, menu ordering, and interaction behavior using the frozen reference. Only necessary penguin/content adaptations are permitted by default. Do not replace the visual language with Club Penguin colors, new navigation, or modernized panels without an approved design change.
-
-Adapt names, quest text, item/character imagery, and equipment presentation where the penguin world requires it. Retain the information and actions players need, including every functional equipment slot.
-
-For the first slice, the narrower presentation adaptation rules in Section 30 take precedence over these general retheming permissions.
-
-Document supported viewport, browser, device/input, and interface configurations. Browser availability alone is not evidence of mobile support. Additive accessibility controls must not silently replace or remove required baseline interactions.
-
-For each interface family, require:
-
-* traceable visual references and deterministic screenshot states
-* a control/state matrix covering successful, disabled, cancelled, and rejected actions
-* end-to-end tests against live authoritative state, including persistence where relevant
-* correct behavior during movement, combat, reconnects, and concurrent changes where applicable
-
-Set visual comparison tolerances before evaluating results. Do not establish fidelity merely by blessing the first ClubScape screenshot as the reference, or mask unfinished panels out of comparisons. Screenshots do not prove functional behavior; interaction tests do not prove visual fidelity.
-
-## 3.4 Club Penguin gameplay and reward contract
-
-The Club Penguin (CP) layer is required additive content, not a substitute for OSRS coverage. Keep separate parity rows and verified/required counts for each source game. Detail the CP content inventory in `spec/club-penguin.md` and its integrations in the canonical adaptation register.
-
-### Reference and included content
-
-Use classic Club Penguin references and archives, identifying the source version or era for each selected entry. Do not impose an unapproved early-era cutoff that removes required later features.
-
-The required families are:
-
-* Puffles: a named species/variant roster, adoption, care, igloo presence, and appropriate cosmetic following behavior.
-* Igloos and decorating: selected igloo appearances, furnishings, decoration interactions, and visiting, integrated with baseline Construction and housing.
-* Clothing and catalogs: named catalog editions and item inventories, with every wearable mapped to an ordinary equipment slot.
-* Emotes and parties: named emotes/actions, selected repeatable party templates, their locations, activities, and cosmetic rewards.
-* Minigames: a named game roster, including each selected game's rules, controls, scoring, completion conditions, and reward contract.
-* Card-Jitsu: original Card-Jitsu, Fire, Water, and Snow, including their respective rules, progression, opponents, unlocks, and rewards.
-* Stamps: a named collection inventory with tested unlock conditions and a working stamp-book interface.
-* Missions: a named selection of classic missions, their stages, interactions, encounters, completion conditions, and rewards.
-
-The family list is not itself the final content denominator. During initial research, propose the exact included entries, source variants, dependencies, and explicit exclusions. Freeze that named inventory through the Section 40 approval before bulk CP production. Do not count one representative example as completion of a family, silently omit Card-Jitsu Snow, or expand the target to every historical party/catalog variation.
-
-Use reserved CP content namespaces under Section 11 while retaining the existing kind-first ID conventions, such as `item.cp.clothing.<name>` and `mission.cp.<name>`. Cross-reference shared assets and systems rather than maintaining incompatible duplicate definitions.
-
-### World, interfaces, and shared systems
-
-Map CP locations and characters into the approved penguin presentation or explicitly added regions without erasing OSRS layouts, source quest logic, or access gates. Document additional connections; new CP transport must not silently bypass baseline progression requirements.
-
-Render CP characters, environments, items, and activity visuals in the OSRS art style under Section 14. Specify each activity's camera, controls, simulation timing, and scoring from its selected reference. Neither a blanket 2D-window assumption nor a blanket 3D remake is a substitute for that contract.
-
-CP-specific catalogs, stamp books, minigame screens, Card-Jitsu screens, mission screens, and housing/puffle controls are necessary additions. Use OSRS interface visual language and interaction conventions; do not restyle, remove, or replace the baseline panels. Reuse shared inventory, equipment, chat, friends, and persistence systems wherever their contracts fit.
-
-Preserve genuine real-player requirements for group activities. Source-defined NPC opponents are allowed where the selected game includes them, but ambient NPC adventurers must not impersonate players or fill mandatory human roles.
-
-Puffles are social/cosmetic by default. Use the existing follower and housing rules where applicable; do not silently add combat, gathering, storage, loot-finding, or core-progression benefits. Any participation in a selected CP minigame must be specified in that game's rules, including its effect on gold payouts.
-
-Present baseline player-owned housing as igloos without bypassing Construction acquisition, room/hotspot rules, costs, requirements, or XP. Cosmetic furnishings must not silently become free functional rooms, shortcuts, or progression rewards.
-
-### Gold, rewards, and cosmetic equipment
-
-Use normal gold for CP cosmetic and decoration purchases. Do not create a separate CP coin currency, hidden spending balance, or automatic classic-coin-to-gold conversion.
-
-Catalog purchases are intended gold sinks. Record prices, stock/ownership rules, and the actual gold debit/removal. Specify any resale, shop buyback, refund, or transformation behavior so it cannot accidentally undo the intended sink or create profitable purchase/reclaim loops.
-
-CP minigames may award normal gold through explicit per-activity payout rules and caps. This is an approved economic crossover, not a blanket approval of any reward quantity or an automatic one-to-one reuse of classic CP coin payouts.
-
-For each payout contract, define:
-
-* eligible outcomes, validated score/state inputs, and the exact reward calculation
-* payout cadence, limits, source budgets, and the time/account/world or mode scope of each cap
-* behavior for repeat play, interrupted sessions, concurrent claims, and resets
-* legitimate gold delivery and inventory-capacity behavior
-* telemetry and economy-simulation acceptance criteria
-
-Validate the underlying play/result server-side; a client-submitted score or requested reward is not sufficient. Gold credits, purchases, item grants, and budget updates must be authoritative, atomic where required, and idempotent across retries and crashes. Follow baseline inventory, stack, bank-access, and ownership rules rather than inventing a remote wallet.
-
-CP clothing is ordinary cosmetic equipment in normal equipment slots. It uses the normal item, inventory, bank, equip/unequip, slot-conflict, and applicable trade/death systems. Wearing it replaces the equipment in that slot; it is not an independent wardrobe layer or a visual override hiding still-equipped gear.
-
-Record each item's slot mapping, requirements, tradeability, death/reclaim rules, value, and acquisition path. Do not create extra functional slots merely to reproduce classic CP player-card layering. Cosmetic items grant no combat bonuses or special utility by default.
-
-Most CP progression remains cosmetic/social: scores, stamps, ranks, appearances, emotes, mission progress, and cosmetic unlocks. Gold purchases/payouts and ordinary cosmetic items are the approved crossovers above. Do not infer permission for skill XP, quest points, functional combat rewards, requirement bypasses, or other core advantages.
-
-### Crossover records and mission boundaries
-
-For each integration, record:
-
-* a stable adaptation/crossover ID and its approved direction or template
-* granting/spending CP content IDs and affected core item, skill, quest, economy, or interface IDs
-* exact rules, values, limits, requirements, and account/mode behavior
-* ownership, trade, death, reclaim, and source/sink accounting where relevant
-* approval reference, acceptance criteria, and verification evidence
-
-The directions approved in this section do not need repeated product approval for every entry conforming to an approved template. Define and validate the templates and concrete values as part of the full/release contracts. A new reward class or material departure from those boundaries requires owner approval under Sections 40 and 44.
-
-Rethemed OSRS quests retain their own source state graphs, rewards, and parity rows under Section 26. CP missions have separate IDs and definitions, while reusing generic state-machine/dialogue mechanics where appropriate. One family must never replace, merge away, or claim completion credit for the other.
-
-Mission progress does not automatically grant quest points, satisfy an OSRS quest requirement, or create skill XP or gold. Any such crossover beyond the specified minigame gold routes needs its own explicit approval.
-
-### Integrated-loop evidence
-
-Before bulk CP production, prove a small real loop headlessly and end to end in the browser:
-
-1. Play an included minigame with real controls, authoritative scoring, and a specified gold payout.
-2. Spend legitimately acquired gold on one CP clothing item; verify the gold sink and item grant.
-3. Equip it through the ordinary equipment interface, verify the displaced item and resulting stats/appearance, then bank or unequip it normally.
-4. Reconnect and restart the test server; verify persistence without duplicate gold, items, or rewards.
-5. Verify a cosmetic/social progress result such as a score record, stamp, rank, or unlock, while unapproved skill XP and quest state remain unchanged.
-
-The first loop need not include every minigame, all Card-Jitsu variants, housing, and every puffle. Before bulk production of each remaining family, verify its first complete entry with appropriate gameplay and multiplayer evidence.
-
-Require economy simulations with CP-focused players, including sustained farming, catalog spending, NPC liquidity, resale/conversion cycles, and mixed OSRS/CP play. Require tests for invalid scores, replayed rewards, payout-cap races, full inventories, failed purchases, disconnects, and crash/retry behavior in controlled environments.
-
-Use deterministic screenshots and interaction tests for the relevant interfaces, with reference evidence and visual tolerances established before acceptance. Track verified entries and all remaining work in the same full-target dashboards; neither a penguin avatar nor a mocked minigame reward completes this layer.
-
----
-
-# 4. SMALL-POPULATION REQUIREMENT
-
-ClubScape must provide enjoyable, meaningful progression when only one to five real players are online, without promising access to every group activity.
-
-This is a hard experience requirement, not permission to change baseline mechanics.
-
-Design systems accordingly:
-
-* Preserve the baseline's solo-capable progression paths and make them discoverable.
-* Keep original group requirements; some bosses, raids, or activities may be unavailable with too few real players.
-* Do not use NPC participants to satisfy required real-player counts.
-* The world may contain clearly identified NPC adventurers without pretending they are real users.
-* The initially exposed region may be compact, but must preserve its source layout and eventual world connections.
-* Player hubs should naturally concentrate activity.
-* The economy must function at very low population using the explicit adaptation in Section 5.
-* Communicate group requirements and availability honestly instead of silently substituting easier content.
-
-The game should transition naturally from:
-
-* solo RPG
-* small online community
-* medium multiplayer world
-* full MMO
-
-without requiring fundamental redesign. The solo stage does not need to expose activities whose original requirements cannot be met.
-
----
-
-# 5. ECONOMY REQUIREMENTS
-
-ClubScape should have a player-driven economy, but it must function before there is sufficient player liquidity.
-
-Implement a Grand Exchange-style market.
-
-Allow broader NPC-backed market liquidity when real-player liquidity is insufficient. It is not restricted to an essentials-only whitelist, but every supported market must have explicit price and production constraints.
-
-Player orders should take priority when compatible.
-
-NPC liquidity should:
-
-* prevent essential items from becoming unobtainable
-* operate within controlled price bands, inventories, and per-period item/currency budgets
-* avoid unbounded profit loops and preserve intended progression gates
-* gradually become less influential as player liquidity increases
-
-Account separately for NPC-backed market liquidity and the NPC adventurers in Section 29. Any items or currency they introduce into the player economy must enter explicit production budgets and source/sink accounting. Decorative NPC activity must not silently create tradable value.
-
-Identify NPC counterparties honestly. Define their eligibility rules, quote inputs, update cadence, stock/funding limits, and transaction accounting. Preserve ordinary shop and item restrictions unless a separate adaptation explicitly changes them.
-
-Test complete conversion cycles involving gathering, production, shops, item transformations, fees, and NPC/player orders. Controlled prices alone do not establish that a market is safe from repeatable profit loops. Budget enforcement must remain correct across concurrent orders, crashes, retries, and restarts.
-
-Build synthetic economy simulation capable of evaluating:
-
-* item production
-* gold creation
-* gold sinks
-* inflation
-* price volatility
-* scarcity
-* supply bottlenecks
-* progression bottlenecks
-* market liquidity
-* merchant behavior
-* PvM reward effects
-
-Synthetic player archetypes should include at minimum:
-
-* new player
-* casual player
-* efficient skiller
-* PvMer
-* merchant
-* completionist
-* social player
-* ironman-style player
-* CP-focused minigame player and sustained reward farmer
-
-The economy must be testable before significant real player population exists.
-
-Include the CP gold faucets, catalog sinks, cosmetic-item resale/transformation rules, and mixed gameplay paths from Section 3.4. Share source/sink accounting and cap enforcement with the main economy rather than treating minigame rewards as an untracked side balance.
-
----
-
-# 6. CORE TECHNOLOGY STACK
-
-Do not use Unity or Unreal as the primary engine.
-
-Do not use C# as the main game runtime.
-
-Use a Rust-first architecture.
-
-Primary technologies:
-
-## Core game and server
-
-* Rust
-* Tokio for async services where appropriate
-* Cargo workspace
-* Serde for data
-* PostgreSQL for persistent relational/account/game data
-* Redis only where an actual caching/ephemeral-state use case exists
-* Docker for local service orchestration
-
-## Web client
-
-* Rust compiled to WebAssembly
-* wgpu/WebGPU for game rendering
-* TypeScript for browser shell, account UI, settings, routing, browser integrations, and supporting tools
-* WebGL fallback only if technically necessary for a later approved browser/device support target; it is out of scope for the first slice
-
-## Desktop client
-
-Do not initially build a separate native desktop ClubScape client.
-
-The desktop power-user strategy is RuneLite compatibility. Follow the evidence-based feasibility and deferral process in Section 12. Browser/server development is the delivery priority; a failed RuneLite attempt is not an automatic reason to build another client.
-
-Keep the Rust client architecture capable of native compilation for a later desktop application. Do not start that application as an automatic substitute for unfinished RuneLite work.
-
-## RuneLite
-
-Build the compatibility layer described in Section 12.
-
-Java should be isolated to RuneLite compatibility.
-
-Java must not become the authoritative game implementation.
-
-## Agent orchestration
-
-Use TypeScript/Node.js initially.
-
-## Assets
-
-* Blender
-* glTF or another efficient web/native-friendly runtime model format
-* compressed GPU-friendly textures
-* automated LOD generation where appropriate
-* S3-compatible object storage/CDN in production
-
----
-
-# 7. CLIENT/SERVER SECURITY MODEL
-
-Treat every client as hostile.
-
-Do not rely on protocol secrecy for security.
-
-The server is authoritative.
-
-A client may request:
-
-“Interact with rock 381.”
-
-A client must never be trusted to state:
-
-“Give my character one runite ore.”
-
-Validate server-side:
-
-* player location
-* movement legality
-* collision
-* action cooldowns
-* item ownership
-* inventory capacity
-* skill requirements
-* equipment requirements
-* quest requirements
-* combat legality
-* resource availability
-* target validity
-* transaction state
-* trade state
-* drop ownership
-* world state
-* timing
-
-Use standard transport encryption.
-
-Do not invent custom cryptography.
-
-Prefer:
-
-* TLS
-* QUIC/WebTransport where appropriate
-* WebSocket fallback where appropriate
-
-Use:
-
-* short-lived authentication/session tokens
-* sequence numbers
-* protocol versioning
-* rate limits
-* replay protection
-* transactional inventory/economy mutations
-* server telemetry
-* anomaly detection
-
-A custom compact binary protocol may be introduced for efficiency.
-
-Do not use binary encoding as a security mechanism.
-
-The architecture must remain secure even if the full protocol specification becomes public.
-
----
-
-# 8. NETWORK PROTOCOL
-
-Start with a mature schema-based binary representation unless benchmarks demonstrate a compelling reason otherwise.
-
-Protobuf is acceptable for initial implementation.
-
-Reserve the ability to implement specialized packed encodings for high-frequency world updates later.
-
-Define protocol messages for concepts such as:
-
-* authentication
-* session establishment
-* player input
-* movement requests
-* entity updates
-* entity spawn/despawn
-* interactions
-* inventory deltas
-* skill updates
-* combat actions
-* animations
-* projectiles
-* chat
-* social state
-* world transitions
-* instances
-* trade
-* market activity
-
-Do not send complete world state repeatedly when deltas suffice.
-
-Version the protocol explicitly.
-
-Generate language bindings where possible.
-
-Design protocol capabilities so future clients and features can negotiate support safely.
-
-Document the supported client and protocol compatibility window. Negotiate optional capabilities and reject unsupported combinations safely; backward compatibility does not mean supporting every historical client indefinitely.
-
----
-
-# 9. RUST WORKSPACE ARCHITECTURE
-
-Use a monorepo.
-
-Suggested structure:
+Use orthogonal fields rather than one overloaded status:
 
 ```text
-clubscape/
-  crates/
-    protocol/
-    shared-types/
-    math/
-    content-runtime/
-    simulation/
-    world/
-    movement/
-    pathfinding/
-    combat/
-    skills/
-    quests/
-    economy/
-    social/
-    server/
-    client-core/
-    renderer/
-    audio/
-    input/
-    wasm/
-  web/
-    app/
-    ui/
-    launcher/
-  runelite/
-    compatibility/
-    api-bridge/
-    integration-tests/
-  content/
-    items/
-    equipment/
-    npcs/
-    objects/
-    monsters/
-    bosses/
-    skills/
-    quests/
-    missions/
-    dialogue/
-    shops/
-    drops/
-    regions/
-    instances/
-    achievements/
-    collections/
-    minigames/
-    events/
-    catalogs/
-  assets/
-    source/
-    manifests/
-    compiled/
-  research/
-    mechanic-notes/
-    data-imports/
-  schemas/
-  tools/
-    content-compiler/
-    asset-compiler/
-    world-compiler/
-    simulator/
-    loadtest/
-    economy-sim/
-    data-importer/
-    waddleworks/
-  tests/
-    unit/
-    integration/
-    simulation/
-    economy/
-    security/
-    compatibility/
-    browser/
-    assets/
-    regression/
-  spec/
-  .github/
+implementation: not_started | in_progress | implemented | blocked | deferred
+verification: unverified | partially_verified | verified
+fidelity: exact | presentation_adaptation | behavior_adaptation | original_content
 ```
 
-Keep authoritative simulation independent from graphical rendering.
+Only verified entries count as verified coverage. Blocked and deferred entries remain in the full denominator. Report verified/required counts and unresolved records, not percentages alone.
 
-The following must run headlessly:
+Cache or database presence establishes discovery, not complete gameplay. Legitimate player acquisition and progression paths are part of completion.
 
-* movement
-* world state
-* skills
-* combat
-* inventory
-* equipment
-* drops
-* quests
-* shops
-* economy
-* NPC behavior
-* instances
-* achievements
+## 9. Gameplay and economy rules
 
----
+Treat the server as authoritative. Validate location, collision, timing, action state, requirements, ownership, inventory capacity, targets, transactions, trades, drops, and world state. Protocol secrecy is not a security mechanism.
 
-# 10. DATA-DRIVEN CONTENT
+Preserve selected-baseline behavior for tick timing, action ordering, movement, collision, combat, XP, skills, inventory, equipment, banking, shops, trading, death, quests, activities, and rewards unless an approved behavior adaptation applies.
 
-ClubScape must be content-driven rather than implemented as thousands of hardcoded classes.
+Keep genuine real-player group requirements. Low population does not authorize NPC stand-ins, solo conversions, increased rewards, or easier requirements. Make source-defined solo progression discoverable and state unavailable group content honestly.
 
-Engine code defines reusable mechanics.
+The economy must work at low population through controlled, explicit NPC liquidity. Player orders take priority when compatible. NPC markets require eligibility, price inputs, stock/funding budgets, accounting, and conversion-cycle tests.
 
-Content files define actual game content.
+Club Penguin minigame payouts and catalog spending use ordinary gold and authoritative transactions. Define payout formulas, caps, eligible outcomes, retries, disconnects, inventory behavior, sources, sinks, and Ironman/account-mode behavior. Never trust a client-submitted score to mint value.
 
-Examples of reusable engine mechanics:
+Rebalance Club Penguin prices, payouts, sources, and sinks for the OSRS economy while preserving relative Club Penguin rarity and prestige. Treat raw Club Penguin coin values as reference evidence rather than values to copy directly.
 
-* GatherAction
-* ProductionAction
-* CombatAction
-* DialogueTree
-* QuestStateMachine
-* DropTable
-* Shop
-* NPCBehavior
-* ResourceNode
-* EquipmentDefinition
-* InstanceDefinition
-* AchievementDefinition
+Club Penguin-derived clothing, puffle supplies, stamps, and most activity rewards are cosmetic, collectible, social, or ordinary tradeable goods by default. Adopted puffles themselves are permanent account-bound companions. Any reward that changes combat power, skilling efficiency, traversal, storage, loot, requirements, or progression needs an individually approved balance decision. Integration into the OSRS economy does not itself imply gameplay power.
 
-An individual copper rock should generally be data rather than a bespoke Rust type.
+## 10. Club Penguin content
 
-Use strongly validated schemas.
+Follow `references/HYBRID_GAME_DESIGN.md`, treating entries marked proposed as proposals until promoted in `references/PRODUCT_DECISIONS.md`.
 
-Evaluate RON, JSON, YAML, or a combination.
+The long-term Club Penguin target is the complete original browser game through its 2017 shutdown, including:
 
-Prefer formats that:
+- puffles
+- igloos and decorating integrated with Construction/housing
+- clothing and catalogs
+- emotes and selected parties
+- named minigames
+- Card-Jitsu, Fire, Water, and Snow
+- stamps and stamp-book interface
+- classic missions
 
-* deserialize cleanly into Rust types
-* are diffable
-* are easy for agents to modify
-* produce strong validation errors
-* support references by stable IDs
-* support versioning and migrations
-* support future fields without breaking older content
+Before bulk production, enumerate the complete target as a named inventory with source era and variants, then select milestone subsets from it. When content changed across 2005–2017, use the latest stable original-browser version as the normal-world default and preserve materially distinct earlier variants through parties, archives, missions, or instances. Club Penguin Island is excluded unless a later decision approves a specific element as inspiration. One example does not complete a family.
 
-Compile source content into optimized runtime representation during the build.
+Preserve each Club Penguin minigame's recognizable core rules, controls, timing, scoring, and win/failure loop by default. Integrate its entrance, world placement, accounts, persistence, multiplayer, rewards, economy, security, interfaces, and presentation into ClubScape. Record material gameplay deviations per minigame.
 
----
+A minigame may award modest OSRS skill XP only when its actual play directly exercises that skill. Keep its XP rate below comparable dedicated OSRS training by default, simulate its progression and economy effects, and record the exact skill, formula, caps, eligibility, and Ironman behavior in the activity specification.
 
-# 11. STABLE CONTENT IDS
+Implement the full puffle-care identity: adoption, ownership, individual personality and variant, needs such as food/rest/play/cleanliness, direct interactions, follower behavior, igloo residence, and participation in compatible original activities. Puffles remain non-power companions unless an individual functional effect is approved.
 
-Every significant game object must have a stable ID.
+Adoption creates a permanent account-bound puffle and may charge ordinary OSRS coins as a gold sink. A puffle cannot be traded, sold, dropped, lost on death, or transferred between accounts. Puffle food, care supplies, equipment, and cosmetics are ordinary tradeable items by default unless their individual definitions say otherwise.
 
-Examples:
+Use rotating featured Club Penguin catalogs for discovery and seasonal presentation, backed by a permanent archive containing ordinary catalog clothing after its featured window. Ordinary catalog clothing is tradeable by default. Quest, activity, rank, stamp, and live-event rewards remain account-bound or availability-limited according to their own definitions and do not enter the archive automatically.
 
-item.pickaxe.rune
-item.ore.copper
-npc.goblin.basic
-object.rock.copper
-quest.cooks_crisis
-region.starter_town
+Use one player home. The igloo is ClubScape's presentation of the OSRS Player-Owned House, backed by the same Construction skill, requirements, rooms, hotspots, costs, storage, portals, servants, persistence, and visiting rules.
 
-Avoid fragile implicit numeric indexing.
+Preserve classic Club Penguin mission characters, mysteries, puzzles, and outcomes. Adapt travel, locations, items, and dialogue enough to fit coherently inside Gielinor. Implement Penguin missions as first-class quests in the shared journal, quest engine, map markers, requirement panels, state machine, dialogue, cutscenes, inventory flow, and reward screens.
 
-Where RuneLite or compatibility with OSRS concepts requires numeric IDs, maintain explicit mapping layers.
+Penguin missions award unified Quest Points according to OSRS-style length, difficulty, and requirements. Preserve every explicit OSRS quest prerequisite. Inventory every system that consumes total Quest Points and deliberately rebalance each threshold, formula, cape, diary, unlock, or reward so the added missions neither accidentally trivialize nor obstruct progression; generic Quest Point gates count the unified total. The Quest Point Cape ultimately requires all persistent OSRS quests and Penguin missions in the supported release. Track baseline OSRS quest coverage and Penguin mission coverage separately for parity reporting, not as separate player-facing point currencies.
 
-Reuse OSRS numeric IDs inside those mapping layers where technically useful; ClubScape's canonical IDs remain stable and independent.
+Use an additive expansion of the frozen baseline's existing Iceberg and penguin region as the primary Club Penguin settlement and social hub. Preserve the original Iceberg geometry, Cold War storyline, NPCs, quest states, travel, agility-course behavior, and all other baseline content. Distribute additional venues, rooms, and activity entrances where they fit existing OSRS regions. Do not create a disconnected second world. Record the exact expanded boundaries and every distributed mapping in the content inventory.
 
-Reserve dedicated ranges/namespaces for ClubScape-exclusive content.
+Preserve a dedicated Club Penguin stamp book and its activity-specific categories, criteria, and completion tracking. Keep it distinct from OSRS Achievement Diaries and the Collection Log, while allowing relevant activities and accomplishments to be cross-linked in their interfaces. Define one authoritative completion event for every stamp so cross-links cannot double-award progress or rewards.
 
-Each content-producing task must reserve its ID namespace before parallel implementation to prevent collisions.
+Missions, minigames, exploration, stamps, parties, and other accomplishments may award server-authoritative pins. Earned pins are untradeable collectibles shown through a dedicated pin collection, a Club Penguin-style player card, relevant Collection Log views, and an igloo/POH pin board. A displayed pin links back to its source. Pins do not consume OSRS equipment slots or bank space; any later tradeable decorative pin item must be a distinct item family.
 
-Never assume that an external game’s IDs are safe to reuse without checking compatibility and technical implications.
+When adding or migrating a stamp, backfill it only when authoritative stored history proves the exact criterion. Current state may prove a state-based criterion, but do not infer event counts, timing, difficulty, party composition, or other historical facts that were not recorded. If proof is insufficient, require a fresh completion. Make migration and reward settlement idempotent.
 
----
+Preserve Card-Jitsu as a separate activity progression family with collectible cards and decks, matchmaking, belts, ranks, and ninja progression across Card-Jitsu, Fire, Water, and Snow. Its rewards are primarily cosmetic, social, or collection-oriented. Card-Jitsu does not require or award OSRS combat or Magic levels, XP, equipment power, or other functional progression unless a later decision approves the exact crossover.
 
-# 12. RUNELITE COMPATIBILITY
+Use hybrid binding for Card-Jitsu. Ordinary collectible cards are tradeable through the OSRS inventory, bank, trade, and market economy; using a card in a deck does not consume it. Belts, ranks, ninja status, rank rewards, and specially earned progression cards are account-bound and cannot be bought to substitute for earned progression. Define acquisition sources, duplicate handling, deck ownership checks, storage, losses, and sinks before implementation.
 
-RuneLite is the desktop power-user strategy, pursued in parallel with browser-first delivery. It is a serious engineering goal, but not a prerequisite for expanding browser/server content beyond the vertical slice.
+For archived out-of-season parties, allow story replay, activities, collection progress, and appropriate stamps, but cap or disable repeatable economic rewards and reserve selected event-window rewards for the scheduled live party. Define the rule per party and reward.
 
-Build a compatibility runtime that exposes the game-state model RuneLite expects.
+Puffle ownership is permanent. Neglected puffles may become unhappy or inactive and return to the player's igloo until cared for; neglect does not delete ownership or require re-adoption.
 
-Prefer unchanged upstream RuneLite. When necessary, investigate maintainable upstream modifications and alternative bridge designs rather than assuming that the first approach must work.
+Use shared OSRS-style inventory, equipment, bank, chat, friends, persistence, housing, and economy contracts wherever they fit. Penguin missions grant unified Quest Points, and qualifying minigames may grant their approved modest skill XP. Other CP progress does not grant functional combat rewards, requirement bypasses, or unapproved progression effects.
 
-Inspect and test RuneLite's actual client-loading, rendering, scene, coordinate, timing, event, and plugin requirements. Do not assume that an API-shaped shim alone is enough, or impose unverified client assumptions on the authoritative server.
+Preserve OSRS free chat, private messages, friends, ignore, clans, reporting, and moderation. Add optional Club Penguin-style quick-chat phrases, emotes, and social actions without creating a separate social graph or enforcement system. Both clients expose the same authoritative social state and moderation outcomes.
 
-Initial compatibility target should expose:
+Re-create recognizable Club Penguin musical themes and sound identities within the frozen OSRS revision's audio style and technical constraints. Use original audio as reference rather than inserting it unchanged. Browser and RuneLite routes must present the same canonical music, ambience, cues, and sound-effect identity.
 
-* local player
-* other players
-* NPCs
-* world objects
-* ground items
-* scene tiles
-* coordinates
-* skills
-* XP
-* inventory
-* equipment
-* chat
-* game state
-* animations
-* game ticks
-* menu actions
-* relevant callbacks/events
+## 11. Browser client and interfaces
 
-Attempt compatibility with generic RuneLite features first:
+The browser is a complete game client. Implement the selected OSRS entry sequence, viewport, game frame, minimap, chat, tabs, menus, panels, input behavior, disabled/error states, and activity interfaces required by the active milestone.
 
-* XP tracking
-* ground item overlays
-* tile indicators
-* NPC indicators
-* idle notifications
-* loot tracking
+The Rust/WASM client owns protocol state, scene/entity state, camera, animation, viewport rendering, interpolation, and world interaction. TypeScript owns browser/account shell concerns without duplicating authoritative gameplay.
 
-Do not require arbitrary OSRS-specific plugins to work immediately.
+Stream assets by region/content need. Record supported browsers, inputs, viewport range, and required capabilities. Give clear feedback when required capabilities are unavailable.
 
-Create compatibility tiers:
+For each required interface family, maintain:
 
-Tier 1:
-RuneLite launches and basic generic overlays work.
+- traceable visual references
+- deterministic screenshot states
+- control/state matrix
+- interaction tests against authoritative state
+- visual comparison tolerances established before acceptance
 
-Tier 2:
-Broad generic-plugin coverage against a named, tested support list.
+Regression screenshots against ClubScape detect changes; fidelity screenshots compare against the selected source references. Neither replaces functional tests.
 
-Tier 3:
-Selected OSRS-aware plugins work through ID/semantic compatibility.
+## 12. RuneLite compatibility
 
-Tier 4:
-Broader compatibility where worthwhile.
+Follow `references/RUNELITE_COMPATIBILITY.md`.
 
-Record the tested runtime/plugin builds and known limitations. Do not imply that untested plugins work.
+RuneLite is a required complete alternative gameplay client for the same accounts, world, mechanics, quests, items, progression, and Club Penguin activities as the browser client. Reach that target through demonstrated compatibility tiers; do not describe an API-shaped shim, successful compilation, mock screenshot, or Creator's Kit scene as working compatibility.
 
-The early compatibility demonstration target is a real RuneLite runtime that launches, connects to the ClubScape authoritative server, renders the slice scene and penguin character, receives live state/events, and runs at least one generic overlay or tracker. Compilation, mocks, and screenshots disconnected from live state are not compatibility proof.
+Run bounded spikes against named RuneLite/client/cache builds. Record executable evidence for launch, connection, scene rendering, penguin appearance, game ticks, state/events, menu actions, and at least one generic plugin.
 
-Before the feasibility milestone, define bounded experiments, required tools, the tested runtime/plugin versions, and available time/compute budgets. Diagnose failed attempts and try reasonable alternative approaches rather than repeating failures without new evidence.
+Keep the authoritative server independent of RuneLite assumptions. Browser/server work continues while compatibility gaps are investigated. The supported default configurations of the browser and RuneLite clients must use the same canonical asset geometry, colors/textures, animations, UI art, lighting assumptions, camera composition, and visual identity, within defined cross-renderer screenshot tolerances. Platform rasterization differences may exist; intentional detail tiers or visual substitutions require an owner-approved exception. A strategy change, browser-only activity, or desktop deferral requires a documented feasibility review and owner decision.
 
-A documented feasibility review must record:
+## 13. Asset pipeline
 
-* attempted architectures and executable evidence from the integration attempts
-* which launch, rendering, state, event, and plugin requirements actually work
-* unresolved gaps, technical limitations, upstream maintenance risks, and missing prerequisites
-* the estimated work/resources for viable alternatives and their effect on browser delivery
-* a recommendation to continue integration or explicitly defer desktop support
+Follow `references/BLENDER_ASSET_GUIDE.md`.
 
-A deadline or missing tool is not proof of impossibility. However, deferral does not require proving impossibility: demonstrated cost, limitations, or unavailable resources may justify it after review. Obtain and record owner approval for the deferral and its follow-up scope.
+Reuse suitable authorized OSRS assets for unchanged OSRS content. Create original Club Penguin-derived assets for penguins, puffles, clothing, props, locations, missions, and minigames that match the frozen OSRS revision's geometry density, proportions, silhouettes, face colors/textures, shading, animation cadence, camera-distance readability, and visual rhythm. Preserve OSRS item identity when adapting worn equipment to penguin anatomy.
 
-Continue independent browser/server work while investigation, review, or approval is pending. A pending or approved desktop deferral must not block that pipeline. Keep compatibility code and findings, publish the tested support status, and never count deferred desktop support as completed.
+Keep canonical authored sources target-independent and generate deterministic outputs that render the same visual design in both the web and RuneLite routes. Treat any required client-specific simplification or substitution as a compatibility blocker or owner-approved exception, not the default pipeline.
 
-Do not automatically switch to a native client. Any later desktop-client strategy change is a separate product decision. Browser gameplay and interface parity remain required regardless of the RuneLite outcome.
+The canonical asset source is the authored source file plus semantic manifest. Generate browser and RuneLite/cache outputs deterministically. Keep target-specific metadata explicit, including face color, textures, alpha, priorities, skin groups, recolors, animation links, pivots, sockets, bounds, and IDs.
 
-RuneLite integration must not dictate authoritative server architecture.
+Before bulk asset production, prove the validation corpus in Blender, decoded target output, the real browser renderer, and the selected RuneLite route. Treat preliminary triangle ranges and content mappings as proposed values until measured.
 
----
+Every used/generated asset records its source path, input hash, relevant tool version, import/generation steps, modifications, output hashes, and client validation state.
 
-# 13. WEB CLIENT
+## 14. Architecture and repository shape
 
-Build the primary web game experience using Rust/WASM and WebGPU.
+Prefer a Cargo workspace with focused crates for protocol, shared types, simulation, world, movement, pathfinding, combat, skills, quests, economy, social systems, server, client core, rendering, audio, input, and WASM delivery. Let actual coupling and compile boundaries determine final crate count.
 
-The browser should be capable of joining the same world/account as RuneLite.
+Keep content under data directories organized by category and compiled into optimized runtime data. Avoid thousands of bespoke Rust classes for ordinary content. A new content entry using existing mechanics should not require an engine edit.
 
-Implement the complete in-game interface contract in Section 3.3. Account pages, a launcher, or a generic inventory panel are not substitutes for the baseline game interfaces. Choose the rendering/UI boundary to meet fidelity, input, accessibility, and performance requirements without duplicating authoritative gameplay rules.
-
-TypeScript ownership of login and launcher behavior is an implementation boundary, not permission to use generic website forms or loading spinners for the game entry sequence. Title/login, loading/connecting, authentication failures, and reconnect states must satisfy the same visual contract as the game itself. Display real authentication and loading outcomes; visual fidelity must not depend on fake progress or cosmetic-only controls.
-
-Implement the real account sign-up/login and browser-capability contract in Section 30 using ClubScape's own account service and authoritative server. A development-only login or a seeded character is not proof of the required new-player experience. Preserve tutorial and quest progress through logout, reconnect, and server restart.
-
-Use TypeScript for:
-
-* account sign-up and login
-* account management
-* browser routing
-* settings
-* payments/store if added
-* accessibility UI
-* external integrations
-* launcher behavior
-* web-specific APIs
-
-Use Rust/WASM for:
-
-* protocol
-* world state
-* entity management
-* camera
-* animation state
-* game viewport
-* scene rendering
-* asset state
-* entity interpolation
-* interaction processing
-
-Assets should stream by region/content need rather than requiring the full game to download before play.
-
----
-
-# 14. ART PIPELINE
-
-Art must be standardized and automated.
-
-Use a reuse-first asset pipeline:
-
-1. Reuse existing OSRS models, textures, animations, and sounds directly for matching content wherever applicable. Do not recreate suitable OSRS assets merely to produce ClubScape-specific versions.
-2. If runtime format conversion, animation retargeting, or equipment fitting is needed, make the minimum technical adaptation while preserving the source asset's appearance, motion, and sound as far as practical. Technical adaptation is not a reason to redesign the asset.
-3. Create novel ClubScape assets for the approved penguin/Club Penguin presentation where suitable existing assets or technical adaptations cannot serve it. Examples include penguins, puffles, igloos, rethemed quest characters, locations, clothing, and props. Present these in an OSRS art style where applicable, with animations and sounds consistent with that presentation. Ordinary matching OSRS assets remain reuse-first.
-
-For example, runite ore, runite rocks, and their associated mining interactions can use existing OSRS textures, animations, and sounds directly wherever applicable, without a ClubScape-specific redesign.
-
-Asset reuse alone does not establish visual fidelity. Validate converted assets in the actual browser renderer against the approved reference, including scale, materials, lighting/shading, texture sampling, camera framing, and animation playback. A successful model import or a generic low-poly appearance is not sufficient. Prove the representative tree, goblin, terrain, and penguin rendering in Section 30 before bulk asset conversion or generation.
-
-Every runtime asset should have a manifest containing:
-
-* stable asset ID
-* source asset path
-* source/build record as described in Section 15
-* geometry limits
-* dimensions
-* pivot requirements
-* attachment points
-* materials
-* textures
-* skeleton
-* animation compatibility
-* LOD requirements
-* optimization state
-* output hashes
-
-Equipment must be modular.
-
-Do not create separate complete penguin models for every equipment combination.
-
-Use:
-
-Penguin base character
-
-* head item
-* torso item
-* legs
-* hands/gloves
-* feet
-* cape
-* neck item
-* weapon
-* offhand
-* ring and ammunition slots where applicable
-* additional accessories supported by an explicit slot definition
-
-Create standardized penguin equipment attachment definitions.
-
-Preserve every baseline equipment slot, requirement, effect, and slot-conflict rule even when penguin anatomy requires a different attachment arrangement. A functional slot does not necessarily require a visible mesh; do not delete a slot because it is difficult to display. Validate equipment appearance and interface representation against the same item definitions.
-
-Preserve baseline interface artwork under Section 3.3, adapting only the elements required by the penguin/content mapping. Retheming the world is not permission to redesign the entire UI.
-
-Automate Blender using headless processing where useful.
-
-Automatically generate:
-
-* front render
-* side render
-* back render
-* close-up render
-* in-game scale render
-
-Validate:
-
-* missing textures
-* invalid materials
-* triangle budgets
-* incorrect pivot
-* incorrect scale
-* invalid rig
-* incompatible skeleton
-* clipping thresholds
-* LOD generation
-* naming conventions
-* manifest completeness
-* source paths and output hashes
-
-Important visual assets should receive independent style and technical review.
-
----
-
-# 15. ASSET AND DATA SOURCE RECORDS
-
-Keep lightweight technical records that make assets and imported datasets reproducible, diagnosable, and replaceable.
-
-Use the asset manifest in Section 14 as the canonical record rather than maintaining a duplicate registry. Alongside its source paths and hashes, retain:
-
-* source URL or supplied-file reference where applicable
-* import or generation steps and relevant settings
-* meaningful project modifications
-* relevant tool/model versions, dates, and seeds where needed to reproduce a result
-
-Imported datasets should keep equivalent information beside their import scripts. Original content does not need a fabricated external reference.
-
-Validate required records and input integrity within the existing content and asset builds. Report missing or invalid build inputs explicitly. Do not require a separate administrative workflow for each asset or research note.
-
-Retain standard upstream license notices with dependencies and imported files.
-
----
-
-# 16. SPECIFICATION SYSTEM
-
-Maintain a canonical project specification under `spec/`.
-
-At minimum:
-
-CLUBSCAPE_CONSTITUTION.md
-product.md
-reference-baseline.md
-full-scope.md
-launch-scope.md
-feature-parity.md
-adaptations.md
-interface-parity.md
-club-penguin.md
-future-extensibility.md
-gameplay.md
-skills.md
-combat.md
-economy.md
-world.md
-quests.md
-social.md
-art-style.md
-characters.md
-animation.md
-networking.md
-security.md
-client-api.md
-runelite-compatibility.md
-content-format.md
-asset-format.md
-agent-rules.md
-research-policy.md
-testing.md
-
-When a foundational decision changes, update the canonical specification before mass agent work proceeds.
-
-Agents must receive only the relevant specification sections for their task rather than the entire project history.
-
-Keep each requirement canonical rather than copying independent versions into multiple specs. Link the parity registry, adaptation register, source mappings, and release criteria. Derived plans must not weaken the owner's full-target requirements.
-
----
-
-# 17. AGENT ORCHESTRATION
-
-Build a first-class internal orchestration system named WaddleWorks.
-
-Start with a durable task ledger and existing development tools. Until the WaddleWorks MVP exists, the Director orchestrates directly using the same task template. Build WaddleWorks incrementally; a complete orchestration platform must not become a prerequisite for the first playable slice.
-
-Add orchestration features to solve measured coordination, validation, or integration bottlenecks. Worker counts, planning volume, and orchestration-platform completeness are not substitutes for verified game progress.
-
-Enforce one shared `max_active_ai_agents = 25` budget, including before the WaddleWorks MVP exists. With one active Director, at most 24 other AI agents may be active. Every spawn, nested delegation, retry, or resumed worker must be admitted through the same budget; queue work when no slot is available.
-
-Reserve slots before starting workers and release them only after completion, confirmed cancellation, or parking that prevents automatic resumption without fresh admission. Do not bypass the cap by labeling automatically resumable agents idle, creating additional coordinators, or issuing unbudgeted parallel model calls.
-
-Track request/token budgets and rate-limit responses as well as agent counts. Respect provider retry instructions; otherwise use bounded exponential backoff with jitter. Pause new admissions, reduce the effective concurrency limit below 25 when throttled, and recover gradually after successful requests. Do not create replacement agents or additional pools to work around a rate limit.
-
-There is no owner-imposed AI spending cap for an execution. Do not invent a monetary ceiling or require one as a launch prerequisite. The approved-milestone stopping rule, external execution limits, 25-agent ceiling, provider quotas, and bounded retries still apply. Report observed usage where available and identify unavailable accounting honestly. This policy does not authorize unrelated infrastructure purchases or other new irreversible costs.
-
-Expose active/queued counts and throttling/backoff state. Validate that nested tasks, retries, cancellation, and resumption cannot oversubscribe the shared budget. The cap is a ceiling, not a utilization target, and does not replace provider request/token limits.
-
-WaddleWorks owns:
-
-* roadmap
-* task graph
-* dependencies
-* task state
-* worker assignment
-* shared agent-slot admission and release
-* request/token budgeting and rate-limit backoff
-* agent prompts
-* allowed file paths
-* acceptance criteria
-* build/test commands
-* worktrees
-* branches
-* PR creation
-* reviewer assignment
-* retry logic
-* failure tracking
-* integration queue
-* change history linking tasks, workers, branches, PRs, and results
-* metrics
-* research assignments
-
-Suggested task lifecycle:
-
-BLOCKED
-READY
-CLAIMED
-IMPLEMENTING
-VALIDATING
-REVIEW
-INTEGRATION
-DONE
-FAILED
-
-Every task must define before implementation:
-
-* task ID
-* goal
-* relevant specs
-* dependencies
-* allowed paths
-* forbidden paths
-* expected outputs
-* validation commands
-* test requirements
-* acceptance criteria
-* reserved content-ID namespaces where applicable
-* relevant source notes where applicable
-* parity entries, fidelity requirements, and approved adaptation IDs where applicable
-
-Do not allow agents to modify arbitrary repository areas.
-
-Bound retries and record failure diagnostics. Repeated failures should become diagnosed blockers, not unlimited agent respawns. Preserve visible blocked and deferred states rather than counting them as completed work.
-
----
-
-# 18. PARALLEL DEVELOPMENT MODEL
-
-Use a small, coordinated team, never more than 25 concurrent AI agents in total.
-
-An illustrative maximum allocation, totaling 25 including coordination, is:
-
-* Director/orchestration: 1
-* Architecture/contracts: 2
-* Engine/server/client/gameplay: 8
-* Content/assets: 6
-* Research/reference validation: 2
-* QA/review: 4
-* Build/integration/tooling: 2
-
-This is not a requirement to start or keep 25 agents running. Combine roles, leave slots unused, and rebalance within the same ceiling according to available independent tasks, provider quotas, CI throughput, and review capacity. Raising the ceiling requires explicit owner approval.
-
-Prefer isolated content, assets, tests, research, and validation when parallelism is useful. Queue additional work rather than expanding beyond the cap.
-
-Very few agents should modify core architecture concurrently.
-
-Stage bulk imports, validate their schemas and ID mappings, and review their integration before release. Keep their source/build records as described in Section 15.
-
----
-
-# 19. AGENT HIERARCHY
-
-Use hierarchical task decomposition.
-
-Do not create an all-to-all communication graph.
-
-Use a structure such as:
-
-Director
-Architecture leads
-Gameplay leads
-Content leads
-Art leads
-Research leads
-QA leads
-Infrastructure leads
-
-Each lead decomposes work into independently testable tasks.
-
-These are responsibilities, not separately staffed pools outside the 25-agent ceiling. One agent may cover multiple lead responsibilities; every delegated worker still consumes a slot from the shared budget in Section 17.
-
-Workers communicate primarily through:
-
-* specs
-* task definitions
-* code
-* content files
-* assets
-* mechanic notes
-* test results
-* PRs
-
-Avoid dependence on conversational history.
-
----
-
-# 20. GIT WORKFLOW
-
-Every task that modifies project files should execute in an isolated branch/worktree. Read-only research and review do not need their own worktrees.
-
-Establish shared contracts before parallel implementation. Serialize changes to shared schemas, migrations, generated files, and other conflicting paths.
-
-No agent pushes directly to main.
-
-Typical flow:
-
-Task
-→ worktree
-→ implementation
-→ local validation
-→ PR
-→ independent review
-→ CI
-→ integration queue
-→ main
-→ post-merge validation
-
-Use CODEOWNERS.
-
-Restrict core areas such as:
-
-* networking
-* persistence
-* authentication
-* security
-* economy transactions
-* protocol
-* core simulation
-
-to stricter review.
-
-Content agents should not modify core engine code merely to make content work.
-
----
-
-# 21. CONTINUOUS INTEGRATION
-
-CI is the objective supervisor.
-
-Every relevant PR should run:
-
-* formatting
-* compilation
-* lints
-* schema validation
-* content compilation
-* unit tests
-* content ID uniqueness checks
-* dependency checks
-* path ownership checks
-* prohibited dependency checks
-* asset manifest and import-record validation where applicable
-
-Additional tests depending on affected area:
-
-* simulation scenarios
-* RuneLite compatibility
-* browser tests
-* asset validation
-* economy tests
-* security tests
-* integration tests
-* load tests
-* visual regression tests
-* feature-parity coverage checks
-* extensibility compatibility tests
-
-Do not merge based solely on LLM review.
-
-Keep routine CI bounded. Run expensive load, GPU, long-duration, and failure-injection suites in suitable test environments, and require their results for affected release criteria. Unavailable coverage must remain visible rather than being reported as passed.
-
----
-
-# 22. HEADLESS SIMULATOR
-
-Build a headless simulator early.
-
-It must be able to instantiate the authoritative game simulation without graphics.
-
-Provide commands similar to:
+Use stable semantic IDs such as:
 
 ```text
-clubscape-sim scenario new_player_to_mining_10
-
-clubscape-sim mine --rock copper --pickaxe bronze --level 1 --iterations 10000
+item.osrs.pickaxe.rune
+item.cp.clothing.sailor_hat
+npc.osrs.goblin.basic
+mission.cp.operation.blackout
 ```
 
-Support scripted scenarios:
+Map selected-baseline numeric IDs explicitly for RuneLite/client/cache compatibility. Reserve namespaces before parallel content work.
 
-* create account
-* spawn character
-* walk
-* interact
-* gather
-* bank
-* trade
-* craft
-* fight
-* die
-* complete quests
-* use shops
-* use Grand Exchange
-* enter instances
-* earn achievements
-* test future content extensions
-* test protocol version compatibility
+The repository should support consistent commands such as:
 
-Results should be machine-readable.
-
----
-
-# 23. BOT/LOAD TEST CLIENT
-
-Create a protocol-level synthetic client separate from the graphical client.
-
-It must be able to emulate real users.
-
-Use it for:
-
-* server load
-* movement
-* combat
-* skilling
-* market activity
-* social activity
-* login spikes
-* world hopping
-* boss encounters
-* economy simulation
-* feature-parity regression
-* future-client compatibility
-
-Support thousands to hundreds of thousands of synthetic clients where infrastructure allows.
-
-These are protocol-level test clients, not AI-agent sessions. Their workload limits are separate from the 25-agent ceiling. Any AI agents directing or assessing play still count toward that ceiling; do not launch one AI agent per synthetic client.
-
-Run load, adversarial, economy-manipulation, and failure-injection scenarios against controlled test environments and synthetic accounts. Set workload and resource limits before execution; do not direct them at live player worlds or third-party services.
-
----
-
-# 24. TESTING STRATEGY
-
-Testing must include multiple layers.
-
-## Unit tests
-
-Test:
-
-* XP calculations
-* inventory mutations
-* item stacks
-* equipment
-* movement
-* collision
-* quest conditions
-* drop logic
-* combat formulas
-* market calculations
-* schema migrations
-* feature capability negotiation
-
-## Property/invariant tests
-
-Examples:
-
-* item quantities never become negative
-* items cannot exist simultaneously in two owners’ inventories
-* a trade preserves item/gold totals
-* unauthorized inventory creation cannot occur
-* XP cannot decrease unless explicitly designed
-* player cannot equip items they do not own
-* level requirements cannot be bypassed
-* a quest cannot enter an undefined state
-* a region intended to be reachable has a valid path
-* server state remains internally consistent after disconnect/reconnect
-* adding a new content definition does not require unrelated engine changes
-* protocol evolution preserves supported older clients
-* content migrations preserve player state
-
-## Integration tests
-
-Run real server components with synthetic clients.
-
-## Regression tests
-
-Every fixed bug receives a regression test.
-
-## Browser tests
-
-Use automated browser testing for:
-
-* account sign-up, login, and logout
-* loading
-* input
-* UI
-* session recovery
-* WASM startup
-* asset streaming
-* client capability negotiation
-
-The first-slice browser suite must execute the Section 30 fresh-account journey against the real server in both supported browsers. Verify persisted tutorial stages and quest outcomes rather than relying only on pre-created accounts or direct state seeding.
-
-## RuneLite tests
-
-Launch compatibility environment and test expected plugins/API behavior.
-
-## Visual tests
-
-Automated screenshots for:
-
-* title/login, loading/connecting, authentication failures, and reconnect states
-* characters
-* equipment
-* UI
-* environments
-* animations
-* rendering regressions
-* imported and original assets
-
-Use the traceable reference fixtures and pre-agreed comparison tolerances in Sections 3.3 and 30. Distinguish fidelity checks against the approved source references from regression checks against earlier ClubScape builds; passing the latter does not prove the former.
-
-## Audio tests
-
-Validate playback in the running browser for required music and sound effects, including source-defined triggers, timing, looping, region transitions, volume, and mute behavior. Test browser user-gesture/autoplay handling and reconnects so audio does not remain unintentionally silent or start duplicate playback. Audio files in a manifest are not evidence that the required experience is audible when enabled.
-
-## Security/adversarial tests
-
-Attempt:
-
-* impossible movement
-* action spam
-* replay
-* duplicate messages
-* stale actions
-* malformed packets
-* inventory spoofing
-* item duplication
-* race conditions
-* trade cancellation exploits
-* disconnect exploits
-* unauthorized asset/data access
-* protocol downgrade
-* capability spoofing
-
----
-
-# 25. SELF-PLAY TESTING
-
-Use AI agents as players for exploratory behavior and qualitative assessment. Use deterministic scenarios and synthetic clients for bulk repetition, reserving agent capacity for exploration and failure investigation.
-
-AI playtesters share the same 25-agent budget with development and review; there is no additional playtesting pool outside the cap.
-
-Have agents attempt:
-
-* normal progression
-* speedrunning
-* unusual interaction orders
-* economy manipulation
-* griefing
-* exploit discovery
-* sequence breaking
-* boss cheesing
-* duplication
-* AFK strategies
-* resource monopolization
-* low-population play
-* feature-parity comparisons
-* future-content compatibility
-* accessibility and usability testing
-
-Record failures automatically as new tasks. Apply the test-environment and resource limits in Section 23.
-
----
-
-# 26. QUEST STRUCTURE
-
-Quests should be highly parallelizable.
-
-Each quest should live in an isolated directory, such as:
-
-content/quests/q_0042/
-
-Containing:
-
-quest definition
-dialogue
-encounters
-requirements
-rewards
-localization
-tests
-asset references
-source notes where applicable
-
-Quest implementation should use generic state-machine mechanics rather than bespoke engine modifications wherever possible.
-
-Every rethemed OSRS quest must preserve and test its source state graph, requirements, progression gates, encounters, and rewards. Keep presentation/story mapping separate from executable quest logic. Club Penguin missions are a separate content family under Section 3.4, not substitutes for unfinished OSRS quests.
-
----
-
-# 27. WORLD STRUCTURE
-
-Do not create one enormous manually edited scene.
-
-Represent the world declaratively.
-
-World definitions should contain:
-
-* region ID
-* bounds
-* terrain
-* objects
-* NPC spawns
-* resource spawns
-* portals
-* exits
-* instances
-* collision
-* environment assets
-* music
-* ambient effects
-* level/content requirements
-* future expansion anchors
-
-Compile source world content into optimized runtime data.
-
-Agents should be able to own separate regions without scene merge conflicts.
-
-Retain source layout and connectivity references with each mapped region. Validate collision, travel relationships, access gates, and gameplay-relevant distances after visual retheming. New Club Penguin areas are explicit additions, not replacements that erase required baseline regions.
-
----
-
-# 28. PLAYER HOUSING
-
-Combine OSRS Construction depth with Club Penguin-style personal spaces.
-
-Player housing/igloos should support:
-
-* construction progression
-* furniture
-* trophy displays
-* boss trophies
-* portals
-* social hosting
-* minigames
-* decoration
-* cosmetic identity
-* functional rooms
-* visitors
-* future room types
-* future furniture categories
-* future interactive systems
-
-Housing should remain useful at low population.
-
-Preserve baseline Construction requirements, costs, functional room behavior, and unlocks while presenting player housing as igloos. Club Penguin decoration and catalog systems may add cosmetic choices, but must not grant free Construction progression or replace functional rooms without an explicit crossover/adaptation contract.
-
----
-
-# 29. NPC ADVENTURERS
-
-Create clearly identified AI-controlled adventurer NPCs.
-
-They may:
-
-* mine
-* fish
-* bank
-* fight
-* travel
-* wear equipment
-* improve over time
-* appear in towns
-* participate in explicitly designed NPC-friendly activities without satisfying OSRS real-player group requirements
-
-Do not deceptively present them as real users.
-
-Their purpose is to make small populations feel alive.
-
-Do not include them in reported real-player population or use them to bypass group requirements. Any economic production or rewards must follow the separate budgets and accounting in Section 5.
-
----
-
-# 30. STARTING VERTICAL SLICE
-
-Do not begin by building the entire game.
-
-First deliver a presentation-complete, gameplay-limited starter journey from real account sign-up through full Tutorial Island to Lumbridge and Cook's Assistant. It must match the approved OSRS visual and audio references from the initial title/login screen through gameplay, subject only to the explicit adaptations below. Proving the development factory supports this deliverable; it is not a substitute for it. Do not defer the slice's presentation as later polish.
-
-## 30.1 Player journey, locations, and working content
-
-The required player journey is:
-
-1. Create a real ClubScape account through the UI, log in, and initialize a persistent penguin character in Tutorial Island using the verified normal-account starting state. Record the source-defined initial stats, inventory, and tutorial flags; do not substitute a boosted or pre-completed character.
-2. Complete the full frozen-baseline Tutorial Island experience, including every required stage, interaction, progression restriction, and reward. Use real shared gameplay systems, not dialogue-only progression, scripted stage skips, or tutorial-specific mock mechanics.
-3. Leave Tutorial Island through its legitimate completion flow and arrive in Lumbridge with the correct resulting character state and possessions.
-4. Mine copper with a legitimately acquired bronze pickaxe; exercise XP, inventory/equipment, banking, shops, and goblin combat. Validate source-defined death and recovery behavior as well as successful combat.
-5. Complete Cook's Assistant with its full baseline steps, legitimate ingredient acquisition, dependencies, and rewards.
-6. Verify logout/login, reconnect, and test-server restart both during onboarding and after quest completion. Resume the correct state without repeating the tutorial, losing acknowledged progress, or duplicating items, XP, or rewards.
-
-Map the complete tutorial route on Tutorial Island and the Lumbridge starter area, including its castle, grounds, paths, and nearby river/bridge. Record exact baseline region/tile bounds, spawn/arrival points, and initial cameras. Include connected baseline areas and legitimate travel needed for the resources, bank, shop, and Cook's Assistant dependencies; do not relocate them into an arbitrary demonstration square.
-
-Reduce implemented interactions, not the visual completeness of the visible environment. Preserve the reference layout, terrain, elevation, landmarks, object placement, and surrounding scenery needed by the approved views, including scenery beyond the playable boundary where necessary. The small content subset below does not authorize an otherwise empty map with one example of each asset.
-
-The minimum content subset contains:
-
-* one penguin player
-* the full baseline Tutorial Island route, instructors, objects, items, and required interactions
-* one reference-mapped Lumbridge starter area with a limited working content subset
-* one copper rock
-* one bronze pickaxe
-* one tree
-* one fish
-* one goblin
-* one bank
-* one shop
-* the complete Cook's Assistant quest
-
-Tutorial Island's dependencies are required even where the broader skill or combat family appears later in Section 32. Its gathering, production, combat, and interface steps must use working shared mechanics now. Tutorial coverage does not establish full-skill coverage. The one-item entries above are minimums, not limits that excuse missing tutorial or quest dependencies.
-
-Required functionality:
-
-* real account sign-up/login/logout and accurate loading/connecting, authentication-error, and reconnect states
-* movement
-* interaction
-* Mining
-* inventory
-* XP
-* level progression
-* combat
-* banking
-* shop
-* complete tutorial progression and Cook's Assistant quest state
-* persistence
-* content compilation
-* asset manifest validation
-* OSRS-faithful title/login presentation, game frame, minimap, chat, tabs, and context menus
-* OSRS-faithful interfaces for the slice's inventory, equipment used by the slice, skills, combat, bank, shop, and quest interactions
-* baseline music and sound effects for startup, Tutorial Island, Lumbridge, and the required slice activities
-
-Do not shorten tutorial or quest state graphs, pre-complete stages, or grant missing items/rewards through test-only mechanisms to make this journey fit the slice. Out-of-scope features follow the explicit availability policy below; that policy cannot excuse any dependency of the required journey.
-
-The same authoritative server must support:
-
-* headless simulator
-* browser client
-
-## 30.2 Frozen presentation target and allowed adaptations
-
-The first slice targets desktop Chrome and Edge with keyboard/mouse input and requires WebGPU. Show clear in-client feedback when a required capability is unavailable rather than starting a broken renderer or silently switching backends. Mobile controls, WebGL fallback, and certification of other browsers are outside this milestone.
-
-Before presentation implementation, establish an owner-approved visual/audio reference pack linked from the canonical reference, interface, art, and world specifications. Freeze concrete inputs rather than leaving each worker to interpret "OSRS-like." The pack must contain:
-
-* the reference build, dated source captures, and identifiable source/asset snapshots, with concrete paths or retrieval instructions for the required terrain, models, animations, textures, interface sprites, icons, fonts, music, and sound effects
-* the baseline's Resizable - Classic layout with stock OSRS visuals, not fixed mode, modern layout, or a custom classic-themed web layout; exclude HD and appearance-changing plugins
-* a 1920x1080 browser viewport for the primary comparison/performance case, with exact logical resolution, UI scale, tested browser versions, and capture settings; also define and test the supported resizing range
-* world scale, camera projection/pitch/rotation/zoom, draw distance, lighting/shading, material and texture-sampling settings, sprite scaling, font metrics, and animation timing sufficient to reproduce the target appearance
-* reference captures for title/login, account creation, loading/connecting, authentication feedback, reconnect states, Tutorial Island stages, Lumbridge arrival, the HUD, and each interface used by the slice
-* representative tree and goblin views and animation references, with reproducible positions, camera settings, account/UI state, and animation frames for comparisons
-* the required music/sound IDs, source recordings, and source-defined playback triggers and timing for the startup and complete player journey
-* per-case numeric visual tolerances and the comparison procedure, established before evaluating ClubScape output, with narrowly defined allowances for approved adaptations and unavoidable dynamic differences
-
-Selecting resizable classic for this slice does not remove the other baseline layouts from the full contract in Section 3.3. Where a ClubScape registration, web-only loading, or error state has no direct source equivalent, include an explicitly approved composition consistent with the reference visual language; do not invent source evidence or substitute a generic game-entry page.
-
-Default presentation departures are limited to the penguin player, necessary equipment fitting, ClubScape name/logo substitutions within the existing composition, and the approved scope/capability feedback defined here. Keep ordinary trees, goblins, rocks, terrain, buildings, interface frames, sprites, and fonts faithful to their matching source assets. Do not infer permission for snowy terrain, remodeled creatures, cartoon trees, new interface layouts, or broader location/quest retheming from the general penguin-world vision. Any additional departure requires a specific approved adaptation-register entry.
-
-For intentionally out-of-scope features, preserve the OSRS layout and control placement and provide clear in-client unavailable feedback when selected. Do not hide an otherwise available control merely because it is unimplemented, silently ignore input, or report fake success. Preserve genuine source-defined hidden, locked, or disabled states, including Tutorial Island's progressive interface unlocks. Record the affected controls, world boundaries, and feedback in a scope-limited adaptation entry, and keep the underlying features unverified in the parity registry. This approved policy does not cover broken required controls, missing tutorial/quest dependencies, or unexpected runtime errors.
-
-Compare unchanged scene/interface regions against the actual source references and review the approved adaptations separately. Do not mask whole panels, creatures, or scenery to hide fidelity failures, or bless the first ClubScape render as its own reference.
-
-Missing source inputs, unresolved conversion/rendering/audio differences, and generic substitutes are blockers to presentation acceptance. Temporary debug assets must remain clearly identified as unfinished; their existence does not authorize accepting the slice.
-
-## 30.3 Early presentation checkpoint and slice acceptance
-
-Build the startup-to-world presentation benchmark in the real browser renderer and audio pipeline early, before filling out all slice mechanics. It must include title/login and loading, representative Tutorial Island and Lumbridge scenes, a reference-faithful tree and animated goblin, the penguin player, and the resizable classic game frame/HUD. Include baseline music and sound playback, not merely imported audio files. Review matched reference and candidate captures side by side, with overlays or image differences where appropriate. Static mockups or reference screenshots embedded in a page are not a renderer demonstration.
-
-This early checkpoint validates presentation only. Developer-only rendering fixtures may expose later views for comparison, but final player-journey evidence must reach them through legitimate progression. The checkpoint does not replace the complete slice's live gameplay, authoritative-state, or persistence requirements.
-
-Before declaring the slice complete, require:
-
-* the complete fresh-account player journey through sign-up, Tutorial Island, Lumbridge activities, and Cook's Assistant, verified headlessly and through the real browser/server path
-* account/player persistence and recovery checks during the tutorial and after quest completion, including logout, reconnect, server restart, and source-defined death/recovery behavior
-* reproducible captures from the running browser client for every required startup, scene, and interface case, plus evidence of the required animation behavior
-* runtime audio evidence for the required baseline music and sound effects, including playback controls and source-defined triggers/timing under Section 24
-* measured attainment of the first-slice 60 FPS target at 1920x1080 on modern integrated graphics under Section 36, in both supported browsers
-* source references, candidate captures, comparison results against the pre-agreed tolerances, and explicit records of any approved differences
-* independent style and technical review, with presentation failures repaired rather than moved into an unspecified polish backlog
-* explicit owner presentation acceptance covering visuals and audio, recorded against the reviewed build and evidence; implementation-agent self-certification is not a substitute
-
-The reference-pack approval and slice presentation acceptance are bounded product checkpoints, not recurring approval requests for routine engineering or every asset. If required inputs, target-hardware evidence, or owner review are unavailable, record the blocker and continue independent unblocked slice/infrastructure work within the approved milestone without claiming acceptance or advancing content milestones.
-
-Pursue the RuneLite demonstration in Section 12 against that server independently. Browser/server/headless slice acceptance does not depend on RuneLite completion or a deferral decision.
-
-After all slice acceptance gates pass, stop the execution and report under Section 44. A later separately approved execution must prove the integrated Club Penguin social/cosmetic loop under Section 3.4 before bulk Club Penguin content production; the penguin avatar alone is not proof of that gameplay layer. Do not automatically add that loop, Mining 1-99, or other content expansion to the first-slice execution.
-
----
-
-# 31. SECOND MILESTONE: MINING 1-99
-
-In a later owner-approved execution, once the vertical slice is stable and has passed Section 30 including owner presentation acceptance, prove legitimate Mining progression from 1-99 using verified baseline methods and working acquisition paths. This is a progression milestone, not permission to call Mining fully complete while source methods or dependent activities are missing.
-
-Automatically decompose Mining into:
-
-* rocks
-* ores
-* pickaxes
-* levels
-* success formulas
-* depletion/respawn
-* Mining locations
-* Mining guild/content
-* quests
-* rewards
-* achievements
-* animations
-* VFX
-* sounds
-* equipment
-* progression validation
-* economy effects
-* RuneLite support under Section 12
-* web support
-* automated tests
-* OSRS reference notes and feature-parity validation
-* future extension tests
-
-Follow Section 14 when assigning Mining asset work: reuse the existing OSRS mining assets and reserve novel asset creation for Club Penguin-related additions.
-
-Required tools, locations, and progression dependencies must have functional acquisition paths. Mining 1-99 must not rely on unfinished systems, test-only item grants, or unreachable content.
-
-Record which Mining methods, sites, quests, and rewards are verified and which remain pending. Full Mining parity requires the complete baseline inventory. Schedule cross-skill or quest-dependent methods when their dependencies become available rather than blocking all other skill development or silently dropping those methods.
-
-Use this milestone to validate bounded parallel development within the 25-agent ceiling.
-
----
-
-# 32. EXPANSION ORDER
-
-After Mining, expand production depth in this order across separately approved milestones, not automatically within one execution. This is not the order in which dependencies first become available: Tutorial Island's required gathering, production, and combat mechanics, along with inventory/equipment, banking, shops, and quest state, already work in the vertical slice. Later entries deepen those implementations rather than excuse missing tutorial dependencies.
-
-1. Woodcutting
-2. Fishing
-3. Cooking
-4. Smithing
-5. basic melee combat
-6. banking
-7. shops
-8. quests and the shared mission framework
-9. equipment
-10. basic Magic/Ranged
-11. gathering/production skill network
-12. Slayer
-13. bosses
-14. Grand Exchange
-15. Construction/housing
-16. social systems and the Club Penguin social core
-17. OSRS and approved Club Penguin minigames, including Card-Jitsu
-18. achievements/collections and Club Penguin stamps
-19. PvP
-20. raids/endgame
-21. additional OSRS-scale systems
-22. remaining approved Club Penguin missions, parties, catalogs, and content coverage
-23. future skills and expansions outside the frozen full-game target
-
-Reorder only when dependencies make another sequence clearly superior.
-
-This list describes production depth, not permission to leave every Club Penguin interaction until the end. Establish and verify its shared cosmetic/social progression contract early under Sections 3.4 and 30. Keep later OSRS updates separate from the frozen baseline.
-
----
-
-# 33. BOOTSTRAP FROM AN EMPTY MACHINE
-
-Create scripts/documentation capable of bootstrapping a blank supported development machine.
-
-Preserve existing work and unrelated machine configuration. Prefer project-local or containerized dependencies, install what the active milestone needs, and report missing prerequisites explicitly. Do not store credentials in source control.
-
-Expected dependencies include:
-
-* Git
-* GitHub CLI
-* GitHub Copilot CLI
-* VS Code or equivalent
-* Rustup
-* Rust stable toolchain
-* rustfmt
-* clippy
-* wasm-bindgen tooling
-* Node.js
-* pnpm
-* Docker
-* Blender
-* JDK for RuneLite work
-* just or equivalent task runner
-
-PostgreSQL and other supporting infrastructure should normally run through Docker for local development.
-
-Do not require Unity, Unreal, or .NET.
-
-Create a bootstrap command such as:
-
-just bootstrap
-
-or equivalent.
-
-It should:
-
-* verify/install/check prerequisites where feasible
-* initialize development configuration
-* fetch dependencies
-* start required containers
-* compile the workspace
-* compile content
-* compile WASM
-* run tests
-* seed development data
-
----
-
-# 34. STANDARD DEVELOPMENT COMMANDS
-
-Create consistent commands.
-
-Examples:
-
+```text
 just bootstrap
 just dev
 just server
 just web
-just runelite
 just test
 just test-fast
 just test-integration
-just test-economy
+just test-browser
 just test-runelite
-just test-security
-just test-feature-parity
-just test-extensibility
-just lint
-just fmt
 just content-build
 just asset-build
 just sim
-just loadtest
+```
 
-Commands must work identically in developer environments and CI where practical.
+Bootstrap blank supported machines with project-local or containerized dependencies where practical. Never store credentials in source control.
 
-Content and asset builds include their relevant schema, source-reference, and manifest checks.
+## 15. Testing and delivery gates
 
----
+Test at the appropriate layers:
 
-# 35. OBSERVABILITY
+- unit tests for formulas and local state transitions
+- property/invariant tests for ownership, quantities, transactions, state graphs, and migrations
+- integration tests with real server components
+- headless scenarios for player journeys and progression
+- browser tests for real account/session/UI flows
+- RuneLite launch/state/plugin tests for supported tiers
+- visual comparisons against selected source references
+- audio trigger/playback tests in the running client
+- adversarial tests for impossible actions, replay, races, duplication, malformed inputs, and downgrade/capability abuse
+- load and economy simulations in controlled environments
 
-Add observability from the beginning.
+Every fixed defect needs a regression test when the test would prevent recurrence meaningfully.
 
-Use:
+A feature is complete when its required implementation, content, legitimate player path, server validation, tests, client behavior, presentation, source/adaptation records, migration behavior, and relevant performance/security evidence pass. A placeholder, mocked path, imported definition, screenshot, or one training route does not complete a category.
 
-* structured logs
-* metrics
-* traces
-* error IDs
-* account/session correlation IDs
-* game-world metrics
-* economy metrics
-* server tick timing
-* DB latency
-* packet rates
-* rejected action rates
-* player latency
-* instance health
-* content usage
-* feature flag usage
-* client capability distribution
-* content and asset build identifiers
+CI should run formatting, compilation, lints, schema/content validation, ID uniqueness, unit tests, dependency checks, path ownership, and affected subsystem tests. Expensive suites may run in suitable test environments, but unavailable results remain visible.
 
-Use OpenTelemetry where appropriate.
+## 16. Git and integration
 
-Production failures should be diagnosable without reproducing them manually.
+- Do not push directly to main.
+- Use isolated branches/worktrees for modifying tasks.
+- Restrict core protocol, security, authentication, persistence, simulation, and economy areas to stricter review.
+- Require independent review and CI before integration.
+- Do not merge solely on an LLM's textual review.
+- Preserve unrelated user changes.
+- Bound retries and retain failure diagnostics.
 
----
+## 17. Observability, recovery, and deployment
 
-# 36. PERFORMANCE REQUIREMENTS
+Add structured logs, metrics, traces, error IDs, session correlation, tick timing, DB latency, packet/rejection rates, client capability/build IDs, economy flows, and asset/content build identities as the active milestone requires.
 
-Profile rather than guessing.
+Design durable transaction boundaries so acknowledged inventory, trade, market, reward, and purchase changes survive crashes and cannot duplicate on retry.
 
-Before implementation of the active milestone, define baseline hardware, representative workloads, and measurable budgets for the metrics below. Include the launch concurrency target, the one-to-five-player case, and the browser configurations being supported. Record actual measurements; do not lower failing targets merely to declare success.
+Start deployment simply with containers, PostgreSQL, and object storage/CDN as needed. Add multi-world, region-process, load-balancing, or Kubernetes complexity only after measurements justify it.
 
-The first-slice rendering target is 60 FPS at a 1920x1080 browser viewport on modern integrated graphics, in desktop Chrome and Edge with WebGPU. Pin representative hardware by GPU model, CPU, memory, OS/driver, browser version, and rendering settings before implementation. Use the approved stock-visual configuration and representative tutorial/Lumbridge activity, not an empty scene or silently reduced draw distance/resolution.
+## 18. Completion and stopping rule
 
-Record measured rendered FPS, frame-time distributions, and stalls over a declared benchmark window, with acceptance tolerances fixed in advance. A configured 60 FPS limiter is not proof of achieved performance. If representative integrated-GPU testing is unavailable, report performance verification as blocked; a dedicated GPU or software-rendering run is not a substitute for the required evidence.
+Milestone completion and full-game completion are different claims.
 
-Track:
+When the active milestone passes:
 
-* server tick duration
-* players per process
-* entities per region
-* memory per player
-* bandwidth per player
-* CPU cost per entity
-* WASM startup time
-* browser frame time
-* GPU frame time
-* asset download size
-* region streaming latency
-* content compilation time
-* agent integration throughput
-* active/queued AI agent counts and provider throttling/backoff
-* CI queue time
+1. Stop new work admissions.
+2. Park or cancel unfinished workers so they cannot continue into later scope automatically.
+3. Preserve the reviewed build and evidence.
+4. Report completed scope, commands/results, visual/audio/performance evidence, remaining blockers, known limitations, and proposed next milestone.
+5. Stop. Wait for a later execution before implementing the next milestone.
 
-Create benchmarks and prevent severe regressions in CI.
+Full-game completion requires verified coverage of the frozen OSRS denominator, the approved Club Penguin inventory, supported clients, deployment, monitoring, backups, recovery, security, performance, and all required assets/interfaces. Deferred or blocked entries remain visible.
 
-Do not change source gameplay cadence, action timing, or progression rules merely to meet a performance target. Measure server and client performance while preserving the fidelity contract.
+Future milestone ordering is planning guidance rather than authorization. Consult `references/MILESTONE_ROADMAP.md` when proposing the next milestone.
 
----
+## 19. First actions
 
-# 37. FAILURE RECOVERY
+For an empty repository:
 
-Design for:
+1. Create the active milestone record, per-task YAML schema, milestone integration record, and first contract manifest following `references/PARALLEL_EXECUTION.md`.
+2. Establish the selected reference baseline and initial inclusion rules.
+3. Create minimal canonical product, architecture, content, interface, art, testing, and RuneLite feasibility specs.
+4. Bootstrap the Cargo workspace, browser shell, local services, task commands, minimal CI, and durable task ledger.
+5. Define shared simulation, protocol, persistence, stable-ID, content-schema, and asset-manifest contracts.
+6. Build an early real-renderer benchmark for login/loading, a representative Tutorial Island/Lumbridge scene, the penguin, one unchanged OSRS object/NPC, HUD, and audio playback.
+7. Build real account/session/persistence and shared headless/browser gameplay in dependency order.
+8. Complete Tutorial Island, Lumbridge dependencies, and Cook's Assistant.
+9. Run the milestone's functional, visual, audio, persistence, security, and performance gates.
+10. Report and stop.
 
-* server crash
-* network interruption
-* duplicate request
-* stale client
-* reconnect
-* region process restart
-* DB outage
-* deployment rollback
-* partial market transaction
-* disconnect during trade
-* disconnect during combat
-* disconnect during loot assignment
-* content migration failure
-* protocol version mismatch
-* asset replacement/removal while preserving stable references
+For an existing repository, inspect and validate before creating or replacing systems. Continue from working code and reopen failed milestone requirements.
 
-Never allow recovery logic to create items or currency accidentally.
-
-Define character/session ownership, authoritative input ordering, and the durable commit boundary for inventory, trade, and market settlements. Acknowledged settlements must survive recovery; retries and reconnects must neither duplicate nor lose value.
-
-Test crash/retry scenarios and complete production/shop/market/NPC conversion cycles, not only isolated formulas.
-
----
-
-# 38. DEPLOYMENT STRATEGY
-
-Start simple.
-
-Early environment:
-
-Docker Compose
-single/few servers
-PostgreSQL
-object storage/CDN
-
-Scale later when justified:
-
-containers
-load balancing
-multiple worlds
-region processes
-Kubernetes
-game-server orchestration
-
-Do not deploy Kubernetes solely because this is an MMO.
-
-Scale infrastructure based on actual load.
-
----
-
-# 39. WORLD SCALING
-
-The architecture should support multiple worlds/shards eventually.
-
-Global services may include:
-
-* authentication
-* accounts
-* character metadata
-* Grand Exchange
-* friends
-* clans
-* highscores
-
-World-local services handle:
-
-* player simulation
-* NPCs
-* combat
-* world objects
-* region state
-* instances
-
-Do not introduce distributed complexity until required.
-
-Selected seasonal rulesets and restricted account modes must have explicit state and economy boundaries. Scope characters, progression, inventories, banks, markets, and highscores as the reference mode requires. Permit cross-mode rewards only through documented rules; mode resets, event expiry, and world transfers must not duplicate value or overwrite ordinary-world progress.
-
----
-
-# 40. CONTENT COMPLETENESS
-
-The long-term goal is not a toy MMO.
-
-The long-term target remains verification of the complete frozen OSRS baseline and approved Club Penguin inventory across separately approved executions. Comparable breadth, a polished subset, or an early-access launch is not full-game completion.
-
-Maintain two distinct contracts:
-
-* `spec/full-scope.md`: the frozen OSRS baseline, complete parity inventory, approved presentation/behavior adaptations, and selected Club Penguin inventory.
-* `spec/launch-scope.md`: the measurable subset and operational criteria for a particular early-access or full release, explicitly labeled as such.
-
-Draft both during initial planning. Reconcile source inventories, use vertical-slice and Mining evidence to make delivery targets credible, and request one explicit owner approval of the full contract and initial release proposal before broad content production. Identify provisional counts honestly while research is incomplete.
-
-Each execution also needs its own approved milestone scope before implementation under Section 44. This approval is separate from the broader full/release contracts; their later refinement does not authorize unapproved Mining work or other content expansion in advance.
-
-The contracts must define:
-
-* required systems and content coverage, with numeric targets where meaningful
-* skill and level-band coverage, quests, regions, equipment tiers, monsters, bosses, and activities
-* the fixed selection of seasonal rulesets and holiday events, including version, availability, and reset behavior
-* interface inventory, required states/interactions, and visual fidelity evidence
-* Club Penguin social, minigame, original/Fire/Water/Snow Card-Jitsu, stamp, mission, party, and catalog coverage
-* retheming mappings and permitted progression/economy crossover rewards
-* economy, social, housing, PvP, tutorial, and low-population acceptance criteria, preserving genuine group requirements
-* supported clients and the RuneLite outcome permitted by Section 12
-* performance, load, reliability, security, and operational targets
-* validation evidence required for each target
-* clearly separated follow-on content and expansion work
-
-An early-access release must identify its available content and limitations. Completing that release contract does not complete `spec/full-scope.md`.
-
-Do not silently reduce the parity denominator, reclassify blocked features as optional, or move the target when source games update. Record source-inventory corrections with evidence. Material scope changes require explicit owner approval and an explanation of their effect on parity claims; routine engineering decisions do not require renewed approval.
-
-Maintain machine-readable coverage dashboards for:
-
-* skills
-* skill level bands
-* quests
-* regions
-* equipment tiers
-* monsters
-* bosses
-* minigames
-* selected seasonal modes and event versions
-* achievements
-* social systems
-* economy systems
-* housing
-* tutorials
-* interface families, states, controls, and visual fidelity
-* Club Penguin feature families and included content entries
-* source-to-penguin world/quest mappings
-* approved adaptations and crossover rewards
-* RuneLite compatibility
-* browser support
-* feature-parity categories
-* future-extensibility coverage
-* unresolved reference assumptions affecting implementation
-* asset-build readiness
-
-Do not consider the game complete while critical categories are represented only by placeholder examples.
-
-Show verified/required counts and unresolved source gaps, not only percentages. Separate early-access progress, full-baseline progress, and post-baseline expansion work. A deferred RuneLite outcome must remain visible as deferred even when the browser release is accepted.
-
----
-
-# 41. NO PLACEHOLDER COMPLETION
-
-The following do not count as completion:
-
-* TODO comments
-* empty implementations
-* mocked network systems
-* fake persistence
-* hardcoded test-only values
-* placeholder assets presented as final
-* a mechanically working slice whose startup screens, scene, interfaces, or audio fail its approved presentation contract
-* unfinished quests
-* required menus that do not function
-* buttons that silently do nothing or report fake success
-* unimplemented server validation
-* passing tests that only verify mocks
-* imported assets/data with missing required source/build records
-* feature-parity claims without validation against documented reference behavior
-* routine content additions that require unrelated engine rewrites
-* imported item definitions without their required gameplay, acquisition/ownership conditions, interfaces, and assets
-* one route to level 99 presented as complete coverage of an entire skill
-* rethemed quest names/dialogue without the full source quest logic and rewards
-* visually similar interfaces whose controls or authoritative-state behavior are incomplete
-* a penguin avatar presented as completion of the Club Penguin gameplay layer
-* an early-access subset presented as full OSRS baseline parity
-
-If something is intentionally deferred, create an explicit tracked task with severity and dependency information.
-
-The approved out-of-scope feedback policy in Section 30 is an honest milestone limitation, not completion of the unavailable feature. It must not be used to hide a failed in-scope requirement or remove required content from the full-target denominator.
-
----
-
-# 42. QUALITY GATES
-
-Before declaring a feature complete, require:
-
-* implementation complete
-* content complete
-* tests complete
-* no relevant TODOs
-* no known critical bugs
-* docs/spec updated
-* server validation present
-* browser functionality verified
-* RuneLite compatibility verified where applicable under Section 12
-* telemetry present where appropriate
-* performance benchmark acceptable
-* security/adversarial tests complete
-* independent review passed
-* extension points documented
-* feature-parity acceptance criteria validated where applicable
-* source mappings and any behavior/presentation adaptations recorded
-* interface visual and interaction evidence complete where applicable
-* audio playback and timing evidence complete where applicable
-* Section 30 reference-pack approval and owner presentation acceptance recorded before completing the first slice or advancing beyond it
-* Club Penguin reward/crossover boundaries validated where applicable
-* asset reuse and novel asset creation follow Section 14
-* relevant source notes and asset/import records complete
-* migration and backward-compatibility behavior tested
-
----
-
-# 43. DEFINITION OF GAME COMPLETION
-
-An early-access release may be accepted when its explicit `spec/launch-scope.md` targets and applicable operational gates pass. It must be labeled early access and disclose unavailable content. This is not a declaration that the game or full parity is complete.
-
-Full-game completion requires every target in `spec/full-scope.md`, the complete frozen OSRS parity inventory, the approved Club Penguin inventory, and the full-release operational contract to be verified. There must be no unresolved required source-inventory gaps disguised as complete coverage.
-
-Require:
-
-* production server can be deployed reproducibly
-* account creation, onboarding, and persistent characters work
-* core progression and all required baseline skill methods/unlocks are complete
-* baseline combat systems, encounters, and rewards are complete
-* every required quest is complete with its source logic and rethemed presentation
-* the required world layouts, regions, connections, and access gates are complete
-* all required item variants, behaviors, requirements, and acquisition/ownership conditions are implemented
-* all required interfaces pass visual and behavior validation
-* economy functions
-* low-population operation functions without bypassing preserved group requirements
-* multiplayer functions
-* social systems function
-* browser client is production-ready
-* RuneLite meets its named supported target, or desktop work has an owner-approved, documented deferral under Section 12
-* the approved Club Penguin social core, minigames, all four Card-Jitsu variants, stamps, and missions are complete
-* the selected seasonal rulesets and events function with verified state/economy isolation and reset behavior
-* Club Penguin cosmetic progression and every approved crossover reward function within their specified boundaries
-* asset pipeline is complete
-* all full-target assets have valid manifests and reproducible source/build records
-* automated tests pass
-* load tests meet targets
-* exploit/security testing passes
-* account recovery/session behavior works
-* monitoring works
-* backups work
-* deployment/rollback works
-* full-target content coverage is verified, including all source mappings and approved adaptations
-* every required frozen OSRS baseline entry is verified, not merely represented by a similar system
-* future extensibility tests pass
-* no critical/blocking defects remain
-
----
-
-# 44. EXECUTION BEHAVIOR
-
-Each execution is limited to the current owner-approved milestone. Record its deliverables, non-goals, acceptance evidence, prerequisites, and external execution limits before implementation. For a project without an accepted starting slice, the approved default scope is the complete Section 30 journey; do not silently reduce it to a Lumbridge spawn or a seeded login. If that slice is already accepted and no later milestone has been approved for this execution, report the state and request the next assignment rather than choosing one automatically.
-
-When given this prompt:
-
-1. Inspect the current machine and repository.
-2. Confirm the active approved milestone, checking any existing slice-completion claim against all of Section 30 rather than assuming previous functional tests establish acceptance.
-3. Create or update the architecture, frozen reference record, full-scope contract, release proposal, and milestone acceptance criteria.
-4. Build the dependency graph.
-5. Identify tasks within the approved milestone that can run independently.
-6. Assign research agents to produce concise OSRS/Club Penguin mechanic notes for upcoming tasks.
-7. Assign implementation agents once relevant requirements are clear; label unresolved reference assumptions instead of creating blanket research gates.
-8. Admit parallel agents for independent tasks within the shared 25-agent ceiling, provider quotas, and path-ownership limits; queue or back off when capacity is unavailable.
-9. Require implementation tasks to produce relevant tests, and every task to provide appropriate validation evidence.
-10. Integrate only passing work.
-11. Run post-merge regression tests.
-12. Turn failures into new tasks automatically.
-13. Update feature-parity and extensibility coverage.
-14. Once the current milestone's acceptance gates pass, including the Section 30 presentation acceptance where applicable, stop new admissions and checkpoint and park/cancel unfinished AI workers under Section 17. Do not leave workers running or automatically resuming into unapproved work.
-15. Report the verified milestone results and stop the execution. A release may be accepted only if its separate release criteria pass; milestone completion is not a claim of full-game completion.
-
-The final report must identify the reviewed build/revision, completed scope, validation commands/results, presentation and performance evidence where applicable, owner approvals, remaining limitations/blockers, available usage accounting, and the proposed next milestone. Preserve the accepted build and its evidence; subsequent changes require revalidation of affected gates. Preserve durable task state and references so a separately approved execution can resume without recreating working systems. Neither this report nor approval of the completed milestone authorizes starting the next one.
-
-Do not repeatedly ask the project owner to make routine engineering decisions.
-
-Choose sensible defaults based on this specification.
-
-Escalate only when a decision:
-
-* materially changes product direction
-* starts a new execution for a later milestone or changes the current execution's approved scope
-* establishes or materially changes the full scope, adaptations, or release scope in Section 40
-* establishes or materially changes the first-slice presentation reference pack, or requests the owner presentation acceptance required by Section 30
-* recommends RuneLite deferral or a different desktop strategy under Section 12, with supporting evidence
-* would raise the 25-agent ceiling
-* creates significant irreversible cost
-* requires secrets/accounts/credentials
-* requires a business decision rather than an engineering decision
-
-Otherwise proceed autonomously within the approved milestone. Apply the no-AI-spending-cap policy in Section 17 without overriding external execution limits or the milestone stopping rule.
-
-When execution limits or unavailable external dependencies prevent further progress, preserve a durable checkpoint with completed work, validation results, blockers, and the next executable tasks. Continue independent unblocked work within the current milestone where the execution limits permit; otherwise stop and report the milestone as incomplete. Never claim that unexecuted checks, unavailable reviews, blocked requirements, or deferred features have passed.
-
----
-
-# 45. FIRST ACTIONS
-
-The sequence below is a roadmap across separately approved executions, not authorization to run the entire list in one invocation. On an empty machine/repository, begin with the steps needed for Section 30. If work already exists, inspect and continue from its verified state instead of recreating it. Perform only the steps within the current approved milestone.
-
-For an existing first-slice implementation, audit real account creation, the full tutorial-to-Lumbridge journey, Cook's Assistant, presentation/audio, and performance against Section 30 before expanding. Reopen missing or failed work and repair the existing implementation; do not grandfather a graybox or tutorial-skipping build into acceptance because some mechanics work, or discard working server/persistence systems solely because other parts need repair.
-
-1. Bootstrap the dependencies needed for the first milestone.
-2. Create the monorepo and Cargo workspace.
-3. Establish the frozen OSRS reference baseline, source inventories, canonical specification, full-scope proposal, draft release scope, and milestone acceptance criteria, including the Section 30 visual/audio reference pack, its owner approval, and the Section 36 performance benchmark contract.
-4. Create the initial GitHub/Copilot instructions.
-5. Create `justfile` or equivalent commands and Docker local infrastructure.
-6. Establish minimal CI and the durable task ledger described in Section 17.
-7. Define shared protocol, simulation, persistence, and stable-ID contracts before parallel implementation.
-8. Create content, parity/mapping, and asset-manifest schemas with the lightweight source/build records in Section 15.
-9. Build the Section 30 startup-to-world presentation benchmark early, then complete real sign-up, full Tutorial Island, Lumbridge activities, and Cook's Assistant in dependency order with account/player persistence.
-10. Prove the headless and browser paths against the same authoritative server and validate startup, world, asset, interface, and audio fidelity against the approved references while separately pursuing the bounded RuneLite feasibility milestone in Section 12.
-11. Add the relevant security, feature-parity, and extensibility tests as each subsystem is implemented.
-12. Complete browser/server/headless, visual, audio, and performance validation; obtain the Section 30 owner presentation acceptance; stop this execution and report under Section 44.
-13. In a later approved execution, prove the first integrated Club Penguin social/cosmetic loop under Sections 3.4 and 30 before bulk CP production.
-14. Build the WaddleWorks MVP around the proven task-ledger and integration workflow when included in an approved milestone.
-15. Verify Mining 1-99 progression in its approved execution with functional dependencies, tracking remaining Mining parity entries explicitly.
-16. Refine the full and release contracts using verified inventories and milestone evidence, then obtain the scope approval described in Section 40.
-17. Improve WaddleWorks and rebalance worker capacity within the 25-agent ceiling as measured integration needs and provider quotas justify it.
-18. Expand systematically through approved milestones in the order described in Section 32, tracking early-access coverage separately from the complete OSRS/Club Penguin target.
-19. Validate deployment, monitoring, backups, recovery, and rollback for each release. Declare full-game completion only under Section 43.
-
-At every stage, prioritize verified, playable progress toward the full product contract. Improve the development factory when doing so demonstrably improves reliable delivery; the factory is a means, not the finished product.
-
-The objective is to deliver the complete frozen OSRS experience in a penguin world, with faithful interfaces and the approved Club Penguin gameplay layer. A reliable, scalable development process should make that game maintainable and extensible for many years without replacing the game itself as the goal.
+At every stage, favor verified playable progress. Improve tooling and orchestration when a measured delivery problem justifies the work.
